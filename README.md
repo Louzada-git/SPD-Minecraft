@@ -18,10 +18,28 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
   - Chão de tufo polido, musgo espalhado (mais perto das poças) e lanternas penduradas por correntes no meio das salas.
   - Moldura de tufo entalhado em volta das escadas.
 - Escada de subida na entrada de cada andar e alçapão de descida na saída.
-- A run fica salva no mundo, e quem entra no meio começa no andar 1.
 - Sem dia/noite, sem chuva e sem mobs do Minecraft nascendo.
 
-As texturas ainda são do próprio Minecraft (provisórias).
+### Classes e run
+
+- Menu **Escolha Seu Herói** no estilo do Shattered, com as 6 classes e a arte de cada uma: Guerreiro, Mago, Ladino, Caçadora, Duelista e Clérigo.
+- Cada classe começa com a sua arma do Shattered e uma ração:
+
+| Classe | Arma | Dano | Especial |
+|---|---|---|---|
+| Guerreiro | Espada Curta Desgastada | 1-10 | |
+| Mago | Cajado do Mago | 1-6 | |
+| Ladino | Adaga | 1-8 | |
+| Caçadora | Luvas Cravejadas | 1-5 | ataca 2x mais rápido |
+| Duelista | Florete | 1-8 | |
+| Clérigo | Maça | 1-8 | +40% de precisão |
+
+- Regras do Shattered: força (começa em 10), nível, vida (20, +5 por nível), precisão e esquiva. Todo golpe corpo a corpo sorteia se acerta, e o dano é sorteado pela arma. A barra de XP mostra o nível do Shattered.
+- A run começa quando alguém escolhe a classe. Quem entra depois escolhe a sua e começa no andar 1.
+- Quem morre vira espectador. Um aliado pode trazer ele de volta usando um **ankh** (clique direito). Se todos morrerem, a run acaba e todo mundo volta pro menu.
+- As armas já vêm com os ataques do Better Combat (funciona com ou sem ele instalado).
+
+As texturas dos blocos ainda são do próprio Minecraft (provisórias). As artes do menu e os ícones dos itens são do Shattered.
 
 ## Como rodar no Linux
 
@@ -56,15 +74,18 @@ Na primeira vez ele baixa o Minecraft, o NeoForge e tudo que precisa. Isso demor
 
 1. Crie um **mundo novo**. O tipo padrão já é a dungeon.
 2. Ligue **Permitir comandos (cheats)** pra poder usar os comandos de teste.
-3. Você aparece no andar 1. Ache o **alçapão de madeira** no chão (é a saída) e clique com o botão direito pra descer.
-4. A **escada de pedra** é a entrada: clique com o botão direito pra subir.
+3. Escolha o herói no menu e clique em **Começar**. Você aparece no andar 1.
+4. Ache o **alçapão de madeira** no chão (é a saída) e clique com o botão direito pra descer.
+5. A **escada de pedra** é a entrada: clique com o botão direito pra subir.
 
-Comandos de teste:
+Comandos:
 
 | Comando | O que faz |
 |---|---|
+| `/heroi` | Abre o menu de escolha de herói (se você fechou sem escolher) |
 | `/dungeon andar 3` | Vai direto pro andar 3 (de 1 a 5) |
-| `/dungeon novarun` | Começa uma run nova e manda todo mundo pro andar 1 |
+| `/dungeon xp 20` | Ganha 20 de XP do Shattered (pra testar os níveis) |
+| `/dungeon novarun` | Acaba a run atual e manda todo mundo de volta pro menu |
 
 ### Gerar o .jar do mod
 
@@ -80,10 +101,9 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 
 ## O que vem depois
 
-1. **Classe e regras:** menu do Shattered (escolha de herói), Guerreiro, força, precisão e esquiva. A run começa quando alguém escolhe a classe, e quem morre vira espectador até alguém usar um ankh.
-2. **Itens:** armas e armaduras com força mínima, poções e pergaminhos desconhecidos (cor e runa aleatórias por run), pergaminho de melhoria, comida, e opção no menu pra compartilhar o que foi identificado.
-3. **Mobs do esgoto:** com modelos do Minecraft e textura trocada, e mais vida quanto mais gente estiver jogando.
-4. **Goo:** o chefe do andar 5.
+1. **Itens:** os itens únicos das classes (selo do Guerreiro, varinha do Mago, capa do Ladino, arco da Caçadora, habilidade do florete, tomo do Clérigo), armadura de pano, armas e armaduras com força mínima, poções e pergaminhos desconhecidos (cor e runa aleatórias por run), pergaminho de melhoria, comida, e opção no menu pra compartilhar o que foi identificado.
+2. **Mobs do esgoto:** com modelos do Minecraft e textura trocada, e mais vida quanto mais gente estiver jogando.
+3. **Goo:** o chefe do andar 5.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
 
@@ -92,8 +112,17 @@ Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod 
 ```
 src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
-  registro/                    blocos, itens e aba do criativo
-  bloco/                       escadas de subida e descida
+  registro/                    blocos, itens, aba do criativo e dados do jogador
+  bloco/                       escadas e blocos de decoração
+  item/                        armas do Shattered e ankh
+  heroi/
+    ClasseDoHeroi.java         as 6 classes e o kit de cada uma
+    DadosDoHeroi.java          classe, força, nível e XP de cada jogador
+    RegrasDoHeroi.java         contas de vida, precisão, esquiva e XP
+    EventosDeCombate.java      acerto, esquiva e dano das armas
+  rede/                        pacotes do menu (servidor <-> jogador)
+  cliente/
+    TelaEscolhaDeHeroi.java    o menu Escolha Seu Herói
   dungeon/
     Andares.java               medidas e onde cada andar fica no mundo
     PlantaDoAndar.java         o mapa do andar em quadradinhos
@@ -102,12 +131,14 @@ src/main/java/com/louzada/pixeldungeon/
   run/
     DadosDaRun.java            o que fica salvo no mundo
     GerenciadorDaRun.java      começar run, construir andar, levar jogador
-    EventosDaRun.java          servidor ligando, jogador entrando e renascendo
-    ComandosDaDungeon.java     comandos de teste
+    EventosDaRun.java          servidor ligando, jogador entrando e morrendo
+    ComandosDaDungeon.java     /heroi e comandos de teste
 ```
 
 ## Créditos e licença
 
 Baseado no [Shattered Pixel Dungeon](https://github.com/00-Evan/shattered-pixel-dungeon), de Evan Debenham, que por sua vez é baseado no Pixel Dungeon, de Watabou.
+
+As artes do menu de herói, os bonecos dos heróis, os ícones dos itens e os textos das classes e itens vêm do Shattered Pixel Dungeon, também sob GPLv3.
 
 Este mod é software livre sob a licença **GPLv3**, a mesma do Shattered Pixel Dungeon (veja o arquivo `LICENSE`).
