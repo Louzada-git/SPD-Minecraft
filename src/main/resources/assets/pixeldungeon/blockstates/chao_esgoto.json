@@ -1,5 +1,8 @@
 {
   "variants": {
-    "": { "model": "pixeldungeon:block/chao_esgoto" }
+    "": [
+      { "model": "pixeldungeon:block/chao_esgoto", "weight": 5 },
+      { "model": "pixeldungeon:block/chao_esgoto_bruto", "weight": 2 }
+    ]
   }
 }

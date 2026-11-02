@@ -1,5 +1,9 @@
 {
   "variants": {
-    "": { "model": "pixeldungeon:block/parede_esgoto" }
+    "": [
+      { "model": "pixeldungeon:block/parede_esgoto", "weight": 5 },
+      { "model": "pixeldungeon:block/parede_esgoto_musgo", "weight": 3 },
+      { "model": "pixeldungeon:block/parede_esgoto_rachada", "weight": 2 }
+    ]
   }
 }
