@@ -3,6 +3,13 @@
 
   "block.pixeldungeon.parede_esgoto": "Sewer Wall",
   "block.pixeldungeon.chao_esgoto": "Sewer Floor",
+  "block.pixeldungeon.rodape_esgoto": "Sewer Baseboard",
+  "block.pixeldungeon.pilar_esgoto": "Sewer Pillar",
+  "block.pixeldungeon.moldura_esgoto": "Sewer Frame",
+  "block.pixeldungeon.cornija_esgoto": "Sewer Cornice",
+  "block.pixeldungeon.lanterna_esgoto": "Sewer Lantern",
+  "block.pixeldungeon.corrente_esgoto": "Sewer Chain",
+  "block.pixeldungeon.musgo_esgoto": "Sewer Moss",
   "block.pixeldungeon.escada_subida": "Stairs Up",
   "block.pixeldungeon.escada_descida": "Stairs Down",
 
