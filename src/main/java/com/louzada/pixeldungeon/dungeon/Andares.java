@@ -9,8 +9,10 @@ import net.minecraft.core.BlockPos;
 public class Andares {
     // 1 quadradinho do Shattered = 4x4 blocos
     public static final int TAMANHO_DO_QUADRADINHO = 4;
-    // Altura do espaço livre entre o chão e o teto
+    // Altura do espaço livre entre o chão e o teto das salas
     public static final int ALTURA_DA_PAREDE = 8;
+    // Os corredores são túneis mais baixos que as salas
+    public static final int ALTURA_DO_CORREDOR = 6;
     // Distância (em blocos) entre o chão de um andar e o chão do próximo
     public static final int ESPACO_ENTRE_ANDARES = 12;
     // Altura (Y) do chão do andar 1
