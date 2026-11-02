@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.registro;
 
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
+import com.louzada.pixeldungeon.item.ItemAnkh;
 
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
@@ -31,6 +32,11 @@ public class ModItens {
     // Ração do Shattered: mata bastante a fome
     public static final DeferredItem<Item> RACAO = ITENS.registerSimpleItem("racao",
             new Item.Properties().food(new FoodProperties.Builder().nutrition(10).saturationModifier(1.0f).build()));
+
+    // ---- Itens especiais ----
+
+    // Traz de volta um aliado que morreu
+    public static final DeferredItem<ItemAnkh> ANKH = ITENS.registerItem("ankh", ItemAnkh::new);
 
     // ---- Blocos (pra poder pegar no criativo e testar) ----
 
