@@ -3,8 +3,10 @@ package com.louzada.pixeldungeon.registro;
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.entidade.CaranguejoDeEsgoto;
 import com.louzada.pixeldungeon.entidade.CobraDeEsgoto;
+import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.GnollExplorador;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
+import com.louzada.pixeldungeon.entidade.RatoAlbino;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
 import com.louzada.pixeldungeon.entidade.SlimeDeEsgoto;
 
@@ -24,6 +26,10 @@ public class ModEntidades {
     public static final DeferredHolder<EntityType<?>, EntityType<RatoMarsupial>> RATO_MARSUPIAL = ENTIDADES.register("rato_marsupial",
             () -> EntityType.Builder.of(RatoMarsupial::new, MobCategory.MONSTER).sized(0.6F, 0.6F).build("rato_marsupial"));
 
+    // Rato raro (1 em 50 ratos)
+    public static final DeferredHolder<EntityType<?>, EntityType<RatoAlbino>> RATO_ALBINO = ENTIDADES.register("rato_albino",
+            () -> EntityType.Builder.of(RatoAlbino::new, MobCategory.MONSTER).sized(0.6F, 0.6F).build("rato_albino"));
+
     public static final DeferredHolder<EntityType<?>, EntityType<CobraDeEsgoto>> COBRA_DE_ESGOTO = ENTIDADES.register("cobra_de_esgoto",
             () -> EntityType.Builder.of(CobraDeEsgoto::new, MobCategory.MONSTER).sized(0.6F, 0.4F).build("cobra_de_esgoto"));
 
@@ -36,6 +42,9 @@ public class ModEntidades {
     public static final DeferredHolder<EntityType<?>, EntityType<SlimeDeEsgoto>> SLIME = ENTIDADES.register("slime",
             () -> EntityType.Builder.of(SlimeDeEsgoto::new, MobCategory.MONSTER).sized(1.0F, 1.0F).build("slime"));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<EnxameDeMoscas>> ENXAME_DE_MOSCAS = ENTIDADES.register("enxame_de_moscas",
+            () -> EntityType.Builder.of(EnxameDeMoscas::new, MobCategory.MONSTER).sized(0.6F, 0.6F).build("enxame_de_moscas"));
+
     // Diz ao Minecraft a vida, velocidade etc. de cada inimigo
     public static void aoCriarAtributos(EntityAttributeCreationEvent evento) {
         evento.put(RATO_MARSUPIAL.get(), MobDoShattered.atributosDoMinecraft(RatoMarsupial.ATRIBUTOS).build());
@@ -43,5 +52,7 @@ public class ModEntidades {
         evento.put(GNOLL_EXPLORADOR.get(), MobDoShattered.atributosDoMinecraft(GnollExplorador.ATRIBUTOS).build());
         evento.put(CARANGUEJO_DE_ESGOTO.get(), MobDoShattered.atributosDoMinecraft(CaranguejoDeEsgoto.ATRIBUTOS).build());
         evento.put(SLIME.get(), MobDoShattered.atributosDoMinecraft(SlimeDeEsgoto.ATRIBUTOS).build());
+        evento.put(RATO_ALBINO.get(), MobDoShattered.atributosDoMinecraft(RatoAlbino.ATRIBUTOS).build());
+        evento.put(ENXAME_DE_MOSCAS.get(), EnxameDeMoscas.atributosDoEnxame().build());
     }
 }

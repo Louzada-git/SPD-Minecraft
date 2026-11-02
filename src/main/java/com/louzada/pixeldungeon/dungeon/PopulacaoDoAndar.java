@@ -53,19 +53,28 @@ public class PopulacaoDoAndar {
         return andar == 1 ? 8 : limite(semente, andar);
     }
 
-    // Quem aparece em cada andar (igual ao Shattered; o enxame de moscas vem depois)
+    // Quem aparece em cada andar (igual ao Shattered)
     private static List<EntityType<? extends MobDoShattered>> rotacao(int andar) {
         EntityType<? extends MobDoShattered> rato = ModEntidades.RATO_MARSUPIAL.get();
         EntityType<? extends MobDoShattered> cobra = ModEntidades.COBRA_DE_ESGOTO.get();
         EntityType<? extends MobDoShattered> gnoll = ModEntidades.GNOLL_EXPLORADOR.get();
         EntityType<? extends MobDoShattered> caranguejo = ModEntidades.CARANGUEJO_DE_ESGOTO.get();
         EntityType<? extends MobDoShattered> slime = ModEntidades.SLIME.get();
+        EntityType<? extends MobDoShattered> enxame = ModEntidades.ENXAME_DE_MOSCAS.get();
         return switch (andar) {
             case 1 -> List.of(rato, rato, rato, cobra);
             case 2 -> List.of(rato, rato, cobra, gnoll, gnoll);
-            case 3 -> List.of(rato, cobra, gnoll, gnoll, gnoll, caranguejo);
-            default -> List.of(gnoll, caranguejo, caranguejo, slime, slime);
+            case 3 -> List.of(rato, cobra, gnoll, gnoll, gnoll, enxame, caranguejo);
+            default -> List.of(gnoll, enxame, caranguejo, caranguejo, slime, slime);
         };
+    }
+
+    // Igual ao Shattered: 1 em cada 50 ratos é um rato albino
+    private static EntityType<? extends MobDoShattered> talvezRaro(EntityType<? extends MobDoShattered> tipo, Random sorteio) {
+        if (tipo == ModEntidades.RATO_MARSUPIAL.get() && sorteio.nextInt(50) == 0) {
+            return ModEntidades.RATO_ALBINO.get();
+        }
+        return tipo;
     }
 
     // ---- Começo do andar ----
@@ -87,7 +96,7 @@ public class PopulacaoDoAndar {
                 Collections.shuffle(fila, sorteio);
             }
             int[] lugar = lugares.remove(sorteio.nextInt(lugares.size()));
-            MobDoShattered inimigo = criar(mundo, fila.remove(0), origem, lugar);
+            MobDoShattered inimigo = criar(mundo, talvezRaro(fila.remove(0), sorteio), origem, lugar);
             if (inimigo != null) {
                 inimigo.dormir();
                 criados++;
@@ -156,7 +165,7 @@ public class PopulacaoDoAndar {
         Random sorteio = new Random();
         List<EntityType<? extends MobDoShattered>> tipos = rotacao(andar);
         // Quem renasce já nasce acordado, andando pelo andar
-        criar(mundo, tipos.get(sorteio.nextInt(tipos.size())), origem, lugares.get(sorteio.nextInt(lugares.size())));
+        criar(mundo, talvezRaro(tipos.get(sorteio.nextInt(tipos.size())), sorteio), origem, lugares.get(sorteio.nextInt(lugares.size())));
     }
 
     // ---- Ajudantes ----
