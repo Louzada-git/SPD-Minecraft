@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import com.louzada.pixeldungeon.registro.ModAbas;
 import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.louzada.pixeldungeon.registro.ModItens;
+import com.louzada.pixeldungeon.run.ComandosDaDungeon;
 import com.louzada.pixeldungeon.run.EventosDaRun;
 import com.mojang.logging.LogUtils;
 
@@ -30,5 +31,6 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(EventosDaRun::aoIniciarServidor);
         NeoForge.EVENT_BUS.addListener(EventosDaRun::aoEntrar);
         NeoForge.EVENT_BUS.addListener(EventosDaRun::aoRenascer);
+        NeoForge.EVENT_BUS.addListener(ComandosDaDungeon::aoRegistrarComandos);
     }
 }
