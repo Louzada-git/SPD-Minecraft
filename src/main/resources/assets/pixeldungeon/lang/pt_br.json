@@ -23,5 +23,26 @@
   "mensagem.pixeldungeon.sem_amuleto": "Você não pode sair da dungeon sem o Amuleto de Yendor.",
   "mensagem.pixeldungeon.bloqueado": "O caminho mais fundo ainda está bloqueado.",
 
-  "comando.pixeldungeon.novarun": "Uma nova run começou!"
+  "comando.pixeldungeon.novarun": "Uma nova run começou!",
+
+  "item.pixeldungeon.espada_curta_desgastada": "Espada Curta Desgastada",
+  "item.pixeldungeon.espada_curta_desgastada.descricao": "Uma espada levemente curta, um pouco deteriorada por muito uso. É fraca e mais leve que uma espada curta em melhores condições.",
+  "item.pixeldungeon.cajado_do_mago": "Cajado do Mago",
+  "item.pixeldungeon.cajado_do_mago.descricao": "Feito pelo próprio Mago, este cajado é uma arma mágica única que pode ser imbuída com uma varinha.",
+  "item.pixeldungeon.adaga": "Adaga",
+  "item.pixeldungeon.adaga.descricao": "Uma simples adaga de ferro com punho de madeira desgastado.",
+  "item.pixeldungeon.luvas_cravejadas": "Luvas Cravejadas",
+  "item.pixeldungeon.luvas_cravejadas.descricao": "Estas luvas cravejadas não fornecem qualquer proteção real, mas agem como uma arma útil, mantendo as mãos livres.",
+  "item.pixeldungeon.florete": "Florete",
+  "item.pixeldungeon.florete.descricao": "Uma espada reta e fina que oferece certa proteção em detrimento de poder de corte.",
+  "item.pixeldungeon.maca": "Maça",
+  "item.pixeldungeon.maca.descricao": "Uma pequena maça de bronze, feita mais como uma ferramenta de autodefesa para nobres do que como uma arma de aventura.",
+  "item.pixeldungeon.racao": "Ração",
+  "item.pixeldungeon.ankh": "Ankh",
+  "item.pixeldungeon.ankh.descricao": "Este antigo símbolo de imortalidade concede a habilidade de retornar à vida após a morte. Use para trazer de volta um aliado que morreu.",
+  "dica.pixeldungeon.tier": "Tier %s",
+  "dica.pixeldungeon.dano": "Dano: %s-%s",
+  "dica.pixeldungeon.forca": "Força necessária: %s",
+  "dica.pixeldungeon.precisao": "Precisão: +%s%%",
+  "dica.pixeldungeon.rapida": "Ataca %sx mais rápido"
 }

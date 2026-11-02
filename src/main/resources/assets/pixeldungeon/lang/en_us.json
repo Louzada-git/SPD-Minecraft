@@ -23,5 +23,26 @@
   "mensagem.pixeldungeon.sem_amuleto": "You can't leave the dungeon without the Amulet of Yendor.",
   "mensagem.pixeldungeon.bloqueado": "The way deeper is still blocked.",
 
-  "comando.pixeldungeon.novarun": "A new run has started!"
+  "comando.pixeldungeon.novarun": "A new run has started!",
+
+  "item.pixeldungeon.espada_curta_desgastada": "Worn Shortsword",
+  "item.pixeldungeon.espada_curta_desgastada.descricao": "A quite short sword, worn down through heavy use. It is both weaker and a bit lighter than a shortsword in better condition.",
+  "item.pixeldungeon.cajado_do_mago": "Mage's Staff",
+  "item.pixeldungeon.cajado_do_mago.descricao": "Crafted by the Mage himself, this staff is a unique magical weapon which can be imbued with a wand.",
+  "item.pixeldungeon.adaga": "Dagger",
+  "item.pixeldungeon.adaga.descricao": "A simple iron dagger with a worn wooden handle.",
+  "item.pixeldungeon.luvas_cravejadas": "Studded Gloves",
+  "item.pixeldungeon.luvas_cravejadas.descricao": "These studded gloves don't provide any real protection, but they act as a serviceable weapon while keeping the hands free.",
+  "item.pixeldungeon.florete": "Rapier",
+  "item.pixeldungeon.florete.descricao": "A slim straight sword that offers some protection in exchange for less slashing power.",
+  "item.pixeldungeon.maca": "Cudgel",
+  "item.pixeldungeon.maca.descricao": "A small brass mace, made more as a self-defense tool for nobles than as an adventuring weapon.",
+  "item.pixeldungeon.racao": "Ration of Food",
+  "item.pixeldungeon.ankh": "Ankh",
+  "item.pixeldungeon.ankh.descricao": "This ancient symbol of immortality grants the ability to return to life after death. Use it to bring back an ally who has died.",
+  "dica.pixeldungeon.tier": "Tier %s",
+  "dica.pixeldungeon.dano": "Damage: %s-%s",
+  "dica.pixeldungeon.forca": "Strength required: %s",
+  "dica.pixeldungeon.precisao": "Accuracy: +%s%%",
+  "dica.pixeldungeon.rapida": "Attacks %sx faster"
 }
