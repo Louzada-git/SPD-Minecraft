@@ -51,7 +51,10 @@ jobs:
           if ! grep -q "Done (" servidor.log; then echo "O servidor não terminou de ligar"; exit 1; fi
           echo "----- andares construídos -----"
           grep "construído em" servidor.log || true
+          echo "----- inimigos -----"
+          grep -E "Andar [0-9]+: [0-9]+ inimigos" servidor.log || true
           if ! grep -q "Começando a run 1" servidor.log; then echo "A run não começou"; exit 1; fi
           if grep -qE "at .*com\.louzada\.pixeldungeon" servidor.log; then echo "Deu erro no código do mod:"; grep -B5 -A5 -E "at .*com\.louzada\.pixeldungeon" servidor.log | head -60; exit 1; fi
           if ! grep -q "Andar 5 construído" servidor.log; then echo "Nem todos os andares foram construídos"; exit 1; fi
+          if ! grep -q "Andar 1: 8 inimigos" servidor.log; then echo "Os inimigos do andar 1 não nasceram"; exit 1; fi
           echo "Servidor ligou e os 5 andares foram construídos"
