@@ -50,13 +50,20 @@ Inimigos do esgoto com os números do Shattered:
 | Gnoll Explorador | 2-4 | 12 | 10 | 4 | 1-6 | 0-2 | 2 |
 | Caranguejo de Esgoto | 3-4 | 15 | 12 | 5 | 1-7 | 0-4 | 4 |
 | Slime | 4 | 20 | 12 | 5 | 2-5 | 0 | 4 |
+| Enxame de Moscas | 3-4 | 50 | 10 | 5 | 1-4 | 0 | 3 |
+| Rato Albino (raro) | 1-3 | 12 | 8 | 2 | 1-4 | 0-1 | 2 |
 
 - Quando o andar é criado, os inimigos nascem **dormindo** (8 no andar 1). Eles acordam quando notam um herói: quanto mais perto, mais rápido.
 - **Ataque surpresa:** bater num inimigo dormindo ou que não está de olho em você sempre acerta. A adaga bate quase no dano máximo.
 - A cobra esquiva demais: o jeito é pegar ela de surpresa. O caranguejo é rápido. O slime amortece golpes fortes.
+- O **enxame de moscas** voa e se divide em dois a cada golpe que leva (os pedaços não dão XP).
+- O **rato albino** aparece no lugar de 1 em cada 50 ratos. Metade das mordidas fazem sangrar.
+- Caranguejos (1 em 6) e ratos albinos (sempre) deixam **carne misteriosa**: mata metade da fome de uma ração, mas pode queimar, travar as pernas, envenenar ou deixar lento.
+- Quem dorme solta um "z" de vez em quando; quem nota você mostra um "!". Depois de apanhar, o inimigo ganha uma **barra de vida** em cima da cabeça.
+- Cada inimigo tem os seus sons (por enquanto, sons de bichos do Minecraft).
 - **Armadura:** cada golpe recebido perde de 0 até a defesa da armadura (pano = 0-2). O florete dá 1 de defesa extra.
 - O dano é sorteado mais pro meio do intervalo, igual ao Shattered.
-- Números de dano sobem em cima de quem apanhou (laranja nos inimigos, vermelho nos heróis), "desviou" quando erra, "!" no ataque surpresa e "+XP" ao matar. A barra de ação mostra a vida que sobrou no alvo.
+- Números de dano sobem em cima de quem apanhou (laranja nos inimigos, vermelho nos heróis), "desviou" quando erra, "✦" no ataque surpresa e "+XP" ao matar. A barra de ação mostra a vida que sobrou no alvo.
 - A cada 50 segundos, se o andar tiver menos inimigos que o limite, nasce mais um longe dos heróis (no andar 1 não nasce mais).
 - Mais jogadores = inimigos com mais vida (+50% por jogador a mais).
 - Herói acima do nível máximo de um inimigo não ganha XP com ele, igual ao Shattered.
@@ -125,7 +132,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 ## O que vem depois
 
 1. **Itens:** poções e pergaminhos desconhecidos (já começados), os itens únicos das classes (selo do Guerreiro, varinha do Mago, capa do Ladino, arco da Caçadora, habilidade do florete, tomo do Clérigo), armadura de pano, armas e armaduras com força mínima, poções e pergaminhos desconhecidos (cor e runa aleatórias por run), pergaminho de melhoria, comida, e opção no menu pra compartilhar o que foi identificado.
-2. **Goo:** o chefe do andar 5, e o enxame de moscas que falta no esgoto.
+2. **Goo:** o chefe do andar 5.
 3. **Texturas próprias** dos inimigos e dos blocos.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
