@@ -1,6 +1,7 @@
 package com.louzada.pixeldungeon.heroi;
 
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
+import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
@@ -26,7 +27,8 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 //   2. Senão, sorteia o acerto: precisão do atacante contra esquiva do defensor ("desviou")
 //   3. Dano sorteado pela arma (herói) ou pelo inimigo
 //   4. A armadura do defensor tira um pouco do dano
-//   5. O dano aparece flutuando em cima de quem apanhou
+//   5. Efeitos especiais (o enxame se divide, o rato albino faz sangrar)
+//   6. O dano aparece flutuando em cima de quem apanhou, e o inimigo ganha uma barra de vida
 // Ataques de longe (flechas etc.) ficam pra depois.
 public class EventosDeCombate {
     // Mobs que não são do Shattered (do Minecraft ou de outros mods) usam estes valores
@@ -74,10 +76,18 @@ public class EventosDeCombate {
         if (alvo instanceof MobDoShattered inimigo) {
             dano = inimigo.reduzirDanoRecebido(dano);
         }
+
+        // 5. Efeitos especiais: o enxame se divide antes de levar o golpe; o rato albino faz sangrar
+        if (alvo instanceof EnxameDeMoscas enxame && dano > 0) {
+            enxame.dividir(dano);
+        }
+        if (atacante instanceof MobDoShattered inimigo) {
+            inimigo.aoAcertar(alvo, dano);
+        }
         evento.setAmount(dano);
 
         if (surpresa) {
-            NumerosFlutuantes.mostrar(alvo, "!", NumerosFlutuantes.AMARELO);
+            NumerosFlutuantes.mostrar(alvo, "✦", NumerosFlutuantes.AMARELO);
         }
         acordar(alvo, atacante);
     }
@@ -91,21 +101,31 @@ public class EventosDeCombate {
         String cor = alvo instanceof Player ? NumerosFlutuantes.VERMELHO : NumerosFlutuantes.LARANJA;
         NumerosFlutuantes.mostrar(alvo, String.valueOf(Math.max(1, Math.round(evento.getNewDamage()))), cor);
 
+        // Barra de vida em cima do inimigo
+        if (alvo instanceof MobDoShattered inimigo) {
+            inimigo.atualizarBarraDeVida();
+        }
+
         // Quem bateu vê quanto de vida o alvo ainda tem
         if (evento.getSource().getEntity() instanceof ServerPlayer jogador && alvo != jogador) {
-            jogador.displayClientMessage(Component.translatable("combate.pixeldungeon.vida_do_alvo", alvo.getDisplayName(),
+            jogador.displayClientMessage(Component.translatable("combate.pixeldungeon.vida_do_alvo", alvo.getType().getDescription(),
                     Math.max(0, Math.round(alvo.getHealth())), Math.round(alvo.getMaxHealth())), true);
         }
     }
 
-    // Quem mata um inimigo do Shattered ganha o XP dele (se não passou do nível máximo dele)
+    // Quem mata um inimigo do Shattered ganha o XP dele (se não passou do nível máximo dele).
+    // Alguns inimigos deixam itens (carne misteriosa...).
     public static void aoMorrerAlguem(LivingDeathEvent evento) {
-        if (!(evento.getEntity() instanceof MobDoShattered inimigo)) {
+        if (!(evento.getEntity() instanceof MobDoShattered inimigo) || inimigo.level().isClientSide()) {
             return;
+        }
+        ItemStack saque = inimigo.sortearSaque();
+        if (!saque.isEmpty()) {
+            inimigo.spawnAtLocation(saque);
         }
         if (evento.getSource().getEntity() instanceof ServerPlayer jogador) {
             DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
-            int xp = inimigo.atributos().xp();
+            int xp = inimigo.xpAoMorrer();
             if (xp > 0 && dados.nivel() <= inimigo.atributos().nivelMaximo()) {
                 NumerosFlutuantes.mostrar(jogador, "+" + xp + " XP", NumerosFlutuantes.ROXO);
                 RegrasDoHeroi.ganharXp(jogador, xp);
