@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.run;
 
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.dungeon.Andares;
+import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 
@@ -53,6 +54,20 @@ public class EventosDaRun {
             alvo.hurt(mundo.damageSources().mobAttack(atacante), 1.0F);
         }
         PixelDungeon.LOGGER.info("Teste de combate: o rato ficou com {}/{} de vida", alvo.getHealth(), alvo.getMaxHealth());
+
+        // O enxame tem que se dividir quando apanha
+        EnxameDeMoscas enxame = ModEntidades.ENXAME_DE_MOSCAS.get().create(mundo);
+        if (enxame == null) {
+            return;
+        }
+        enxame.moveTo(lugar.getX() + 0.5, lugar.getY() + 1, lugar.getZ() + 1.5);
+        mundo.addFreshEntity(enxame);
+        for (int golpe = 0; golpe < 20 && enxame.getHealth() >= enxame.getMaxHealth(); golpe++) {
+            enxame.invulnerableTime = 0;
+            enxame.hurt(mundo.damageSources().mobAttack(atacante), 1.0F);
+        }
+        int enxames = mundo.getEntitiesOfClass(EnxameDeMoscas.class, enxame.getBoundingBox().inflate(4)).size();
+        PixelDungeon.LOGGER.info("Teste do enxame: {} enxames depois do golpe", enxames);
     }
 
     // Alguém entrou no mundo: continua na run ou vai pro menu de escolha de herói
