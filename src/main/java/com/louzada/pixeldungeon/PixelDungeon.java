@@ -2,7 +2,9 @@ package com.louzada.pixeldungeon;
 
 import org.slf4j.Logger;
 
+import com.louzada.pixeldungeon.registro.ModAbas;
 import com.louzada.pixeldungeon.registro.ModBlocos;
+import com.louzada.pixeldungeon.registro.ModItens;
 import com.mojang.logging.LogUtils;
 
 import net.neoforged.bus.api.IEventBus;
@@ -19,5 +21,7 @@ public class PixelDungeon {
     public PixelDungeon(IEventBus barramentoDoMod, ModContainer container) {
         // Registros: blocos, itens, abas do criativo...
         ModBlocos.BLOCOS.register(barramentoDoMod);
+        ModItens.ITENS.register(barramentoDoMod);
+        ModAbas.ABAS.register(barramentoDoMod);
     }
 }
