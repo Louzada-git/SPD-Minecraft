@@ -44,7 +44,7 @@ public class GerenciadorDaRun {
 
         PlantaDoAndar planta = GeradorDeAndar.gerar(dados.semente(), andar);
         BlockPos origem = Andares.origemDoAndar(dados.numeroDaRun(), andar);
-        ConstrutorDeAndar.construir(servidor.overworld(), planta, origem);
+        ConstrutorDeAndar.construir(servidor.overworld(), planta, origem, dados.semente() * 31 + andar);
 
         BlockPos entrada = ConstrutorDeAndar.pontoDeChegada(origem, planta.entradaX(), planta.entradaY());
         BlockPos saida = null;
