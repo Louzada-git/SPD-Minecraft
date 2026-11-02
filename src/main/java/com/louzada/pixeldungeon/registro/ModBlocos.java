@@ -1,6 +1,8 @@
 package com.louzada.pixeldungeon.registro;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.bloco.BlocoEscadaDescida;
+import com.louzada.pixeldungeon.bloco.BlocoEscadaSubida;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -16,6 +18,10 @@ public class ModBlocos {
     // Paredes, teto e chão da dungeon: ninguém consegue quebrar (igual bedrock).
     public static final DeferredBlock<Block> PAREDE_ESGOTO = BLOCOS.registerSimpleBlock("parede_esgoto", inquebravel());
     public static final DeferredBlock<Block> CHAO_ESGOTO = BLOCOS.registerSimpleBlock("chao_esgoto", inquebravel());
+
+    // Escadas entre os andares
+    public static final DeferredBlock<BlocoEscadaSubida> ESCADA_SUBIDA = BLOCOS.registerBlock("escada_subida", BlocoEscadaSubida::new, inquebravel().noOcclusion());
+    public static final DeferredBlock<BlocoEscadaDescida> ESCADA_DESCIDA = BLOCOS.registerBlock("escada_descida", BlocoEscadaDescida::new, inquebravel());
 
     // Propriedades de um bloco que não quebra, não explode, não dropa nada e onde mob não nasce.
     public static BlockBehaviour.Properties inquebravel() {
