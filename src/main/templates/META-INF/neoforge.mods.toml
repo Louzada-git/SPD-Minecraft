@@ -1,5 +1,5 @@
 # Arquivo que diz ao NeoForge quem é o mod.
-# Os valores ${...} são preenchidos automaticamente a partir do gradle.properties.
+# Os valores entre chaves com cifrão são preenchidos automaticamente a partir do gradle.properties.
 
 modLoader="javafml"
 loaderVersion="${loader_version_range}"
