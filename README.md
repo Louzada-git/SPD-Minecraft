@@ -4,13 +4,19 @@ O Shattered Pixel Dungeon dentro do Minecraft: não existem mais Overworld, Neth
 
 Mod para **Minecraft 1.21.1** com **NeoForge**.
 
-## O que já tem (versão 0.1.0)
+## O que já tem
 
 - O tipo de mundo padrão virou a dungeon: sem Nether, sem End e sem terreno normal.
 - Andares do esgoto (1 a 4) gerados com salas, corredores e poças de água, no estilo do Shattered.
   - 1 quadradinho do Shattered = 4x4 blocos. As paredes têm 8 blocos de altura.
   - Paredes, chão e teto são inquebráveis.
-- Andar 5: a arena do chefe (o Goo vem depois).
+- Andar 5: a arena do chefe, com 4 pilares grossos (o Goo vem depois).
+- Visual construído:
+  - Salas com 8 blocos de altura, cornija de degraus no alto das paredes e pilares de tufo entalhado nos cantos.
+  - Corredores em túnel mais baixos (6 blocos), com arcos dos dois lados.
+  - Paredes de tijolo de pedra que variam sozinhas (com musgo, rachadas) e rodapé de tijolo de tufo.
+  - Chão de tufo polido, musgo espalhado (mais perto das poças) e lanternas penduradas por correntes no meio das salas.
+  - Moldura de tufo entalhado em volta das escadas.
 - Escada de subida na entrada de cada andar e alçapão de descida na saída.
 - A run fica salva no mundo, e quem entra no meio começa no andar 1.
 - Sem dia/noite, sem chuva e sem mobs do Minecraft nascendo.
