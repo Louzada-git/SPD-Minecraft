@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon.registro;
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
+import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
 import com.louzada.pixeldungeon.item.ItemAnkh;
 
 import net.minecraft.world.food.FoodProperties;
@@ -42,6 +43,9 @@ public class ModItens {
     // Ração do Shattered: mata bastante a fome
     public static final DeferredItem<Item> RACAO = ITENS.registerSimpleItem("racao",
             new Item.Properties().food(new FoodProperties.Builder().nutrition(10).saturationModifier(1.0f).build()));
+
+    // Carne misteriosa: cai de caranguejos e ratos albinos (comer é arriscado)
+    public static final DeferredItem<ItemCarneMisteriosa> CARNE_MISTERIOSA = ITENS.registerItem("carne_misteriosa", ItemCarneMisteriosa::new);
 
     // ---- Itens especiais ----
 
