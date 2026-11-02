@@ -1,5 +1,7 @@
 package com.louzada.pixeldungeon.run;
 
+import com.louzada.pixeldungeon.dungeon.Andares;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameRules;
@@ -19,6 +21,13 @@ public class EventosDaRun {
         // (Depois isso vai sair daqui: a run vai começar quando alguém escolher a classe no menu.)
         if (DadosDaRun.pegar(servidor).numeroDaRun() == 0) {
             GerenciadorDaRun.novaRun(servidor);
+        }
+
+        // Só no teste do GitHub: constrói todos os andares de uma vez pra ver se algum dá erro
+        if (Boolean.getBoolean("pixeldungeon.testarAndares")) {
+            for (int andar = 1; andar <= Andares.ULTIMO_ANDAR_LIBERADO; andar++) {
+                GerenciadorDaRun.garantirAndar(servidor, andar);
+            }
         }
     }
 

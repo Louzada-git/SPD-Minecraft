@@ -62,6 +62,8 @@ neoForge {
             server()
             programArgument '--nogui'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            // No GitHub (variável CI), o servidor de teste constrói todos os andares ao ligar
+            systemProperty 'pixeldungeon.testarAndares', System.getenv('CI') != null ? 'true' : 'false'
         }
 
         // This run config launches GameTestServer and runs all registered gametests, then exits.
