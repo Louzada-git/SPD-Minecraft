@@ -12,19 +12,15 @@
   "block.pixeldungeon.musgo_esgoto": "Musgo do Esgoto",
   "block.pixeldungeon.escada_subida": "Escada de Subida",
   "block.pixeldungeon.escada_descida": "Escada de Descida",
-
   "regiao.pixeldungeon.esgoto": "Esgoto",
   "regiao.pixeldungeon.prisao": "Prisão",
   "regiao.pixeldungeon.cavernas": "Cavernas",
   "regiao.pixeldungeon.cidade_dos_anoes": "Cidade dos Anões",
   "regiao.pixeldungeon.saloes_demoniacos": "Salões Demoníacos",
-
   "mensagem.pixeldungeon.andar": "Andar %1$s - %2$s",
   "mensagem.pixeldungeon.sem_amuleto": "Você não pode sair da dungeon sem o Amuleto de Yendor.",
   "mensagem.pixeldungeon.bloqueado": "O caminho mais fundo ainda está bloqueado.",
-
-  "comando.pixeldungeon.novarun": "Uma nova run começou!",
-
+  "comando.pixeldungeon.novarun": "A run acabou. Escolham seus heróis!",
   "item.pixeldungeon.espada_curta_desgastada": "Espada Curta Desgastada",
   "item.pixeldungeon.espada_curta_desgastada.descricao": "Uma espada levemente curta, um pouco deteriorada por muito uso. É fraca e mais leve que uma espada curta em melhores condições.",
   "item.pixeldungeon.cajado_do_mago": "Cajado do Mago",
@@ -45,8 +41,32 @@
   "dica.pixeldungeon.forca": "Força necessária: %s",
   "dica.pixeldungeon.precisao": "Precisão: +%s%%",
   "dica.pixeldungeon.rapida": "Ataca %sx mais rápido",
-
   "mensagem.pixeldungeon.errou": "Errou!",
   "mensagem.pixeldungeon.esquivou": "Esquivou!",
-  "mensagem.pixeldungeon.subiu_de_nivel": "Você subiu para o nível %s!"
+  "mensagem.pixeldungeon.subiu_de_nivel": "Você subiu para o nível %s!",
+
+  "tela.pixeldungeon.escolha_heroi": "Escolha Seu Herói",
+  "tela.pixeldungeon.comecar": "Começar",
+  "tela.pixeldungeon.kit": "Começa com: %s e uma ração.",
+  "tela.pixeldungeon.run_em_andamento": "Já tem gente na dungeon: você entra no andar 1 da run atual.",
+  "classe.pixeldungeon.guerreiro": "Guerreiro",
+  "classe.pixeldungeon.guerreiro.descricao": "O Guerreiro suporta dano extra com a proteção concedida pelo seu _selo quebrado._ O selo pode ser movido entre armaduras e _transfere um único aprimoramento._",
+  "classe.pixeldungeon.mago": "Mago",
+  "classe.pixeldungeon.mago.descricao": "O Mago é um especialista arcano e carrega um _cajado mágico_ que é mais forte que uma varinha. O cajado pode ser _imbuído com qualquer varinha_ que o Mago encontrar.",
+  "classe.pixeldungeon.ladino": "Ladino",
+  "classe.pixeldungeon.ladino.descricao": "O Ladino pode evadir dos inimigos e atacar da invisibilidade usando sua _capa das sombras._ Ele também _detecta segredos e armadilhas_ de uma distância maior.",
+  "classe.pixeldungeon.cacadora": "Caçadora",
+  "classe.pixeldungeon.cacadora.descricao": "A Caçadora é uma mestra em armas de arremesso e possui um _arco mágico_ com flechas infinitas. Ela também se locomove pela grama alta _sem a pisotear._",
+  "classe.pixeldungeon.duelista": "Duelista",
+  "classe.pixeldungeon.duelista.descricao": "A Duelista é uma mestra em armas que pode usar sua arma para ativar uma _habilidade de arma especial._ Essa habilidade especial é _diferente para cada arma._",
+  "classe.pixeldungeon.clerigo": "Clérigo",
+  "classe.pixeldungeon.clerigo.descricao": "O Clérigo é um feiticeiro divino que usa seu _tomo sagrado_ único para canalizar magia divina. Ele pode _aprender e aprimorar feitiços_ por meio de talentos.",
+  "mensagem.pixeldungeon.entrou": "%s entrou na dungeon como %s.",
+  "mensagem.pixeldungeon.morreu": "%s morreu.",
+  "mensagem.pixeldungeon.espere_ankh": "Você morreu. Agora é espectador até alguém usar um ankh em você.",
+  "mensagem.pixeldungeon.fim_da_run": "Todos os heróis morreram. A run acabou.",
+  "mensagem.pixeldungeon.reviveu": "%s voltou à vida pelo ankh de %s!",
+  "mensagem.pixeldungeon.ninguem_pra_reviver": "Não tem nenhum aliado morto pra trazer de volta.",
+  "mensagem.pixeldungeon.reabrir_menu": "Digite /heroi para abrir o menu de escolha de herói de novo.",
+  "comando.pixeldungeon.ja_na_run": "Você já está na run."
 }

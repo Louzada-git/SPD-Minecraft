@@ -12,19 +12,15 @@
   "block.pixeldungeon.musgo_esgoto": "Sewer Moss",
   "block.pixeldungeon.escada_subida": "Stairs Up",
   "block.pixeldungeon.escada_descida": "Stairs Down",
-
   "regiao.pixeldungeon.esgoto": "Sewers",
   "regiao.pixeldungeon.prisao": "Prison",
   "regiao.pixeldungeon.cavernas": "Caves",
   "regiao.pixeldungeon.cidade_dos_anoes": "Dwarven City",
   "regiao.pixeldungeon.saloes_demoniacos": "Demon Halls",
-
   "mensagem.pixeldungeon.andar": "Depth %1$s - %2$s",
   "mensagem.pixeldungeon.sem_amuleto": "You can't leave the dungeon without the Amulet of Yendor.",
   "mensagem.pixeldungeon.bloqueado": "The way deeper is still blocked.",
-
-  "comando.pixeldungeon.novarun": "A new run has started!",
-
+  "comando.pixeldungeon.novarun": "The run is over. Choose your heroes!",
   "item.pixeldungeon.espada_curta_desgastada": "Worn Shortsword",
   "item.pixeldungeon.espada_curta_desgastada.descricao": "A quite short sword, worn down through heavy use. It is both weaker and a bit lighter than a shortsword in better condition.",
   "item.pixeldungeon.cajado_do_mago": "Mage's Staff",
@@ -45,8 +41,32 @@
   "dica.pixeldungeon.forca": "Strength required: %s",
   "dica.pixeldungeon.precisao": "Accuracy: +%s%%",
   "dica.pixeldungeon.rapida": "Attacks %sx faster",
-
   "mensagem.pixeldungeon.errou": "Missed!",
   "mensagem.pixeldungeon.esquivou": "Dodged!",
-  "mensagem.pixeldungeon.subiu_de_nivel": "You reached level %s!"
+  "mensagem.pixeldungeon.subiu_de_nivel": "You reached level %s!",
+
+  "tela.pixeldungeon.escolha_heroi": "Choose Your Hero",
+  "tela.pixeldungeon.comecar": "Start",
+  "tela.pixeldungeon.kit": "Starts with: %s and a ration.",
+  "tela.pixeldungeon.run_em_andamento": "Someone is already in the dungeon: you will join the current run on depth 1.",
+  "classe.pixeldungeon.guerreiro": "Warrior",
+  "classe.pixeldungeon.guerreiro.descricao": "The Warrior endures extra damage with shielding granted by his _broken seal._ The seal can be moved between armors and _transfers a single upgrade._",
+  "classe.pixeldungeon.mago": "Mage",
+  "classe.pixeldungeon.mago.descricao": "The Mage is an arcane expert and carries a _magical staff_ that's stronger than a wand. The staff can be _imbued with any wand_ the Mage finds.",
+  "classe.pixeldungeon.ladino": "Rogue",
+  "classe.pixeldungeon.ladino.descricao": "The Rogue can evade enemies and strike from invisibility using his _cloak of shadows._ He also _detects secrets and traps_ from a greater distance.",
+  "classe.pixeldungeon.cacadora": "Huntress",
+  "classe.pixeldungeon.cacadora.descricao": "The Huntress is a master of thrown weapons and has a _magical bow_ with infinite arrows. She also travels through tall grass _without trampling it._",
+  "classe.pixeldungeon.duelista": "Duelist",
+  "classe.pixeldungeon.duelista.descricao": "The Duelist is a weapons master who can use her weapon to trigger a _special weapon ability._ This special ability is _different for every weapon._",
+  "classe.pixeldungeon.clerigo": "Cleric",
+  "classe.pixeldungeon.clerigo.descricao": "The Cleric is a divine spellcaster who uses their unique _holy tome_ to channel divine magic. They can _learn and upgrade spells_ via talents.",
+  "mensagem.pixeldungeon.entrou": "%s entered the dungeon as a %s.",
+  "mensagem.pixeldungeon.morreu": "%s died.",
+  "mensagem.pixeldungeon.espere_ankh": "You died. You are now a spectator until someone uses an ankh on you.",
+  "mensagem.pixeldungeon.fim_da_run": "All heroes have died. The run is over.",
+  "mensagem.pixeldungeon.reviveu": "%s was brought back to life by %s's ankh!",
+  "mensagem.pixeldungeon.ninguem_pra_reviver": "There is no dead ally to bring back.",
+  "mensagem.pixeldungeon.reabrir_menu": "Type /heroi to open the hero menu again.",
+  "comando.pixeldungeon.ja_na_run": "You are already in the run."
 }

@@ -5,10 +5,11 @@ import com.louzada.pixeldungeon.dungeon.Andares;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameRules;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 
-// Coisas que acontecem sozinhas: quando o servidor liga, quando alguém entra e quando alguém renasce.
+// Coisas que acontecem sozinhas: servidor ligando, jogador entrando, renascendo e morrendo.
 // Esses métodos são ligados ao jogo lá no PixelDungeon.java.
 public class EventosDaRun {
 
@@ -17,35 +18,36 @@ public class EventosDaRun {
         MinecraftServer servidor = evento.getServer();
         configurarRegras(servidor);
 
-        // Mundo novo: começa a primeira run.
-        // (Depois isso vai sair daqui: a run vai começar quando alguém escolher a classe no menu.)
-        if (DadosDaRun.pegar(servidor).numeroDaRun() == 0) {
-            GerenciadorDaRun.novaRun(servidor);
-        }
-
-        // Só no teste do GitHub: constrói todos os andares de uma vez pra ver se algum dá erro
+        // Só no teste do GitHub: começa uma run e constrói todos os andares de uma vez pra ver se algum dá erro
         if (Boolean.getBoolean("pixeldungeon.testarAndares")) {
+            if (!DadosDaRun.pegar(servidor).ativa()) {
+                GerenciadorDaRun.novaRun(servidor);
+            }
             for (int andar = 1; andar <= Andares.ULTIMO_ANDAR_LIBERADO; andar++) {
                 GerenciadorDaRun.garantirAndar(servidor, andar);
             }
         }
     }
 
-    // Alguém entrou no mundo: se ainda não está na run atual, vai pro andar 1
+    // Alguém entrou no mundo: continua na run ou vai pro menu de escolha de herói
     public static void aoEntrar(PlayerEvent.PlayerLoggedInEvent evento) {
         if (evento.getEntity() instanceof ServerPlayer jogador) {
-            DadosDaRun dados = DadosDaRun.pegar(jogador.serverLevel().getServer());
-            if (!dados.estaNaRunAtual(jogador.getUUID())) {
-                GerenciadorDaRun.colocarNaRun(jogador);
-            }
+            GerenciadorDaRun.aoEntrarNoMundo(jogador);
         }
     }
 
-    // Alguém renasceu: volta pro andar 1.
-    // (Depois isso muda: quem morrer vira espectador até alguém usar um ankh.)
+    // Renascer pelo jeito normal do Minecraft só acontece com quem não estava na run: vai pro menu
     public static void aoRenascer(PlayerEvent.PlayerRespawnEvent evento) {
         if (evento.getEntity() instanceof ServerPlayer jogador) {
-            GerenciadorDaRun.levarPara(jogador, 1, true);
+            GerenciadorDaRun.aoEntrarNoMundo(jogador);
+        }
+    }
+
+    // Jogador da run morreu: cancela a morte do Minecraft e vira espectador
+    public static void aoMorrer(LivingDeathEvent evento) {
+        if (evento.getEntity() instanceof ServerPlayer jogador && GerenciadorDaRun.estaVivoNaRun(jogador)) {
+            evento.setCanceled(true);
+            GerenciadorDaRun.aoMorrer(jogador);
         }
     }
 

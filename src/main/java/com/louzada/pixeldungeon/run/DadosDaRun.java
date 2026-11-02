@@ -2,7 +2,6 @@ package com.louzada.pixeldungeon.run;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -15,7 +14,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 
 // Tudo sobre a run atual que precisa continuar salvo quando o mundo fecha:
-// número da run, semente, andares já construídos e em qual run cada jogador está.
+// número da run, se ela está acontecendo, semente e andares já construídos.
+// (Em qual run cada jogador está fica salvo no próprio jogador, no DadosDoHeroi.)
 public class DadosDaRun extends SavedData {
     private static final String NOME_DO_ARQUIVO = "pixeldungeon_run";
 
@@ -24,9 +24,10 @@ public class DadosDaRun extends SavedData {
     }
 
     private int numeroDaRun = 0;
+    // A run começa quando alguém escolhe a classe e acaba quando todos morrem
+    private boolean ativa = false;
     private long semente = 0;
     private Map<Integer, InfoAndar> andares = new HashMap<>();
-    private Map<UUID, Integer> runDoJogador = new HashMap<>();
 
     // Pega os dados salvos no mundo (ou cria do zero se ainda não existem)
     public static DadosDaRun pegar(MinecraftServer servidor) {
@@ -38,15 +39,24 @@ public class DadosDaRun extends SavedData {
         return numeroDaRun;
     }
 
+    public boolean ativa() {
+        return ativa;
+    }
+
     public long semente() {
         return semente;
     }
 
     public void comecarNovaRun(long novaSemente) {
         numeroDaRun++;
+        ativa = true;
         semente = novaSemente;
         andares.clear();
-        runDoJogador.clear();
+        setDirty();
+    }
+
+    public void terminarRun() {
+        ativa = false;
         setDirty();
     }
 
@@ -60,21 +70,12 @@ public class DadosDaRun extends SavedData {
         setDirty();
     }
 
-    public boolean estaNaRunAtual(UUID jogador) {
-        Integer run = runDoJogador.get(jogador);
-        return run != null && run == numeroDaRun;
-    }
-
-    public void registrarJogador(UUID jogador) {
-        runDoJogador.put(jogador, numeroDaRun);
-        setDirty();
-    }
-
     // ---- Salvar e carregar ----
 
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registros) {
         tag.putInt("numero", numeroDaRun);
+        tag.putBoolean("ativa", ativa);
         tag.putLong("semente", semente);
 
         ListTag listaDeAndares = new ListTag();
@@ -88,21 +89,13 @@ public class DadosDaRun extends SavedData {
             listaDeAndares.add(andarTag);
         }
         tag.put("andares", listaDeAndares);
-
-        ListTag listaDeJogadores = new ListTag();
-        for (Map.Entry<UUID, Integer> item : runDoJogador.entrySet()) {
-            CompoundTag jogadorTag = new CompoundTag();
-            jogadorTag.putUUID("id", item.getKey());
-            jogadorTag.putInt("run", item.getValue());
-            listaDeJogadores.add(jogadorTag);
-        }
-        tag.put("jogadores", listaDeJogadores);
         return tag;
     }
 
     public static DadosDaRun carregar(CompoundTag tag, HolderLookup.Provider registros) {
         DadosDaRun dados = new DadosDaRun();
         dados.numeroDaRun = tag.getInt("numero");
+        dados.ativa = tag.getBoolean("ativa");
         dados.semente = tag.getLong("semente");
 
         ListTag listaDeAndares = tag.getList("andares", Tag.TAG_COMPOUND);
@@ -111,12 +104,6 @@ public class DadosDaRun extends SavedData {
             BlockPos entrada = carregarPosicao(andarTag, "entrada");
             BlockPos saida = andarTag.contains("saida_x") ? carregarPosicao(andarTag, "saida") : null;
             dados.andares.put(andarTag.getInt("andar"), new InfoAndar(entrada, saida));
-        }
-
-        ListTag listaDeJogadores = tag.getList("jogadores", Tag.TAG_COMPOUND);
-        for (int i = 0; i < listaDeJogadores.size(); i++) {
-            CompoundTag jogadorTag = listaDeJogadores.getCompound(i);
-            dados.runDoJogador.put(jogadorTag.getUUID("id"), jogadorTag.getInt("run"));
         }
         return dados;
     }
