@@ -43,11 +43,11 @@
   "dica.pixeldungeon.rapida": "Attacks %sx faster",
   "mensagem.pixeldungeon.errou": "Missed!",
   "mensagem.pixeldungeon.esquivou": "Dodged!",
-  "mensagem.pixeldungeon.subiu_de_nivel": "You reached level %s!",
+  "mensagem.pixeldungeon.subiu_de_nivel": "Welcome to level %s! +Accuracy, +Evasion, +5 HP!",
 
   "tela.pixeldungeon.escolha_heroi": "Choose Your Hero",
   "tela.pixeldungeon.comecar": "Start",
-  "tela.pixeldungeon.kit": "Starts with: %s and a ration.",
+  "tela.pixeldungeon.kit": "Starts with: %s, cloth armor and a ration.",
   "tela.pixeldungeon.run_em_andamento": "Someone is already in the dungeon: you will join the current run on depth 1.",
   "classe.pixeldungeon.guerreiro": "Warrior",
   "classe.pixeldungeon.guerreiro.descricao": "The Warrior endures extra damage with shielding granted by his _broken seal._ The seal can be moved between armors and _transfers a single upgrade._",
@@ -68,5 +68,23 @@
   "mensagem.pixeldungeon.reviveu": "%s was brought back to life by %s's ankh!",
   "mensagem.pixeldungeon.ninguem_pra_reviver": "There is no dead ally to bring back.",
   "mensagem.pixeldungeon.reabrir_menu": "Type /heroi to open the hero menu again.",
-  "comando.pixeldungeon.ja_na_run": "You are already in the run."
+  "comando.pixeldungeon.ja_na_run": "You are already in the run.",
+
+  "entity.pixeldungeon.rato_marsupial": "Marsupial Rat",
+  "entity.pixeldungeon.cobra_de_esgoto": "Sewer Snake",
+  "entity.pixeldungeon.gnoll_explorador": "Gnoll Scout",
+  "entity.pixeldungeon.caranguejo_de_esgoto": "Sewer Crab",
+  "entity.pixeldungeon.slime": "Slime",
+  "item.pixeldungeon.ovo_rato_marsupial": "Marsupial Rat Spawn Egg",
+  "item.pixeldungeon.ovo_cobra_de_esgoto": "Sewer Snake Spawn Egg",
+  "item.pixeldungeon.ovo_gnoll_explorador": "Gnoll Scout Spawn Egg",
+  "item.pixeldungeon.ovo_caranguejo_de_esgoto": "Sewer Crab Spawn Egg",
+  "item.pixeldungeon.ovo_slime": "Slime Spawn Egg",
+  "item.pixeldungeon.armadura_de_pano": "Cloth Armor",
+  "item.pixeldungeon.armadura_de_pano.descricao": "This lightweight armor offers basic protection.",
+  "dica.pixeldungeon.defesa": "Armor: %s-%s",
+  "dica.pixeldungeon.defesa_extra": "Extra armor: 0-%s",
+  "dica.pixeldungeon.surpresa_forte": "Surprise attacks hit close to max damage",
+  "combate.pixeldungeon.desviou": "dodged",
+  "combate.pixeldungeon.vida_do_alvo": "%s: %s/%s health"
 }

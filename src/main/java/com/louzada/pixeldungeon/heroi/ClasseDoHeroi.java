@@ -44,9 +44,9 @@ public enum ClasseDoHeroi {
         return armaInicial.get();
     }
 
-    // O que a classe recebe ao começar a run
+    // O que a classe recebe ao começar a run (a armadura já vai vestida)
     public List<ItemStack> kitInicial() {
-        return List.of(new ItemStack(armaInicial.get()), new ItemStack(ModItens.RACAO.get()));
+        return List.of(new ItemStack(armaInicial.get()), new ItemStack(ModItens.ARMADURA_DE_PANO.get()), new ItemStack(ModItens.RACAO.get()));
     }
 
     @Nullable

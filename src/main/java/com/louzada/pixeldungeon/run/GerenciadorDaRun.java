@@ -10,6 +10,7 @@ import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.dungeon.ConstrutorDeAndar;
 import com.louzada.pixeldungeon.dungeon.GeradorDeAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
+import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
@@ -20,6 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -89,10 +91,14 @@ public class GerenciadorDaRun {
         DadosDoHeroi heroi = RegrasDoHeroi.dados(jogador);
         heroi.comecar(classe, dados.numeroDaRun());
 
-        // Inventário novo com o kit da classe
+        // Inventário novo com o kit da classe (armadura vestida)
         jogador.getInventory().clearContent();
         for (ItemStack item : classe.kitInicial()) {
-            jogador.getInventory().add(item);
+            if (item.getItem() instanceof ArmorItem armadura) {
+                jogador.setItemSlot(armadura.getEquipmentSlot(), item);
+            } else {
+                jogador.getInventory().add(item);
+            }
         }
 
         jogador.setGameMode(GameType.SURVIVAL);
@@ -190,6 +196,7 @@ public class GerenciadorDaRun {
         long inicio = System.currentTimeMillis();
         ConstrutorDeAndar.construir(servidor.overworld(), planta, origem, dados.semente() * 31 + andar);
         PixelDungeon.LOGGER.info("Andar {} construído em {} ms", andar, System.currentTimeMillis() - inicio);
+        PopulacaoDoAndar.povoarNoInicio(servidor.overworld(), planta, origem, andar, dados.semente());
 
         BlockPos entrada = ConstrutorDeAndar.pontoDeChegada(origem, planta.entradaX(), planta.entradaY());
         BlockPos saida = null;

@@ -2,6 +2,8 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.List;
 
+import com.louzada.pixeldungeon.combate.Sorteio;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -26,16 +28,23 @@ public class ArmaDoShattered extends Item {
     private float precisao;
     // Tempo entre ataques, em turnos (1 turno = 1 segundo). 0.5 = ataca 2x mais rápido.
     private float atraso;
+    // Defesa extra que a arma dá (o florete dá 1)
+    private int defesa;
+    // Ataque surpresa forte (a adaga)
+    private boolean surpresaForte;
     // Chave da descrição no arquivo de idioma
     private String chaveDaDescricao;
 
-    public ArmaDoShattered(Properties propriedades, String nome, int tier, int danoMinimo, int danoMaximo, float precisao, float atraso) {
+    public ArmaDoShattered(Properties propriedades, String nome, int tier, int danoMinimo, int danoMaximo, float precisao, float atraso,
+            int defesa, boolean surpresaForte) {
         super(propriedades.stacksTo(1).attributes(atributos(atraso)));
         this.tier = tier;
         this.danoMinimo = danoMinimo;
         this.danoMaximo = danoMaximo;
         this.precisao = precisao;
         this.atraso = atraso;
+        this.defesa = defesa;
+        this.surpresaForte = surpresaForte;
         this.chaveDaDescricao = "item.pixeldungeon." + nome + ".descricao";
     }
 
@@ -58,9 +67,15 @@ public class ArmaDoShattered extends Item {
         return 8 + tier * 2;
     }
 
-    // Dano de um golpe. Cada ponto de força acima do necessário pode somar até +1 de dano.
-    public int sortearDano(RandomSource sorteio, int forcaDoHeroi) {
-        int dano = danoMinimo + sorteio.nextInt(danoMaximo - danoMinimo + 1);
+    // Dano de um golpe (mais provável no meio do intervalo, igual ao Shattered).
+    // Cada ponto de força acima do necessário pode somar até +1 de dano.
+    // No ataque surpresa, a adaga bate entre 75% e 100% do dano máximo.
+    public int sortearDano(RandomSource sorteio, int forcaDoHeroi, boolean surpresa) {
+        int minimo = danoMinimo;
+        if (surpresa && surpresaForte) {
+            minimo = danoMinimo + Math.round((danoMaximo - danoMinimo) * 0.75f);
+        }
+        int dano = Sorteio.normal(sorteio, minimo, danoMaximo);
         int forcaSobrando = forcaDoHeroi - forcaNecessaria();
         if (forcaSobrando > 0) {
             dano += sorteio.nextInt(forcaSobrando + 1);
@@ -77,6 +92,16 @@ public class ArmaDoShattered extends Item {
         return precisao;
     }
 
+    // Defesa que a arma dá a quem segura (sorteada de 0 até a defesa dela)
+    public int sortearDefesa(RandomSource sorteio, int forcaDoHeroi) {
+        int valor = Sorteio.normal(sorteio, 0, defesa);
+        int forcaFaltando = forcaNecessaria() - forcaDoHeroi;
+        if (forcaFaltando > 0) {
+            valor -= 2 * forcaFaltando;
+        }
+        return Math.max(0, valor);
+    }
+
     @Override
     public void appendHoverText(ItemStack pilha, TooltipContext contexto, List<Component> linhas, TooltipFlag opcoes) {
         linhas.add(Component.translatable("dica.pixeldungeon.tier", tier).withStyle(ChatFormatting.GRAY));
@@ -87,6 +112,12 @@ public class ArmaDoShattered extends Item {
         }
         if (atraso < 1.0f) {
             linhas.add(Component.translatable("dica.pixeldungeon.rapida", Math.round(1.0f / atraso)).withStyle(ChatFormatting.GRAY));
+        }
+        if (defesa > 0) {
+            linhas.add(Component.translatable("dica.pixeldungeon.defesa_extra", defesa).withStyle(ChatFormatting.GRAY));
+        }
+        if (surpresaForte) {
+            linhas.add(Component.translatable("dica.pixeldungeon.surpresa_forte").withStyle(ChatFormatting.GRAY));
         }
         Textos.adicionarQuebrado(linhas, chaveDaDescricao, ChatFormatting.DARK_GRAY);
     }

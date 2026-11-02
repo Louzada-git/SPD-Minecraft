@@ -2,12 +2,16 @@ package com.louzada.pixeldungeon;
 
 import org.slf4j.Logger;
 
+import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
+import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.heroi.EventosDeCombate;
 import com.louzada.pixeldungeon.rede.ModRede;
 import com.louzada.pixeldungeon.registro.ModAbas;
 import com.louzada.pixeldungeon.registro.ModAnexos;
 import com.louzada.pixeldungeon.registro.ModBlocos;
+import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
+import com.louzada.pixeldungeon.registro.ModMateriais;
 import com.louzada.pixeldungeon.run.ComandosDaDungeon;
 import com.louzada.pixeldungeon.run.EventosDaRun;
 import com.mojang.logging.LogUtils;
@@ -30,6 +34,9 @@ public class PixelDungeon {
         ModItens.ITENS.register(barramentoDoMod);
         ModAbas.ABAS.register(barramentoDoMod);
         ModAnexos.ANEXOS.register(barramentoDoMod);
+        ModEntidades.ENTIDADES.register(barramentoDoMod);
+        ModMateriais.MATERIAIS.register(barramentoDoMod);
+        barramentoDoMod.addListener(ModEntidades::aoCriarAtributos);
 
         // Pacotes de rede (menu de escolha de herói)
         barramentoDoMod.addListener(ModRede::aoRegistrar);
@@ -42,5 +49,9 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(ComandosDaDungeon::aoRegistrarComandos);
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoReceberDano);
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoMorrerAlguem);
+        NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoTomarDano);
+        NeoForge.EVENT_BUS.addListener(NumerosFlutuantes::aoTickDoServidor);
+        NeoForge.EVENT_BUS.addListener(NumerosFlutuantes::aoEntrarNoMundo);
+        NeoForge.EVENT_BUS.addListener(PopulacaoDoAndar::aoTickDoServidor);
     }
 }

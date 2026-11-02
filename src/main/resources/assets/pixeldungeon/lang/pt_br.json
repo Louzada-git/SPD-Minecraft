@@ -43,11 +43,11 @@
   "dica.pixeldungeon.rapida": "Ataca %sx mais rápido",
   "mensagem.pixeldungeon.errou": "Errou!",
   "mensagem.pixeldungeon.esquivou": "Esquivou!",
-  "mensagem.pixeldungeon.subiu_de_nivel": "Você subiu para o nível %s!",
+  "mensagem.pixeldungeon.subiu_de_nivel": "Subiu de nível! +Precisão, +Evasão, +5 PV! (nível %s)",
 
   "tela.pixeldungeon.escolha_heroi": "Escolha Seu Herói",
   "tela.pixeldungeon.comecar": "Começar",
-  "tela.pixeldungeon.kit": "Começa com: %s e uma ração.",
+  "tela.pixeldungeon.kit": "Começa com: %s, armadura de pano e uma ração.",
   "tela.pixeldungeon.run_em_andamento": "Já tem gente na dungeon: você entra no andar 1 da run atual.",
   "classe.pixeldungeon.guerreiro": "Guerreiro",
   "classe.pixeldungeon.guerreiro.descricao": "O Guerreiro suporta dano extra com a proteção concedida pelo seu _selo quebrado._ O selo pode ser movido entre armaduras e _transfere um único aprimoramento._",
@@ -68,5 +68,23 @@
   "mensagem.pixeldungeon.reviveu": "%s voltou à vida pelo ankh de %s!",
   "mensagem.pixeldungeon.ninguem_pra_reviver": "Não tem nenhum aliado morto pra trazer de volta.",
   "mensagem.pixeldungeon.reabrir_menu": "Digite /heroi para abrir o menu de escolha de herói de novo.",
-  "comando.pixeldungeon.ja_na_run": "Você já está na run."
+  "comando.pixeldungeon.ja_na_run": "Você já está na run.",
+
+  "entity.pixeldungeon.rato_marsupial": "Rato Marsupial",
+  "entity.pixeldungeon.cobra_de_esgoto": "Cobra de Esgoto",
+  "entity.pixeldungeon.gnoll_explorador": "Gnoll Explorador",
+  "entity.pixeldungeon.caranguejo_de_esgoto": "Caranguejo de Esgoto",
+  "entity.pixeldungeon.slime": "Slime",
+  "item.pixeldungeon.ovo_rato_marsupial": "Ovo de Rato Marsupial",
+  "item.pixeldungeon.ovo_cobra_de_esgoto": "Ovo de Cobra de Esgoto",
+  "item.pixeldungeon.ovo_gnoll_explorador": "Ovo de Gnoll Explorador",
+  "item.pixeldungeon.ovo_caranguejo_de_esgoto": "Ovo de Caranguejo de Esgoto",
+  "item.pixeldungeon.ovo_slime": "Ovo de Slime",
+  "item.pixeldungeon.armadura_de_pano": "Armadura de Pano",
+  "item.pixeldungeon.armadura_de_pano.descricao": "Esta leve armadura oferece uma proteção básica.",
+  "dica.pixeldungeon.defesa": "Defesa: %s-%s",
+  "dica.pixeldungeon.defesa_extra": "Defesa extra: 0-%s",
+  "dica.pixeldungeon.surpresa_forte": "Ataque surpresa quase no dano máximo",
+  "combate.pixeldungeon.desviou": "desviou",
+  "combate.pixeldungeon.vida_do_alvo": "%s: %s/%s de vida"
 }
