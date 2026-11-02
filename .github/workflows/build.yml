@@ -29,3 +29,25 @@ jobs:
         with:
           name: pixeldungeon-jar
           path: build/libs/*.jar
+
+      # Liga um servidor de verdade com o mod, espera o mundo ser criado e confere se a run começou
+      # (o andar 1 é construído quando o servidor liga). Depois desliga.
+      - name: Test server start
+        run: |
+          mkdir -p run
+          echo "eula=true" > run/eula.txt
+          ./gradlew runServer > servidor.log 2>&1 &
+          for i in $(seq 1 90); do
+            if grep -q "Done (" servidor.log; then break; fi
+            if grep -q "BUILD FAILED" servidor.log; then break; fi
+            sleep 5
+          done
+          sleep 5
+          pkill -f "net.neoforged" || true
+          pkill -f "gradle" || true
+          echo "----- final do log do servidor -----"
+          grep -v "DEBUG" servidor.log | tail -60
+          if ! grep -q "Done (" servidor.log; then echo "O servidor não terminou de ligar"; exit 1; fi
+          if ! grep -q "Começando a run 1" servidor.log; then echo "A run não começou"; exit 1; fi
+          if grep -E "Exception|Caused by" servidor.log | grep -v "DEBUG" | grep -qi "pixeldungeon"; then echo "Deu erro no código do mod"; exit 1; fi
+          echo "Servidor ligou e o andar 1 foi construído"
