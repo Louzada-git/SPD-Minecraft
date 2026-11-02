@@ -86,5 +86,17 @@
   "dica.pixeldungeon.defesa_extra": "Extra armor: 0-%s",
   "dica.pixeldungeon.surpresa_forte": "Surprise attacks hit close to max damage",
   "combate.pixeldungeon.desviou": "dodged",
-  "combate.pixeldungeon.vida_do_alvo": "%s: %s/%s health"
+  "combate.pixeldungeon.vida_do_alvo": "%s: %s/%s health",
+
+  "entity.pixeldungeon.rato_albino": "Albino Rat",
+  "entity.pixeldungeon.enxame_de_moscas": "Swarm of Flies",
+  "item.pixeldungeon.ovo_rato_albino": "Albino Rat Spawn Egg",
+  "item.pixeldungeon.ovo_enxame_de_moscas": "Swarm of Flies Spawn Egg",
+  "item.pixeldungeon.carne_misteriosa": "Mystery Meat",
+  "item.pixeldungeon.carne_misteriosa.descricao": "Eat at your own risk!",
+  "item.pixeldungeon.carne_misteriosa.quente": "Oh it's hot!",
+  "item.pixeldungeon.carne_misteriosa.pernas": "You can't feel your legs!",
+  "item.pixeldungeon.carne_misteriosa.mal": "You are not feeling well.",
+  "item.pixeldungeon.carne_misteriosa.estufado": "You are stuffed.",
+  "item.pixeldungeon.carne_misteriosa.esquisito": "That food tasted... strange."
 }

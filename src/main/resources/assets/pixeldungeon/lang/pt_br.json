@@ -86,5 +86,17 @@
   "dica.pixeldungeon.defesa_extra": "Defesa extra: 0-%s",
   "dica.pixeldungeon.surpresa_forte": "Ataque surpresa quase no dano máximo",
   "combate.pixeldungeon.desviou": "desviou",
-  "combate.pixeldungeon.vida_do_alvo": "%s: %s/%s de vida"
+  "combate.pixeldungeon.vida_do_alvo": "%s: %s/%s de vida",
+
+  "entity.pixeldungeon.rato_albino": "Rato Albino",
+  "entity.pixeldungeon.enxame_de_moscas": "Enxame de Moscas",
+  "item.pixeldungeon.ovo_rato_albino": "Ovo de Rato Albino",
+  "item.pixeldungeon.ovo_enxame_de_moscas": "Ovo de Enxame de Moscas",
+  "item.pixeldungeon.carne_misteriosa": "Carne Misteriosa",
+  "item.pixeldungeon.carne_misteriosa.descricao": "Coma por sua própria conta e risco.",
+  "item.pixeldungeon.carne_misteriosa.quente": "Ah! Está quente!",
+  "item.pixeldungeon.carne_misteriosa.pernas": "Você não sente suas pernas!",
+  "item.pixeldungeon.carne_misteriosa.mal": "Você não se sente bem.",
+  "item.pixeldungeon.carne_misteriosa.estufado": "Você está estufado.",
+  "item.pixeldungeon.carne_misteriosa.esquisito": "A comida estava com um gosto... esquisito."
 }
