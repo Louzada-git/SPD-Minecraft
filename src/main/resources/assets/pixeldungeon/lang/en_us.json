@@ -44,5 +44,9 @@
   "dica.pixeldungeon.dano": "Damage: %s-%s",
   "dica.pixeldungeon.forca": "Strength required: %s",
   "dica.pixeldungeon.precisao": "Accuracy: +%s%%",
-  "dica.pixeldungeon.rapida": "Attacks %sx faster"
+  "dica.pixeldungeon.rapida": "Attacks %sx faster",
+
+  "mensagem.pixeldungeon.errou": "Missed!",
+  "mensagem.pixeldungeon.esquivou": "Dodged!",
+  "mensagem.pixeldungeon.subiu_de_nivel": "You reached level %s!"
 }

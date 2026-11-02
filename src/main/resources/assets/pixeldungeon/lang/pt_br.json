@@ -44,5 +44,9 @@
   "dica.pixeldungeon.dano": "Dano: %s-%s",
   "dica.pixeldungeon.forca": "Força necessária: %s",
   "dica.pixeldungeon.precisao": "Precisão: +%s%%",
-  "dica.pixeldungeon.rapida": "Ataca %sx mais rápido"
+  "dica.pixeldungeon.rapida": "Ataca %sx mais rápido",
+
+  "mensagem.pixeldungeon.errou": "Errou!",
+  "mensagem.pixeldungeon.esquivou": "Esquivou!",
+  "mensagem.pixeldungeon.subiu_de_nivel": "Você subiu para o nível %s!"
 }

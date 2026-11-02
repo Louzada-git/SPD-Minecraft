@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon;
 
 import org.slf4j.Logger;
 
+import com.louzada.pixeldungeon.heroi.EventosDeCombate;
 import com.louzada.pixeldungeon.registro.ModAbas;
 import com.louzada.pixeldungeon.registro.ModAnexos;
 import com.louzada.pixeldungeon.registro.ModBlocos;
@@ -34,5 +35,7 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(EventosDaRun::aoEntrar);
         NeoForge.EVENT_BUS.addListener(EventosDaRun::aoRenascer);
         NeoForge.EVENT_BUS.addListener(ComandosDaDungeon::aoRegistrarComandos);
+        NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoReceberDano);
+        NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoMorrerAlguem);
     }
 }
