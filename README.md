@@ -23,7 +23,7 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 ### Classes e run
 
 - Menu **Escolha Seu Herói** no estilo do Shattered, com as 6 classes e a arte de cada uma: Guerreiro, Mago, Ladino, Caçadora, Duelista e Clérigo.
-- Cada classe começa com a sua arma do Shattered e uma ração:
+- Cada classe começa com a sua arma do Shattered, armadura de pano (vestida) e uma ração:
 
 | Classe | Arma | Dano | Especial |
 |---|---|---|---|
@@ -38,6 +38,29 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 - A run começa quando alguém escolhe a classe. Quem entra depois escolhe a sua e começa no andar 1.
 - Quem morre vira espectador. Um aliado pode trazer ele de volta usando um **ankh** (clique direito). Se todos morrerem, a run acaba e todo mundo volta pro menu.
 - As armas já vêm com os ataques do Better Combat (funciona com ou sem ele instalado).
+
+### Combate e inimigos
+
+Inimigos do esgoto com os números do Shattered:
+
+| Inimigo | Andares | Vida | Precisão | Esquiva | Dano | Armadura | XP |
+|---|---|---|---|---|---|---|---|
+| Rato Marsupial | 1-3 | 8 | 8 | 2 | 1-4 | 0-1 | 1 |
+| Cobra de Esgoto | 1-3 | 4 | 10 | 25 | 1-4 | 0 | 2 |
+| Gnoll Explorador | 2-4 | 12 | 10 | 4 | 1-6 | 0-2 | 2 |
+| Caranguejo de Esgoto | 3-4 | 15 | 12 | 5 | 1-7 | 0-4 | 4 |
+| Slime | 4 | 20 | 12 | 5 | 2-5 | 0 | 4 |
+
+- Quando o andar é criado, os inimigos nascem **dormindo** (8 no andar 1). Eles acordam quando notam um herói: quanto mais perto, mais rápido.
+- **Ataque surpresa:** bater num inimigo dormindo ou que não está de olho em você sempre acerta. A adaga bate quase no dano máximo.
+- A cobra esquiva demais: o jeito é pegar ela de surpresa. O caranguejo é rápido. O slime amortece golpes fortes.
+- **Armadura:** cada golpe recebido perde de 0 até a defesa da armadura (pano = 0-2). O florete dá 1 de defesa extra.
+- O dano é sorteado mais pro meio do intervalo, igual ao Shattered.
+- Números de dano sobem em cima de quem apanhou (laranja nos inimigos, vermelho nos heróis), "desviou" quando erra, "!" no ataque surpresa e "+XP" ao matar. A barra de ação mostra a vida que sobrou no alvo.
+- A cada 50 segundos, se o andar tiver menos inimigos que o limite, nasce mais um longe dos heróis (no andar 1 não nasce mais).
+- Mais jogadores = inimigos com mais vida (+50% por jogador a mais).
+- Herói acima do nível máximo de um inimigo não ganha XP com ele, igual ao Shattered.
+- Os inimigos usam modelos e texturas do Minecraft por enquanto. Na aba do criativo tem um ovo de cada um pra testar.
 
 As texturas dos blocos ainda são do próprio Minecraft (provisórias). As artes do menu e os ícones dos itens são do Shattered.
 
@@ -101,9 +124,9 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 
 ## O que vem depois
 
-1. **Itens:** os itens únicos das classes (selo do Guerreiro, varinha do Mago, capa do Ladino, arco da Caçadora, habilidade do florete, tomo do Clérigo), armadura de pano, armas e armaduras com força mínima, poções e pergaminhos desconhecidos (cor e runa aleatórias por run), pergaminho de melhoria, comida, e opção no menu pra compartilhar o que foi identificado.
-2. **Mobs do esgoto:** com modelos do Minecraft e textura trocada, e mais vida quanto mais gente estiver jogando.
-3. **Goo:** o chefe do andar 5.
+1. **Itens:** poções e pergaminhos desconhecidos (já começados), os itens únicos das classes (selo do Guerreiro, varinha do Mago, capa do Ladino, arco da Caçadora, habilidade do florete, tomo do Clérigo), armadura de pano, armas e armaduras com força mínima, poções e pergaminhos desconhecidos (cor e runa aleatórias por run), pergaminho de melhoria, comida, e opção no menu pra compartilhar o que foi identificado.
+2. **Goo:** o chefe do andar 5, e o enxame de moscas que falta no esgoto.
+3. **Texturas próprias** dos inimigos e dos blocos.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
 
@@ -114,7 +137,9 @@ src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas e blocos de decoração
-  item/                        armas do Shattered e ankh
+  item/                        armas, armadura e ankh
+  entidade/                    os inimigos do Shattered
+  combate/                     sorteio de dano e números flutuantes
   heroi/
     ClasseDoHeroi.java         as 6 classes e o kit de cada uma
     DadosDoHeroi.java          classe, força, nível e XP de cada jogador
@@ -123,11 +148,13 @@ src/main/java/com/louzada/pixeldungeon/
   rede/                        pacotes do menu (servidor <-> jogador)
   cliente/
     TelaEscolhaDeHeroi.java    o menu Escolha Seu Herói
+    PixelDungeonCliente.java   desenho dos inimigos
   dungeon/
     Andares.java               medidas e onde cada andar fica no mundo
     PlantaDoAndar.java         o mapa do andar em quadradinhos
     GeradorDeAndar.java        sorteia salas e corredores
     ConstrutorDeAndar.java     transforma o mapa em blocos
+    PopulacaoDoAndar.java      inimigos de cada andar e renascimento
   run/
     DadosDaRun.java            o que fica salvo no mundo
     GerenciadorDaRun.java      começar run, construir andar, levar jogador
