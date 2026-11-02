@@ -1,0 +1,20 @@
+{
+  "itemGroup.pixeldungeon": "Pixel Dungeon",
+
+  "block.pixeldungeon.parede_esgoto": "Parede do Esgoto",
+  "block.pixeldungeon.chao_esgoto": "Chão do Esgoto",
+  "block.pixeldungeon.escada_subida": "Escada de Subida",
+  "block.pixeldungeon.escada_descida": "Escada de Descida",
+
+  "regiao.pixeldungeon.esgoto": "Esgoto",
+  "regiao.pixeldungeon.prisao": "Prisão",
+  "regiao.pixeldungeon.cavernas": "Cavernas",
+  "regiao.pixeldungeon.cidade_dos_anoes": "Cidade dos Anões",
+  "regiao.pixeldungeon.saloes_demoniacos": "Salões Demoníacos",
+
+  "mensagem.pixeldungeon.andar": "Andar %1$s - %2$s",
+  "mensagem.pixeldungeon.sem_amuleto": "Você não pode sair da dungeon sem o Amuleto de Yendor.",
+  "mensagem.pixeldungeon.bloqueado": "O caminho mais fundo ainda está bloqueado.",
+
+  "comando.pixeldungeon.novarun": "Uma nova run começou!"
+}

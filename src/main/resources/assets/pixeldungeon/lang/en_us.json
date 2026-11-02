@@ -1,0 +1,20 @@
+{
+  "itemGroup.pixeldungeon": "Pixel Dungeon",
+
+  "block.pixeldungeon.parede_esgoto": "Sewer Wall",
+  "block.pixeldungeon.chao_esgoto": "Sewer Floor",
+  "block.pixeldungeon.escada_subida": "Stairs Up",
+  "block.pixeldungeon.escada_descida": "Stairs Down",
+
+  "regiao.pixeldungeon.esgoto": "Sewers",
+  "regiao.pixeldungeon.prisao": "Prison",
+  "regiao.pixeldungeon.cavernas": "Caves",
+  "regiao.pixeldungeon.cidade_dos_anoes": "Dwarven City",
+  "regiao.pixeldungeon.saloes_demoniacos": "Demon Halls",
+
+  "mensagem.pixeldungeon.andar": "Depth %1$s - %2$s",
+  "mensagem.pixeldungeon.sem_amuleto": "You can't leave the dungeon without the Amulet of Yendor.",
+  "mensagem.pixeldungeon.bloqueado": "The way deeper is still blocked.",
+
+  "comando.pixeldungeon.novarun": "A new run has started!"
+}
