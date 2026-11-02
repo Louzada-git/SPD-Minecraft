@@ -93,7 +93,7 @@ Comandos:
 ./gradlew build
 ```
 
-O arquivo fica em `build/libs/pixeldungeon-0.1.0.jar`. É esse que vai na pasta `mods` de um Minecraft com NeoForge.
+O arquivo fica em `build/libs/pixeldungeon-1.1.jar`. É esse que vai na pasta `mods` de um Minecraft com NeoForge.
 
 ### Se der erro
 
