@@ -1,13 +1,23 @@
 package com.louzada.pixeldungeon.entidade;
 
+import javax.annotation.Nullable;
+
+import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Sorteio;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -16,12 +26,14 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 // Base de todos os inimigos do Shattered.
 // Cada inimigo tem os números dele (vida, precisão, esquiva, dano, armadura, XP) e:
-//   - nasce dormindo quando o andar é criado, e acorda quando nota um herói por perto (igual ao Shattered)
+//   - nasce dormindo quando o andar é criado ("z" em cima dele), e acorda quando nota um herói por perto ("!")
 //   - quem ataca um inimigo dormindo ou distraído faz um ataque surpresa (sempre acerta)
+//   - depois de apanhar, mostra uma barra de vida em cima da cabeça
 public abstract class MobDoShattered extends Monster {
 
     // Os números de um inimigo, iguais aos do Shattered.
@@ -31,12 +43,20 @@ public abstract class MobDoShattered extends Monster {
             int armaduraMinima, int armaduraMaxima, int xp, int nivelMaximo, double velocidade) {
     }
 
+    // Os sons do inimigo (por enquanto, sons de bichos do Minecraft)
+    public record Sons(SoundEvent ambiente, SoundEvent ferido, SoundEvent morte) {
+    }
+
+    private static final int PEDACOS_DA_BARRA = 10;
+
     private Atributos atributos;
+    private Sons sons;
     private boolean dormindo = false;
 
-    protected MobDoShattered(EntityType<? extends MobDoShattered> tipo, Level mundo, Atributos atributos) {
+    protected MobDoShattered(EntityType<? extends MobDoShattered> tipo, Level mundo, Atributos atributos, Sons sons) {
         super(tipo, mundo);
         this.atributos = atributos;
+        this.sons = sons;
         this.xpReward = 0;
     }
 
@@ -54,15 +74,30 @@ public abstract class MobDoShattered extends Monster {
         goalSelector.addGoal(1, new FloatGoal(this));
         // Ataca uma vez por segundo, que é um turno do Shattered
         goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, false));
-        goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8));
+        goalSelector.addGoal(5, passeio());
         goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         goalSelector.addGoal(7, new RandomLookAroundGoal(this));
         targetSelector.addGoal(1, new HurtByTargetGoal(this));
         targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
+    // Como o inimigo anda à toa quando não está caçando ninguém (o enxame sobrescreve pra voar)
+    protected Goal passeio() {
+        return new WaterAvoidingRandomStrollGoal(this, 0.8);
+    }
+
     public Atributos atributos() {
         return atributos;
+    }
+
+    // XP que dá ao morrer (o enxame dividido não dá)
+    public int xpAoMorrer() {
+        return atributos.xp();
+    }
+
+    // O que pode cair quando morre (nada, por padrão)
+    public ItemStack sortearSaque() {
+        return ItemStack.EMPTY;
     }
 
     // ---- Números do combate ----
@@ -98,6 +133,17 @@ public abstract class MobDoShattered extends Monster {
         }
     }
 
+    // Notou um herói: acorda e vai atrás dele. Igual ao Shattered, aparece um "!" em cima.
+    public void notar(Player jogador) {
+        acordar();
+        setTarget(jogador);
+        NumerosFlutuantes.mostrar(this, "!", NumerosFlutuantes.VERMELHO);
+    }
+
+    // Chamado quando este inimigo acerta alguém (o rato albino faz sangrar, por exemplo)
+    public void aoAcertar(Entity alvo, float dano) {
+    }
+
     // O herói pega o inimigo de surpresa se ele está dormindo ou não está de olho nesse herói
     public boolean surpreendidoPor(Player jogador) {
         return dormindo || getTarget() != jogador;
@@ -109,6 +155,10 @@ public abstract class MobDoShattered extends Monster {
         // Uma vez por segundo, quem está dormindo pode notar um herói por perto.
         // Igual ao Shattered: a chance é maior quanto mais perto (1 quadradinho = 4 blocos).
         if (dormindo && !level().isClientSide() && tickCount % 20 == 0) {
+            // De vez em quando sobe um "z" em cima de quem dorme (só se tiver alguém por perto pra ver)
+            if (tickCount % 60 == 0 && level().getNearestPlayer(this, 16) != null) {
+                NumerosFlutuantes.mostrar(this, "z", NumerosFlutuantes.BRANCO);
+            }
             for (Player jogador : level().players()) {
                 if (jogador.isSpectator() || jogador.isCreative() || !hasLineOfSight(jogador)) {
                     continue;
@@ -118,12 +168,46 @@ public abstract class MobDoShattered extends Monster {
                     continue;
                 }
                 if (getRandom().nextDouble() * Math.max(1.0, distanciaEmQuadradinhos) < 1.0) {
-                    acordar();
-                    setTarget(jogador);
+                    notar(jogador);
                     break;
                 }
             }
         }
+    }
+
+    // ---- Barra de vida ----
+
+    // Mostra a vida em cima da cabeça como uma barra (vermelho = vida que sobra), igual ao Shattered.
+    // Com a vida cheia, a barra some.
+    public void atualizarBarraDeVida() {
+        if (getHealth() >= getMaxHealth() || isDeadOrDying()) {
+            setCustomName(null);
+            setCustomNameVisible(false);
+            return;
+        }
+        int cheios = Math.max(1, Math.round(PEDACOS_DA_BARRA * getHealth() / getMaxHealth()));
+        MutableComponent barra = Component.literal("■".repeat(cheios)).withStyle(ChatFormatting.RED)
+                .append(Component.literal("■".repeat(PEDACOS_DA_BARRA - cheios)).withStyle(ChatFormatting.DARK_GRAY));
+        setCustomName(barra);
+        setCustomNameVisible(true);
+    }
+
+    // ---- Sons ----
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return dormindo ? null : sons.ambiente();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource fonte) {
+        return sons.ferido();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return sons.morte();
     }
 
     // ---- O resto do Minecraft ----
