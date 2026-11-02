@@ -1,5 +1,9 @@
 package com.louzada.pixeldungeon.dungeon;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 // A "planta baixa" de um andar: uma grade de quadradinhos, igual ao mapa do Shattered.
 // Cada quadradinho tem um tipo (parede, chão, água, entrada ou saída).
 // Ela ainda não é blocos no mundo: quem transforma em blocos é o ConstrutorDeAndar.
@@ -10,9 +14,31 @@ public class PlantaDoAndar {
     public static final byte ENTRADA = 3;
     public static final byte SAIDA = 4;
 
+    // Uma sala retangular. x, y = canto; largura e altura em quadradinhos.
+    public record Sala(int x, int y, int largura, int altura) {
+        public int centroX() {
+            return x + largura / 2;
+        }
+
+        public int centroY() {
+            return y + altura / 2;
+        }
+
+        // Verdadeiro se as duas salas se encostam (deixando "folga" quadradinhos de parede entre elas)
+        public boolean encostaEm(Sala outra, int folga) {
+            return x - folga < outra.x + outra.largura
+                    && outra.x - folga < x + largura
+                    && y - folga < outra.y + outra.altura
+                    && outra.y - folga < y + altura;
+        }
+    }
+
     private int largura;
     private int altura;
     private byte[] quadradinhos;
+    // Número da sala de cada quadradinho (-1 = não é sala, ou seja, corredor ou parede)
+    private int[] salaDoQuadradinho;
+    private List<Sala> salas = new ArrayList<>();
 
     private int entradaX = -1;
     private int entradaY = -1;
@@ -24,6 +50,31 @@ public class PlantaDoAndar {
         this.largura = largura;
         this.altura = altura;
         this.quadradinhos = new byte[largura * altura];
+        this.salaDoQuadradinho = new int[largura * altura];
+        Arrays.fill(salaDoQuadradinho, -1);
+    }
+
+    // Cava a sala (vira chão) e lembra que esses quadradinhos são dela
+    public void adicionarSala(Sala sala) {
+        int numero = salas.size();
+        salas.add(sala);
+        for (int y = sala.y(); y < sala.y() + sala.altura(); y++) {
+            for (int x = sala.x(); x < sala.x() + sala.largura(); x++) {
+                if (dentro(x, y)) {
+                    quadradinhos[y * largura + x] = CHAO;
+                    salaDoQuadradinho[y * largura + x] = numero;
+                }
+            }
+        }
+    }
+
+    public List<Sala> salas() {
+        return salas;
+    }
+
+    // Lugar aberto que não pertence a nenhuma sala = corredor
+    public boolean ehCorredor(int x, int y) {
+        return aberto(x, y) && salaDoQuadradinho[y * largura + x] < 0;
     }
 
     public int largura() {

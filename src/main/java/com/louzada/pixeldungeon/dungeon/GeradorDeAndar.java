@@ -4,28 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
+
 // Gera a planta de um andar: salas ligadas por corredores, com entrada, saída e poças de água.
 // A mesma semente + o mesmo andar sempre geram a mesma planta.
 public class GeradorDeAndar {
-
-    // Uma sala retangular. x, y = canto; largura e altura em quadradinhos.
-    public record Sala(int x, int y, int largura, int altura) {
-        public int centroX() {
-            return x + largura / 2;
-        }
-
-        public int centroY() {
-            return y + altura / 2;
-        }
-
-        // Verdadeiro se as duas salas se encostam (deixando "folga" quadradinhos de parede entre elas)
-        public boolean encostaEm(Sala outra, int folga) {
-            return x - folga < outra.x + outra.largura
-                    && outra.x - folga < x + largura
-                    && y - folga < outra.y + outra.altura
-                    && outra.y - folga < y + altura;
-        }
-    }
 
     public static PlantaDoAndar gerar(long semente, int andar) {
         Random sorteio = new Random(semente * 1000003L + andar);
@@ -74,7 +57,7 @@ public class GeradorDeAndar {
         }
 
         for (Sala sala : salas) {
-            cavarSala(planta, sala);
+            planta.adicionarSala(sala);
         }
 
         // 2. Liga todas as salas (árvore geradora mínima) e depois adiciona alguns caminhos extras
@@ -105,27 +88,25 @@ public class GeradorDeAndar {
         return planta;
     }
 
-    // O andar 5 do esgoto: uma arena grande (onde vai ficar o Goo) e uma salinha de entrada
+    // O andar 5 do esgoto: uma arena grande com 4 pilares (onde vai ficar o Goo) e uma salinha de entrada
     private static PlantaDoAndar gerarArenaDoChefe() {
         int tamanho = Andares.TAMANHO_DA_PLANTA;
         PlantaDoAndar planta = new PlantaDoAndar(tamanho, tamanho);
 
         Sala arena = new Sala(8, 4, 16, 16);
         Sala entrada = new Sala(13, 23, 6, 5);
-        cavarSala(planta, arena);
-        cavarSala(planta, entrada);
+        planta.adicionarSala(arena);
+        planta.adicionarSala(entrada);
         cavarCorredor(planta, entrada.centroX(), entrada.centroY(), arena.centroX(), arena.centroY(), true);
+
+        // Pilares grossos (1 quadradinho = 4x4 blocos) pra se esconder do chefe
+        planta.definir(11, 7, PlantaDoAndar.PAREDE);
+        planta.definir(20, 7, PlantaDoAndar.PAREDE);
+        planta.definir(11, 16, PlantaDoAndar.PAREDE);
+        planta.definir(20, 16, PlantaDoAndar.PAREDE);
 
         planta.definirEntrada(entrada.centroX(), entrada.centroY());
         return planta;
-    }
-
-    private static void cavarSala(PlantaDoAndar planta, Sala sala) {
-        for (int y = sala.y(); y < sala.y() + sala.altura(); y++) {
-            for (int x = sala.x(); x < sala.x() + sala.largura(); x++) {
-                planta.definir(x, y, PlantaDoAndar.CHAO);
-            }
-        }
     }
 
     // Corredor em "L" de um ponto a outro. Só transforma parede em chão (não estraga o que já existe).
