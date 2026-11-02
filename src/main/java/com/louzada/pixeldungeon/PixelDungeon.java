@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon;
 
 import org.slf4j.Logger;
 
+import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.mojang.logging.LogUtils;
 
 import net.neoforged.bus.api.IEventBus;
@@ -16,6 +17,7 @@ public class PixelDungeon {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public PixelDungeon(IEventBus barramentoDoMod, ModContainer container) {
-        LOGGER.info("Pixel Dungeon MC carregando");
+        // Registros: blocos, itens, abas do criativo...
+        ModBlocos.BLOCOS.register(barramentoDoMod);
     }
 }
