@@ -23,3 +23,9 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: pixeldungeon-jar
+          path: build/libs/*.jar
