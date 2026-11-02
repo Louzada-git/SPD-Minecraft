@@ -9,6 +9,7 @@ import com.louzada.pixeldungeon.rede.ModRede;
 import com.louzada.pixeldungeon.registro.ModAbas;
 import com.louzada.pixeldungeon.registro.ModAnexos;
 import com.louzada.pixeldungeon.registro.ModBlocos;
+import com.louzada.pixeldungeon.registro.ModEfeitos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
 import com.louzada.pixeldungeon.registro.ModMateriais;
@@ -36,6 +37,7 @@ public class PixelDungeon {
         ModAnexos.ANEXOS.register(barramentoDoMod);
         ModEntidades.ENTIDADES.register(barramentoDoMod);
         ModMateriais.MATERIAIS.register(barramentoDoMod);
+        ModEfeitos.EFEITOS.register(barramentoDoMod);
         barramentoDoMod.addListener(ModEntidades::aoCriarAtributos);
 
         // Pacotes de rede (menu de escolha de herói)
