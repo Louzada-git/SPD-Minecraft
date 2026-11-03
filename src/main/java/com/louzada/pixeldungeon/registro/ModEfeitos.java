@@ -36,4 +36,71 @@ public class ModEfeitos {
     // Escudo de luz (Clérigo): armadura extra contra um inimigo escolhido
     public static final DeferredHolder<MobEffect, EfeitoSimples> ESCUDO_DE_LUZ = EFEITOS.register("escudo_de_luz",
             () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xFFFFCC));
+
+    // ---- Efeitos das poções, pergaminhos, plantas e maldições (o que cada um faz fica no EfeitosNoTick e no combate) ----
+
+    // Paralisado (gás paralisante): não anda nem ataca. Igual ao Shattered, dura 10 turnos.
+    public static final DeferredHolder<MobEffect, EfeitoSimples> PARALISADO = EFEITOS.register("paralisado",
+            () -> EfeitoSimples.quePrende(MobEffectCategory.HARMFUL, 0xC8B4FF, "paralisado"));
+    // Congelado (poção de gelo, gelo-do-norte): igual ao paralisado
+    public static final DeferredHolder<MobEffect, EfeitoSimples> CONGELADO = EFEITOS.register("congelado",
+            () -> EfeitoSimples.quePrende(MobEffectCategory.HARMFUL, 0x9BD6FF, "congelado"));
+    // Sono mágico (canção de ninar no herói): não se mexe e cura 1 por turno até encher; apanhar acorda
+    public static final DeferredHolder<MobEffect, EfeitoSimples> SONO_MAGICO = EFEITOS.register("sono_magico",
+            () -> EfeitoSimples.quePrende(MobEffectCategory.HARMFUL, 0x8888FF, "sono_magico"));
+    // Sonolento (canção de ninar): quando acaba, dorme
+    public static final DeferredHolder<MobEffect, EfeitoSimples> SONOLENTO = EFEITOS.register("sonolento",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xAAAAFF));
+    // Aterrorizado (pergaminho de terror): foge de quem leu e não ataca
+    public static final DeferredHolder<MobEffect, EfeitoSimples> ATERRORIZADO = EFEITOS.register("aterrorizado",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xFF4444));
+    // Furioso (pergaminho de fúria): ataca quem estiver mais perto, até os outros inimigos
+    public static final DeferredHolder<MobEffect, EfeitoSimples> FURIOSO = EFEITOS.register("furioso",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xFF6600));
+    // Veneno do Shattered (musgo-do-pesar): o dano por turno vai caindo com o tempo, e pode matar
+    public static final DeferredHolder<MobEffect, EfeitoSimples> VENENO = EFEITOS.register("veneno",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0x8844AA));
+    // Sangrando (maldição sacrificial): dano que vai diminuindo
+    public static final DeferredHolder<MobEffect, EfeitoSimples> SANGRANDO = EFEITOS.register("sangrando",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xAA0000));
+    // Aleijado (erva-cega): anda pela metade
+    public static final DeferredHolder<MobEffect, EfeitoSimples> ALEIJADO = EFEITOS.register("aleijado",
+            () -> EfeitoSimples.queMudaAVelocidade(MobEffectCategory.HARMFUL, 0x996633, "aleijado", -0.5));
+    // Cego (erva-cega, retribuição, maldição ofuscante): inimigos cegos perdem o alvo
+    public static final DeferredHolder<MobEffect, EfeitoSimples> CEGO = EFEITOS.register("cego",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0x222222));
+    // Vertigem (videira-da-tempestade, poção de levitação arremessada): inimigos andam pra qualquer lado
+    public static final DeferredHolder<MobEffect, EfeitoSimples> VERTIGEM = EFEITOS.register("vertigem",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0x99CC99));
+    // Desviante (maldição): golpes muito menos precisos
+    public static final DeferredHolder<MobEffect, EfeitoSimples> DESVIANTE = EFEITOS.register("desviante",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0x555555));
+
+    // Curando (poção de cura): cura um quarto do que falta a cada turno
+    public static final DeferredHolder<MobEffect, EfeitoSimples> CURANDO = EFEITOS.register("curando",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xFF5555));
+    // Saúde da grama-do-sol: cura aos pouquinhos enquanto não sai do lugar
+    public static final DeferredHolder<MobEffect, EfeitoSimples> SAUDE_DA_GRAMA = EFEITOS.register("saude_da_grama",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x88FF88));
+    // Raiz-da-terra: segura parte de cada golpe enquanto não sai do lugar
+    public static final DeferredHolder<MobEffect, EfeitoSimples> RAIZ_DA_TERRA = EFEITOS.register("raiz_da_terra",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x996633));
+    // Pele de árvore (auxílio da natureza): armadura extra (0 até o nível)
+    public static final DeferredHolder<MobEffect, EfeitoSimples> PELE_DE_ARVORE = EFEITOS.register("pele_de_arvore",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x8B5A2B));
+    // Abençoado (flor-estrela): +25% de precisão e de esquiva
+    public static final DeferredHolder<MobEffect, EfeitoSimples> ABENCOADO = EFEITOS.register("abencoado",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xFFFF88));
+    // Imune a gases (poção de pureza)
+    public static final DeferredHolder<MobEffect, EfeitoSimples> IMUNE_A_GAS = EFEITOS.register("imune_a_gas",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xCCFFFF));
+    // Levitando (poção de levitação): dá pra voar
+    public static final DeferredHolder<MobEffect, EfeitoSimples> LEVITANDO = EFEITOS.register("levitando",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xCCCCFF));
+    // Pressa (poção de pressa): anda 3x mais rápido
+    public static final DeferredHolder<MobEffect, EfeitoSimples> PRESSA = EFEITOS.register("pressa",
+            () -> EfeitoSimples.queMudaAVelocidade(MobEffectCategory.BENEFICIAL, 0xFFCC44, "pressa", 2.0));
+    // Visão mental (poção): vê todos os inimigos do andar através das paredes
+    public static final DeferredHolder<MobEffect, EfeitoSimples> VISAO_MENTAL = EFEITOS.register("visao_mental",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x44CCFF));
 }
