@@ -55,6 +55,12 @@ public class ModComponentes {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> MALDICAO_CONHECIDA = COMPONENTES.registerComponentType(
             "maldicao_conhecida", construtor -> construtor.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 
+    // De que run e de que andar é a chave de ferro (ela só abre as portas trancadas de lá)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> RUN_DA_CHAVE = COMPONENTES.registerComponentType(
+            "run_da_chave", construtor -> construtor.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ANDAR_DA_CHAVE = COMPONENTES.registerComponentType(
+            "andar_da_chave", construtor -> construtor.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
     // Selo quebrado do Guerreiro afixado na armadura
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> SELO = COMPONENTES.registerComponentType("selo",
             construtor -> construtor.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
