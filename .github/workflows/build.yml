@@ -89,4 +89,13 @@ jobs:
           if ! grep -q "Teste do míssil mágico: acertou o rato = true" servidor.log; then echo "O míssil mágico não acertou o rato"; exit 1; fi
           if ! grep -q "Andar 5: Goo no ninho" servidor.log; then echo "O Goo não nasceu no andar 5"; exit 1; fi
           if ! grep -qE "Teste do Goo: tinha 80 de vida, depois de 5 s na água ficou com 8[1-9]" servidor.log; then echo "O Goo não se curou na água"; exit 1; fi
+          echo "----- saque dos andares -----"
+          grep -E "Andar [0-9]+: [0-9]+ itens" servidor.log || true
+          if ! grep -qE "Andar 1: [4-6] itens" servidor.log; then echo "Os itens do andar 1 não apareceram"; exit 1; fi
+          if ! grep -q "Teste das armas: 15 armas, 15 com habilidade, por tier 5/3/3/2/2" servidor.log; then echo "As armas novas não estão certas"; exit 1; fi
+          if ! grep -q "Teste da espada larga: o rato morreu = true" servidor.log; then echo "A espada larga não cortou"; exit 1; fi
+          if ! grep -q "Teste do ouro: ouro do herói = 50, a pilha sumiu = true, pilha do andar 3 com moedas entre 60 e 120 = true" servidor.log; then echo "O ouro não funcionou"; exit 1; fi
+          if ! grep -q "Teste do baú: tem a espada dentro = true" servidor.log; then echo "O baú não guardou o item"; exit 1; fi
+          if ! grep -q "Teste do mímico: era mímico = true, o baú sumiu = true, vida 12.0, guardava 2 itens, caíram 2" servidor.log; then echo "O mímico não funcionou"; exit 1; fi
+          if ! grep -q "Teste dos drops: gnoll deixou ouro = true, slime deixou arma de tier 2 = true" servidor.log; then echo "Os inimigos não deixaram itens"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
