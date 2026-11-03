@@ -1,8 +1,10 @@
 package com.louzada.pixeldungeon.run;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.bloco.PortaGigante;
 import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.dungeon.Baus;
+import com.louzada.pixeldungeon.dungeon.ConstrutorDeAndar;
 import com.louzada.pixeldungeon.dungeon.GeradorDeAndar;
 import com.louzada.pixeldungeon.dungeon.Grama;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
@@ -29,6 +31,7 @@ import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.Artefato;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.Cargas;
+import com.louzada.pixeldungeon.item.ChaveDeFerro;
 import com.louzada.pixeldungeon.item.Odre;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.registro.ModBlocos;
@@ -38,6 +41,7 @@ import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
 import com.mojang.authlib.GameProfile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -54,6 +58,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
@@ -70,6 +75,10 @@ public class EventosDaRun {
     private static Goo gooDoTeste = null;
     private static int vidaDoGooNoTeste = 0;
     private static int ticksParaOTesteDoGoo = 0;
+    // Teste das portas: um rato dormindo do lado de uma porta comum e outro do lado de uma trancada
+    private static BlockPos portaDoTeste = null;
+    private static BlockPos trancadaDoTeste = null;
+    private static List<RatoMarsupial> ratosDasPortas = new ArrayList<>();
     // Teste do míssil mágico: o rato do teste de combate leva um míssil
     private static RatoMarsupial ratoDoMissil = null;
     private static float vidaDoRatoAntesDoMissil = 0;
@@ -88,6 +97,7 @@ public class EventosDaRun {
                 GerenciadorDaRun.garantirAndar(servidor, andar);
             }
             testarCombate(servidor);
+            testarPortas(servidor);
             testarClasses(servidor);
             testarSaque(servidor);
             TestesDosItens.testar(servidor);
@@ -149,6 +159,47 @@ public class EventosDaRun {
         gooDoTeste.setHealth(gooDoTeste.getMaxHealth() - 20);
         vidaDoGooNoTeste = Math.round(gooDoTeste.getHealth());
         ticksParaOTesteDoGoo = 5 * 20;
+    }
+
+    // Só no teste do GitHub: as portas do andar 1 começam fechadas; um rato encostado faz a comum abrir
+    // (o resultado sai junto com o do Goo, 5 s depois)
+    private static void testarPortas(MinecraftServer servidor) {
+        ServerLevel mundo = servidor.overworld();
+        DadosDaRun run = DadosDaRun.pegar(servidor);
+        PlantaDoAndar planta = GeradorDeAndar.gerar(run.semente(), 1);
+        BlockPos origem = Andares.origemDoAndar(run.numeroDaRun(), 1);
+        for (int y = 0; y < planta.altura(); y++) {
+            for (int x = 0; x < planta.largura(); x++) {
+                if (planta.tipo(x, y) == PlantaDoAndar.PORTA && portaDoTeste == null) {
+                    portaDoTeste = ConstrutorDeAndar.controleDaPorta(origem, planta, x, y);
+                } else if (planta.tipo(x, y) == PlantaDoAndar.PORTA_TRANCADA && trancadaDoTeste == null) {
+                    trancadaDoTeste = ConstrutorDeAndar.controleDaPorta(origem, planta, x, y);
+                }
+            }
+        }
+        if (portaDoTeste == null || trancadaDoTeste == null) {
+            PixelDungeon.LOGGER.info("Teste das portas: o andar 1 não tem porta comum e trancada");
+            return;
+        }
+        PixelDungeon.LOGGER.info("Teste das portas: comum fechada no começo = {}, trancada fechada no começo = {}", !portaAberta(mundo, portaDoTeste),
+                !portaAberta(mundo, trancadaDoTeste) && mundo.getBlockState(trancadaDoTeste).getValue(PortaGigante.TRANCADA));
+        for (BlockPos porta : List.of(portaDoTeste, trancadaDoTeste)) {
+            mundo.setChunkForced(porta.getX() >> 4, porta.getZ() >> 4, true);
+            RatoMarsupial rato = ModEntidades.RATO_MARSUPIAL.get().create(mundo);
+            if (rato != null) {
+                // Dentro do quadradinho da porta, 2 blocos pro lado de passar
+                boolean pelaX = mundo.getBlockState(porta).getValue(PortaGigante.EIXO) == Direction.Axis.X;
+                rato.moveTo(porta.getX() + (pelaX ? 2.5 : 1.5), porta.getY(), porta.getZ() + (pelaX ? 1.5 : 2.5));
+                mundo.addFreshEntity(rato);
+                rato.dormir();
+                ratosDasPortas.add(rato);
+            }
+        }
+    }
+
+    private static boolean portaAberta(ServerLevel mundo, BlockPos controle) {
+        BlockState estado = mundo.getBlockState(controle);
+        return estado.is(ModBlocos.PORTA_GIGANTE.get()) && estado.getValue(PortaGigante.ABERTA);
     }
 
     // Só no teste do GitHub: um jogador de mentira testa os itens das classes, os talentos e as habilidades
@@ -230,8 +281,8 @@ public class EventosDaRun {
             if (eraAlta) {
                 Grama.pisotear(mundo, grama, mundo.getBlockState(grama), heroi);
             }
-            PixelDungeon.LOGGER.info("Teste da grama: era grama alta = {}, virou grama baixa = {}", eraAlta,
-                    mundo.getBlockState(grama).is(ModBlocos.GRAMA_BAIXA.get()));
+            PixelDungeon.LOGGER.info("Teste da grama: era grama alta = {}, virou musgo = {}", eraAlta,
+                    mundo.getBlockState(grama).is(ModBlocos.MUSGO_ESGOTO.get()));
         } else {
             PixelDungeon.LOGGER.info("Teste da grama: o andar 1 não tem grama alta");
         }
@@ -349,6 +400,28 @@ public class EventosDaRun {
                     ratoDoMissil.isAlive() ? ratoDoMissil.getHealth() : 0);
             evento.getServer().overworld().setChunkForced(ratoDoMissil.chunkPosition().x, ratoDoMissil.chunkPosition().z, false);
             ratoDoMissil = null;
+        }
+        if (portaDoTeste != null && trancadaDoTeste != null) {
+            ServerLevel mundo = evento.getServer().overworld();
+            PixelDungeon.LOGGER.info("Teste das portas: a comum abriu com o rato perto = {}, a trancada continuou fechada = {}",
+                    portaAberta(mundo, portaDoTeste), !portaAberta(mundo, trancadaDoTeste));
+            // Um herói com a chave de ferro do andar 1 destranca a trancada e gasta a chave
+            FakePlayer heroi = FakePlayerFactory.get(mundo, new GameProfile(UUID.fromString("5e7c1a3e-0000-4000-8000-00000000b0b0"), "TesteDoMod"));
+            DadosDaRun run = DadosDaRun.pegar(evento.getServer());
+            heroi.getInventory().clearContent();
+            heroi.getInventory().add(ChaveDeFerro.criar(run.numeroDaRun(), 1));
+            boolean destrancou = ModBlocos.PORTA_GIGANTE.get().usarChave(mundo, trancadaDoTeste, heroi);
+            PixelDungeon.LOGGER.info("Teste da chave de ferro: destrancou = {}, gastou a chave = {}, ficou comum = {}", destrancou,
+                    ChaveDeFerro.procurar(heroi, run.numeroDaRun(), 1).isEmpty(), !mundo.getBlockState(trancadaDoTeste).getValue(PortaGigante.TRANCADA));
+            for (RatoMarsupial rato : ratosDasPortas) {
+                rato.discard();
+            }
+            ratosDasPortas.clear();
+            for (BlockPos porta : List.of(portaDoTeste, trancadaDoTeste)) {
+                mundo.setChunkForced(porta.getX() >> 4, porta.getZ() >> 4, false);
+            }
+            portaDoTeste = null;
+            trancadaDoTeste = null;
         }
         PixelDungeon.LOGGER.info("Teste do Goo: tinha {} de vida, depois de 5 s na água ficou com {} (na água: {})",
                 vidaDoGooNoTeste, Math.round(gooDoTeste.getHealth()), gooDoTeste.isInWater());
