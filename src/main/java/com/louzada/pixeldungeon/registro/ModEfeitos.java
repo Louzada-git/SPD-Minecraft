@@ -39,6 +39,11 @@ public class ModEfeitos {
 
     // ---- Efeitos das poções, pergaminhos, plantas e maldições (o que cada um faz fica no EfeitosNoTick e no combate) ----
 
+    // Comendo: igual ao Shattered, comer gasta turnos (ração e carne misteriosa: 3; baga e ração de suprimentos: 1).
+    // Come na hora, mas nesse tempo o herói não anda, não ataca e não usa itens.
+    public static final DeferredHolder<MobEffect, EfeitoSimples> COMENDO = EFEITOS.register("comendo",
+            () -> EfeitoSimples.quePrende(MobEffectCategory.NEUTRAL, 0xC89650, "comendo"));
+
     // Paralisado (gás paralisante): não anda nem ataca. Igual ao Shattered, dura 10 turnos.
     public static final DeferredHolder<MobEffect, EfeitoSimples> PARALISADO = EFEITOS.register("paralisado",
             () -> EfeitoSimples.quePrende(MobEffectCategory.HARMFUL, 0xC8B4FF, "paralisado"));
