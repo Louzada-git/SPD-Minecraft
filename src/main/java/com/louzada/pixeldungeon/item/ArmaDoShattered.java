@@ -2,6 +2,8 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.louzada.pixeldungeon.combate.Sorteio;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
@@ -30,15 +32,20 @@ public class ArmaDoShattered extends Item implements ArmaComDano {
     private float precisao;
     // Tempo entre ataques, em turnos (1 turno = 1 segundo). 0.5 = ataca 2x mais rápido.
     private float atraso;
-    // Defesa extra que a arma dá (o florete dá 1)
+    // Defesa extra que a arma dá (o florete dá 1, a katana 3)
     private int defesa;
-    // Ataque surpresa forte (a adaga)
-    private boolean surpresaForte;
+    // Ataque surpresa forte: o dano começa mais perto do máximo (adaga 75%, punhal 67%, lâmina assassina 50%; 0 = normal)
+    private float surpresa;
+    // Habilidade que a Duelista usa com esta arma (ou null) e o número dela
+    // (dano a mais, ou alcance em quadradinhos no caso do furtivo)
+    @Nullable
+    private HabilidadesDaDuelista.Habilidade habilidade;
+    private int valorDaHabilidade;
     // Chave da descrição no arquivo de idioma
     private String chaveDaDescricao;
 
     public ArmaDoShattered(Properties propriedades, String nome, int tier, int danoMinimo, int danoMaximo, float precisao, float atraso,
-            int defesa, boolean surpresaForte) {
+            int defesa, float surpresa, @Nullable HabilidadesDaDuelista.Habilidade habilidade, int valorDaHabilidade) {
         super(propriedades.stacksTo(1).attributes(atributos(atraso)));
         this.tier = tier;
         this.danoMinimo = danoMinimo;
@@ -46,7 +53,9 @@ public class ArmaDoShattered extends Item implements ArmaComDano {
         this.precisao = precisao;
         this.atraso = atraso;
         this.defesa = defesa;
-        this.surpresaForte = surpresaForte;
+        this.surpresa = surpresa;
+        this.habilidade = habilidade;
+        this.valorDaHabilidade = valorDaHabilidade;
         this.chaveDaDescricao = "item.pixeldungeon." + nome + ".descricao";
     }
 
@@ -64,6 +73,15 @@ public class ArmaDoShattered extends Item implements ArmaComDano {
         return tier;
     }
 
+    @Nullable
+    public HabilidadesDaDuelista.Habilidade habilidade() {
+        return habilidade;
+    }
+
+    public int valorDaHabilidade() {
+        return valorDaHabilidade;
+    }
+
     // Igual ao Shattered: 8 + 2 por tier (tier 1 = 10 de força)
     public int forcaNecessaria() {
         return 8 + tier * 2;
@@ -71,11 +89,11 @@ public class ArmaDoShattered extends Item implements ArmaComDano {
 
     // Dano de um golpe (mais provável no meio do intervalo, igual ao Shattered).
     // Cada ponto de força acima do necessário pode somar até +1 de dano.
-    // No ataque surpresa, a adaga bate entre 75% e 100% do dano máximo.
-    public int sortearDano(RandomSource sorteio, int forcaDoHeroi, boolean surpresa) {
+    // No ataque surpresa, a adaga bate entre 75% e 100% do dano máximo (o punhal 67%, a lâmina assassina 50%).
+    public int sortearDano(RandomSource sorteio, int forcaDoHeroi, boolean deSurpresa) {
         int minimo = danoMinimo;
-        if (surpresa && surpresaForte) {
-            minimo = danoMinimo + Math.round((danoMaximo - danoMinimo) * 0.75f);
+        if (deSurpresa && surpresa > 0) {
+            minimo = danoMinimo + Math.round((danoMaximo - danoMinimo) * surpresa);
         }
         int dano = Sorteio.normal(sorteio, minimo, danoMaximo);
         int forcaSobrando = forcaDoHeroi - forcaNecessaria();
@@ -128,14 +146,14 @@ public class ArmaDoShattered extends Item implements ArmaComDano {
         if (defesa > 0) {
             linhas.add(Component.translatable("dica.pixeldungeon.defesa_extra", defesa).withStyle(ChatFormatting.GRAY));
         }
-        if (surpresaForte) {
-            linhas.add(Component.translatable("dica.pixeldungeon.surpresa_forte").withStyle(ChatFormatting.GRAY));
+        if (surpresa > 0) {
+            linhas.add(Component.translatable("dica.pixeldungeon.surpresa_forte", Math.round(surpresa * 100)).withStyle(ChatFormatting.GRAY));
         }
-        // Habilidade que a Duelista pode usar com esta arma
-        HabilidadesDaDuelista.Habilidade habilidade = HabilidadesDaDuelista.habilidadeDe(this);
+        // Habilidade que a Duelista pode usar com esta arma (com o número desta arma)
         if (habilidade != null) {
             linhas.add(Component.translatable("dica.pixeldungeon.habilidade", Component.translatable(habilidade.chaveDoNome()))
                     .withStyle(ChatFormatting.AQUA));
+            Textos.adicionarQuebrado(linhas, habilidade.chaveDaDescricao(), ChatFormatting.DARK_AQUA, valorDaHabilidade);
         }
         Textos.adicionarQuebrado(linhas, chaveDaDescricao, ChatFormatting.DARK_GRAY);
     }

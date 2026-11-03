@@ -10,9 +10,14 @@ import net.minecraft.network.chat.Component;
 public class Textos {
     private static final int LARGURA_DA_LINHA = 40;
 
-    // Pega o texto traduzido e quebra em várias linhas de até 40 letras
-    public static void adicionarQuebrado(List<Component> linhas, String chave, ChatFormatting cor) {
+    // Pega o texto traduzido e quebra em várias linhas de até 40 letras.
+    // Os números vão no lugar dos %s do texto; os "_" de destaque (das telas) somem.
+    public static void adicionarQuebrado(List<Component> linhas, String chave, ChatFormatting cor, Object... numeros) {
         String texto = Language.getInstance().getOrDefault(chave);
+        if (numeros.length > 0) {
+            texto = String.format(texto, numeros);
+        }
+        texto = texto.replace("_", "");
         StringBuilder linha = new StringBuilder();
         for (String palavra : texto.split(" ")) {
             if (linha.length() > 0 && linha.length() + 1 + palavra.length() > LARGURA_DA_LINHA) {

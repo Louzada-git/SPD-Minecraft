@@ -31,7 +31,7 @@ public class CajadoDoMago extends ArmaDoShattered {
     private static final int COR_DA_BARRA = 0xB07CFF;
 
     public CajadoDoMago(Properties propriedades) {
-        super(propriedades, "cajado_do_mago", 1, 1, 6, 1.0f, 1.0f, 0, false);
+        super(propriedades, "cajado_do_mago", 1, 1, 6, 1.0f, 1.0f, 0, 0.0f, null, 0);
     }
 
     // ---- Cargas ----

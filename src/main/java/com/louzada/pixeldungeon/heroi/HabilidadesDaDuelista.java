@@ -7,7 +7,6 @@ import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
-import com.louzada.pixeldungeon.registro.ModItens;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -29,11 +28,12 @@ import net.minecraft.world.phys.Vec3;
 //   - recarrega 1 carga a cada 60 a 45 turnos (mais rápido quanto mais vazio)
 //   - cada habilidade gasta 1 carga
 //
-//   espada curta desgastada: cortar (+3 de dano, acerto garantido; se matar, o próximo corte em 5 turnos é de graça)
-//   adaga: furtivo (pula até 5 quadradinhos pra onde está olhando e fica invisível por 2 turnos)
-//   luvas cravejadas: combinação (acerto garantido, +3 de dano por golpe dado nos últimos 5 turnos)
-//   florete: estocada (avança até um inimigo a 1 quadradinho de distância e golpeia com +5, acerto garantido)
-//   maça: golpe pesado (acerto garantido; de surpresa dá +3; atordoa por 5 turnos)
+// Cada arma tem a sua habilidade e o seu número (fica no ModItens). As armas mais fortes têm números maiores:
+//   cortar (espadas): +3 a +7 de dano, acerto garantido; se matar, o próximo corte em 5 turnos é de graça
+//   furtivo (adaga, punhal, lâmina assassina): pula até 5/4/3 quadradinhos pra onde está olhando e fica invisível por 2 turnos
+//   combinação (luvas, sai): acerto garantido, +3/+4 de dano por golpe dado nos últimos 5 turnos
+//   estocada (florete, katana): avança até um inimigo a 1 quadradinho de distância e golpeia com +5/+8, acerto garantido
+//   golpe pesado (maça, machadinha, clava, martelo): acerto garantido; de surpresa dá +3 a +6; atordoa por 5 turnos
 public class HabilidadesDaDuelista {
     public static final String CARGAS = "habilidade_cargas";
     public static final String PARCIAL = "habilidade_parcial";
@@ -41,10 +41,9 @@ public class HabilidadesDaDuelista {
     private static final String COMBO_ATE = "combo_ate";
     private static final String CORTE_GRATIS = "corte_gratis";
     private static final int TURNO = 20;
-    // Florete: alcance da estocada (1 quadradinho vazio entre a Duelista e o inimigo)
+    // Estocada: alcance (1 quadradinho vazio entre a Duelista e o inimigo)
     private static final double ALCANCE_DA_ESTOCADA = 10;
-    // Adaga: até 5 quadradinhos
-    private static final double ALCANCE_DO_FURTIVO = 20;
+    private static final int BLOCOS_POR_QUADRADINHO = 4;
 
     public enum Habilidade {
         CORTAR("cortar"),
@@ -71,18 +70,7 @@ public class HabilidadesDaDuelista {
     // A habilidade de cada arma (o cajado do Mago não tem)
     @Nullable
     public static Habilidade habilidadeDe(Item arma) {
-        if (arma == ModItens.ESPADA_CURTA_DESGASTADA.get()) {
-            return Habilidade.CORTAR;
-        } else if (arma == ModItens.ADAGA.get()) {
-            return Habilidade.FURTIVO;
-        } else if (arma == ModItens.LUVAS_CRAVEJADAS.get()) {
-            return Habilidade.COMBINACAO;
-        } else if (arma == ModItens.FLORETE.get()) {
-            return Habilidade.ESTOCADA;
-        } else if (arma == ModItens.MACA.get()) {
-            return Habilidade.GOLPE_PESADO;
-        }
-        return null;
+        return arma instanceof ArmaDoShattered armaDoShattered ? armaDoShattered.habilidade() : null;
     }
 
     // ---- Cargas ----
@@ -160,7 +148,7 @@ public class HabilidadesDaDuelista {
 
         boolean usou = switch (habilidade) {
             case CORTAR -> cortar(jogador, dados, armaDoShattered, agora);
-            case FURTIVO -> furtivo(jogador);
+            case FURTIVO -> furtivo(jogador, armaDoShattered);
             case COMBINACAO -> combinacao(jogador, dados, armaDoShattered, agora);
             case ESTOCADA -> estocada(jogador, armaDoShattered);
             case GOLPE_PESADO -> golpePesado(jogador, armaDoShattered);
@@ -198,14 +186,14 @@ public class HabilidadesDaDuelista {
         return alvo;
     }
 
-    // Espada curta: cortar
+    // Espadas: cortar
     private static boolean cortar(ServerPlayer jogador, DadosDoHeroi dados, ArmaDoShattered arma, long agora) {
         LivingEntity alvo = alvoDePerto(jogador);
         if (alvo == null) {
             return false;
         }
         boolean eraGratis = dados.ativo(CORTE_GRATIS, agora);
-        golpear(jogador, alvo, arma, 3);
+        golpear(jogador, alvo, arma, arma.valorDaHabilidade());
         dados.desativar(CORTE_GRATIS);
         // Matou: o próximo corte nos próximos 5 turnos não gasta carga (mas não dá pra encadear dois de graça)
         if (!alvo.isAlive() && !eraGratis) {
@@ -214,10 +202,10 @@ public class HabilidadesDaDuelista {
         return true;
     }
 
-    // Adaga: furtivo
-    private static boolean furtivo(ServerPlayer jogador) {
+    // Adagas: furtivo
+    private static boolean furtivo(ServerPlayer jogador, ArmaDoShattered arma) {
         ServerLevel mundo = jogador.serverLevel();
-        Vec3 mira = Mira.ponto(jogador, ALCANCE_DO_FURTIVO);
+        Vec3 mira = Mira.ponto(jogador, arma.valorDaHabilidade() * BLOCOS_POR_QUADRADINHO);
         Vec3 destino = lugarPraFicar(jogador, mira);
         if (destino == null) {
             avisar(jogador, "mensagem.pixeldungeon.habilidade_fora_de_alcance");
@@ -232,7 +220,7 @@ public class HabilidadesDaDuelista {
         return true;
     }
 
-    // Luvas: combinação
+    // Luvas e sai: combinação
     private static boolean combinacao(ServerPlayer jogador, DadosDoHeroi dados, ArmaDoShattered arma, long agora) {
         LivingEntity alvo = alvoDePerto(jogador);
         if (alvo == null) {
@@ -241,14 +229,14 @@ public class HabilidadesDaDuelista {
         int golpes = golpesSeguidos(dados, agora);
         dados.definir(COMBO, 0);
         dados.desativar(COMBO_ATE);
-        golpear(jogador, alvo, arma, 3 * golpes);
+        golpear(jogador, alvo, arma, arma.valorDaHabilidade() * golpes);
         if (golpes >= 2) {
             Particulas.faiscas(alvo);
         }
         return true;
     }
 
-    // Florete: estocada
+    // Florete e katana: estocada
     private static boolean estocada(ServerPlayer jogador, ArmaDoShattered arma) {
         LivingEntity alvo = Mira.inimigo(jogador, ALCANCE_DA_ESTOCADA);
         if (alvo == null) {
@@ -273,10 +261,10 @@ public class HabilidadesDaDuelista {
         }
         jogador.teleportTo(destino.x, destino.y, destino.z);
         jogador.level().playSound(null, jogador.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.0F, 1.3F);
-        return golpear(jogador, alvo, arma, 5);
+        return golpear(jogador, alvo, arma, arma.valorDaHabilidade());
     }
 
-    // Maça: golpe pesado
+    // Maças, machadinha e martelo: golpe pesado
     private static boolean golpePesado(ServerPlayer jogador, ArmaDoShattered arma) {
         LivingEntity alvo = alvoDePerto(jogador);
         if (alvo == null) {
@@ -284,7 +272,7 @@ public class HabilidadesDaDuelista {
         }
         // Só dá o dano a mais de surpresa (igual ao Shattered)
         boolean surpresa = alvo instanceof MobDoShattered inimigo && inimigo.surpreendidoPor(jogador);
-        golpear(jogador, alvo, arma, surpresa ? 3 : 0);
+        golpear(jogador, alvo, arma, surpresa ? arma.valorDaHabilidade() : 0);
         if (alvo.isAlive()) {
             alvo.addEffect(new MobEffectInstance(ModEfeitos.ATORDOADO, 5 * TURNO));
             NumerosFlutuantes.mostrarTraduzido(alvo, "efeito.pixeldungeon.atordoado.mostrar", NumerosFlutuantes.AMARELO);

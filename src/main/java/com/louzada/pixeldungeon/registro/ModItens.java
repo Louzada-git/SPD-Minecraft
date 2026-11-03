@@ -1,6 +1,7 @@
 package com.louzada.pixeldungeon.registro;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista.Habilidade;
 import com.louzada.pixeldungeon.item.ArcoEspiritual;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
@@ -27,20 +28,24 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ModItens {
     public static final DeferredRegister.Items ITENS = DeferredRegister.createItems(PixelDungeon.MODID);
 
-    // ---- Armas iniciais das classes (números do Shattered) ----
-    // nome, tier, dano mínimo, dano máximo, precisão, atraso entre ataques, defesa extra, surpresa forte
+    // ---- Armas (números do Shattered) ----
+    // nome, tier, dano mínimo, dano máximo, precisão, atraso entre ataques, defesa extra, surpresa forte,
+    // habilidade da Duelista e o número dela (dano a mais; no furtivo, o alcance em quadradinhos)
 
-    public static final DeferredItem<ArmaDoShattered> ESPADA_CURTA_DESGASTADA = arma("espada_curta_desgastada", 1, 1, 10, 1.0f, 1.0f, 0, false);
+    // Tier 1: as armas iniciais das classes
+    public static final DeferredItem<ArmaDoShattered> ESPADA_CURTA_DESGASTADA = arma("espada_curta_desgastada", 1, 1, 10, 1.0f, 1.0f, 0, 0,
+            Habilidade.CORTAR, 3);
     // Também lança mísseis mágicos com o clique direito (vem com a varinha de míssil mágico dentro)
     public static final DeferredItem<CajadoDoMago> CAJADO_DO_MAGO = ITENS.registerItem("cajado_do_mago", CajadoDoMago::new);
     // Ataque surpresa quase sempre no dano máximo
-    public static final DeferredItem<ArmaDoShattered> ADAGA = arma("adaga", 1, 1, 8, 1.0f, 1.0f, 0, true);
+    public static final DeferredItem<ArmaDoShattered> ADAGA = arma("adaga", 1, 1, 8, 1.0f, 1.0f, 0, 0.75f, Habilidade.FURTIVO, 5);
     // Ataca 2x mais rápido, mas bate fraco
-    public static final DeferredItem<ArmaDoShattered> LUVAS_CRAVEJADAS = arma("luvas_cravejadas", 1, 1, 5, 1.0f, 0.5f, 0, false);
+    public static final DeferredItem<ArmaDoShattered> LUVAS_CRAVEJADAS = arma("luvas_cravejadas", 1, 1, 5, 1.0f, 0.5f, 0, 0,
+            Habilidade.COMBINACAO, 3);
     // Dá 1 de defesa extra
-    public static final DeferredItem<ArmaDoShattered> FLORETE = arma("florete", 1, 1, 8, 1.0f, 1.0f, 1, false);
+    public static final DeferredItem<ArmaDoShattered> FLORETE = arma("florete", 1, 1, 8, 1.0f, 1.0f, 1, 0, Habilidade.ESTOCADA, 5);
     // 40% a mais de precisão
-    public static final DeferredItem<ArmaDoShattered> MACA = arma("maca", 1, 1, 8, 1.4f, 1.0f, 0, false);
+    public static final DeferredItem<ArmaDoShattered> MACA = arma("maca", 1, 1, 8, 1.4f, 1.0f, 0, 0, Habilidade.GOLPE_PESADO, 3);
 
     // ---- Itens únicos das classes ----
 
@@ -125,9 +130,9 @@ public class ModItens {
     public static final DeferredItem<BlockItem> ESCADA_DESCIDA = ITENS.registerSimpleBlockItem("escada_descida", ModBlocos.ESCADA_DESCIDA);
 
     private static DeferredItem<ArmaDoShattered> arma(String nome, int tier, int danoMinimo, int danoMaximo, float precisao, float atraso,
-            int defesa, boolean surpresaForte) {
+            int defesa, float surpresa, Habilidade habilidade, int valorDaHabilidade) {
         return ITENS.registerItem(nome, propriedades -> new ArmaDoShattered(propriedades, nome, tier, danoMinimo, danoMaximo, precisao, atraso,
-                defesa, surpresaForte));
+                defesa, surpresa, habilidade, valorDaHabilidade));
     }
 
     // Usado pela aba do criativo para mostrar todos os itens do mod
