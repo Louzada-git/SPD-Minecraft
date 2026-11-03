@@ -11,6 +11,10 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
   - 1 quadradinho do Shattered = 4x4 blocos. As paredes têm 8 blocos de altura.
   - Paredes, chão e teto são inquebráveis.
 - Em cima das poças, a água pinga do teto (igual às goteiras do esgoto do Shattered).
+- **Grama** igual ao esgoto do Shattered: manchas de grama baixa e grama alta pelas salas. A grama alta é a do Minecraft, só que bem maior (3 blocos de altura).
+  - Encostou, o quadradinho inteiro (4x4) é pisoteado e vira grama baixa. Mobs também pisoteiam (o enxame, que voa, não).
+  - 1 em 6 vezes cai uma **gota de orvalho**, que voa sozinha pro **odre** do herói mais perto. Com o odre cheio, a gota cura 5% da vida.
+  - A Caçadora passa pela grama alta sem derrubar (igual ao Shattered), mas ainda ganha as gotas.
 - Andar 5: a arena do **Goo**, com 4 pilares grossos, uma poça grande no meio (o ninho dele) e poças em volta dos pilares. A sala da saída fica do lado e só abre quando ele morre.
 - Visual construído:
   - Salas com 8 blocos de altura, cornija de degraus no alto das paredes e pilares de tufo entalhado nos cantos.
@@ -24,7 +28,7 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 ### Classes e run
 
 - Menu **Escolha Seu Herói** no estilo do Shattered, com as 6 classes e a arte de cada uma: Guerreiro, Mago, Ladino, Caçadora, Duelista e Clérigo.
-- Cada classe começa com a sua arma do Shattered, armadura de pano (vestida), uma ração e o seu item único:
+- Cada classe começa com a sua arma do Shattered, armadura de pano (vestida), uma ração, um **odre** e o seu item único:
 
 | Classe | Arma | Dano | Item único |
 |---|---|---|---|
@@ -66,6 +70,8 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 | Intuição divina (talento) | 3/2 | diz se o item na outra mão é amaldiçoado |
 | Escudo de luz (talento) | 1 | 2-4 / 3-6 de armadura contra o inimigo na mira por 5 turnos |
 
+- **Odre (todas as classes):** guarda até 20 gotas de orvalho. Clique direito bebe: cada gota cura 5% da vida, e só gasta as gotas que precisa. A barrinha azul do ícone mostra quantas gotas tem.
+
 ### Talentos
 
 - Tecla **K** abre a tela de talentos, no estilo do Shattered. Do nível 2 ao 6, cada nível dá 1 ponto (5 no total), e cada talento vai até +2.
@@ -76,11 +82,11 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 | Guerreiro | refeição saudável, intuição de veterano*, raiva provocada, determinação de ferro |
 | Mago | refeição empoderadora, intuição do estudioso*, magia prolongada, barreira de apoio |
 | Ladino | rações guardadas (baús com rações de suprimentos), intuição do ladrão*, golpe surpresa, sombras protetoras |
-| Caçadora | recompensa da natureza*, intuição de sobrevivente*, ataque consecutivo, auxílio da natureza* |
+| Caçadora | recompensa da natureza (bagas na grama alta), intuição de sobrevivente*, ataque consecutivo, auxílio da natureza* |
 | Duelista | refeição fortalecedora, intuição de aventureiro*, golpe paciente (ficar parado 1 turno antes de bater), barreira agressiva |
 | Clérigo | magias saciadas, intuição divina, luz abrasadora, escudo de luz |
 
-\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: itens não identificados (as intuições), grama alta e plantas (recompensa e auxílio da natureza). A tela de talentos avisa isso.
+\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: itens não identificados (as intuições) e plantas (auxílio da natureza). A tela de talentos avisa isso.
 
 ### Combate e inimigos
 
@@ -192,7 +198,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 
 ## O que vem depois
 
-1. **Itens:** poções e pergaminhos desconhecidos (já começados, com cor e runa aleatórias por run), pergaminho de melhoria, itens não identificados, grama alta e plantas (pra os talentos que faltam), e opção no menu pra compartilhar o que foi identificado.
+1. **Itens:** poções e pergaminhos desconhecidos (já começados, com cor e runa aleatórias por run), pergaminho de melhoria, itens não identificados, sementes e plantas (pra os talentos que faltam), e opção no menu pra compartilhar o que foi identificado.
 2. **Texturas próprias** dos inimigos e dos blocos.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
