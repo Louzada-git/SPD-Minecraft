@@ -1,69 +1,67 @@
 package com.louzada.pixeldungeon.cliente;
 
+import java.util.Set;
+
 import com.louzada.pixeldungeon.PixelDungeon;
-import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
-import com.louzada.pixeldungeon.registro.ModItens;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
-// Avisos do lado direito da barra de itens:
-//   - o ouro do herói (com o desenho da moeda)
-//   - pontos de talento pra gastar (tecla K)
-//   - cargas da habilidade da arma da Duelista (tecla V) e os golpes seguidos das luvas
+// A tela do jogo igual à interface completa do Shattered:
+//   - embaixo à esquerda, a barra de status (rosto do herói, vida, experiência, nível e efeitos)
+//   - embaixo à direita, a barra de ferramentas com as 9 casinhas de atalho
+// A barra de itens, os corações, a fome, a armadura, a experiência e os efeitos do Minecraft somem durante a run.
 public class HudDoHeroi {
-    private static final int AMARELO = 0xFFFF44;
-    private static final int CINZA = 0xAAAAAA;
-    private static final int DOURADO = 0xFFD700;
-    private static ItemStack moeda = ItemStack.EMPTY;
+    // As partes da tela do Minecraft que o Shattered mostra do jeito dele
+    private static final Set<ResourceLocation> ESCONDIDAS = Set.of(VanillaGuiLayers.HOTBAR, VanillaGuiLayers.PLAYER_HEALTH,
+            VanillaGuiLayers.ARMOR_LEVEL, VanillaGuiLayers.FOOD_LEVEL, VanillaGuiLayers.EXPERIENCE_BAR, VanillaGuiLayers.EXPERIENCE_LEVEL,
+            VanillaGuiLayers.EFFECTS);
+    private static final Set<ResourceLocation> ESCONDIDAS_NO_INVENTARIO = Set.of(VanillaGuiLayers.CHAT, VanillaGuiLayers.CROSSHAIR);
+    // Espaço entre a barra de status e a barra de ferramentas
+    private static final int ESPACO = 4;
 
     public static void aoRegistrar(RegisterGuiLayersEvent evento) {
         evento.registerAbove(VanillaGuiLayers.HOTBAR, ResourceLocation.fromNamespaceAndPath(PixelDungeon.MODID, "hud_do_heroi"), HudDoHeroi::desenhar);
     }
 
+    // O herói está na run (tem classe e não está só assistindo)
+    public static boolean ativo() {
+        Minecraft jogo = Minecraft.getInstance();
+        return jogo.player != null && EstadoNoCliente.classe() != null && !jogo.player.isSpectator();
+    }
+
+    // Cabe a barra de status do lado da barra de ferramentas? Se não couber, ela vai pro canto de cima.
+    public static boolean cabeEmbaixo(int largura, int larguraDaDireita) {
+        return largura >= PainelDeStatus.LARGURA + ESPACO + larguraDaDireita;
+    }
+
+    public static void aoDesenharCamada(RenderGuiLayerEvent.Pre evento) {
+        if (ESCONDIDAS.contains(evento.getName()) && ativo()) {
+            evento.setCanceled(true);
+        }
+        // Com o inventário aberto, o chat e a mira ficariam aparecendo entre os painéis
+        if (ESCONDIDAS_NO_INVENTARIO.contains(evento.getName()) && Minecraft.getInstance().screen instanceof TelaDoInventario) {
+            evento.setCanceled(true);
+        }
+    }
+
     private static void desenhar(GuiGraphics desenho, DeltaTracker tempo) {
         Minecraft jogo = Minecraft.getInstance();
-        if (jogo.player == null || jogo.options.hideGui || jogo.player.isSpectator() || EstadoNoCliente.classe() == null) {
+        LocalPlayer jogador = jogo.player;
+        // Com o inventário aberto, quem desenha tudo é a tela do inventário
+        if (!ativo() || jogo.options.hideGui || jogo.screen instanceof TelaDoInventario) {
             return;
         }
-        int x = desenho.guiWidth() / 2 + 96;
-        int y = desenho.guiHeight() - 12;
-
-        // Ouro: o desenho da pilha de moedas, pela metade, e o total do lado
-        if (moeda.isEmpty()) {
-            moeda = new ItemStack(ModItens.OURO.get());
-        }
-        desenho.pose().pushPose();
-        desenho.pose().translate(x, y - 1, 0);
-        desenho.pose().scale(0.625F, 0.625F, 1.0F);
-        desenho.renderItem(moeda, 0, 0);
-        desenho.pose().popPose();
-        desenho.drawString(jogo.font, String.valueOf(EstadoNoCliente.ouro()), x + 12, y, DOURADO);
-        y -= 11;
-
-        if (EstadoNoCliente.classe() == ClasseDoHeroi.DUELISTA) {
-            int cargas = EstadoNoCliente.cargasDaHabilidade();
-            int maximo = EstadoNoCliente.cargasMaximasDaHabilidade();
-            StringBuilder pontos = new StringBuilder();
-            for (int i = 0; i < maximo; i++) {
-                pontos.append(i < cargas ? '◆' : '◇');
-            }
-            Component texto = Component.translatable("hud.pixeldungeon.habilidade", TeclasDoMod.HABILIDADE.getTranslatedKeyMessage(), pontos.toString());
-            desenho.drawString(jogo.font, texto, x, y, cargas > 0 ? AMARELO : CINZA);
-            if (EstadoNoCliente.golpesSeguidos() > 0) {
-                desenho.drawString(jogo.font, "x" + EstadoNoCliente.golpesSeguidos(), x + jogo.font.width(texto) + 4, y, 0xFF8800);
-            }
-            y -= 11;
-        }
-        if (EstadoNoCliente.pontosLivres() > 0) {
-            desenho.drawString(jogo.font, Component.translatable("hud.pixeldungeon.pontos_de_talento", EstadoNoCliente.pontosLivres(),
-                    TeclasDoMod.TALENTOS.getTranslatedKeyMessage()), x, y, AMARELO);
-        }
+        int largura = desenho.guiWidth();
+        int altura = desenho.guiHeight();
+        int yDoStatus = cabeEmbaixo(largura, BarraDeFerramentas.LARGURA) ? altura - PainelDeStatus.ALTURA : 0;
+        PainelDeStatus.desenhar(desenho, jogador, 0, yDoStatus);
+        BarraDeFerramentas.desenhar(desenho, jogador, largura, altura - BarraDeFerramentas.ALTURA, true, -1, -1);
     }
 }
