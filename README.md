@@ -10,7 +10,7 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 - Andares do esgoto (1 a 4) gerados com salas, corredores e poças de água, no estilo do Shattered.
   - 1 quadradinho do Shattered = 4x4 blocos. As paredes têm 8 blocos de altura.
   - Paredes, chão e teto são inquebráveis.
-- Andar 5: a arena do chefe, com 4 pilares grossos (o Goo vem depois).
+- Andar 5: a arena do **Goo**, com 4 pilares grossos, uma poça grande no meio (o ninho dele) e poças em volta dos pilares. A sala da saída fica do lado e só abre quando ele morre.
 - Visual construído:
   - Salas com 8 blocos de altura, cornija de degraus no alto das paredes e pilares de tufo entalhado nos cantos.
   - Corredores em túnel mais baixos (6 blocos), com arcos dos dois lados.
@@ -68,6 +68,21 @@ Inimigos do esgoto com os números do Shattered:
 - Mais jogadores = inimigos com mais vida (+50% por jogador a mais).
 - Herói acima do nível máximo de um inimigo não ganha XP com ele, igual ao Shattered.
 - Os inimigos usam modelos e texturas do Minecraft por enquanto. Na aba do criativo tem um ovo de cada um pra testar.
+
+### Goo, o chefe do esgoto
+
+| Chefe | Andar | Vida | Precisão | Esquiva | Dano | Armadura | XP |
+|---|---|---|---|---|---|---|---|
+| Goo | 5 | 100 | 10 (15 furioso) | 8 (12 furioso) | 1-8 (1-12 furioso) | 0-2 | 10 |
+
+- Dorme no ninho, no meio da arena. Quando acorda grita "GULP-GULP!" e aparece a **barra de vida de chefe** no alto da tela.
+- **Na água ele se cura** 1 de vida por segundo (até dormindo). O segredo é tirar ele da poça.
+- **Golpe carregado:** 1 em cada 5 ataques (1 em 2 furioso) ele bombeia em vez de bater: aparece "!!!", ele incha e um círculo de gosma no chão mostra o alcance (2 quadradinhos). Depois de 2 segundos solta um golpe com **3x o dano e 2x a precisão**. Quem sai do círculo antes faz ele desistir.
+- Com metade da vida ou menos fica **furioso**: bate mais forte, acerta mais, esquiva mais e bombeia mais vezes. A barra fica vermelha. Se ele se curar na água acima da metade, acalma.
+- 1 em cada 3 golpes deixa **muco cáustico**: 1 de dano por segundo durante 20 segundos. Entrar na água lava na hora.
+- Enquanto ele luta, o andar fica **selado**: ninguém sobe a escada. A luta acaba se não sobrar nenhum herói vivo perto dele.
+- Quando morre deixa 2 a 4 **bolhas de gosma** e a saída do andar abre. Todo mundo no andar vê "Chefe Derrotado". A prisão (andar 6 em diante) ainda não existe, então o alçapão avisa que o caminho está bloqueado.
+- Mais jogadores = mais vida, igual aos outros inimigos.
 
 As texturas dos blocos ainda são do próprio Minecraft (provisórias). As artes do menu e os ícones dos itens são do Shattered.
 
@@ -132,8 +147,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 ## O que vem depois
 
 1. **Itens:** poções e pergaminhos desconhecidos (já começados), os itens únicos das classes (selo do Guerreiro, varinha do Mago, capa do Ladino, arco da Caçadora, habilidade do florete, tomo do Clérigo), armadura de pano, armas e armaduras com força mínima, poções e pergaminhos desconhecidos (cor e runa aleatórias por run), pergaminho de melhoria, comida, e opção no menu pra compartilhar o que foi identificado.
-2. **Goo:** o chefe do andar 5.
-3. **Texturas próprias** dos inimigos e dos blocos.
+2. **Texturas próprias** dos inimigos e dos blocos.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
 
@@ -144,8 +158,9 @@ src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas e blocos de decoração
-  item/                        armas, armadura e ankh
-  entidade/                    os inimigos do Shattered
+  item/                        armas, armadura, ankh e bolha de gosma
+  entidade/                    os inimigos do Shattered e o Goo
+  efeito/                      efeitos do Shattered (muco cáustico)
   combate/                     sorteio de dano e números flutuantes
   heroi/
     ClasseDoHeroi.java         as 6 classes e o kit de cada uma
