@@ -9,7 +9,9 @@ import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.entidade.LuzGuia;
 import com.louzada.pixeldungeon.item.Artefato;
 import com.louzada.pixeldungeon.item.Cargas;
+import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.item.TomoSagrado;
+import com.louzada.pixeldungeon.registro.ModComponentes;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.ChatFormatting;
@@ -158,8 +160,14 @@ public class MagiasDoClerigo {
             jogador.displayClientMessage(Component.translatable("magia.pixeldungeon.intuicao_divina.sem_item").withStyle(ChatFormatting.GRAY), true);
             return false;
         }
-        jogador.displayClientMessage(Component.translatable("magia.pixeldungeon.intuicao_divina.limpo", item.getHoverName())
-                .withStyle(ChatFormatting.YELLOW), false);
+        // Revela se a arma tem maldição (os outros itens nunca são amaldiçoados)
+        boolean amaldicoado = NivelDoItem.amaldicoado(item);
+        if (NivelDoItem.podeIdentificar(item)) {
+            item.remove(ModComponentes.MALDICAO_CONHECIDA.get());
+        }
+        jogador.displayClientMessage(Component.translatable(amaldicoado ? "magia.pixeldungeon.intuicao_divina.amaldicoado"
+                : "magia.pixeldungeon.intuicao_divina.limpo", item.getHoverName())
+                .withStyle(amaldicoado ? ChatFormatting.DARK_PURPLE : ChatFormatting.YELLOW), false);
         Particulas.subindoEmVolta(jogador, ParticleTypes.END_ROD, 6, 0.05);
         jogador.level().playSound(null, jogador.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.0F, 1.2F);
         return true;

@@ -8,32 +8,32 @@ import javax.annotation.Nullable;
 // Os 4 primeiros talentos (tier 1) de cada classe, iguais aos do Shattered.
 // Cada talento vai até +2. O herói ganha 1 ponto por nível do 2 ao 6 (5 pontos no total).
 //
-// Alguns talentos dependem de coisas que o mod ainda não tem (itens não identificados, plantas).
+// Alguns talentos dependem de coisas que o mod ainda não tem (varinhas, anéis, armas de arremesso).
 // Eles podem ser escolhidos, mas a dica avisa que ainda não fazem nada ("pendente").
 public enum Talento {
     // Guerreiro
     REFEICAO_SAUDAVEL("refeicao_saudavel", ClasseDoHeroi.GUERREIRO, null),
-    INTUICAO_DE_VETERANO("intuicao_de_veterano", ClasseDoHeroi.GUERREIRO, "identificar"),
+    INTUICAO_DE_VETERANO("intuicao_de_veterano", ClasseDoHeroi.GUERREIRO, null),
     RAIVA_PROVOCADA("raiva_provocada", ClasseDoHeroi.GUERREIRO, null),
     DETERMINACAO_DE_FERRO("determinacao_de_ferro", ClasseDoHeroi.GUERREIRO, null),
     // Mago
     REFEICAO_EMPODERADORA("refeicao_empoderadora", ClasseDoHeroi.MAGO, null),
-    INTUICAO_DO_ESTUDIOSO("intuicao_do_estudioso", ClasseDoHeroi.MAGO, "identificar"),
+    INTUICAO_DO_ESTUDIOSO("intuicao_do_estudioso", ClasseDoHeroi.MAGO, "varinhas"),
     MAGIA_PROLONGADA("magia_prolongada", ClasseDoHeroi.MAGO, null),
     BARREIRA_DE_APOIO("barreira_de_apoio", ClasseDoHeroi.MAGO, null),
     // Ladino
     RACOES_GUARDADAS("racoes_guardadas", ClasseDoHeroi.LADINO, null),
-    INTUICAO_DO_LADRAO("intuicao_do_ladrao", ClasseDoHeroi.LADINO, "identificar"),
+    INTUICAO_DO_LADRAO("intuicao_do_ladrao", ClasseDoHeroi.LADINO, "aneis"),
     GOLPE_SURPRESA("golpe_surpresa", ClasseDoHeroi.LADINO, null),
     SOMBRAS_PROTETORAS("sombras_protetoras", ClasseDoHeroi.LADINO, null),
     // Caçadora
     RECOMPENSA_DA_NATUREZA("recompensa_da_natureza", ClasseDoHeroi.CACADORA, null),
-    INTUICAO_DE_SOBREVIVENTE("intuicao_de_sobrevivente", ClasseDoHeroi.CACADORA, "identificar"),
+    INTUICAO_DE_SOBREVIVENTE("intuicao_de_sobrevivente", ClasseDoHeroi.CACADORA, "arremesso"),
     ATAQUE_CONSECUTIVO("ataque_consecutivo", ClasseDoHeroi.CACADORA, null),
-    AUXILIO_DA_NATUREZA("auxilio_da_natureza", ClasseDoHeroi.CACADORA, "plantas"),
+    AUXILIO_DA_NATUREZA("auxilio_da_natureza", ClasseDoHeroi.CACADORA, null),
     // Duelista
     REFEICAO_FORTALECEDORA("refeicao_fortalecedora", ClasseDoHeroi.DUELISTA, null),
-    INTUICAO_DE_AVENTUREIRO("intuicao_de_aventureiro", ClasseDoHeroi.DUELISTA, "identificar"),
+    INTUICAO_DE_AVENTUREIRO("intuicao_de_aventureiro", ClasseDoHeroi.DUELISTA, null),
     GOLPE_PACIENTE("golpe_paciente", ClasseDoHeroi.DUELISTA, null),
     BARREIRA_AGRESSIVA("barreira_agressiva", ClasseDoHeroi.DUELISTA, null),
     // Clérigo
