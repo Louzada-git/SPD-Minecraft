@@ -7,12 +7,18 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 ## O que já tem
 
 - O tipo de mundo padrão virou a dungeon: sem Nether, sem End e sem terreno normal.
-- Andares do esgoto (1 a 4) gerados com salas, corredores e poças de água, no estilo do Shattered.
+- Andares do esgoto (1 a 4) gerados igual ao Shattered (o mesmo jeito de montar o mapa do jogo original):
+  - A entrada, a saída, de 4 a 6 salas comuns (algumas grandes) e 1 ou 2 salas especiais. Metade dos andares é uma volta, a outra metade é um oito, com galhos e túneis entre as salas.
+  - As salas do esgoto do Shattered: a dos canos (canais de água com uma calçada em volta), a do anel, a da ponte na água, a dos barris de armazenamento e a das plantas. Salas vizinhas às vezes viram uma só (a parede entre elas some).
+  - **Salas especiais**, sempre trancadas: **arsenal** (uma arma e uma armadura), **tesouraria** (ouro no chão ou em baús, que a partir do andar 2 podem ser mímicos), **biblioteca** (estantes e pergaminhos; o primeiro é de identificação ou de remover maldição), **jardim** (grama alta e às vezes plantas) e **cripta** (uma armadura melhor que as do andar, +1, mas amaldiçoada).
+  - Manchas de água (30%) e de grama (20%), igual ao esgoto do Shattered.
   - 1 quadradinho do Shattered = 4x4 blocos. As paredes têm 8 blocos de altura.
   - Paredes, chão e teto são inquebráveis.
+- **Portas gigantes** entre as salas: ocupam o quadradinho inteiro (4 blocos de largura e 6 de altura), com o desenho da porta do Shattered. Abrem sozinhas quando alguém (herói ou inimigo) chega perto e fecham quando todo mundo sai. Fechadas, bloqueiam a visão dos inimigos.
+  - **Portas trancadas** (com cadeado) guardam as salas especiais. Cada uma tem uma **chave de ferro** largada numa sala comum do mesmo andar: é só chegar perto da porta com a chave que ela destranca (e a chave é gasta). A chave só abre as portas do andar dela.
 - Em cima das poças, a água pinga do teto (igual às goteiras do esgoto do Shattered).
 - **Grama** igual ao esgoto do Shattered: manchas de grama baixa e grama alta pelas salas. A grama alta é a do Minecraft, só que bem maior (3 blocos de altura).
-  - Encostou, o quadradinho inteiro (4x4) é pisoteado e vira grama baixa. Mobs também pisoteiam (o enxame, que voa, não).
+  - Encostou, o quadradinho inteiro (4x4) é pisoteado e vira musgo. Mobs também pisoteiam (o enxame, que voa, não).
   - 1 em 6 vezes cai uma **gota de orvalho**, que voa sozinha pro **odre** do herói mais perto. Com o odre cheio, a gota cura 5% da vida.
   - A Caçadora passa pela grama alta sem derrubar (igual ao Shattered), mas ainda ganha as gotas.
 - Andar 5: a arena do **Goo**, com 4 pilares grossos, uma poça grande no meio (o ninho dele) e poças em volta dos pilares. A sala da saída fica do lado e só abre quando ele morre.
@@ -20,7 +26,8 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
   - Salas com 8 blocos de altura, cornija de degraus no alto das paredes e pilares de tufo entalhado nos cantos.
   - Corredores em túnel mais baixos (6 blocos), com arcos dos dois lados.
   - Paredes de tijolo de pedra que variam sozinhas (com musgo, rachadas) e rodapé de tijolo de tufo.
-  - Chão de tufo polido, musgo espalhado (mais perto das poças) e lanternas penduradas por correntes no meio das salas.
+  - Chão de tufo polido e lanternas penduradas por correntes no meio das salas.
+  - Chão especial de tufo entalhado nas pontes e na biblioteca, estátuas de tufo entalhado, estantes de livros e pilhas de barris.
   - Moldura de tufo entalhado em volta das escadas.
 - Escada de subida na entrada de cada andar e alçapão de descida na saída.
 - Sem dia/noite, sem chuva e sem mobs do Minecraft nascendo.
@@ -33,8 +40,8 @@ Igual à interface completa do Shattered. Durante a run, a barra de itens, os co
   - Em cima das barras ficam os ícones dos **efeitos** (piscando quando estão acabando), o de **fome** ("Faminto" quando falta 1/3 da comida, "Morrendo de fome" quando acaba) e uma estrela com a tecla **K** quando tem ponto de talento pra gastar.
   - O rosto pisca em vermelho com pouca vida (menos de 1/3) e em amarelo por 10 segundos quando ganha um ponto de talento.
 - **Embaixo à direita, a barra de ferramentas:** os botões de procurar, esperar e mochila do Shattered e, à esquerda deles, as **9 casinhas** da barra de itens. A do item na mão fica mais clara, com borda amarela. O item da mão esquerda aparece numa casinha solta do lado. A Duelista ganha uma etiqueta em cima com as cargas da habilidade.
-- **Inventário (tecla E):** abre igual ao do Shattered: a barra de ferramentas sobe e embaixo dela aparece o painel do inventário. O jogo continua aparecendo atrás (sem escurecer).
-  - Em cima, o equipamento (cabeça, peito, pernas, pés e mão esquerda) e o ouro; embaixo, as 27 casinhas da mochila.
+- **Inventário (tecla E):** abre igual ao do Shattered: a barra de ferramentas sobe e embaixo dela aparece o painel do inventário. O jogo continua aparecendo atrás (sem escurecer) e fica **pausado** enquanto o inventário está aberto (no single player).
+  - Em cima, igual ao Shattered: a casinha da **armadura**, a da mão esquerda e o ouro; embaixo, as 27 casinhas da mochila. Os outros espaços de armadura do Minecraft (cabeça, pernas e pés) não existem na run.
   - À esquerda, o painel do herói: a skin em 3D olhando pro mouse, a classe, o nível, a força e o andar.
   - As casinhas mudam de cor igual ao Shattered: cinza claro no que está equipado, avermelhado no que se sabe que é amaldiçoado e arroxeado no que ainda não foi identificado (armas, poções e pergaminhos).
   - Passar o mouse nos efeitos, na fome, nas barras, no ouro e nos botões mostra o que eles são. Clicar no herói (ou apertar **K**) abre os talentos; clicar na mochila fecha o inventário.
@@ -56,6 +63,9 @@ Igual à interface completa do Shattered. Durante a run, a barra de itens, os co
 | Clérigo | Maça (+40% de precisão) | 1-8 | tomo sagrado |
 
 - Regras do Shattered: força (começa em 10), nível, vida (20, +5 por nível), precisão e esquiva. Todo golpe corpo a corpo sorteia se acerta, e o dano é sorteado pela arma. A barra de XP mostra o nível do Shattered.
+- **1 turno = 2 segundos.** Tudo que no Shattered conta turnos (efeitos, recargas, fome, renascimento dos inimigos...) usa esse tempo.
+- **Poções** são bebidas na hora. **Comer** também é na hora, mas o herói fica comendo (sem atacar nem usar itens) pelos mesmos turnos do Shattered: 3 turnos (1 na baga e na ração de suprimentos).
+- Com pouca fome, o herói continua correndo normalmente (o Minecraft não deixa mais lento).
 - A run começa quando alguém escolhe a classe. Quem entra depois escolhe a sua e começa no andar 1.
 - Quem morre vira espectador. Um aliado pode trazer ele de volta usando um **ankh** (clique direito). Se todos morrerem, a run acaba e todo mundo volta pro menu.
 - As armas já vêm com os ataques do Better Combat (funciona com ou sem ele instalado).
@@ -63,7 +73,7 @@ Igual à interface completa do Shattered. Durante a run, a barra de itens, os co
 ### Itens das classes
 
 - **Selo quebrado (Guerreiro):** vem afixado na armadura de pano. Quando um golpe vai deixar o Guerreiro com metade da vida ou menos, ele ganha 5 de blindagem na hora (os corações amarelos). Depois precisa de 150 turnos pra proteger de novo. A blindagem some se ficar 5 turnos sem inimigos por perto.
-- **Cajado do Mago:** já vem com a varinha de míssil mágico dentro. Clique direito lança um raio de luz branca que sempre acerta e dá 2-8 de dano mágico (a armadura não segura). Tem 4 cargas, mostradas na barrinha roxa do ícone, que voltam sozinhas (de ~33 a ~45 segundos cada).
+- **Cajado do Mago:** já vem com a varinha de míssil mágico dentro. Clique direito lança um raio de luz branca que sempre acerta e dá 2-8 de dano mágico (a armadura não segura). Tem 4 cargas, mostradas na barrinha roxa do ícone, que voltam sozinhas (de ~33 a ~45 turnos cada).
 - **Capa das sombras (Ladino):** clique direito liga e desliga a invisibilidade. Os inimigos perdem o Ladino de vista e não acordam. Ligar gasta 1 carga e depois mais 1 a cada 4 turnos. Atacar desliga a capa (e o ataque é surpresa). Começa com 3 cargas e fica mais forte com o uso (até o nível 10).
 - **Arco espiritual (Caçadora):** clique direito atira uma flecha mágica (flechas infinitas). Dano de 1-6 que cresce com o nível. É um ataque físico: sorteia acerto e a armadura segura. Colado no inimigo, acerta pior.
 - **Habilidades das armas (Duelista):** tecla **V**. Começa com 2 cargas (até 8 com os níveis), que voltam a cada 45-60 turnos. As cargas aparecem numa etiqueta em cima da barra de ferramentas.
@@ -119,9 +129,35 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 | Sacrificante | 1 em 10 golpes: quem bate sangra (mais, quanto mais vida tiver) |
 | Inconstante | 1 em 4 golpes: a precisão cai pra um quinto por 10 turnos (acertar desfaz) |
 
+### Armaduras
+
+5 armaduras do Shattered, com os mesmos números. Elas aparecem pelos andares com o mesmo sorteio de tier das armas, e vêm sem identificar (+0, +1 ou +2, e 30% amaldiçoadas).
+
+| Armadura | Tier | Defesa | Força |
+|---|---|---|---|
+| Armadura de pano | 1 | 0-2 | 10 |
+| Armadura de couro | 2 | 0-4 | 12 |
+| Armadura de malha | 3 | 0-6 | 14 |
+| Armadura de escamas | 4 | 0-8 | 16 |
+| Armadura de placas | 5 | 0-10 | 18 |
+
+- Cada golpe recebido perde um valor sorteado de 0 até a defesa. Cada nível dá +1 na defesa mínima e +tier na máxima.
+- Igual ao Shattered, cada ponto de força que falta tira 2 de defesa, deixa a esquiva bem menor e o herói **anda mais devagar** (as armas pesadas demais atacam mais devagar).
+- A armadura se identifica sozinha depois de 20 golpes recebidos (a intuição de veterano do Guerreiro acelera, e com +2 identifica na hora de vestir).
+- **Armadura amaldiçoada:** vestir revela a maldição, e aí ela **gruda no corpo**: não dá pra tirar até remover a maldição.
+
+| Maldição | O que faz |
+|---|---|
+| Antientropia | 1 em 8 golpes recebidos: congela tudo em volta, mas põe fogo em quem veste (a não ser na água) |
+| Corrosão | 1 em 10 golpes recebidos: espirra muco cáustico em volta (e em quem veste) |
+| De deslocamento | 1 em 20 golpes recebidos: teletransporta quem veste pra outro lugar do andar (e o golpe não pega) |
+| Metabolizante | 1 em 6 golpes recebidos: troca fome por vida |
+| Supercrescimento | 1 em 20 golpes recebidos: uma planta qualquer nasce e é ativada em quem veste |
+| Fedor | 1 em 8 golpes recebidos: solta uma nuvem de gás tóxico em volta |
+
 ### Ouro, baús e mímicos
 
-- Cada andar (menos o do chefe) tem de 3 a 5 itens espalhados (60% / 30% / 10%), mais uma ração. Cada item é **ouro** (10), **poção** (8), **pergaminho** (8), **arma** (2) ou **semente** (1), com os pesos do Shattered (armaduras, varinhas e anéis ainda não existem). Em cada região também caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares.
+- Cada andar (menos o do chefe) tem de 3 a 5 itens espalhados (60% / 30% / 10%), mais uma ração. Cada item é **ouro** (10), **poção** (8), **pergaminho** (8), **arma** (2), **armadura** (2) ou **semente** (1), com os pesos do Shattered (varinhas e anéis ainda não existem). As salas especiais têm os prêmios delas, e cada porta trancada tem a sua chave de ferro. Em cada região também caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares.
 - **Ouro:** uma pilha tem de 30 + 10 por andar até 60 + 20 por andar moedas. Encostou, as moedas vão direto pra bolsa (não ocupam o inventário), sobe um "+N" dourado e o total aparece no inventário, do lado do equipamento. Cada herói tem o seu ouro, pras lojas que vão vir.
 - De cada 20 itens, 4 ficam num **baú** (um baú comum do Minecraft, com o item no meio), 1 fica dentro de um **mímico** (a partir do andar 2) e o resto fica largado no chão. Onde tem item, a grama alta é aparada. Os itens nunca somem do chão.
 - Ninguém consegue quebrar um baú (só no criativo).
@@ -135,7 +171,7 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 
 - Igual ao Shattered, em cada run as **cores das poções** e as **runas dos pergaminhos** são sorteadas de novo: numa run a poção escarlate é de cura, na outra é de gás tóxico. Beber, ler ou ver o efeito revela o tipo pro resto da run, e o nome muda na hora.
 - **Compartilhar:** no botão "Compartilhar" da tela de talentos (K), cada jogador escolhe se o que ele descobre vai pra todo mundo, pra ninguém ou só pra quem ele marcar.
-- Poções: clique direito bebe (1 turno), agachado + clique direito arremessa. Quem já sabe que a poção é ruim arremessa com o clique direito.
+- Poções: clique direito bebe na hora, agachado + clique direito arremessa. Quem já sabe que a poção é ruim arremessa com o clique direito.
 
 | Poção | Beber | Arremessar |
 |---|---|---|
@@ -224,13 +260,14 @@ Inimigos do esgoto com os números do Shattered:
 - Quem dorme solta um "z" de vez em quando; quem nota você mostra um "!". Depois de apanhar, o inimigo ganha uma **barra de vida** em cima da cabeça.
 - Cada inimigo tem os seus sons (por enquanto, sons de bichos do Minecraft).
 - **Partículas:** todo golpe espirra sangue da cor do Shattered (vermelho; verde no slime; amarelado no caranguejo; esverdeado no enxame; gosma preta no Goo). O ataque surpresa solta faíscas, e subir de nível faz um brilho subir em volta do herói.
-- **Armadura:** cada golpe recebido perde de 0 até a defesa da armadura (pano = 0-2). O florete dá 1 de defesa extra.
+- **Armadura:** cada golpe recebido perde de 0 até a defesa da armadura (pano = 0-2). O florete e a katana dão defesa extra.
+- **Invisível:** os inimigos que já estavam caçando continuam indo na direção do herói invisível, mas não conseguem atacar.
 - O dano é sorteado mais pro meio do intervalo, igual ao Shattered.
 - Números de dano sobem em cima de quem apanhou (laranja nos inimigos, vermelho nos heróis), "desviou" quando erra, "✦" no ataque surpresa e "+XP" ao matar. A barra de ação mostra a vida que sobrou no alvo.
-- A cada 50 segundos, se o andar tiver menos inimigos que o limite, nasce mais um longe dos heróis (no andar 1 não nasce mais).
+- A cada 50 turnos, se o andar tiver menos inimigos que o limite, nasce mais um longe dos heróis (no andar 1 não nasce mais).
 - Mais jogadores = inimigos com mais vida (+50% por jogador a mais).
 - Herói acima do nível máximo de um inimigo não ganha XP com ele, igual ao Shattered.
-- Os inimigos usam modelos e texturas do Minecraft por enquanto. Na aba do criativo tem um ovo de cada um pra testar.
+- Os inimigos são os **desenhos animados do próprio Shattered**: uma placa que sempre vira pra câmera, com as animações de parado, andando, atacando e morrendo do jogo original. O desenho vira pro lado em que o inimigo anda e fica vermelho quando apanha. Na aba do criativo tem um ovo de cada um pra testar.
 
 ### Goo, o chefe do esgoto
 
@@ -239,15 +276,15 @@ Inimigos do esgoto com os números do Shattered:
 | Goo | 5 | 100 | 10 (15 furioso) | 8 (12 furioso) | 1-8 (1-12 furioso) | 0-2 | 10 |
 
 - Dorme no ninho, no meio da arena. Quando acorda grita "GULP-GULP!" e aparece a **barra de vida de chefe** no alto da tela.
-- **Na água ele se cura** 1 de vida por segundo (até dormindo). O segredo é tirar ele da poça.
-- **Golpe carregado:** 1 em cada 5 ataques (1 em 2 furioso) ele bombeia em vez de bater: aparece "!!!", ele incha e sobe fumaça escura de todo o chão que o golpe vai pegar (2 quadradinhos), com um círculo marcando a borda. Depois de 2 segundos solta um golpe com **3x o dano e 2x a precisão**. Quem sai do círculo antes faz ele desistir.
+- **Na água ele se cura** 1 de vida por turno (até dormindo). O segredo é tirar ele da poça.
+- **Golpe carregado:** 1 em cada 5 ataques (1 em 2 furioso) ele bombeia em vez de bater: aparece "!!!", ele incha e sobe fumaça escura de todo o chão que o golpe vai pegar (2 quadradinhos), com um círculo marcando a borda. Depois de 2 turnos solta um golpe com **3x o dano e 2x a precisão**. Quem sai do círculo antes faz ele desistir.
 - Com metade da vida ou menos fica **furioso**: bate mais forte, acerta mais, esquiva mais e bombeia mais vezes. A barra fica vermelha e ele fica espirrando pedaços de gosma. Se ele se curar na água acima da metade, acalma.
-- 1 em cada 3 golpes deixa **muco cáustico**: 1 de dano por segundo durante 20 segundos. Entrar na água lava na hora.
+- 1 em cada 3 golpes deixa **muco cáustico**: 1 de dano por turno durante 20 turnos. Entrar na água lava na hora.
 - Enquanto ele luta, o andar fica **selado**: ninguém sobe a escada. A luta acaba se não sobrar nenhum herói vivo perto dele.
 - Quando morre deixa 2 a 4 **bolhas de gosma** e a saída do andar abre. Todo mundo no andar vê "Chefe Derrotado". A prisão (andar 6 em diante) ainda não existe, então o alçapão avisa que o caminho está bloqueado.
 - Mais jogadores = mais vida, igual aos outros inimigos.
 
-As texturas dos blocos ainda são do próprio Minecraft (provisórias). As artes do menu e os ícones dos itens são do Shattered.
+As texturas dos blocos ainda são do próprio Minecraft (provisórias), menos as portas. As artes do menu, os ícones dos itens, as portas e os desenhos dos inimigos são do Shattered.
 
 ## Como rodar no Linux
 
@@ -307,7 +344,7 @@ O arquivo fica em `build/libs/pixeldungeon-1.1.jar`. É esse que vai na pasta `m
 
 ### Fotos do teste
 
-A cada push, o teste do GitHub também abre o jogo de verdade (sem monitor), entra no mundo como Guerreiro e tira fotos da tela do jogo e do inventário (com as dicas do mouse e em dois tamanhos de interface). Elas ficam no branch `fotos`.
+A cada push, o teste do GitHub também abre o jogo de verdade (sem monitor), entra no mundo como Guerreiro e tira fotos da tela do jogo e do inventário (com as dicas do mouse e em dois tamanhos de interface), de uma porta comum, de uma trancada e dos inimigos. Elas ficam no branch `fotos`.
 
 ### Se der erro
 
@@ -315,8 +352,9 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 
 ## O que vem depois
 
-1. **Texturas próprias** dos inimigos e dos blocos.
-2. **Mais itens:** armaduras (couro, malha, escamas, placas), varinhas, anéis e armas de arremesso (pras intuições que faltam), poções e pergaminhos exóticos, alquimia e encantamentos.
+1. **Texturas próprias** dos blocos.
+2. **Mais itens:** varinhas, anéis e armas de arremesso (pras intuições que faltam), poções e pergaminhos exóticos, alquimia e encantamentos.
+3. **O resto do esgoto do Shattered:** portas escondidas (que precisam ser procuradas), armadilhas e as salas que precisam de abismo.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
 
@@ -326,17 +364,22 @@ Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod 
 src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
-  bloco/                       escadas, plantas e blocos de decoração
+  bloco/                       escadas, portas gigantes, plantas e blocos de decoração
   item/                        armas, armadura, poções, pergaminhos, sementes, identificação e maldições
   entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o míssil mágico, as nuvens de gás...
   efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
-  combate/                     sorteio de dano, números flutuantes e partículas
+  combate/
+    Combate.java               o golpe do Shattered, igual pra todo mundo (acerto, dano, armadura, reações)
+    Golpe.java                 quem bate, quem apanha, a arma e os bônus de um golpe
+    Combatente.java            os números de cada um (o herói, os inimigos, a imagem espelhada)
+    HeroiEmCombate.java        os números e as reações do herói (arma, armadura, talentos, maldições)
+    EventosDeCombate.java      liga o dano do Minecraft ao combate do Shattered
+    (e o sorteio, os números flutuantes e as partículas)
   heroi/
     ClasseDoHeroi.java         as 6 classes e o kit de cada uma
     DadosDoHeroi.java          classe, força, nível e XP de cada jogador
     RegrasDoHeroi.java         contas de vida, precisão, esquiva e XP
-    EventosDeCombate.java      acerto, esquiva e dano dos golpes
-    CombateDoHeroi.java        golpe do herói (normal, habilidades e flechas)
+    PesoDoEquipamento.java     armadura e arma pesadas demais deixam mais lento
     Talento.java / Talentos.java    os talentos e o que cada um faz
     Escudos.java               blindagem e o selo do Guerreiro
     HabilidadesDaDuelista.java      as habilidades das armas
@@ -350,12 +393,15 @@ src/main/java/com/louzada/pixeldungeon/
     TelaEscolhaDeHeroi.java    o menu Escolha Seu Herói
     TelaDeTalentos.java        a tela de talentos (K)
     TelaDoTomo.java            as magias do Clérigo
-    PixelDungeonCliente.java   desenho dos inimigos
+    RenderizadorDeSprite.java  os inimigos com os desenhos animados do Shattered
+    SpriteDoShattered.java     as folhas de desenho e as animações de cada inimigo
+    PixelDungeonCliente.java   liga os desenhos e as telas
   dungeon/
     Andares.java               medidas e onde cada andar fica no mundo
     PlantaDoAndar.java         o mapa do andar em quadradinhos
-    GeradorDeAndar.java        sorteia salas e corredores
-    ConstrutorDeAndar.java     transforma o mapa em blocos
+    GeradorDeAndar.java        gera o mapa de cada andar (os comuns pela geração do Shattered, o do chefe é a arena)
+    geracao/                   a geração do Shattered: os cômodos, o arquiteto (volta ou oito) e o pintor do esgoto
+    ConstrutorDeAndar.java     transforma o mapa em blocos (com as portas gigantes)
     PopulacaoDoAndar.java      inimigos de cada andar e renascimento
     SaqueDoAndar.java          o que fica espalhado pelo andar
     Baus.java                  baús e mímicos disfarçados
@@ -372,6 +418,6 @@ src/main/java/com/louzada/pixeldungeon/
 
 Baseado no [Shattered Pixel Dungeon](https://github.com/00-Evan/shattered-pixel-dungeon), de Evan Debenham, que por sua vez é baseado no Pixel Dungeon, de Watabou.
 
-As artes do menu de herói, os bonecos dos heróis, os ícones dos itens e os textos das classes e itens vêm do Shattered Pixel Dungeon, também sob GPLv3.
+As artes do menu de herói, os bonecos dos heróis, os ícones dos itens, as portas, os desenhos dos inimigos, a interface e os textos das classes e itens vêm do Shattered Pixel Dungeon, também sob GPLv3. A geração dos andares é uma tradução do código do Shattered.
 
 Este mod é software livre sob a licença **GPLv3**, a mesma do Shattered Pixel Dungeon (veja o arquivo `LICENSE`).
