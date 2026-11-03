@@ -2,6 +2,10 @@ name: Build
 
 on: [push, pull_request]
 
+# Precisa poder escrever no repositório pra guardar o jar no branch "jar"
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,6 +33,20 @@ jobs:
         with:
           name: pixeldungeon-jar
           path: build/libs/*.jar
+
+      # Guarda o jar mais novo no branch "jar" (só ele, sem histórico), pra dar pra baixar direto pelo git
+      - name: Publish jar to the jar branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p /tmp/jar
+          cp build/libs/*.jar /tmp/jar/
+          cd /tmp/jar
+          git init -q -b jar
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add *.jar
+          git commit -q -m "Jar do commit ${GITHUB_SHA}"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" jar
 
       # Liga um servidor de verdade com o mod, espera o mundo ser criado e confere se a run começou
       # (o andar 1 é construído quando o servidor liga). Depois desliga.
