@@ -7,15 +7,37 @@ import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.entidade.MisselMagico;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
+import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
+import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
+import com.louzada.pixeldungeon.heroi.Escudos;
+import com.louzada.pixeldungeon.heroi.Furtividade;
+import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
+import com.louzada.pixeldungeon.heroi.MagiasDoClerigo;
+import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
+import com.louzada.pixeldungeon.heroi.Talento;
+import com.louzada.pixeldungeon.heroi.Talentos;
+import com.louzada.pixeldungeon.item.Artefato;
+import com.louzada.pixeldungeon.item.Cargas;
+import com.louzada.pixeldungeon.registro.ModComponentes;
+import com.louzada.pixeldungeon.registro.ModEfeitos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
+import com.louzada.pixeldungeon.registro.ModItens;
+import com.mojang.authlib.GameProfile;
 
 import java.util.List;
+import java.util.UUID;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
@@ -46,6 +68,7 @@ public class EventosDaRun {
                 GerenciadorDaRun.garantirAndar(servidor, andar);
             }
             testarCombate(servidor);
+            testarClasses(servidor);
         }
     }
 
@@ -104,6 +127,67 @@ public class EventosDaRun {
         gooDoTeste.setHealth(gooDoTeste.getMaxHealth() - 20);
         vidaDoGooNoTeste = Math.round(gooDoTeste.getHealth());
         ticksParaOTesteDoGoo = 5 * 20;
+    }
+
+    // Só no teste do GitHub: um jogador de mentira testa os itens das classes, os talentos e as habilidades
+    private static void testarClasses(MinecraftServer servidor) {
+        ServerLevel mundo = servidor.overworld();
+        DadosDaRun run = DadosDaRun.pegar(servidor);
+        BlockPos lugar = run.andar(1).entrada();
+        FakePlayer heroi = FakePlayerFactory.get(mundo, new GameProfile(UUID.fromString("5e7c1a3e-0000-4000-8000-00000000b0b0"), "TesteDoMod"));
+        heroi.moveTo(lugar.getX() - 1.5, lugar.getY(), lugar.getZ() + 0.5, 0.0F, 0.0F);
+        DadosDoHeroi dados = RegrasDoHeroi.dados(heroi);
+
+        // Talentos: no nível 3 o herói tem 2 pontos, e cada talento vai até +2
+        dados.comecar(ClasseDoHeroi.GUERREIRO, run.numeroDaRun());
+        dados.definirNivel(3);
+        Talentos.aprimorar(heroi, Talento.REFEICAO_SAUDAVEL);
+        Talentos.aprimorar(heroi, Talento.REFEICAO_SAUDAVEL);
+        Talentos.aprimorar(heroi, Talento.REFEICAO_SAUDAVEL);
+        Talentos.aprimorar(heroi, Talento.DETERMINACAO_DE_FERRO);
+        PixelDungeon.LOGGER.info("Teste dos talentos: refeição saudável +{}, determinação de ferro +{}, pontos livres {}",
+                dados.pontos(Talento.REFEICAO_SAUDAVEL), dados.pontos(Talento.DETERMINACAO_DE_FERRO), dados.pontosLivres());
+
+        // Guerreiro: o selo na armadura de pano dá 5 de blindagem
+        ItemStack armadura = new ItemStack(ModItens.ARMADURA_DE_PANO.get());
+        armadura.set(ModComponentes.SELO.get(), true);
+        heroi.setItemSlot(EquipmentSlot.CHEST, armadura);
+        PixelDungeon.LOGGER.info("Teste do selo: tem selo = {}, blindagem do selo = {}", Escudos.temSelo(heroi), Escudos.escudoDoSelo(heroi));
+
+        // Duelista: cortar com a espada curta num rato na frente dela
+        dados.comecar(ClasseDoHeroi.DUELISTA, run.numeroDaRun());
+        dados.definir(HabilidadesDaDuelista.CARGAS, 2);
+        heroi.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItens.ESPADA_CURTA_DESGASTADA.get()));
+        RatoMarsupial rato = ModEntidades.RATO_MARSUPIAL.get().create(mundo);
+        if (rato != null) {
+            rato.moveTo(lugar.getX() - 1.5, lugar.getY(), lugar.getZ() - 1.5);
+            mundo.addFreshEntity(rato);
+            heroi.lookAt(EntityAnchorArgument.Anchor.EYES, rato.getEyePosition());
+            float antes = rato.getHealth();
+            HabilidadesDaDuelista.usar(heroi);
+            float depois = rato.isAlive() ? rato.getHealth() : 0;
+            PixelDungeon.LOGGER.info("Teste da Duelista: cortar tirou {} de vida do rato, sobraram {} cargas", antes - depois,
+                    dados.inteiro(HabilidadesDaDuelista.CARGAS));
+            rato.discard();
+        }
+
+        // Clérigo: arma celestial gasta 2 das 3 cargas do tomo
+        dados.comecar(ClasseDoHeroi.CLERIGO, run.numeroDaRun());
+        heroi.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItens.MACA.get()));
+        ItemStack tomo = new ItemStack(ModItens.TOMO_SAGRADO.get());
+        heroi.setItemInHand(InteractionHand.OFF_HAND, tomo);
+        MagiasDoClerigo.lancar(heroi, MagiasDoClerigo.Magia.ARMA_CELESTIAL);
+        PixelDungeon.LOGGER.info("Teste do Clérigo: arma celestial = {}, cargas do tomo = {}", heroi.hasEffect(ModEfeitos.ARMA_CELESTIAL),
+                Cargas.cargas(tomo, Artefato.cargasMaximas(tomo)));
+
+        // Ladino: a capa deixa invisível e gasta 1 carga
+        dados.comecar(ClasseDoHeroi.LADINO, run.numeroDaRun());
+        ItemStack capa = new ItemStack(ModItens.CAPA_DAS_SOMBRAS.get());
+        heroi.setItemInHand(InteractionHand.OFF_HAND, capa);
+        ModItens.CAPA_DAS_SOMBRAS.get().use(mundo, heroi, InteractionHand.OFF_HAND);
+        PixelDungeon.LOGGER.info("Teste do Ladino: invisível = {}, cargas da capa = {}", Furtividade.invisivel(heroi),
+                Cargas.cargas(capa, Artefato.cargasMaximas(capa)));
+        Furtividade.revelar(heroi);
     }
 
     // Só no teste do GitHub: termina o teste do Goo depois de 5 s
