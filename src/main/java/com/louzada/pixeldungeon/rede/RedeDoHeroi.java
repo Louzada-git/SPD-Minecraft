@@ -31,7 +31,7 @@ public class RedeDoHeroi {
         }
         long agora = jogador.level().getGameTime();
         List<Integer> numeros = new ArrayList<>(List.of(dados.nivel(), dados.pontosLivres(), dados.inteiro(HabilidadesDaDuelista.CARGAS),
-                HabilidadesDaDuelista.cargasMaximas(dados), HabilidadesDaDuelista.golpesSeguidos(dados, agora), Ouro.ouroDe(dados)));
+                HabilidadesDaDuelista.cargasMaximas(dados), HabilidadesDaDuelista.golpesSeguidos(dados, agora), Ouro.ouroDe(dados), dados.forca()));
         PacoteEstadoDoHeroi pacote = new PacoteEstadoDoHeroi(classe == null ? "" : classe.id(), talentos.toString(), numeros);
         if (sempre || !pacote.equals(ultimosEnviados.get(jogador.getUUID()))) {
             ultimosEnviados.put(jogador.getUUID(), pacote);

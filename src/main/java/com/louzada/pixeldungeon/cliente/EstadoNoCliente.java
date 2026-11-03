@@ -62,4 +62,8 @@ public class EstadoNoCliente {
     public static int ouro() {
         return estado.numero(5);
     }
+
+    public static int forca() {
+        return estado.numero(6);
+    }
 }

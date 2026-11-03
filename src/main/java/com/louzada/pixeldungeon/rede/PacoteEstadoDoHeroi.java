@@ -10,9 +10,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-// Servidor -> jogador: o que a tela de talentos e a barra da Duelista precisam saber.
+// Servidor -> jogador: o que a tela de talentos, o inventário e a barra da Duelista precisam saber.
 //   talentos: "id=pontos;id=pontos;..."
-//   numeros: nível, pontos de talento livres, cargas da habilidade, cargas máximas, golpes seguidos (luvas), ouro
+//   numeros: nível, pontos de talento livres, cargas da habilidade, cargas máximas, golpes seguidos (luvas), ouro, força
 public record PacoteEstadoDoHeroi(String classe, String talentos, List<Integer> numeros) implements CustomPacketPayload {
     public static final Type<PacoteEstadoDoHeroi> TIPO = new Type<>(ResourceLocation.fromNamespaceAndPath(PixelDungeon.MODID, "estado_do_heroi"));
 
