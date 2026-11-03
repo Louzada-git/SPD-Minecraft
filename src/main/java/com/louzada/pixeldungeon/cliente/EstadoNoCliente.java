@@ -58,4 +58,8 @@ public class EstadoNoCliente {
     public static int golpesSeguidos() {
         return estado.numero(4);
     }
+
+    public static int ouro() {
+        return estado.numero(5);
+    }
 }

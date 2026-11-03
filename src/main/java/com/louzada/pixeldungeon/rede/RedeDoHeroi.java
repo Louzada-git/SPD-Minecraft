@@ -11,6 +11,7 @@ import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.Talento;
+import com.louzada.pixeldungeon.item.Ouro;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -30,7 +31,7 @@ public class RedeDoHeroi {
         }
         long agora = jogador.level().getGameTime();
         List<Integer> numeros = new ArrayList<>(List.of(dados.nivel(), dados.pontosLivres(), dados.inteiro(HabilidadesDaDuelista.CARGAS),
-                HabilidadesDaDuelista.cargasMaximas(dados), HabilidadesDaDuelista.golpesSeguidos(dados, agora)));
+                HabilidadesDaDuelista.cargasMaximas(dados), HabilidadesDaDuelista.golpesSeguidos(dados, agora), Ouro.ouroDe(dados)));
         PacoteEstadoDoHeroi pacote = new PacoteEstadoDoHeroi(classe == null ? "" : classe.id(), talentos.toString(), numeros);
         if (sempre || !pacote.equals(ultimosEnviados.get(jogador.getUUID()))) {
             ultimosEnviados.put(jogador.getUUID(), pacote);
