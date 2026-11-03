@@ -1,11 +1,18 @@
 package com.louzada.pixeldungeon.heroi;
 
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
+import com.louzada.pixeldungeon.combate.Sorteio;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
+import com.louzada.pixeldungeon.item.ArmaComDano;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
+import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,10 +35,10 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 //   2. Senão, sorteia o acerto: precisão do atacante contra esquiva do defensor ("desviou")
 //   3. Dano sorteado pela arma (herói) ou pelo inimigo
 //   4. A armadura do defensor tira um pouco do dano
-//   5. Efeitos especiais (o enxame se divide, o rato albino faz sangrar)
+//   5. Efeitos especiais (o enxame se divide, o rato albino faz sangrar, talentos...)
 //   6. O dano aparece flutuando em cima de quem apanhou, espirra sangue da cor dele, e o inimigo ganha uma barra de vida
-// Magia e ataques de longe (o míssil mágico do cajado) não sorteiam acerto nem passam pela armadura, igual às varinhas
-// do Shattered: só acordam o inimigo.
+// Os golpes do herói são calculados no CombateDoHeroi (o mesmo cálculo serve pras habilidades e flechas).
+// Magia (o míssil mágico do cajado, a luz guia) não sorteia acerto nem passa pela armadura, igual ao Shattered: só acorda o inimigo.
 public class EventosDeCombate {
     // Mobs que não são do Shattered (do Minecraft ou de outros mods) usam estes valores
     private static final float PRECISAO_PADRAO = 10;
@@ -41,10 +48,18 @@ public class EventosDeCombate {
         LivingEntity alvo = evento.getEntity();
         DamageSource fonte = evento.getSource();
         Entity atacante = fonte.getEntity();
-        boolean corpoACorpo = atacante != null && fonte.getDirectEntity() == atacante;
         if (alvo.level().isClientSide()) {
             return;
         }
+
+        // Golpe que já veio calculado (habilidades da Duelista, flechas): só o que acontece com quem apanha
+        if (CombateDoHeroi.golpeJaCalculado()) {
+            finalizarGolpe(evento, alvo, atacante, evento.getAmount());
+            return;
+        }
+
+        // Magia e ataques de longe
+        boolean corpoACorpo = atacante != null && fonte.getDirectEntity() == atacante;
         if (!corpoACorpo) {
             if (atacante != null && alvo instanceof MobDoShattered inimigo) {
                 evento.setAmount(inimigo.reduzirDanoRecebido(evento.getAmount()));
@@ -52,53 +67,61 @@ public class EventosDeCombate {
             }
             return;
         }
-        RandomSource sorteio = alvo.getRandom();
 
-        // 1. Ataque surpresa
-        boolean surpresa = atacante instanceof Player jogadorAtacante
-                && alvo instanceof MobDoShattered inimigo
-                && inimigo.surpreendidoPor(jogadorAtacante);
-
-        // 2. Acertou ou desviou?
-        if (!surpresa && !RegrasDoHeroi.acertou(sorteio, precisaoDe(atacante), esquivaDe(alvo))) {
-            evento.setCanceled(true);
-            NumerosFlutuantes.mostrarTraduzido(alvo, "combate.pixeldungeon.desviou", NumerosFlutuantes.BRANCO);
-            alvo.level().playSound(null, alvo.blockPosition(), SoundEvents.PLAYER_ATTACK_NODAMAGE, SoundSource.PLAYERS, 1.0F, 1.0F);
-            acordar(alvo, atacante);
-            return;
-        }
-
-        // 3. Dano
-        float dano = evento.getAmount();
-        if (atacante instanceof Player jogador && jogador.getMainHandItem().getItem() instanceof ArmaDoShattered arma) {
+        // O herói batendo
+        if (atacante instanceof ServerPlayer jogador) {
+            ArmaComDano arma = jogador.getMainHandItem().getItem() instanceof ArmaDoShattered armaDeVerdade ? armaDeVerdade : null;
             // O Minecraft já calculou o golpe com base 1 (vezes a recarga e o crítico).
             // Mantemos essa proporção e trocamos o 1 pelo dano sorteado da arma.
             double ataqueBase = jogador.getAttributeValue(Attributes.ATTACK_DAMAGE);
             float proporcao = ataqueBase > 0 ? (float) (evento.getAmount() / ataqueBase) : 1.0F;
-            dano = arma.sortearDano(sorteio, RegrasDoHeroi.dados(jogador).forca(), surpresa) * proporcao;
-        } else if (atacante instanceof MobDoShattered inimigo) {
+            float dano = CombateDoHeroi.calcular(jogador, alvo, arma, evento.getAmount(), proporcao, 1.0F, 0, false, false);
+            if (dano < 0) {
+                evento.setCanceled(true);
+                return;
+            }
+            finalizarGolpe(evento, alvo, jogador, dano);
+            return;
+        }
+
+        // Um inimigo batendo
+        RandomSource sorteio = alvo.getRandom();
+        if (!RegrasDoHeroi.acertou(sorteio, precisaoDe(atacante), esquivaDe(alvo))) {
+            evento.setCanceled(true);
+            mostrarErro(alvo, atacante);
+            return;
+        }
+        float dano = evento.getAmount();
+        if (atacante instanceof MobDoShattered inimigo) {
             dano = inimigo.sortearDano();
         }
-
-        // 4. Armadura
-        dano = Math.max(0, dano - armaduraDe(alvo, sorteio));
-        if (alvo instanceof MobDoShattered inimigo) {
-            dano = inimigo.reduzirDanoRecebido(dano);
-        }
-
-        // 5. Efeitos especiais: o enxame se divide antes de levar o golpe; o rato albino faz sangrar
-        if (alvo instanceof EnxameDeMoscas enxame && dano > 0) {
-            enxame.dividir(dano);
+        dano = Math.max(0, dano - armaduraDe(alvo, atacante, sorteio));
+        // Armadura sagrada do Clérigo: bloqueia mais 1
+        if (alvo.hasEffect(ModEfeitos.ARMADURA_SAGRADA)) {
+            dano = Math.max(0, dano - 1);
         }
         if (atacante instanceof MobDoShattered inimigo) {
             inimigo.aoAcertar(alvo, dano);
         }
-        evento.setAmount(dano);
+        finalizarGolpe(evento, alvo, atacante, dano);
+    }
 
-        if (surpresa) {
-            NumerosFlutuantes.mostrar(alvo, "✦", NumerosFlutuantes.AMARELO);
-            Particulas.faiscas(alvo);
+    // O que acontece com quem apanha depois do dano calculado: o slime amortece, o enxame se divide, e acorda
+    private static void finalizarGolpe(LivingIncomingDamageEvent evento, LivingEntity alvo, @Nullable Entity atacante, float dano) {
+        if (alvo instanceof MobDoShattered inimigo) {
+            dano = inimigo.reduzirDanoRecebido(dano);
         }
+        if (alvo instanceof EnxameDeMoscas enxame && dano > 0) {
+            enxame.dividir(dano);
+        }
+        evento.setAmount(dano);
+        acordar(alvo, atacante);
+    }
+
+    // "desviou", som de golpe no ar, e o alvo acorda
+    public static void mostrarErro(LivingEntity alvo, @Nullable Entity atacante) {
+        NumerosFlutuantes.mostrarTraduzido(alvo, "combate.pixeldungeon.desviou", NumerosFlutuantes.BRANCO);
+        alvo.level().playSound(null, alvo.blockPosition(), SoundEvents.PLAYER_ATTACK_NODAMAGE, SoundSource.PLAYERS, 1.0F, 1.0F);
         acordar(alvo, atacante);
     }
 
@@ -144,41 +167,48 @@ public class EventosDeCombate {
                 NumerosFlutuantes.mostrar(jogador, "+" + xp + " XP", NumerosFlutuantes.ROXO);
                 RegrasDoHeroi.ganharXp(jogador, xp);
             }
+            if (dados.classe() == ClasseDoHeroi.DUELISTA) {
+                HabilidadesDaDuelista.aoMatar(dados, jogador.level().getGameTime());
+            }
         }
     }
 
     // ---- Números de cada um ----
 
     private static float precisaoDe(Entity atacante) {
+        float precisao = PRECISAO_PADRAO;
         if (atacante instanceof Player jogador) {
-            DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
-            float precisao = RegrasDoHeroi.precisao(dados.nivel());
-            if (jogador.getMainHandItem().getItem() instanceof ArmaDoShattered arma) {
-                precisao *= arma.precisaoCom(dados.forca());
-            }
-            return precisao;
+            precisao = RegrasDoHeroi.precisao(RegrasDoHeroi.dados(jogador).nivel());
+        } else if (atacante instanceof MobDoShattered inimigo) {
+            precisao = inimigo.precisao();
         }
-        if (atacante instanceof MobDoShattered inimigo) {
-            return inimigo.precisao();
+        // Atordoado: precisão pela metade
+        if (atacante instanceof LivingEntity criatura && criatura.hasEffect(ModEfeitos.ATORDOADO)) {
+            precisao *= 0.5F;
         }
-        return PRECISAO_PADRAO;
+        return precisao;
     }
 
-    private static float esquivaDe(LivingEntity alvo) {
+    public static float esquivaDe(LivingEntity alvo) {
+        float esquiva = ESQUIVA_PADRAO;
         if (alvo instanceof Player jogador) {
-            return RegrasDoHeroi.esquiva(RegrasDoHeroi.dados(jogador).nivel());
-        }
-        if (alvo instanceof MobDoShattered inimigo) {
+            esquiva = RegrasDoHeroi.esquiva(RegrasDoHeroi.dados(jogador).nivel());
+        } else if (alvo instanceof MobDoShattered inimigo) {
             // Dormindo não dá pra desviar
-            return inimigo.dormindo() ? 0 : inimigo.esquiva();
+            esquiva = inimigo.dormindo() ? 0 : inimigo.esquiva();
         }
-        return ESQUIVA_PADRAO;
+        if (alvo.hasEffect(ModEfeitos.ATORDOADO)) {
+            esquiva *= 0.5F;
+        }
+        return esquiva;
     }
 
-    // Herói: armadura no peito + defesa da arma (florete). Inimigo: a armadura dele.
-    private static int armaduraDe(LivingEntity alvo, RandomSource sorteio) {
+    // Herói: armadura no peito + defesa da arma (florete) + escudo de luz contra esse inimigo.
+    // Inimigo: a armadura dele.
+    public static int armaduraDe(LivingEntity alvo, @Nullable Entity atacante, RandomSource sorteio) {
         if (alvo instanceof Player jogador) {
-            int forca = RegrasDoHeroi.dados(jogador).forca();
+            DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
+            int forca = dados.forca();
             int defesa = 0;
             ItemStack peito = jogador.getItemBySlot(EquipmentSlot.CHEST);
             if (peito.getItem() instanceof ArmaduraDoShattered armadura) {
@@ -186,6 +216,12 @@ public class EventosDeCombate {
             }
             if (jogador.getMainHandItem().getItem() instanceof ArmaDoShattered arma) {
                 defesa += arma.sortearDefesa(sorteio, forca);
+            }
+            // Escudo de luz do Clérigo: 2-4 / 3-6 de armadura contra o inimigo escolhido
+            UUID protegidoDe = dados.alvo(MagiasDoClerigo.ESCUDO_ALVO);
+            if (atacante != null && jogador.hasEffect(ModEfeitos.ESCUDO_DE_LUZ) && atacante.getUUID().equals(protegidoDe)) {
+                int minimo = 1 + dados.pontos(Talento.ESCUDO_DE_LUZ);
+                defesa += Sorteio.normal(sorteio, minimo, 2 * minimo);
             }
             return defesa;
         }
@@ -196,7 +232,7 @@ public class EventosDeCombate {
     }
 
     // Apanhou (ou quase): acorda e vai atrás de quem atacou
-    private static void acordar(LivingEntity alvo, Entity atacante) {
+    private static void acordar(LivingEntity alvo, @Nullable Entity atacante) {
         if (alvo instanceof MobDoShattered inimigo && atacante instanceof LivingEntity quemAtacou) {
             inimigo.acordar();
             if (!(quemAtacou instanceof Player jogador) || !jogador.isCreative()) {

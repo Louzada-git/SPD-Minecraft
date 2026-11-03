@@ -3,6 +3,8 @@ package com.louzada.pixeldungeon.item;
 import java.util.List;
 
 import com.louzada.pixeldungeon.combate.Sorteio;
+import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
+import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -20,7 +22,7 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 //   - força necessária: quem tem menos força erra mais; quem tem força sobrando bate mais forte
 //   - precisão e velocidade próprias de cada arma
 // O dano de verdade é aplicado no EventosDeCombate.
-public class ArmaDoShattered extends Item {
+public class ArmaDoShattered extends Item implements ArmaComDano {
     private int tier;
     private int danoMinimo;
     private int danoMaximo;
@@ -83,6 +85,16 @@ public class ArmaDoShattered extends Item {
         return dano;
     }
 
+    @Override
+    public int sortearDano(RandomSource sorteio, DadosDoHeroi heroi, boolean surpresa) {
+        return sortearDano(sorteio, heroi.forca(), surpresa);
+    }
+
+    @Override
+    public float precisaoCom(DadosDoHeroi heroi) {
+        return precisaoCom(heroi.forca());
+    }
+
     // Multiplicador de precisão. Cada ponto de força que falta divide a precisão por 1,5.
     public float precisaoCom(int forcaDoHeroi) {
         int forcaFaltando = forcaNecessaria() - forcaDoHeroi;
@@ -118,6 +130,12 @@ public class ArmaDoShattered extends Item {
         }
         if (surpresaForte) {
             linhas.add(Component.translatable("dica.pixeldungeon.surpresa_forte").withStyle(ChatFormatting.GRAY));
+        }
+        // Habilidade que a Duelista pode usar com esta arma
+        HabilidadesDaDuelista.Habilidade habilidade = HabilidadesDaDuelista.habilidadeDe(this);
+        if (habilidade != null) {
+            linhas.add(Component.translatable("dica.pixeldungeon.habilidade", Component.translatable(habilidade.chaveDoNome()))
+                    .withStyle(ChatFormatting.AQUA));
         }
         Textos.adicionarQuebrado(linhas, chaveDaDescricao, ChatFormatting.DARK_GRAY);
     }
