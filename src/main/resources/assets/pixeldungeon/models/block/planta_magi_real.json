@@ -1,0 +1,7 @@
+{
+  "parent": "pixeldungeon:block/planta_do_shattered",
+  "textures": {
+    "planta": "pixeldungeon:block/planta_magi_real",
+    "particle": "pixeldungeon:block/planta_magi_real"
+  }
+}

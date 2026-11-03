@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "pixeldungeon:item/semente_muda_de_gelo"
+  }
+}
