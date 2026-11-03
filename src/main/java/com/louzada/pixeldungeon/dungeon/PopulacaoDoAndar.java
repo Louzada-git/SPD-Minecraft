@@ -196,6 +196,17 @@ public class PopulacaoDoAndar {
         criar(mundo, talvezRaro(tipos.get(sorteio.nextInt(tipos.size())), sorteio), origem, lugares.get(sorteio.nextInt(lugares.size())));
     }
 
+    // Um lugar livre qualquer do andar (longe da entrada), pra colocar um baú, por exemplo
+    @Nullable
+    public static BlockPos lugarAleatorio(long semente, BlockPos origem, int andar, Random sorteio) {
+        List<int[]> lugares = lugaresLivres(planta(semente, andar));
+        if (lugares.isEmpty()) {
+            return null;
+        }
+        int[] lugar = lugares.get(sorteio.nextInt(lugares.size()));
+        return ConstrutorDeAndar.pontoDeChegada(origem, lugar[0], lugar[1]);
+    }
+
     // ---- Ajudantes ----
 
     @Nullable

@@ -14,7 +14,10 @@ import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
+import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
+import com.louzada.pixeldungeon.heroi.Talentos;
+import com.louzada.pixeldungeon.rede.RedeDoHeroi;
 import com.louzada.pixeldungeon.rede.PacoteAbrirMenu;
 
 import net.minecraft.core.BlockPos;
@@ -94,6 +97,8 @@ public class GerenciadorDaRun {
 
         DadosDoHeroi heroi = RegrasDoHeroi.dados(jogador);
         heroi.comecar(classe, dados.numeroDaRun());
+        // Igual ao Shattered: a Duelista começa com 2 cargas de habilidade
+        heroi.definir(HabilidadesDaDuelista.CARGAS, 2);
 
         // Inventário novo com o kit da classe (armadura vestida)
         jogador.getInventory().clearContent();
@@ -110,6 +115,7 @@ public class GerenciadorDaRun {
         jogador.setHealth(jogador.getMaxHealth());
         jogador.getFoodData().setFoodLevel(20);
         levarPara(jogador, 1, true);
+        RedeDoHeroi.enviarEstado(jogador, true);
 
         servidor.getPlayerList().broadcastSystemMessage(Component.translatable("mensagem.pixeldungeon.entrou",
                 jogador.getDisplayName(), Component.translatable(classe.chaveDoNome())), false);
@@ -136,6 +142,7 @@ public class GerenciadorDaRun {
             jogador.setGameMode(GameType.SPECTATOR);
         }
         RegrasDoHeroi.aplicar(jogador);
+        RedeDoHeroi.enviarEstado(jogador, true);
     }
 
     // ---- Morte e ankh ----
@@ -224,6 +231,8 @@ public class GerenciadorDaRun {
         teleportar(jogador, destino);
         jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.andar", andar,
                 Component.translatable(Andares.regiaoDoAndar(andar))), true);
+        // Primeira vez nesse andar: talentos que acontecem ao explorar (rações guardadas do Ladino)
+        Talentos.aoChegarNoAndar(jogador, andar);
     }
 
     private static void teleportar(ServerPlayer jogador, BlockPos destino) {
