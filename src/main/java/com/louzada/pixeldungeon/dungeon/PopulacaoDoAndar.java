@@ -224,7 +224,7 @@ public class PopulacaoDoAndar {
     }
 
     // +50% de vida por jogador vivo a mais na run
-    private static double multiplicadorDeVida(MinecraftServer servidor) {
+    public static double multiplicadorDeVida(MinecraftServer servidor) {
         int herois = 0;
         for (ServerPlayer jogador : servidor.getPlayerList().getPlayers()) {
             if (GerenciadorDaRun.estaVivoNaRun(jogador)) {
@@ -235,7 +235,7 @@ public class PopulacaoDoAndar {
     }
 
     // Quadradinhos de chão (sem água, sem escada) que não ficam colados na entrada
-    private static List<int[]> lugaresLivres(PlantaDoAndar planta) {
+    public static List<int[]> lugaresLivres(PlantaDoAndar planta) {
         List<int[]> lugares = new ArrayList<>();
         for (int qy = 0; qy < planta.altura(); qy++) {
             for (int qx = 0; qx < planta.largura(); qx++) {

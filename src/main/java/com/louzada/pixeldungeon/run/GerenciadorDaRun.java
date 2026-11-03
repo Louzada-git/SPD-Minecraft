@@ -1,5 +1,6 @@
 package com.louzada.pixeldungeon.run;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -11,6 +12,7 @@ import com.louzada.pixeldungeon.dungeon.ConstrutorDeAndar;
 import com.louzada.pixeldungeon.dungeon.GeradorDeAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
+import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
 import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
@@ -204,11 +206,14 @@ public class GerenciadorDaRun {
 
         PlantaDoAndar planta = GeradorDeAndar.gerar(dados.semente(), andar);
         BlockPos origem = Andares.origemDoAndar(dados.numeroDaRun(), andar);
+        // Os itens do andar são sorteados antes de construir, porque onde tem item a grama alta é aparada
+        List<SaqueDoAndar.Saque> saque = SaqueDoAndar.sortear(planta, andar, dados.semente());
         long inicio = System.currentTimeMillis();
         ConstrutorDeAndar.construir(servidor.overworld(), planta, origem, dados.semente() * 31 + andar);
         PixelDungeon.LOGGER.info("Andar {} construído em {} ms", andar, System.currentTimeMillis() - inicio);
         contarGrama(planta, andar);
         PopulacaoDoAndar.povoarNoInicio(servidor.overworld(), planta, origem, andar, dados.semente());
+        SaqueDoAndar.colocar(servidor.overworld(), origem, andar, saque);
 
         BlockPos entrada = ConstrutorDeAndar.pontoDeChegada(origem, planta.entradaX(), planta.entradaY());
         BlockPos saida = null;
