@@ -235,10 +235,12 @@ public class GerenciadorDaRun {
         return info;
     }
 
-    // Só pra conferir no log: quantos quadradinhos de grama o andar ganhou
+    // Só pra conferir no log: o tamanho do andar, as salas, as portas e quantos quadradinhos de grama ele ganhou
     private static void contarGrama(PlantaDoAndar planta, int andar) {
         int grama = 0;
         int alta = 0;
+        int portas = 0;
+        int trancadas = 0;
         for (int y = 0; y < planta.altura(); y++) {
             for (int x = 0; x < planta.largura(); x++) {
                 if (planta.grama(x, y) != PlantaDoAndar.SEM_GRAMA) {
@@ -247,8 +249,15 @@ public class GerenciadorDaRun {
                 if (planta.grama(x, y) == PlantaDoAndar.GRAMA_ALTA) {
                     alta++;
                 }
+                if (planta.tipo(x, y) == PlantaDoAndar.PORTA) {
+                    portas++;
+                } else if (planta.tipo(x, y) == PlantaDoAndar.PORTA_TRANCADA) {
+                    trancadas++;
+                }
             }
         }
+        PixelDungeon.LOGGER.info("Andar {}: {}x{} quadradinhos, {} salas, {} portas, {} trancadas, {} chaves de ferro", andar, planta.largura(),
+                planta.altura(), planta.salas().size(), portas, trancadas, planta.chavesDeFerro());
         PixelDungeon.LOGGER.info("Andar {}: {} quadradinhos de grama ({} de grama alta)", andar, grama, alta);
     }
 

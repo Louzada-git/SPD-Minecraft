@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
 import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
@@ -29,12 +30,12 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 // Os inimigos de cada andar, com as regras do Shattered:
 //   - quando o andar é criado, nascem vários inimigos dormindo (8 no andar 1)
-//   - a cada 50 turnos (50 s), se o andar tiver menos inimigos que o limite, nasce mais um longe dos heróis
+//   - a cada 50 turnos (100 s), se o andar tiver menos inimigos que o limite, nasce mais um longe dos heróis
 //   - no andar 1 não nasce mais nenhum depois do começo
 //   - quanto mais jogadores, mais vida os inimigos têm (+50% por jogador a mais)
 //   - nos andares de chefe só tem o chefe, dormindo no meio da arena (no andar 5, o Goo no ninho dele)
 public class PopulacaoDoAndar {
-    private static final int TICKS_PARA_RENASCER = 50 * 20;
+    private static final int TICKS_PARA_RENASCER = Turno.ticks(50);
     private static final double DISTANCIA_MINIMA_DOS_HEROIS = 24;
     private static final int RAIO_LIVRE_EM_VOLTA_DA_ENTRADA = 3;
 
@@ -234,22 +235,9 @@ public class PopulacaoDoAndar {
         return 1.0 + 0.5 * Math.max(0, herois - 1);
     }
 
-    // Quadradinhos de chão (sem água, sem escada) que não ficam colados na entrada
+    // Onde inimigos e itens podem aparecer (ver PlantaDoAndar.lugaresLivres)
     public static List<int[]> lugaresLivres(PlantaDoAndar planta) {
-        List<int[]> lugares = new ArrayList<>();
-        for (int qy = 0; qy < planta.altura(); qy++) {
-            for (int qx = 0; qx < planta.largura(); qx++) {
-                if (planta.tipo(qx, qy) != PlantaDoAndar.CHAO) {
-                    continue;
-                }
-                boolean pertoDaEntrada = Math.abs(qx - planta.entradaX()) <= RAIO_LIVRE_EM_VOLTA_DA_ENTRADA
-                        && Math.abs(qy - planta.entradaY()) <= RAIO_LIVRE_EM_VOLTA_DA_ENTRADA;
-                if (!pertoDaEntrada) {
-                    lugares.add(new int[] { qx, qy });
-                }
-            }
-        }
-        return lugares;
+        return planta.lugaresLivres(RAIO_LIVRE_EM_VOLTA_DA_ENTRADA);
     }
 
     private static PlantaDoAndar planta(long semente, int andar) {
