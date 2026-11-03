@@ -7,7 +7,9 @@ import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.GnollExplorador;
 import com.louzada.pixeldungeon.entidade.RatoAlbino;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
+import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
+import com.louzada.pixeldungeon.registro.ModItens;
 
 import net.minecraft.client.model.EndermiteModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -22,6 +24,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 // Parte do mod que só roda no jogo do jogador (nunca no servidor): desenhos, telas...
@@ -30,6 +33,8 @@ public class PixelDungeonCliente {
 
     public PixelDungeonCliente(IEventBus barramentoDoMod, ModContainer container) {
         barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarRenderizadores);
+        barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarCoresDosBlocos);
+        barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarCoresDosItens);
         // Teclas (K talentos, V habilidade) e os avisos perto da barra de itens
         barramentoDoMod.addListener(TeclasDoMod::aoRegistrar);
         barramentoDoMod.addListener(HudDoHeroi::aoRegistrar);
@@ -79,5 +84,18 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.LUZ_GUIA.get(), NoopRenderer::new);
         // Flecha espiritual: o desenho da flecha do Shattered, brilhando
         evento.registerEntityRenderer(ModEntidades.FLECHA_ESPIRITUAL.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, true));
+        // Gota de orvalho: o desenho da gota do Shattered, brilhando
+        evento.registerEntityRenderer(ModEntidades.GOTA_DE_ORVALHO.get(), contexto -> new ThrownItemRenderer<>(contexto, 0.8F, true));
+    }
+
+    // A grama usa as texturas cinza da grama do Minecraft; aqui ela ganha a cor verde do esgoto
+    private static final int COR_DA_GRAMA = 0xFF6E9B3D;
+
+    private static void aoRegistrarCoresDosBlocos(RegisterColorHandlersEvent.Block evento) {
+        evento.register((estado, mundo, posicao, camada) -> COR_DA_GRAMA, ModBlocos.CAPIM_ALTO.get(), ModBlocos.GRAMA_BAIXA.get());
+    }
+
+    private static void aoRegistrarCoresDosItens(RegisterColorHandlersEvent.Item evento) {
+        evento.register((pilha, camada) -> COR_DA_GRAMA, ModItens.CAPIM_ALTO.get(), ModItens.GRAMA_BAIXA.get());
     }
 }
