@@ -52,13 +52,13 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 - **Arco espiritual (Caçadora):** clique direito atira uma flecha mágica (flechas infinitas). Dano de 1-6 que cresce com o nível. É um ataque físico: sorteia acerto e a armadura segura. Colado no inimigo, acerta pior.
 - **Habilidades das armas (Duelista):** tecla **V**. Começa com 2 cargas (até 8 com os níveis), que voltam a cada 45-60 turnos. As cargas aparecem do lado da barra de itens.
 
-| Arma | Habilidade |
+| Armas | Habilidade |
 |---|---|
-| Espada curta desgastada | **Cortar:** +3 de dano, acerto garantido. Se matar, o próximo corte em 5 turnos é de graça |
-| Adaga | **Furtivo:** lampeja até 5 quadradinhos pra onde está olhando e fica 2 turnos invisível |
-| Luvas cravejadas | **Combinação:** acerto garantido, +3 de dano pra cada golpe que acertou antes |
-| Florete | **Estocada:** avança até um inimigo a 1 quadradinho e golpeia com +5, acerto garantido |
-| Maça | **Golpe pesado:** acerto garantido, atordoa 5 turnos (precisão e esquiva pela metade); de surpresa, +3 |
+| Espada curta desgastada, espada curta, espada, espada larga | **Cortar:** +3/+4/+5/+7 de dano, acerto garantido. Se matar, o próximo corte em 5 turnos é de graça |
+| Adaga, punhal, lâmina assassina | **Furtivo:** lampeja até 5/4/3 quadradinhos pra onde está olhando e fica 2 turnos invisível |
+| Luvas cravejadas, sai | **Combinação:** acerto garantido, +3/+4 de dano pra cada golpe que acertou antes |
+| Florete, katana | **Estocada:** avança até um inimigo a 1 quadradinho e golpeia com +5/+8, acerto garantido |
+| Maça, machadinha, clava, martelo de guerra | **Golpe pesado:** acerto garantido, atordoa 5 turnos (precisão e esquiva pela metade); de surpresa, +3/+4/+5/+6 |
 
 - **Tomo sagrado (Clérigo):** clique direito abre a lista de magias. Começa com 3 cargas e fica mais forte com o uso.
 
@@ -71,6 +71,37 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 | Escudo de luz (talento) | 1 | 2-4 / 3-6 de armadura contra o inimigo na mira por 5 turnos |
 
 - **Odre (todas as classes):** guarda até 20 gotas de orvalho. Clique direito bebe: cada gota cura 5% da vida, e só gasta as gotas que precisa. A barrinha azul do ícone mostra quantas gotas tem.
+
+### Armas
+
+Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas aparecem pelos andares (no esgoto: 75% tier 2, 20% tier 3, 4% tier 4, 1% tier 5).
+
+| Arma | Tier | Dano | Força | Especial |
+|---|---|---|---|---|
+| Espada curta | 2 | 2-15 | 12 | |
+| Machadinha | 2 | 2-12 | 12 | +32% de precisão |
+| Punhal | 2 | 2-12 | 12 | mais forte de surpresa |
+| Espada | 3 | 3-20 | 14 | |
+| Clava | 3 | 3-16 | 14 | +28% de precisão |
+| Sai | 3 | 3-10 | 14 | ataca 2x mais rápido |
+| Katana | 4 | 4-20 | 16 | 0-3 de defesa extra |
+| Lâmina assassina | 4 | 4-20 | 16 | mais forte de surpresa |
+| Espada larga | 5 | 5-30 | 18 | |
+| Martelo de guerra | 5 | 5-24 | 18 | +20% de precisão |
+
+- Igual ao Shattered, cada ponto de força que falta deixa a arma bem menos precisa, e a Duelista não consegue usar a habilidade. Os heróis começam com 10 de força e ainda não existe poção de força, então por enquanto as armas de tier 2 pra cima são mais difíceis de usar.
+
+### Ouro, baús e mímicos
+
+- Cada andar (menos o do chefe) tem de 3 a 5 itens espalhados (60% / 30% / 10%), mais uma ração. Cada item é **ouro** ou uma **arma**, na mesma proporção entre eles que no Shattered (poções, pergaminhos e o resto ainda não existem).
+- **Ouro:** uma pilha tem de 30 + 10 por andar até 60 + 20 por andar moedas. Encostou, as moedas vão direto pra bolsa (não ocupam o inventário), sobe um "+N" dourado e o total aparece do lado direito da barra de itens. Cada herói tem o seu ouro, pras lojas que vão vir.
+- De cada 20 itens, 4 ficam num **baú** (um baú comum do Minecraft, com o item no meio), 1 fica dentro de um **mímico** (a partir do andar 2) e o resto fica largado no chão. Onde tem item, a grama alta é aparada. Os itens nunca somem do chão.
+- Ninguém consegue quebrar um baú (só no criativo).
+- **Mímico:** por fora é igualzinho a um baú. Quem tenta abrir ou bate nele leva uma mordida que sempre acerta (2 + 2 por andar de dano), e ele vira um baú com dentes que persegue o herói, abrindo e fechando a tampa. Quando morre, solta o item que guardava e mais um prêmio (ouro ou uma arma). Herói invisível não leva a mordida.
+
+| Inimigo | Vida | Precisão | Esquiva | Dano | Armadura | XP |
+|---|---|---|---|---|---|---|
+| Mímico (nível = andar) | (1 + nível) × 6 | 6 + nível | 2 + nível / 2 | 1 + nível a 2 + 2 × nível | 0 a 1 + nível / 2 | 0 |
 
 ### Talentos
 
@@ -108,6 +139,8 @@ Inimigos do esgoto com os números do Shattered:
 - O **enxame de moscas** voa e se divide em dois a cada golpe que leva (os pedaços não dão XP).
 - O **rato albino** aparece no lugar de 1 em cada 50 ratos. Metade das mordidas fazem sangrar.
 - Caranguejos (1 em 6) e ratos albinos (sempre) deixam **carne misteriosa**: mata metade da fome de uma ração, mas pode queimar, travar as pernas, envenenar ou deixar lento.
+- Gnolls deixam **ouro** metade das vezes. O slime às vezes deixa uma **arma de tier 2** (1 em 5 na primeira, e cada uma que já caiu deixa a próxima 4x mais difícil). A cobra (sementes) e o enxame (poção de cura) ainda não deixam nada, porque esses itens não existem.
+- Herói com mais de 2 níveis acima do nível máximo de um inimigo não ganha mais itens dele, igual ao Shattered.
 - Quem dorme solta um "z" de vez em quando; quem nota você mostra um "!". Depois de apanhar, o inimigo ganha uma **barra de vida** em cima da cabeça.
 - Cada inimigo tem os seus sons (por enquanto, sons de bichos do Minecraft).
 - **Partículas:** todo golpe espirra sangue da cor do Shattered (vermelho; verde no slime; amarelado no caranguejo; esverdeado no enxame; gosma preta no Goo). O ataque surpresa solta faíscas, e subir de nível faz um brilho subir em volta do herói.
@@ -198,7 +231,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 
 ## O que vem depois
 
-1. **Itens:** poções e pergaminhos desconhecidos (já começados, com cor e runa aleatórias por run), pergaminho de melhoria, itens não identificados, sementes e plantas (pra os talentos que faltam), e opção no menu pra compartilhar o que foi identificado.
+1. **Itens:** poções e pergaminhos desconhecidos (já começados, com cor e runa aleatórias por run), poção de força e pergaminho de melhoria (as armas ainda não têm nível), itens não identificados, sementes e plantas (pra os talentos que faltam), e opção no menu pra compartilhar o que foi identificado.
 2. **Texturas próprias** dos inimigos e dos blocos.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
@@ -211,7 +244,7 @@ src/main/java/com/louzada/pixeldungeon/
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas e blocos de decoração
   item/                        armas, armadura, itens das classes, cargas e artefatos
-  entidade/                    os inimigos do Shattered, o Goo, o míssil mágico, a luz guia e a flecha espiritual
+  entidade/                    os inimigos do Shattered, o Goo, o mímico, o míssil mágico, a luz guia e a flecha espiritual
   efeito/                      efeitos do Shattered (muco cáustico)
   combate/                     sorteio de dano, números flutuantes e partículas
   heroi/
@@ -236,6 +269,8 @@ src/main/java/com/louzada/pixeldungeon/
     GeradorDeAndar.java        sorteia salas e corredores
     ConstrutorDeAndar.java     transforma o mapa em blocos
     PopulacaoDoAndar.java      inimigos de cada andar e renascimento
+    SaqueDoAndar.java          ouro e armas espalhados pelo andar
+    Baus.java                  baús e mímicos disfarçados
   run/
     DadosDaRun.java            o que fica salvo no mundo
     GerenciadorDaRun.java      começar run, construir andar, levar jogador
