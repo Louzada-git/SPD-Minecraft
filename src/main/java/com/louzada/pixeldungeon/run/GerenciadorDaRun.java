@@ -83,6 +83,11 @@ public class GerenciadorDaRun {
         }
         teleportar(jogador, lugar);
 
+        // Só no teste do GitHub que tira fotos da tela: entra direto, sem o menu
+        if (HeroiDasFotos.ligado()) {
+            HeroiDasFotos.preparar(jogador);
+            return;
+        }
         PacketDistributor.sendToPlayer(jogador, new PacoteAbrirMenu(dados.ativa()));
     }
 

@@ -56,6 +56,11 @@ neoForge {
             client()
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            // No GitHub (variável FOTOGRAFAR), o jogo abre o mundo de teste sozinho e tira fotos da tela
+            if (System.getenv('FOTOGRAFAR') != null) {
+                systemProperty 'pixeldungeon.fotografar', 'true'
+                programArguments.addAll('--quickPlaySingleplayer', 'teste', '--width', '1920', '--height', '1080')
+            }
         }
 
         server {
