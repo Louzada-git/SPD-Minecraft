@@ -36,10 +36,17 @@ public class PixelDungeonCliente {
         barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarRenderizadores);
         barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarCoresDosBlocos);
         barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarCoresDosItens);
-        // Teclas (K talentos, V habilidade) e os avisos perto da barra de itens
+        // Teclas (K talentos, V habilidade)
         barramentoDoMod.addListener(TeclasDoMod::aoRegistrar);
-        barramentoDoMod.addListener(HudDoHeroi::aoRegistrar);
         NeoForge.EVENT_BUS.addListener(TeclasDoMod::aoTick);
+        // A tela do jogo e o inventário iguais aos do Shattered
+        barramentoDoMod.addListener(HudDoHeroi::aoRegistrar);
+        NeoForge.EVENT_BUS.addListener(HudDoHeroi::aoDesenharCamada);
+        NeoForge.EVENT_BUS.addListener(TelaDoInventario::aoAbrirTela);
+        // Só no teste do GitHub: tira fotos da tela do jogo e do inventário
+        if (FotosDeTeste.ligado()) {
+            NeoForge.EVENT_BUS.addListener(FotosDeTeste::aoTick);
+        }
     }
 
     // Como cada inimigo aparece na tela.
