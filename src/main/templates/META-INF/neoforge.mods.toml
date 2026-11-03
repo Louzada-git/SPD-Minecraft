@@ -15,6 +15,10 @@ description='''
 O Shattered Pixel Dungeon dentro do Minecraft: o mundo inteiro é a dungeon.
 '''
 
+# Deixa o mod mudar as casinhas do inventário de lugar (o inventário do Shattered)
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
+
 [[dependencies.${mod_id}]]
     modId="neoforge"
     type="required"
