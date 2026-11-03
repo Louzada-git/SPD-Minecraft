@@ -291,5 +291,11 @@
   "item.pixeldungeon.espada_larga": "Greatsword",
   "item.pixeldungeon.espada_larga.descricao": "This towering blade inflicts heavy damage by investing its heft into every swing.",
   "item.pixeldungeon.martelo_de_guerra": "War Hammer",
-  "item.pixeldungeon.martelo_de_guerra.descricao": "Few creatures can withstand the crushing blow of this towering mass of lead and steel, but it takes great strength to use effectively."
+  "item.pixeldungeon.martelo_de_guerra.descricao": "Few creatures can withstand the crushing blow of this towering mass of lead and steel, but it takes great strength to use effectively.",
+  "item.pixeldungeon.ouro": "Gold",
+  "item.pixeldungeon.ouro.descricao": "A pile of gold coins. Collect gold coins to spend them later in a shop.",
+  "dica.pixeldungeon.moedas": "%s coins",
+  "entity.pixeldungeon.mimico": "Mimic",
+  "item.pixeldungeon.ovo_mimico": "Mimic Spawn Egg",
+  "mensagem.pixeldungeon.mimico_revelado": "That chest is a mimic!"
 }

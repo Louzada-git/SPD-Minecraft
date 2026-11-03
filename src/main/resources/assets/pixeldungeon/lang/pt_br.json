@@ -291,5 +291,11 @@
   "item.pixeldungeon.espada_larga": "Espada Larga",
   "item.pixeldungeon.espada_larga.descricao": "Esta lâmina imponente inflige muito dano ao usar seu peso em cada golpe.",
   "item.pixeldungeon.martelo_de_guerra": "Martelo de Guerra",
-  "item.pixeldungeon.martelo_de_guerra.descricao": "Poucas criaturas conseguem suportar o golpe esmagador desta massa imponente de chumbo e aço, mas é preciso muita força para usá-la com eficiência."
+  "item.pixeldungeon.martelo_de_guerra.descricao": "Poucas criaturas conseguem suportar o golpe esmagador desta massa imponente de chumbo e aço, mas é preciso muita força para usá-la com eficiência.",
+  "item.pixeldungeon.ouro": "Ouro",
+  "item.pixeldungeon.ouro.descricao": "Uma pilha de moedas de ouro. Colete moedas de ouro para gastá-las mais tarde em uma loja.",
+  "dica.pixeldungeon.moedas": "%s moedas",
+  "entity.pixeldungeon.mimico": "Mímico",
+  "item.pixeldungeon.ovo_mimico": "Ovo de Mímico",
+  "mensagem.pixeldungeon.mimico_revelado": "Esse baú é um mímico!"
 }
