@@ -3,10 +3,12 @@ package com.louzada.pixeldungeon.item;
 import java.util.List;
 
 import com.louzada.pixeldungeon.entidade.MisselMagico;
-import com.louzada.pixeldungeon.registro.ModComponentes;
+import com.louzada.pixeldungeon.heroi.Furtividade;
+import com.louzada.pixeldungeon.heroi.Talentos;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -40,36 +42,11 @@ public class CajadoDoMago extends ArmaDoShattered {
     }
 
     public static int cargas(ItemStack pilha) {
-        return pilha.getOrDefault(ModComponentes.CARGAS.get(), CARGAS_MAXIMAS);
+        return Cargas.cargas(pilha, CARGAS_MAXIMAS);
     }
 
-    // Conta as cargas que encheram desde a última vez. Só mexe no item quando uma carga enche,
-    // pra não ficar mandando o item pela rede toda hora.
     private static void recarregar(ItemStack pilha, long agora) {
-        int cargas = cargas(pilha);
-        if (cargas >= CARGAS_MAXIMAS) {
-            pilha.remove(ModComponentes.INICIO_DA_RECARGA.get());
-            return;
-        }
-        Long inicio = pilha.get(ModComponentes.INICIO_DA_RECARGA.get());
-        if (inicio == null || inicio > agora) {
-            pilha.set(ModComponentes.INICIO_DA_RECARGA.get(), agora);
-            return;
-        }
-        long comeco = inicio;
-        int novas = cargas;
-        while (novas < CARGAS_MAXIMAS && agora - comeco >= ticksParaCarregar(CARGAS_MAXIMAS - novas)) {
-            comeco += ticksParaCarregar(CARGAS_MAXIMAS - novas);
-            novas++;
-        }
-        if (novas != cargas) {
-            pilha.set(ModComponentes.CARGAS.get(), novas);
-            if (novas >= CARGAS_MAXIMAS) {
-                pilha.remove(ModComponentes.INICIO_DA_RECARGA.get());
-            } else {
-                pilha.set(ModComponentes.INICIO_DA_RECARGA.get(), comeco);
-            }
-        }
+        Cargas.recarregar(pilha, agora, CARGAS_MAXIMAS, CajadoDoMago::ticksParaCarregar);
     }
 
     // Uma vez por segundo, no servidor, vê se encheu alguma carga
@@ -97,16 +74,17 @@ public class CajadoDoMago extends ArmaDoShattered {
             return InteractionResultHolder.fail(pilha);
         }
 
+        // Talentos do Mago (magia prolongada, barreira de apoio) e a invisibilidade acaba
+        if (jogador instanceof ServerPlayer heroi) {
+            Talentos.aoUsarVarinha(heroi, cargas);
+            Furtividade.revelar(heroi);
+        }
         MisselMagico missil = new MisselMagico(mundo, jogador, NIVEL);
         missil.shootFromRotation(jogador, jogador.getXRot(), jogador.getYRot(), 0.0F, 2.0F, 0.0F);
         mundo.addFreshEntity(missil);
         mundo.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS, 0.8F, 1.4F);
 
-        // Se estava cheio, a recarga começa agora
-        if (cargas >= CARGAS_MAXIMAS) {
-            pilha.set(ModComponentes.INICIO_DA_RECARGA.get(), agora);
-        }
-        pilha.set(ModComponentes.CARGAS.get(), cargas - 1);
+        Cargas.gastar(pilha, agora, CARGAS_MAXIMAS, 1);
         // Lançar gasta um turno
         jogador.getCooldowns().addCooldown(this, 20);
         return InteractionResultHolder.success(pilha);
@@ -122,7 +100,7 @@ public class CajadoDoMago extends ArmaDoShattered {
 
     @Override
     public int getBarWidth(ItemStack pilha) {
-        return Math.round(13.0F * cargas(pilha) / CARGAS_MAXIMAS);
+        return Cargas.larguraDaBarra(pilha, CARGAS_MAXIMAS);
     }
 
     @Override

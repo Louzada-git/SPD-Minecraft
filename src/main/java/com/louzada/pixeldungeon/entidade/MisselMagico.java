@@ -2,12 +2,14 @@ package com.louzada.pixeldungeon.entidade;
 
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.combate.Sorteio;
+import com.louzada.pixeldungeon.heroi.Talentos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -22,6 +24,7 @@ import net.minecraft.world.phys.Vec3;
 // O míssil mágico da varinha (o Mago já começa com ela dentro do cajado).
 // Igual ao Shattered: um raio de energia branca que sempre acerta quem estiver no caminho
 // e dá 2-8 de dano mágico (a armadura não segura). Voa reto, sem cair, e some depois de 2 segundos.
+// A luz guia do Clérigo é um raio igual a este, só que amarelo e iluminando quem acerta.
 public class MisselMagico extends ThrowableProjectile {
     private static final int DURACAO = 40;
     private static final int BRANCO = 0xFFFFFF;
@@ -34,8 +37,26 @@ public class MisselMagico extends ThrowableProjectile {
     }
 
     public MisselMagico(Level mundo, LivingEntity dono, int nivel) {
-        super(ModEntidades.MISSEL_MAGICO.get(), dono, mundo);
+        this(ModEntidades.MISSEL_MAGICO.get(), mundo, dono, nivel);
+    }
+
+    protected MisselMagico(EntityType<? extends MisselMagico> tipo, Level mundo, LivingEntity dono, int nivel) {
+        super(tipo, dono, mundo);
         this.nivel = nivel;
+    }
+
+    // Cor do raio
+    protected int cor() {
+        return BRANCO;
+    }
+
+    // Dano a mais que quem lançou ganha (refeição empoderadora do Mago, só na varinha)
+    protected int bonusDeQuemLancou(ServerPlayer jogador) {
+        return Talentos.bonusDaVarinha(jogador);
+    }
+
+    // O que mais acontece com quem foi atingido (a luz guia ilumina)
+    protected void aoAtingir(LivingEntity alvo) {
     }
 
     @Override
@@ -56,7 +77,7 @@ public class MisselMagico extends ThrowableProjectile {
             Vec3 movimento = getDeltaMovement();
             for (int i = 0; i < 3; i++) {
                 double recuo = i / 3.0;
-                level().addParticle(Particulas.poeira(BRANCO, 1.3F), getX() - movimento.x * recuo, getY() - movimento.y * recuo,
+                level().addParticle(Particulas.poeira(cor(), 1.3F), getX() - movimento.x * recuo, getY() - movimento.y * recuo,
                         getZ() - movimento.z * recuo, 0.0, 0.0, 0.0);
             }
             if (tickCount % 2 == 0) {
@@ -89,7 +110,13 @@ public class MisselMagico extends ThrowableProjectile {
             criatura.invulnerableTime = 0;
         }
         int dano = Sorteio.normal(random, 2 + nivel, 8 + 2 * nivel);
+        if (getOwner() instanceof ServerPlayer jogador) {
+            dano += bonusDeQuemLancou(jogador);
+        }
         alvo.hurt(damageSources().indirectMagic(this, getOwner()), dano);
+        if (alvo instanceof LivingEntity criatura && criatura.isAlive()) {
+            aoAtingir(criatura);
+        }
     }
 
     @Override
@@ -105,7 +132,7 @@ public class MisselMagico extends ThrowableProjectile {
     private void estourar() {
         if (level() instanceof ServerLevel mundo) {
             Particulas.explosao(mundo, ParticleTypes.END_ROD, getX(), getY(), getZ(), 10, 0.1, 0.12);
-            Particulas.explosao(mundo, Particulas.poeira(BRANCO, 1.5F), getX(), getY(), getZ(), 12, 0.3, 0.0);
+            Particulas.explosao(mundo, Particulas.poeira(cor(), 1.5F), getX(), getY(), getZ(), 12, 0.3, 0.0);
             mundo.playSound(null, getX(), getY(), getZ(), SoundEvents.SHULKER_BULLET_HIT, getSoundSource(), 0.8F,
                     0.87F + random.nextFloat() * 0.28F);
         }
