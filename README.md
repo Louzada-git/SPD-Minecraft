@@ -24,23 +24,63 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 ### Classes e run
 
 - Menu **Escolha Seu Herói** no estilo do Shattered, com as 6 classes e a arte de cada uma: Guerreiro, Mago, Ladino, Caçadora, Duelista e Clérigo.
-- Cada classe começa com a sua arma do Shattered, armadura de pano (vestida) e uma ração:
+- Cada classe começa com a sua arma do Shattered, armadura de pano (vestida), uma ração e o seu item único:
 
-| Classe | Arma | Dano | Especial |
+| Classe | Arma | Dano | Item único |
 |---|---|---|---|
-| Guerreiro | Espada Curta Desgastada | 1-10 | |
-| Mago | Cajado do Mago | 1-6 | clique direito lança míssil mágico (2-8) |
-| Ladino | Adaga | 1-8 | |
-| Caçadora | Luvas Cravejadas | 1-5 | ataca 2x mais rápido |
-| Duelista | Florete | 1-8 | |
-| Clérigo | Maça | 1-8 | +40% de precisão |
+| Guerreiro | Espada Curta Desgastada | 1-10 | selo quebrado (na armadura) |
+| Mago | Cajado do Mago | 1-6 | varinha de míssil mágico (dentro do cajado) |
+| Ladino | Adaga | 1-8 | capa das sombras |
+| Caçadora | Luvas Cravejadas (2x mais rápidas) | 1-5 | arco espiritual |
+| Duelista | Florete (+1 de defesa) | 1-8 | habilidades das armas (tecla V) |
+| Clérigo | Maça (+40% de precisão) | 1-8 | tomo sagrado |
 
 - Regras do Shattered: força (começa em 10), nível, vida (20, +5 por nível), precisão e esquiva. Todo golpe corpo a corpo sorteia se acerta, e o dano é sorteado pela arma. A barra de XP mostra o nível do Shattered.
 - A run começa quando alguém escolhe a classe. Quem entra depois escolhe a sua e começa no andar 1.
 - Quem morre vira espectador. Um aliado pode trazer ele de volta usando um **ankh** (clique direito). Se todos morrerem, a run acaba e todo mundo volta pro menu.
 - As armas já vêm com os ataques do Better Combat (funciona com ou sem ele instalado).
-- **Cajado do Mago:** igual ao Shattered, já vem com a varinha de míssil mágico dentro. Clique direito lança um raio de luz branca que sempre acerta e dá 2-8 de dano mágico (a armadura não segura). Tem 4 cargas (3 da varinha + 1 do cajado), mostradas na barrinha roxa do ícone. As cargas voltam sozinhas, de ~33 a ~45 segundos cada (quanto mais vazio, mais rápido). O míssil passa pelos outros heróis.
-- Os itens únicos das outras classes (selo do Guerreiro, capa do Ladino, arco da Caçadora, habilidade da Duelista, tomo do Clérigo) ainda não existem: por enquanto essas armas só batem corpo a corpo.
+
+### Itens das classes
+
+- **Selo quebrado (Guerreiro):** vem afixado na armadura de pano. Quando um golpe vai deixar o Guerreiro com metade da vida ou menos, ele ganha 5 de blindagem na hora (os corações amarelos). Depois precisa de 150 turnos pra proteger de novo. A blindagem some se ficar 5 turnos sem inimigos por perto.
+- **Cajado do Mago:** já vem com a varinha de míssil mágico dentro. Clique direito lança um raio de luz branca que sempre acerta e dá 2-8 de dano mágico (a armadura não segura). Tem 4 cargas, mostradas na barrinha roxa do ícone, que voltam sozinhas (de ~33 a ~45 segundos cada).
+- **Capa das sombras (Ladino):** clique direito liga e desliga a invisibilidade. Os inimigos perdem o Ladino de vista e não acordam. Ligar gasta 1 carga e depois mais 1 a cada 4 turnos. Atacar desliga a capa (e o ataque é surpresa). Começa com 3 cargas e fica mais forte com o uso (até o nível 10).
+- **Arco espiritual (Caçadora):** clique direito atira uma flecha mágica (flechas infinitas). Dano de 1-6 que cresce com o nível. É um ataque físico: sorteia acerto e a armadura segura. Colado no inimigo, acerta pior.
+- **Habilidades das armas (Duelista):** tecla **V**. Começa com 2 cargas (até 8 com os níveis), que voltam a cada 45-60 turnos. As cargas aparecem do lado da barra de itens.
+
+| Arma | Habilidade |
+|---|---|
+| Espada curta desgastada | **Cortar:** +3 de dano, acerto garantido. Se matar, o próximo corte em 5 turnos é de graça |
+| Adaga | **Furtivo:** lampeja até 5 quadradinhos pra onde está olhando e fica 2 turnos invisível |
+| Luvas cravejadas | **Combinação:** acerto garantido, +3 de dano pra cada golpe que acertou antes |
+| Florete | **Estocada:** avança até um inimigo a 1 quadradinho e golpeia com +5, acerto garantido |
+| Maça | **Golpe pesado:** acerto garantido, atordoa 5 turnos (precisão e esquiva pela metade); de surpresa, +3 |
+
+- **Tomo sagrado (Clérigo):** clique direito abre a lista de magias. Começa com 3 cargas e fica mais forte com o uso.
+
+| Magia | Custo | O que faz |
+|---|---|---|
+| Luz guia | 1 | raio de 2-8 de dano que ilumina o alvo: o próximo golpe físico nele acerta com certeza |
+| Arma celestial | 2 | +2 de dano mágico em cada golpe por 50 turnos |
+| Armadura sagrada | 1 | bloqueia mais 1 de dano em cada golpe por 50 turnos |
+| Intuição divina (talento) | 3/2 | diz se o item na outra mão é amaldiçoado |
+| Escudo de luz (talento) | 1 | 2-4 / 3-6 de armadura contra o inimigo na mira por 5 turnos |
+
+### Talentos
+
+- Tecla **K** abre a tela de talentos, no estilo do Shattered. Do nível 2 ao 6, cada nível dá 1 ponto (5 no total), e cada talento vai até +2.
+- Os 4 primeiros talentos de cada classe, com os números do Shattered:
+
+| Classe | Talentos |
+|---|---|
+| Guerreiro | refeição saudável, intuição de veterano*, raiva provocada, determinação de ferro |
+| Mago | refeição empoderadora, intuição do estudioso*, magia prolongada, barreira de apoio |
+| Ladino | rações guardadas (baús com rações de suprimentos), intuição do ladrão*, golpe surpresa, sombras protetoras |
+| Caçadora | recompensa da natureza*, intuição de sobrevivente*, ataque consecutivo, auxílio da natureza* |
+| Duelista | refeição fortalecedora, intuição de aventureiro*, golpe paciente (ficar parado 1 turno antes de bater), barreira agressiva |
+| Clérigo | magias saciadas, intuição divina, luz abrasadora, escudo de luz |
+
+\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: itens não identificados (as intuições), grama alta e plantas (recompensa e auxílio da natureza). A tela de talentos avisa isso.
 
 ### Combate e inimigos
 
@@ -132,6 +172,8 @@ Comandos:
 | Comando | O que faz |
 |---|---|
 | `/heroi` | Abre o menu de escolha de herói (se você fechou sem escolher) |
+| tecla `K` | Tela de talentos |
+| tecla `V` | Habilidade da arma (Duelista) |
 | `/dungeon andar 3` | Vai direto pro andar 3 (de 1 a 5) |
 | `/dungeon xp 20` | Ganha 20 de XP do Shattered (pra testar os níveis) |
 | `/dungeon novarun` | Acaba a run atual e manda todo mundo de volta pro menu |
@@ -150,7 +192,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 
 ## O que vem depois
 
-1. **Itens:** poções e pergaminhos desconhecidos (já começados), os itens únicos das classes (selo do Guerreiro, varinha do Mago, capa do Ladino, arco da Caçadora, habilidade do florete, tomo do Clérigo), armadura de pano, armas e armaduras com força mínima, poções e pergaminhos desconhecidos (cor e runa aleatórias por run), pergaminho de melhoria, comida, e opção no menu pra compartilhar o que foi identificado.
+1. **Itens:** poções e pergaminhos desconhecidos (já começados, com cor e runa aleatórias por run), pergaminho de melhoria, itens não identificados, grama alta e plantas (pra os talentos que faltam), e opção no menu pra compartilhar o que foi identificado.
 2. **Texturas próprias** dos inimigos e dos blocos.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
@@ -162,18 +204,25 @@ src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas e blocos de decoração
-  item/                        armas, cajado do Mago, armadura, ankh e bolha de gosma
-  entidade/                    os inimigos do Shattered, o Goo e o míssil mágico
+  item/                        armas, armadura, itens das classes, cargas e artefatos
+  entidade/                    os inimigos do Shattered, o Goo, o míssil mágico, a luz guia e a flecha espiritual
   efeito/                      efeitos do Shattered (muco cáustico)
   combate/                     sorteio de dano, números flutuantes e partículas
   heroi/
     ClasseDoHeroi.java         as 6 classes e o kit de cada uma
     DadosDoHeroi.java          classe, força, nível e XP de cada jogador
     RegrasDoHeroi.java         contas de vida, precisão, esquiva e XP
-    EventosDeCombate.java      acerto, esquiva e dano das armas
+    EventosDeCombate.java      acerto, esquiva e dano dos golpes
+    CombateDoHeroi.java        golpe do herói (normal, habilidades e flechas)
+    Talento.java / Talentos.java    os talentos e o que cada um faz
+    Escudos.java               blindagem e o selo do Guerreiro
+    HabilidadesDaDuelista.java      as habilidades das armas
+    MagiasDoClerigo.java       as magias do tomo sagrado
   rede/                        pacotes do menu (servidor <-> jogador)
   cliente/
     TelaEscolhaDeHeroi.java    o menu Escolha Seu Herói
+    TelaDeTalentos.java        a tela de talentos (K)
+    TelaDoTomo.java            as magias do Clérigo
     PixelDungeonCliente.java   desenho dos inimigos
   dungeon/
     Andares.java               medidas e onde cada andar fica no mundo
