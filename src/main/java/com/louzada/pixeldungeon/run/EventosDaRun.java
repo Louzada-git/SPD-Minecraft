@@ -2,9 +2,13 @@ package com.louzada.pixeldungeon.run;
 
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.dungeon.Andares;
+import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
+import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
 import com.louzada.pixeldungeon.registro.ModEntidades;
+
+import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -14,10 +18,15 @@ import net.minecraft.world.level.GameRules;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 // Coisas que acontecem sozinhas: servidor ligando, jogador entrando, renascendo e morrendo.
 // Esses métodos são ligados ao jogo lá no PixelDungeon.java.
 public class EventosDaRun {
+    // Teste do Goo (só no GitHub): espera 5 s e vê se ele se curou na água
+    private static Goo gooDoTeste = null;
+    private static int vidaDoGooNoTeste = 0;
+    private static int ticksParaOTesteDoGoo = 0;
 
     // Servidor ligou (também acontece no single player, ao abrir o mundo)
     public static void aoIniciarServidor(ServerStartedEvent evento) {
@@ -68,6 +77,31 @@ public class EventosDaRun {
         }
         int enxames = mundo.getEntitiesOfClass(EnxameDeMoscas.class, enxame.getBoundingBox().inflate(4)).size();
         PixelDungeon.LOGGER.info("Teste do enxame: {} enxames depois do golpe", enxames);
+
+        // O Goo tem que estar dormindo no ninho (na água) e se curar lá
+        BlockPos origem = Andares.origemDoAndar(DadosDaRun.pegar(servidor).numeroDaRun(), 5);
+        List<Goo> goos = mundo.getEntitiesOfClass(Goo.class, PopulacaoDoAndar.caixaDoAndar(origem));
+        if (goos.isEmpty()) {
+            PixelDungeon.LOGGER.info("Teste do Goo: nenhum Goo no andar 5");
+            return;
+        }
+        gooDoTeste = goos.get(0);
+        // Mantém o pedaço do mundo dele carregado durante o teste, senão ele não se mexe
+        mundo.setChunkForced(gooDoTeste.chunkPosition().x, gooDoTeste.chunkPosition().z, true);
+        gooDoTeste.setHealth(gooDoTeste.getMaxHealth() - 20);
+        vidaDoGooNoTeste = Math.round(gooDoTeste.getHealth());
+        ticksParaOTesteDoGoo = 5 * 20;
+    }
+
+    // Só no teste do GitHub: termina o teste do Goo depois de 5 s
+    public static void aoTickDoServidor(ServerTickEvent.Post evento) {
+        if (gooDoTeste == null || --ticksParaOTesteDoGoo > 0) {
+            return;
+        }
+        PixelDungeon.LOGGER.info("Teste do Goo: tinha {} de vida, depois de 5 s na água ficou com {} (na água: {})",
+                vidaDoGooNoTeste, Math.round(gooDoTeste.getHealth()), gooDoTeste.isInWater());
+        evento.getServer().overworld().setChunkForced(gooDoTeste.chunkPosition().x, gooDoTeste.chunkPosition().z, false);
+        gooDoTeste = null;
     }
 
     // Alguém entrou no mundo: continua na run ou vai pro menu de escolha de herói
