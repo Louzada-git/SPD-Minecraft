@@ -47,6 +47,26 @@ public class ModItens {
     // 40% a mais de precisão
     public static final DeferredItem<ArmaDoShattered> MACA = arma("maca", 1, 1, 8, 1.4f, 1.0f, 0, 0, Habilidade.GOLPE_PESADO, 3);
 
+    // Tier 2 (precisam de 12 de força)
+    public static final DeferredItem<ArmaDoShattered> ESPADA_CURTA = arma("espada_curta", 2, 2, 15, 1.0f, 1.0f, 0, 0, Habilidade.CORTAR, 4);
+    public static final DeferredItem<ArmaDoShattered> MACHADINHA = arma("machadinha", 2, 2, 12, 1.32f, 1.0f, 0, 0, Habilidade.GOLPE_PESADO, 4);
+    public static final DeferredItem<ArmaDoShattered> PUNHAL = arma("punhal", 2, 2, 12, 1.0f, 1.0f, 0, 0.67f, Habilidade.FURTIVO, 4);
+
+    // Tier 3 (14 de força)
+    public static final DeferredItem<ArmaDoShattered> ESPADA = arma("espada", 3, 3, 20, 1.0f, 1.0f, 0, 0, Habilidade.CORTAR, 5);
+    public static final DeferredItem<ArmaDoShattered> CLAVA = arma("clava", 3, 3, 16, 1.28f, 1.0f, 0, 0, Habilidade.GOLPE_PESADO, 5);
+    public static final DeferredItem<ArmaDoShattered> SAI = arma("sai", 3, 3, 10, 1.0f, 0.5f, 0, 0, Habilidade.COMBINACAO, 4);
+
+    // Tier 4 (16 de força)
+    public static final DeferredItem<ArmaDoShattered> KATANA = arma("katana", 4, 4, 20, 1.0f, 1.0f, 3, 0, Habilidade.ESTOCADA, 8);
+    public static final DeferredItem<ArmaDoShattered> LAMINA_ASSASSINA = arma("lamina_assassina", 4, 4, 20, 1.0f, 1.0f, 0, 0.5f,
+            Habilidade.FURTIVO, 3);
+
+    // Tier 5 (18 de força)
+    public static final DeferredItem<ArmaDoShattered> ESPADA_LARGA = arma("espada_larga", 5, 5, 30, 1.0f, 1.0f, 0, 0, Habilidade.CORTAR, 7);
+    public static final DeferredItem<ArmaDoShattered> MARTELO_DE_GUERRA = arma("martelo_de_guerra", 5, 5, 24, 1.2f, 1.0f, 0, 0,
+            Habilidade.GOLPE_PESADO, 6);
+
     // ---- Itens únicos das classes ----
 
     // Ladino: fica invisível
