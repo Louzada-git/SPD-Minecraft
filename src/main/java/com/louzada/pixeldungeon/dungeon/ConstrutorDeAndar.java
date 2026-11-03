@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.louzada.pixeldungeon.bloco.CapimAlto;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
 import com.louzada.pixeldungeon.registro.ModBlocos;
 
@@ -15,6 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LightBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.Half;
 
 // Transforma a planta de um andar em blocos de verdade no mundo.
@@ -55,6 +57,8 @@ public class ConstrutorDeAndar {
     private BlockState agua = Blocks.WATER.defaultBlockState();
     private BlockState escadaSubida = ModBlocos.ESCADA_SUBIDA.get().defaultBlockState();
     private BlockState escadaDescida = ModBlocos.ESCADA_DESCIDA.get().defaultBlockState();
+    private BlockState capimAlto = ModBlocos.CAPIM_ALTO.get().defaultBlockState();
+    private BlockState gramaBaixa = ModBlocos.GRAMA_BAIXA.get().defaultBlockState();
 
     private ConstrutorDeAndar(ServerLevel nivel, PlantaDoAndar planta, BlockPos origem, long semente) {
         this.nivel = nivel;
@@ -134,8 +138,15 @@ public class ConstrutorDeAndar {
                     colocar(qx, qy, dx, alturaLivre, dz, parede);
                 }
 
-                // Musgo pelo chão, mais perto das poças
-                if (tipo == PlantaDoAndar.CHAO) {
+                // Grama (a alta ocupa 2 blocos: a parte de baixo e a de cima)
+                byte grama = planta.grama(qx, qy);
+                if (grama == PlantaDoAndar.GRAMA_ALTA) {
+                    colocar(qx, qy, dx, 1, dz, capimAlto.setValue(CapimAlto.HALF, DoubleBlockHalf.LOWER));
+                    colocar(qx, qy, dx, 2, dz, capimAlto.setValue(CapimAlto.HALF, DoubleBlockHalf.UPPER));
+                } else if (grama == PlantaDoAndar.GRAMA) {
+                    colocar(qx, qy, dx, 1, dz, gramaBaixa);
+                } else if (tipo == PlantaDoAndar.CHAO) {
+                    // Musgo pelo chão, mais perto das poças
                     int chance = pertoDaAgua ? CHANCE_DE_MUSGO_PERTO_DA_AGUA : CHANCE_DE_MUSGO;
                     if (sorteio.nextInt(100) < chance) {
                         colocar(qx, qy, dx, 1, dz, musgo);
