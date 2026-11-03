@@ -207,6 +207,7 @@ public class GerenciadorDaRun {
         long inicio = System.currentTimeMillis();
         ConstrutorDeAndar.construir(servidor.overworld(), planta, origem, dados.semente() * 31 + andar);
         PixelDungeon.LOGGER.info("Andar {} construído em {} ms", andar, System.currentTimeMillis() - inicio);
+        contarGrama(planta, andar);
         PopulacaoDoAndar.povoarNoInicio(servidor.overworld(), planta, origem, andar, dados.semente());
 
         BlockPos entrada = ConstrutorDeAndar.pontoDeChegada(origem, planta.entradaX(), planta.entradaY());
@@ -217,6 +218,23 @@ public class GerenciadorDaRun {
         info = new DadosDaRun.InfoAndar(entrada, saida);
         dados.guardarAndar(andar, info);
         return info;
+    }
+
+    // Só pra conferir no log: quantos quadradinhos de grama o andar ganhou
+    private static void contarGrama(PlantaDoAndar planta, int andar) {
+        int grama = 0;
+        int alta = 0;
+        for (int y = 0; y < planta.altura(); y++) {
+            for (int x = 0; x < planta.largura(); x++) {
+                if (planta.grama(x, y) != PlantaDoAndar.SEM_GRAMA) {
+                    grama++;
+                }
+                if (planta.grama(x, y) == PlantaDoAndar.GRAMA_ALTA) {
+                    alta++;
+                }
+            }
+        }
+        PixelDungeon.LOGGER.info("Andar {}: {} quadradinhos de grama ({} de grama alta)", andar, grama, alta);
     }
 
     // Leva o jogador para um andar. chegandoDeCima = aparece na entrada; senão aparece na saída.

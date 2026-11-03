@@ -2,9 +2,13 @@ package com.louzada.pixeldungeon.run;
 
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.dungeon.Andares;
+import com.louzada.pixeldungeon.dungeon.GeradorDeAndar;
+import com.louzada.pixeldungeon.dungeon.Grama;
+import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.Goo;
+import com.louzada.pixeldungeon.entidade.GotaDeOrvalho;
 import com.louzada.pixeldungeon.entidade.MisselMagico;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
@@ -18,6 +22,8 @@ import com.louzada.pixeldungeon.heroi.Talento;
 import com.louzada.pixeldungeon.heroi.Talentos;
 import com.louzada.pixeldungeon.item.Artefato;
 import com.louzada.pixeldungeon.item.Cargas;
+import com.louzada.pixeldungeon.item.Odre;
+import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.louzada.pixeldungeon.registro.ModComponentes;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
@@ -188,6 +194,45 @@ public class EventosDaRun {
         PixelDungeon.LOGGER.info("Teste do Ladino: invisível = {}, cargas da capa = {}", Furtividade.invisivel(heroi),
                 Cargas.cargas(capa, Artefato.cargasMaximas(capa)));
         Furtividade.revelar(heroi);
+
+        // Grama alta: o Guerreiro encosta num quadradinho de grama alta do andar 1 e ele vira grama baixa
+        dados.comecar(ClasseDoHeroi.GUERREIRO, run.numeroDaRun());
+        PlantaDoAndar planta = GeradorDeAndar.gerar(run.semente(), 1);
+        BlockPos origem = Andares.origemDoAndar(run.numeroDaRun(), 1);
+        BlockPos grama = null;
+        for (int y = 0; y < planta.altura() && grama == null; y++) {
+            for (int x = 0; x < planta.largura() && grama == null; x++) {
+                if (planta.grama(x, y) == PlantaDoAndar.GRAMA_ALTA) {
+                    grama = origem.offset(x * Andares.TAMANHO_DO_QUADRADINHO + 1, 1, y * Andares.TAMANHO_DO_QUADRADINHO + 1);
+                }
+            }
+        }
+        if (grama != null) {
+            boolean eraAlta = mundo.getBlockState(grama).is(ModBlocos.CAPIM_ALTO.get());
+            if (eraAlta) {
+                Grama.pisotear(mundo, grama, mundo.getBlockState(grama), heroi);
+            }
+            PixelDungeon.LOGGER.info("Teste da grama: era grama alta = {}, virou grama baixa = {}", eraAlta,
+                    mundo.getBlockState(grama).is(ModBlocos.GRAMA_BAIXA.get()));
+        } else {
+            PixelDungeon.LOGGER.info("Teste da grama: o andar 1 não tem grama alta");
+        }
+
+        // Odre: uma gota de orvalho entra nele, e beber cura
+        ItemStack odre = new ItemStack(ModItens.ODRE.get());
+        heroi.setItemInHand(InteractionHand.MAIN_HAND, odre);
+        GotaDeOrvalho gota = ModEntidades.GOTA_DE_ORVALHO.get().create(mundo);
+        if (gota != null) {
+            gota.moveTo(heroi.getX(), heroi.getY() + 1, heroi.getZ());
+            mundo.addFreshEntity(gota);
+            gota.absorver(heroi);
+        }
+        int gotasDepoisDaGota = Odre.volume(odre);
+        heroi.setHealth(15);
+        float vidaAntes = heroi.getHealth();
+        ModItens.ODRE.get().use(mundo, heroi, InteractionHand.MAIN_HAND);
+        PixelDungeon.LOGGER.info("Teste do odre: gotas depois da gota = {}, vida {} -> {}, gotas depois de beber = {}", gotasDepoisDaGota,
+                vidaAntes, heroi.getHealth(), Odre.volume(odre));
     }
 
     // Só no teste do GitHub: termina o teste do Goo depois de 5 s
