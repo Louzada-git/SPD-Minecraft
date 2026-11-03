@@ -98,4 +98,10 @@ public class EnxameDeMoscas extends MobDoShattered {
         super.readAdditionalSaveData(tag);
         geracao = tag.getInt("geracao");
     }
+
+    // Sangue verde acinzentado (cor do Shattered)
+    @Override
+    public int corDoSangue() {
+        return 0x8BA077;
+    }
 }

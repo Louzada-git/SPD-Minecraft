@@ -21,4 +21,10 @@ public class SlimeDeEsgoto extends MobDoShattered {
         }
         return dano;
     }
+
+    // Sangue verde (cor do Shattered)
+    @Override
+    public int corDoSangue() {
+        return 0x88CC44;
+    }
 }

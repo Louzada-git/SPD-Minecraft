@@ -408,4 +408,10 @@ public class Goo extends MobDoShattered {
             barra.setColor(BossEvent.BossBarColor.RED);
         }
     }
+
+    // Sangue gosma preta (cor do Shattered)
+    @Override
+    public int corDoSangue() {
+        return 0x000000;
+    }
 }

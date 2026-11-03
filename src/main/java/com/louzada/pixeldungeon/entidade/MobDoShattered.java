@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon.entidade;
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
+import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.combate.Sorteio;
 
 import net.minecraft.ChatFormatting;
@@ -109,6 +110,11 @@ public abstract class MobDoShattered extends Monster {
     // XP que dá ao morrer (o enxame dividido não dá)
     public int xpAoMorrer() {
         return atributos.xp();
+    }
+
+    // Cor do sangue que espirra quando apanha (vermelho, por padrão), igual ao Shattered
+    public int corDoSangue() {
+        return Particulas.SANGUE_PADRAO;
     }
 
     // O que pode cair quando morre (nada, por padrão)

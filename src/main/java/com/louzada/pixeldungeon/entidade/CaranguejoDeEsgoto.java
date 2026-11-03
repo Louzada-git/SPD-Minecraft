@@ -25,4 +25,10 @@ public class CaranguejoDeEsgoto extends MobDoShattered {
         }
         return ItemStack.EMPTY;
     }
+
+    // Sangue amarelado (cor do Shattered)
+    @Override
+    public int corDoSangue() {
+        return 0xFFEA80;
+    }
 }
