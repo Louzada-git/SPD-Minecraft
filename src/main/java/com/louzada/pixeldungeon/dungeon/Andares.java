@@ -17,8 +17,8 @@ public class Andares {
     public static final int ESPACO_ENTRE_ANDARES = 12;
     // Altura (Y) do chão do andar 1
     public static final int Y_DO_ANDAR_1 = 300;
-    // Tamanho da planta de um andar, em quadradinhos (32x32 = 128x128 blocos)
-    public static final int TAMANHO_DA_PLANTA = 32;
+    // Tamanho máximo da planta de um andar, em quadradinhos (64x64 = 256x256 blocos)
+    public static final int TAMANHO_DA_PLANTA = 64;
     // Distância (em blocos) entre uma run e outra
     public static final int DISTANCIA_ENTRE_RUNS = 4096;
     // Por enquanto só existe o esgoto (andares 1 a 5)

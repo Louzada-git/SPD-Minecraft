@@ -1,0 +1,226 @@
+package com.louzada.pixeldungeon.dungeon.geracao;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
+import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
+
+// Desenha os cômodos já posicionados na planta (o "RegularPainter" + "SewerPainter" do Shattered):
+//   1. a planta fica do tamanho dos cômodos, com 1 quadradinho de parede em volta
+//   2. cada ligação ganha uma porta num ponto sorteado da parede em comum, e cada cômodo se desenha
+//   3. salas comuns vizinhas com uma parede comprida entre elas às vezes viram uma sala só (a parede some)
+//   4. as portas: comum vira porta gigante, trancada vira porta trancada, túnel e água viram chão e água
+//   5. manchas de água (30%) e de grama (20%), igual ao esgoto
+// (As portas escondidas do Shattered, que precisam ser procuradas, ainda não existem no mod.)
+public class PintorDoEsgoto {
+    private static final float AGUA = 0.30f;
+    private static final int AGRUPAMENTO_DA_AGUA = 5;
+    private static final float GRAMA = 0.20f;
+    private static final int AGRUPAMENTO_DA_GRAMA = 4;
+
+    // Devolve a planta pronta, ou null se ela passar do tamanho máximo (aí o andar é gerado de novo)
+    public static PlantaDoAndar pintar(List<Comodo> comodos, int tamanhoMaximo) {
+        // 1. Tamanho
+        int esquerda = Integer.MAX_VALUE;
+        int cima = Integer.MAX_VALUE;
+        for (Comodo comodo : comodos) {
+            esquerda = Math.min(esquerda, comodo.esquerda);
+            cima = Math.min(cima, comodo.cima);
+        }
+        esquerda -= 1;
+        cima -= 1;
+        int direita = 0;
+        int baixo = 0;
+        for (Comodo comodo : comodos) {
+            comodo.deslocar(-esquerda, -cima);
+            direita = Math.max(direita, comodo.direita);
+            baixo = Math.max(baixo, comodo.baixo);
+        }
+        int largura = direita + 2;
+        int altura = baixo + 2;
+        if (largura > tamanhoMaximo || altura > tamanhoMaximo) {
+            return null;
+        }
+        PlantaDoAndar planta = new PlantaDoAndar(largura, altura);
+
+        // 2. Portas e desenho de cada cômodo
+        List<Comodo> embaralhados = new ArrayList<>(comodos);
+        Dado.embaralhar(embaralhados);
+        for (Comodo comodo : embaralhados) {
+            if (comodo.ligados.isEmpty()) {
+                return null;
+            }
+            porPortas(comodo);
+            comodo.pintar(planta);
+        }
+
+        // As salas (o lado de dentro de tudo que não é túnel)
+        for (Comodo comodo : embaralhados) {
+            if (!(comodo instanceof ComodoDeLigacao)) {
+                Sala sala = new Sala(comodo.esquerda + 1, comodo.cima + 1, comodo.largura() - 2, comodo.altura() - 2,
+                        comodo instanceof ComodoEspecial);
+                comodo.numeroDaSala = planta.registrarSala(sala);
+            }
+        }
+
+        // 3 e 4. Juntar salas e desenhar as portas
+        pintarPortas(planta, embaralhados);
+
+        // 5. Água e grama (com um sorteador separado, igual ao Shattered)
+        Random sorteioDaGeracao = Dado.atual();
+        Dado.usar(new Random(Dado.numeroGrande()));
+        pintarAgua(planta, embaralhados);
+        pintarGrama(planta, embaralhados);
+        Dado.usar(sorteioDaGeracao);
+        return planta;
+    }
+
+    // Cada ligação sem porta ganha uma num ponto da parede em comum que os dois aceitem
+    private static void porPortas(Comodo comodo) {
+        for (Comodo outro : comodo.ligados.keySet()) {
+            if (comodo.ligados.get(outro) != null) {
+                continue;
+            }
+            Retangulo i = comodo.intersecao(outro);
+            List<Ponto> lugares = new ArrayList<>();
+            for (Ponto p : i.pontos()) {
+                if (comodo.podeLigar(p) && outro.podeLigar(p)) {
+                    lugares.add(p);
+                }
+            }
+            if (lugares.isEmpty()) {
+                continue;
+            }
+            Comodo.Porta porta = new Comodo.Porta(Dado.elemento(lugares));
+            comodo.ligados.put(outro, porta);
+            outro.ligados.put(comodo, porta);
+        }
+    }
+
+    private static void pintarPortas(PlantaDoAndar planta, List<Comodo> comodos) {
+        Map<Comodo, Comodo> juntados = new HashMap<>();
+        for (Comodo comodo : comodos) {
+            for (Comodo outro : comodo.ligados.keySet()) {
+                if (juntados.get(comodo) == outro || juntados.get(outro) == comodo) {
+                    continue;
+                }
+                Comodo.Porta porta = comodo.ligados.get(outro);
+                if (porta == null) {
+                    continue;
+                }
+                if (!juntados.containsKey(comodo) && !juntados.containsKey(outro) && juntar(planta, comodo, outro, porta)) {
+                    if (((ComodoComum) comodo).tamanho == ComodoComum.Tamanho.NORMAL) {
+                        juntados.put(comodo, outro);
+                    }
+                    if (((ComodoComum) outro).tamanho == ComodoComum.Tamanho.NORMAL) {
+                        juntados.put(outro, comodo);
+                    }
+                    continue;
+                }
+                if (porta.tipo == Comodo.Porta.Tipo.COMUM) {
+                    porta.tipo = Comodo.Porta.Tipo.DESTRANCADA;
+                }
+                byte tipo = switch (porta.tipo) {
+                    case VAZIA, TUNEL -> PlantaDoAndar.CHAO;
+                    case AGUA -> PlantaDoAndar.AGUA;
+                    case COMUM, DESTRANCADA -> PlantaDoAndar.PORTA;
+                    case TRANCADA -> PlantaDoAndar.PORTA_TRANCADA;
+                    case PAREDE -> PlantaDoAndar.PAREDE;
+                };
+                planta.definir(porta.x, porta.y, tipo);
+            }
+        }
+    }
+
+    // Derruba a parede entre duas salas comuns, a partir da porta, até onde as duas deixarem (pelo menos 3 quadradinhos)
+    private static boolean juntar(PlantaDoAndar planta, Comodo comodo, Comodo outro, Ponto inicio) {
+        Retangulo i = comodo.intersecao(outro);
+        Retangulo pedaco;
+        if (i.esquerda == i.direita) {
+            int de = inicio.y;
+            int ate = inicio.y;
+            Ponto p = new Ponto(i.esquerda, de);
+            while (de > i.cima && outro.podeJuntar(planta, comodo, p) && comodo.podeJuntar(planta, outro, p)) {
+                de--;
+                p.y--;
+            }
+            p.y = ate;
+            while (ate < i.baixo && outro.podeJuntar(planta, comodo, p) && comodo.podeJuntar(planta, outro, p)) {
+                ate++;
+                p.y++;
+            }
+            if (ate - de < 3) {
+                return false;
+            }
+            pedaco = new Retangulo(i.esquerda, de + 1, i.esquerda + 1, ate);
+        } else if (i.cima == i.baixo) {
+            int de = inicio.x;
+            int ate = inicio.x;
+            Ponto p = new Ponto(de, i.cima);
+            while (de > i.esquerda && outro.podeJuntar(planta, comodo, p) && comodo.podeJuntar(planta, outro, p)) {
+                de--;
+                p.x--;
+            }
+            p.x = ate;
+            while (ate < i.direita && outro.podeJuntar(planta, comodo, p) && comodo.podeJuntar(planta, outro, p)) {
+                ate++;
+                p.x++;
+            }
+            if (ate - de < 3) {
+                return false;
+            }
+            pedaco = new Retangulo(de + 1, i.cima, ate, i.cima + 1);
+        } else {
+            return false;
+        }
+        comodo.juntar(planta, outro, pedaco, PlantaDoAndar.CHAO);
+        // A parede que sumiu passa a ser da sala (mesma altura de teto)
+        for (int y = pedaco.cima; y < pedaco.baixo; y++) {
+            for (int x = pedaco.esquerda; x < pedaco.direita; x++) {
+                planta.marcarDaSala(x, y, comodo.numeroDaSala);
+            }
+        }
+        return true;
+    }
+
+    private static void pintarAgua(PlantaDoAndar planta, List<Comodo> comodos) {
+        boolean[] lago = Mancha.gerar(planta.largura(), planta.altura(), AGUA, AGRUPAMENTO_DA_AGUA, true);
+        for (Comodo comodo : comodos) {
+            for (Ponto p : comodo.pontosComAgua()) {
+                if (lago[p.x + p.y * planta.largura()] && planta.tipo(p.x, p.y) == PlantaDoAndar.CHAO && planta.grama(p.x, p.y) == PlantaDoAndar.SEM_GRAMA) {
+                    planta.definir(p.x, p.y, PlantaDoAndar.AGUA);
+                }
+            }
+        }
+    }
+
+    // Quanto mais vizinhos com grama, mais chance de ser grama alta (de 1 em 12 até 9 em 12)
+    private static void pintarGrama(PlantaDoAndar planta, List<Comodo> comodos) {
+        int largura = planta.largura();
+        boolean[] grama = Mancha.gerar(largura, planta.altura(), GRAMA, AGRUPAMENTO_DA_GRAMA, true);
+        List<Ponto> comGrama = new ArrayList<>();
+        for (Comodo comodo : comodos) {
+            for (Ponto p : comodo.pontosComGrama()) {
+                if (grama[p.x + p.y * largura] && planta.tipo(p.x, p.y) == PlantaDoAndar.CHAO && planta.grama(p.x, p.y) == PlantaDoAndar.SEM_GRAMA
+                        && !planta.temPremioEm(p.x, p.y)) {
+                    comGrama.add(p);
+                }
+            }
+        }
+        for (Ponto p : comGrama) {
+            int vizinhos = 1;
+            for (int dy = -1; dy <= 1; dy++) {
+                for (int dx = -1; dx <= 1; dx++) {
+                    if ((dx != 0 || dy != 0) && planta.dentro(p.x + dx, p.y + dy) && grama[p.x + dx + (p.y + dy) * largura]) {
+                        vizinhos++;
+                    }
+                }
+            }
+            planta.definirGrama(p.x, p.y, Dado.decimal() < vizinhos / 12f ? PlantaDoAndar.GRAMA_ALTA : PlantaDoAndar.GRAMA);
+        }
+    }
+}
