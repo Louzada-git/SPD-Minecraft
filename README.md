@@ -25,6 +25,22 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 - Escada de subida na entrada de cada andar e alçapão de descida na saída.
 - Sem dia/noite, sem chuva e sem mobs do Minecraft nascendo.
 
+### Tela do jogo e inventário
+
+Igual à interface completa do Shattered. Durante a run, a barra de itens, os corações, a fome, a armadura, a experiência e os efeitos do Minecraft somem e entram os do Shattered (com as imagens do próprio Shattered):
+
+- **Embaixo à esquerda, a barra de status:** o rosto do herói (a skin do jogador) com o nível embaixo, a **vida** em vermelho (a blindagem aparece em cinza) e a **experiência** em amarelo, com os números em cima.
+  - Em cima das barras ficam os ícones dos **efeitos** (piscando quando estão acabando), o de **fome** ("Faminto" quando falta 1/3 da comida, "Morrendo de fome" quando acaba) e uma estrela com a tecla **K** quando tem ponto de talento pra gastar.
+  - O rosto pisca em vermelho com pouca vida (menos de 1/3) e em amarelo por 10 segundos quando ganha um ponto de talento.
+- **Embaixo à direita, a barra de ferramentas:** os botões de procurar, esperar e mochila do Shattered e, à esquerda deles, as **9 casinhas** da barra de itens. A do item na mão fica mais clara, com borda amarela. O item da mão esquerda aparece numa casinha solta do lado. A Duelista ganha uma etiqueta em cima com as cargas da habilidade.
+- **Inventário (tecla E):** abre igual ao do Shattered: a barra de ferramentas sobe e embaixo dela aparece o painel do inventário. O jogo continua aparecendo atrás (sem escurecer).
+  - Em cima, o equipamento (cabeça, peito, pernas, pés e mão esquerda) e o ouro; embaixo, as 27 casinhas da mochila.
+  - À esquerda, o painel do herói: a skin em 3D olhando pro mouse, a classe, o nível, a força e o andar.
+  - As casinhas mudam de cor igual ao Shattered: cinza claro no que está equipado, avermelhado no que se sabe que é amaldiçoado e arroxeado no que ainda não foi identificado (armas, poções e pergaminhos).
+  - Passar o mouse nos efeitos, na fome, nas barras, no ouro e nos botões mostra o que eles são. Clicar no herói (ou apertar **K**) abre os talentos; clicar na mochila fecha o inventário.
+  - Não tem a mesa de trabalho 2x2 (o Shattered não tem).
+- No criativo, o inventário continua o do Minecraft (pra pegar os itens). Se a tela for estreita demais pra caber tudo embaixo, a barra de status vai pro canto de cima.
+
 ### Classes e run
 
 - Menu **Escolha Seu Herói** no estilo do Shattered, com as 6 classes e a arte de cada uma: Guerreiro, Mago, Ladino, Caçadora, Duelista e Clérigo.
@@ -50,7 +66,7 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 - **Cajado do Mago:** já vem com a varinha de míssil mágico dentro. Clique direito lança um raio de luz branca que sempre acerta e dá 2-8 de dano mágico (a armadura não segura). Tem 4 cargas, mostradas na barrinha roxa do ícone, que voltam sozinhas (de ~33 a ~45 segundos cada).
 - **Capa das sombras (Ladino):** clique direito liga e desliga a invisibilidade. Os inimigos perdem o Ladino de vista e não acordam. Ligar gasta 1 carga e depois mais 1 a cada 4 turnos. Atacar desliga a capa (e o ataque é surpresa). Começa com 3 cargas e fica mais forte com o uso (até o nível 10).
 - **Arco espiritual (Caçadora):** clique direito atira uma flecha mágica (flechas infinitas). Dano de 1-6 que cresce com o nível. É um ataque físico: sorteia acerto e a armadura segura. Colado no inimigo, acerta pior.
-- **Habilidades das armas (Duelista):** tecla **V**. Começa com 2 cargas (até 8 com os níveis), que voltam a cada 45-60 turnos. As cargas aparecem do lado da barra de itens.
+- **Habilidades das armas (Duelista):** tecla **V**. Começa com 2 cargas (até 8 com os níveis), que voltam a cada 45-60 turnos. As cargas aparecem numa etiqueta em cima da barra de ferramentas.
 
 | Armas | Habilidade |
 |---|---|
@@ -106,7 +122,7 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 ### Ouro, baús e mímicos
 
 - Cada andar (menos o do chefe) tem de 3 a 5 itens espalhados (60% / 30% / 10%), mais uma ração. Cada item é **ouro** (10), **poção** (8), **pergaminho** (8), **arma** (2) ou **semente** (1), com os pesos do Shattered (armaduras, varinhas e anéis ainda não existem). Em cada região também caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares.
-- **Ouro:** uma pilha tem de 30 + 10 por andar até 60 + 20 por andar moedas. Encostou, as moedas vão direto pra bolsa (não ocupam o inventário), sobe um "+N" dourado e o total aparece do lado direito da barra de itens. Cada herói tem o seu ouro, pras lojas que vão vir.
+- **Ouro:** uma pilha tem de 30 + 10 por andar até 60 + 20 por andar moedas. Encostou, as moedas vão direto pra bolsa (não ocupam o inventário), sobe um "+N" dourado e o total aparece no inventário, do lado do equipamento. Cada herói tem o seu ouro, pras lojas que vão vir.
 - De cada 20 itens, 4 ficam num **baú** (um baú comum do Minecraft, com o item no meio), 1 fica dentro de um **mímico** (a partir do andar 2) e o resto fica largado no chão. Onde tem item, a grama alta é aparada. Os itens nunca somem do chão.
 - Ninguém consegue quebrar um baú (só no criativo).
 - **Mímico:** por fora é igualzinho a um baú. Quem tenta abrir ou bate nele leva uma mordida que sempre acerta (2 + 2 por andar de dano), e ele vira um baú com dentes que persegue o herói, abrindo e fechando a tampa. Quando morre, solta o item que guardava e mais um prêmio (ouro ou uma arma). Herói invisível não leva a mordida.
@@ -289,6 +305,10 @@ Comandos:
 
 O arquivo fica em `build/libs/pixeldungeon-1.1.jar`. É esse que vai na pasta `mods` de um Minecraft com NeoForge.
 
+### Fotos do teste
+
+A cada push, o teste do GitHub também abre o jogo de verdade (sem monitor), entra no mundo como Guerreiro e tira fotos da tela do jogo e do inventário (com as dicas do mouse e em dois tamanhos de interface). Elas ficam no branch `fotos`.
+
 ### Se der erro
 
 Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande pro Claude.
@@ -323,6 +343,10 @@ src/main/java/com/louzada/pixeldungeon/
     MagiasDoClerigo.java       as magias do tomo sagrado
   rede/                        pacotes do menu (servidor <-> jogador)
   cliente/
+    HudDoHeroi.java            a tela do jogo do Shattered (some com a do Minecraft durante a run)
+    PainelDeStatus.java        a barra de status: rosto, vida, experiência e efeitos
+    BarraDeFerramentas.java    a barra de ferramentas com as 9 casinhas
+    TelaDoInventario.java      o inventário do Shattered
     TelaEscolhaDeHeroi.java    o menu Escolha Seu Herói
     TelaDeTalentos.java        a tela de talentos (K)
     TelaDoTomo.java            as magias do Clérigo
