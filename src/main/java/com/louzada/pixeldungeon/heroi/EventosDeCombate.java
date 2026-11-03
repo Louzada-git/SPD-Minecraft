@@ -145,7 +145,7 @@ public class EventosDeCombate {
             return precisao;
         }
         if (atacante instanceof MobDoShattered inimigo) {
-            return inimigo.atributos().precisao();
+            return inimigo.precisao();
         }
         return PRECISAO_PADRAO;
     }
@@ -156,7 +156,7 @@ public class EventosDeCombate {
         }
         if (alvo instanceof MobDoShattered inimigo) {
             // Dormindo não dá pra desviar
-            return inimigo.dormindo() ? 0 : inimigo.atributos().esquiva();
+            return inimigo.dormindo() ? 0 : inimigo.esquiva();
         }
         return ESQUIVA_PADRAO;
     }

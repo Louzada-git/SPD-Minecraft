@@ -71,7 +71,9 @@ public abstract class MobDoShattered extends Monster {
 
     @Override
     protected void registerGoals() {
-        goalSelector.addGoal(1, new FloatGoal(this));
+        if (nadaNaAgua()) {
+            goalSelector.addGoal(1, new FloatGoal(this));
+        }
         // Ataca uma vez por segundo, que é um turno do Shattered
         goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, false));
         goalSelector.addGoal(5, passeio());
@@ -86,8 +88,22 @@ public abstract class MobDoShattered extends Monster {
         return new WaterAvoidingRandomStrollGoal(this, 0.8);
     }
 
+    // Quem nada fica pulando na água pra boiar (o Goo não: ele anda pela água como se fosse chão)
+    protected boolean nadaNaAgua() {
+        return true;
+    }
+
     public Atributos atributos() {
         return atributos;
+    }
+
+    // Precisão e esquiva agora (o Goo muda as dele quando fica furioso)
+    public int precisao() {
+        return atributos.precisao();
+    }
+
+    public int esquiva() {
+        return atributos.esquiva();
     }
 
     // XP que dá ao morrer (o enxame dividido não dá)
