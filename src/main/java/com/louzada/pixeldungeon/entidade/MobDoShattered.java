@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.combate.Sorteio;
+import com.louzada.pixeldungeon.heroi.Furtividade;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -53,6 +54,8 @@ public abstract class MobDoShattered extends Monster {
     private Atributos atributos;
     private Sons sons;
     private boolean dormindo = false;
+    // Talento golpe surpresa do Ladino: só vale no primeiro ataque surpresa em cada inimigo
+    private boolean levouGolpeSurpresa = false;
 
     protected MobDoShattered(EntityType<? extends MobDoShattered> tipo, Level mundo, Atributos atributos, Sons sons) {
         super(tipo, mundo);
@@ -81,7 +84,8 @@ public abstract class MobDoShattered extends Monster {
         goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         goalSelector.addGoal(7, new RandomLookAroundGoal(this));
         targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        // Não enxerga heróis invisíveis (capa das sombras, habilidade furtiva da adaga)
+        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, alvo -> !Furtividade.invisivel(alvo)));
     }
 
     // Como o inimigo anda à toa quando não está caçando ninguém (o enxame sobrescreve pra voar)
@@ -166,6 +170,14 @@ public abstract class MobDoShattered extends Monster {
     public void aoAcertar(Entity alvo, float dano) {
     }
 
+    public boolean levouGolpeSurpresa() {
+        return levouGolpeSurpresa;
+    }
+
+    public void marcarGolpeSurpresa() {
+        levouGolpeSurpresa = true;
+    }
+
     // O herói pega o inimigo de surpresa se ele está dormindo ou não está de olho nesse herói
     public boolean surpreendidoPor(Player jogador) {
         return dormindo || getTarget() != jogador;
@@ -174,6 +186,10 @@ public abstract class MobDoShattered extends Monster {
     @Override
     public void tick() {
         super.tick();
+        // Igual ao Shattered: quem estava caçando um herói que ficou invisível perde ele de vista
+        if (!level().isClientSide() && tickCount % 10 == 0 && getTarget() instanceof Player alvo && Furtividade.invisivel(alvo)) {
+            setTarget(null);
+        }
         // Uma vez por segundo, quem está dormindo pode notar um herói por perto.
         // Igual ao Shattered: a chance é maior quanto mais perto (1 quadradinho = 4 blocos).
         if (dormindo && !level().isClientSide() && tickCount % 20 == 0) {
@@ -182,7 +198,7 @@ public abstract class MobDoShattered extends Monster {
                 NumerosFlutuantes.mostrar(this, "z", NumerosFlutuantes.BRANCO);
             }
             for (Player jogador : level().players()) {
-                if (jogador.isSpectator() || jogador.isCreative() || !hasLineOfSight(jogador)) {
+                if (jogador.isSpectator() || jogador.isCreative() || Furtividade.invisivel(jogador) || !hasLineOfSight(jogador)) {
                     continue;
                 }
                 double distanciaEmQuadradinhos = distanceTo(jogador) / 4.0;
@@ -244,12 +260,14 @@ public abstract class MobDoShattered extends Monster {
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("dormindo", dormindo);
+        tag.putBoolean("levou_golpe_surpresa", levouGolpeSurpresa);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         dormindo = tag.getBoolean("dormindo");
+        levouGolpeSurpresa = tag.getBoolean("levou_golpe_surpresa");
     }
 
     // Ajusta a vida pra quantidade de jogadores (mais gente = mais vida)
