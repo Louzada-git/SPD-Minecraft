@@ -4,6 +4,7 @@ import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.bloco.BlocoComFormato;
 import com.louzada.pixeldungeon.bloco.BlocoEscadaDescida;
 import com.louzada.pixeldungeon.bloco.BlocoEscadaSubida;
+import com.louzada.pixeldungeon.bloco.BlocoParedeEsgoto;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -21,8 +22,9 @@ public class ModBlocos {
 
     // ---- Estrutura do esgoto ----
 
-    // Paredes e teto (as texturas variam sozinhas: tijolo, tijolo com musgo, tijolo rachado)
-    public static final DeferredBlock<Block> PAREDE_ESGOTO = BLOCOS.registerSimpleBlock("parede_esgoto", inquebravel());
+    // Paredes e teto (as texturas variam sozinhas: tijolo, tijolo com musgo, tijolo rachado).
+    // Em cima das poças, o teto pinga água.
+    public static final DeferredBlock<BlocoParedeEsgoto> PAREDE_ESGOTO = BLOCOS.registerBlock("parede_esgoto", BlocoParedeEsgoto::new, inquebravel());
     // Chão (tufo polido e tufo bruto)
     public static final DeferredBlock<Block> CHAO_ESGOTO = BLOCOS.registerSimpleBlock("chao_esgoto", inquebravel());
     // Faixa de tijolos de tufo na parte de baixo das paredes (rodapé)
