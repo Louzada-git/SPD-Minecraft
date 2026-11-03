@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.louzada.pixeldungeon.bloco.CapimAlto;
+import com.louzada.pixeldungeon.bloco.PortaGigante;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
 import com.louzada.pixeldungeon.registro.ModBlocos;
 
@@ -28,6 +29,7 @@ import net.minecraft.world.level.block.state.properties.Half;
 //   y          chão (ou água, com um chão embaixo)
 //
 // Os corredores são túneis mais baixos (6 blocos), com arcos no alto dos dois lados.
+// As portas gigantes ficam no meio da parede entre dois cômodos, com a altura dos corredores (4 de largura, 6 de altura).
 public class ConstrutorDeAndar {
     // Atualiza só os jogadores, sem avisar os blocos vizinhos (bem mais rápido)
     private static final int ATUALIZACAO = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
@@ -36,9 +38,6 @@ public class ConstrutorDeAndar {
     // Luz invisível de fundo (0 a 15); as lanternas dão a luz forte
     private static final int LUZ_DAS_SALAS = 10;
     private static final int LUZ_DOS_CORREDORES = 9;
-    // Chance (em %) de nascer musgo num bloco de chão
-    private static final int CHANCE_DE_MUSGO_PERTO_DA_AGUA = 30;
-    private static final int CHANCE_DE_MUSGO = 4;
 
     private ServerLevel nivel;
     private PlantaDoAndar planta;
@@ -53,12 +52,13 @@ public class ConstrutorDeAndar {
     private BlockState moldura = ModBlocos.MOLDURA_ESGOTO.get().defaultBlockState();
     private BlockState lanterna = ModBlocos.LANTERNA_ESGOTO.get().defaultBlockState();
     private BlockState corrente = ModBlocos.CORRENTE_ESGOTO.get().defaultBlockState();
-    private BlockState musgo = ModBlocos.MUSGO_ESGOTO.get().defaultBlockState();
     private BlockState agua = Blocks.WATER.defaultBlockState();
     private BlockState escadaSubida = ModBlocos.ESCADA_SUBIDA.get().defaultBlockState();
     private BlockState escadaDescida = ModBlocos.ESCADA_DESCIDA.get().defaultBlockState();
     private BlockState capimAlto = ModBlocos.CAPIM_ALTO.get().defaultBlockState();
     private BlockState gramaBaixa = ModBlocos.GRAMA_BAIXA.get().defaultBlockState();
+    private BlockState barril = ModBlocos.BARRIL_ESGOTO.get().defaultBlockState();
+    private BlockState estante = ModBlocos.ESTANTE_ESGOTO.get().defaultBlockState();
 
     private ConstrutorDeAndar(ServerLevel nivel, PlantaDoAndar planta, BlockPos origem, long semente) {
         this.nivel = nivel;
@@ -67,7 +67,7 @@ public class ConstrutorDeAndar {
         this.sorteio = new Random(semente);
     }
 
-    // semente: decide onde cai o musgo (mesma semente = mesma decoração)
+    // semente: decide a decoração (mesma semente = mesma decoração)
     public static void construir(ServerLevel nivel, PlantaDoAndar planta, BlockPos origem, long semente) {
         new ConstrutorDeAndar(nivel, planta, origem, semente).construirTudo();
     }
@@ -82,6 +82,7 @@ public class ConstrutorDeAndar {
             for (int qx = 0; qx < planta.largura(); qx++) {
                 if (planta.aberto(qx, qy)) {
                     construirQuadradinhoAberto(qx, qy);
+                    construirOQueTemEmCima(qx, qy);
                 } else if (planta.encostaEmAberto(qx, qy)) {
                     // Parede só onde encosta em lugar aberto; o resto fica vazio (ninguém vê mesmo)
                     construirParede(qx, qy);
@@ -106,13 +107,14 @@ public class ConstrutorDeAndar {
         }
     }
 
-    // ---- Chão, teto, cornija, luz e musgo ----
+    // ---- Chão, teto, cornija, luz e grama ----
 
     private void construirQuadradinhoAberto(int qx, int qy) {
         byte tipo = planta.tipo(qx, qy);
         int alturaLivre = alturaLivre(qx, qy);
         boolean temLanterna = temLanterna(qx, qy);
-        boolean pertoDaAgua = encostaEmAgua(qx, qy);
+        // O chão especial (as pontes, a biblioteca) é de tufo entalhado
+        BlockState chaoDaqui = tipo == PlantaDoAndar.CHAO_ESPECIAL ? moldura : chao;
 
         for (int dx = 0; dx < T; dx++) {
             for (int dz = 0; dz < T; dz++) {
@@ -121,7 +123,7 @@ public class ConstrutorDeAndar {
                     colocar(qx, qy, dx, -1, dz, chao);
                     colocar(qx, qy, dx, 0, dz, agua);
                 } else {
-                    colocar(qx, qy, dx, 0, dz, chao);
+                    colocar(qx, qy, dx, 0, dz, chaoDaqui);
                 }
 
                 // Teto (nos corredores, o espaço acima do túnel também é preenchido)
@@ -139,22 +141,20 @@ public class ConstrutorDeAndar {
                 }
 
                 // Grama (a alta ocupa 2 blocos: a parte de baixo e a de cima)
-                byte grama = planta.grama(qx, qy);
+                byte grama = tipo == PlantaDoAndar.CHAO ? planta.grama(qx, qy) : PlantaDoAndar.SEM_GRAMA;
                 if (grama == PlantaDoAndar.GRAMA_ALTA) {
                     colocar(qx, qy, dx, 1, dz, capimAlto.setValue(CapimAlto.HALF, DoubleBlockHalf.LOWER));
                     colocar(qx, qy, dx, 2, dz, capimAlto.setValue(CapimAlto.HALF, DoubleBlockHalf.UPPER));
                 } else if (grama == PlantaDoAndar.GRAMA) {
                     colocar(qx, qy, dx, 1, dz, gramaBaixa);
-                } else if (tipo == PlantaDoAndar.CHAO) {
-                    // Musgo pelo chão, mais perto das poças
-                    int chance = pertoDaAgua ? CHANCE_DE_MUSGO_PERTO_DA_AGUA : CHANCE_DE_MUSGO;
-                    if (sorteio.nextInt(100) < chance) {
-                        colocar(qx, qy, dx, 1, dz, musgo);
-                    }
                 }
             }
         }
 
+        if (!planta.passavel(qx, qy) || planta.ehPorta(qx, qy)) {
+            // A porta, a estátua, a estante e os barris ocupam o meio do quadradinho: a luz vem dos vizinhos
+            return;
+        }
         if (temLanterna) {
             // Lanterna pendurada por duas correntes no meio do quadradinho
             colocar(qx, qy, 1, alturaLivre, 1, corrente);
@@ -166,9 +166,83 @@ public class ConstrutorDeAndar {
         }
     }
 
-    // Salas têm 8 blocos de altura livre; corredores, 6
+    // Salas têm 8 blocos de altura livre; corredores e portas, 6
     private int alturaLivre(int qx, int qy) {
-        return planta.ehCorredor(qx, qy) ? Andares.ALTURA_DO_CORREDOR : Andares.ALTURA_DA_PAREDE;
+        return planta.ehCorredor(qx, qy) || planta.ehPorta(qx, qy) ? Andares.ALTURA_DO_CORREDOR : Andares.ALTURA_DA_PAREDE;
+    }
+
+    // ---- Portas, estátuas, estantes e barris ----
+
+    private void construirOQueTemEmCima(int qx, int qy) {
+        switch (planta.tipo(qx, qy)) {
+            case PlantaDoAndar.PORTA -> construirPorta(qx, qy, false);
+            case PlantaDoAndar.PORTA_TRANCADA -> construirPorta(qx, qy, true);
+            case PlantaDoAndar.ESTATUA -> construirEstatua(qx, qy);
+            case PlantaDoAndar.ESTANTE -> construirEstante(qx, qy);
+            case PlantaDoAndar.BARRIL -> construirBarris(qx, qy);
+            default -> {
+            }
+        }
+    }
+
+    // A porta gigante fica atravessada no quadradinho, a 1 bloco de um dos lados.
+    // Se os vizinhos abertos estão a leste e a oeste, atravessa-se a porta andando no eixo X.
+    private void construirPorta(int qx, int qy, boolean trancada) {
+        boolean pelaX = planta.passavel(qx - 1, qy) && planta.passavel(qx + 1, qy);
+        Direction.Axis eixo = pelaX ? Direction.Axis.X : Direction.Axis.Z;
+        PortaGigante porta = ModBlocos.PORTA_GIGANTE.get();
+        for (int coluna = 0; coluna < PortaGigante.LARGURA; coluna++) {
+            for (int linha = 0; linha < PortaGigante.ALTURA; linha++) {
+                colocar(qx, qy, pelaX ? 1 : coluna, 1 + linha, pelaX ? coluna : 1, porta.pedaco(eixo, coluna, linha, trancada));
+            }
+        }
+        // Uma luz fraca do lado da porta (no alto, fora do caminho dela)
+        colocar(qx, qy, pelaX ? 3 : 1, Andares.ALTURA_DO_CORREDOR, pelaX ? 1 : 3, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, LUZ_DOS_CORREDORES));
+        // O controle (coluna 0, linha 0) começa a olhar em volta
+        nivel.scheduleTick(controleDaPorta(origem, planta, qx, qy), porta, 4);
+    }
+
+    // Onde fica o controle da porta do quadradinho (o pedaço da coluna 0, linha 0)
+    public static BlockPos controleDaPorta(BlockPos origem, PlantaDoAndar planta, int qx, int qy) {
+        boolean pelaX = planta.passavel(qx - 1, qy) && planta.passavel(qx + 1, qy);
+        return new BlockPos(origem.getX() + qx * T + (pelaX ? 1 : 0), origem.getY() + 1, origem.getZ() + qy * T + (pelaX ? 0 : 1));
+    }
+
+    // A estátua: um pilar de tufo entalhado no meio do quadradinho, do chão ao teto
+    private void construirEstatua(int qx, int qy) {
+        int altura = alturaLivre(qx, qy);
+        for (int dx = 1; dx <= 2; dx++) {
+            for (int dz = 1; dz <= 2; dz++) {
+                for (int dy = 1; dy <= altura; dy++) {
+                    colocar(qx, qy, dx, dy, dz, pilar);
+                }
+            }
+        }
+    }
+
+    // A estante: livros do chão ao teto, no quadradinho inteiro
+    private void construirEstante(int qx, int qy) {
+        int altura = alturaLivre(qx, qy);
+        for (int dx = 0; dx < T; dx++) {
+            for (int dz = 0; dz < T; dz++) {
+                for (int dy = 1; dy <= altura; dy++) {
+                    colocar(qx, qy, dx, dy, dz, estante);
+                }
+            }
+        }
+    }
+
+    // Os barris de armazenamento: uma pilha de 2 blocos de altura (ninguém pula), com 4 barris em cima no meio
+    private void construirBarris(int qx, int qy) {
+        for (int dx = 0; dx < T; dx++) {
+            for (int dz = 0; dz < T; dz++) {
+                colocar(qx, qy, dx, 1, dz, barril);
+                colocar(qx, qy, dx, 2, dz, barril);
+                if (dx >= 1 && dx <= 2 && dz >= 1 && dz <= 2) {
+                    colocar(qx, qy, dx, 3, dz, barril);
+                }
+            }
+        }
     }
 
     // O vizinho é "parede" nessa altura? (parede de verdade, ou um corredor, que é mais baixo que a sala)
@@ -199,13 +273,6 @@ public class ConstrutorDeAndar {
         return ModBlocos.CORNIJA_ESGOTO.get().defaultBlockState()
                 .setValue(StairBlock.FACING, ladoDaParede)
                 .setValue(StairBlock.HALF, Half.TOP);
-    }
-
-    private boolean encostaEmAgua(int qx, int qy) {
-        return planta.tipo(qx + 1, qy) == PlantaDoAndar.AGUA
-                || planta.tipo(qx - 1, qy) == PlantaDoAndar.AGUA
-                || planta.tipo(qx, qy + 1) == PlantaDoAndar.AGUA
-                || planta.tipo(qx, qy - 1) == PlantaDoAndar.AGUA;
     }
 
     // Lanternas no centro de cada sala e, nas salas grandes, a cada 4 quadradinhos a partir do centro
