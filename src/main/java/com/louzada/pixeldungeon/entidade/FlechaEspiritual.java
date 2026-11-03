@@ -1,7 +1,9 @@
 package com.louzada.pixeldungeon.entidade;
 
+import com.louzada.pixeldungeon.combate.Combate;
+import com.louzada.pixeldungeon.combate.Combatente;
+import com.louzada.pixeldungeon.combate.Golpe;
 import com.louzada.pixeldungeon.combate.Particulas;
-import com.louzada.pixeldungeon.heroi.CombateDoHeroi;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
 
@@ -78,9 +80,10 @@ public class FlechaEspiritual extends ThrowableItemProjectile {
         }
         if (getOwner() instanceof ServerPlayer jogador) {
             // As regras do herói: acerto, dano do arco, armadura e talentos (ataque consecutivo marca o alvo)
-            float dano = CombateDoHeroi.calcular(jogador, alvo, new ItemStack(ModItens.ARCO_ESPIRITUAL.get()), 1, 1, 1, 0, false, true);
-            if (dano >= 0) {
-                CombateDoHeroi.aplicar(alvo, dano, damageSources().thrown(this, jogador));
+            Golpe golpe = Golpe.de(Combatente.de(jogador), Combatente.de(alvo)).arma(new ItemStack(ModItens.ARCO_ESPIRITUAL.get())).aDistancia();
+            float dano = Combate.resolver(golpe);
+            if (dano != Combate.ERROU) {
+                Combate.aplicar(alvo, dano, damageSources().thrown(this, jogador));
             }
         } else {
             alvo.hurt(damageSources().thrown(this, getOwner()), 2);

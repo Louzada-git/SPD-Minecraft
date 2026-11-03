@@ -22,11 +22,11 @@ import net.minecraft.world.level.Level;
 
 // Arco espiritual da Caçadora: flechas infinitas que aparecem quando a corda é puxada.
 // Igual ao Shattered:
-//   - dano: (1 + nível/5) a (6 + nível/2,5), cresce com o nível da Caçadora
+//   - dano: (1 + nível/5) a (6 + nível/2,5), cresce com o nível da Caçadora (não precisa de melhoria)
 //   - força necessária 10; força sobrando soma dano
 //   - colado no inimigo, acerta pior (precisão pela metade)
 //   - atirar gasta 1 turno
-public class ArcoEspiritual extends Item implements ArmaComDano {
+public class ArcoEspiritual extends Item implements Arma {
     private static final int FORCA_NECESSARIA = 10;
 
     public ArcoEspiritual(Properties propriedades) {
@@ -52,9 +52,8 @@ public class ArcoEspiritual extends Item implements ArmaComDano {
     }
 
     @Override
-    public float precisaoCom(ItemStack pilha, DadosDoHeroi heroi) {
-        int forcaFaltando = FORCA_NECESSARIA - heroi.forca();
-        return forcaFaltando > 0 ? (float) (1.0 / Math.pow(1.5, forcaFaltando)) : 1.0F;
+    public float precisao(ItemStack pilha, DadosDoHeroi heroi) {
+        return Equipamento.divisaoPelaForca(FORCA_NECESSARIA - heroi.forca());
     }
 
     // Clique direito: atira uma flecha espiritual

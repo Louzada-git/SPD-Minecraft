@@ -29,7 +29,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
-// O que cada pergaminho do Shattered faz, com os números de lá (1 turno = 1 segundo).
+// O que cada pergaminho do Shattered faz, com os números de lá (1 turno = 2 segundos).
 // "Visíveis" são os inimigos que o leitor consegue ver (até 32 blocos, sem parede no meio).
 public class EfeitosDePergaminho {
     private static final double ALCANCE_DA_VISAO = 32;

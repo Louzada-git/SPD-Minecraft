@@ -39,7 +39,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-// O que cada poção do Shattered faz, com os números de lá (1 turno = 1 segundo).
+// O que cada poção do Shattered faz, com os números de lá (1 turno = 2 segundos).
 // As poções ruins (gelo, chama líquida, gases) quebram em volta de quem bebe; o certo é arremessar.
 public class EfeitosDePocao {
 

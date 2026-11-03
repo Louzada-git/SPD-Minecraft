@@ -7,6 +7,7 @@ import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista.Habilidade;
 import com.louzada.pixeldungeon.item.ArcoEspiritual;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
+import com.louzada.pixeldungeon.item.ArmaDoShattered.Numeros;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.Baga;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
@@ -25,7 +26,9 @@ import com.louzada.pixeldungeon.item.RunaDePergaminho;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 import com.louzada.pixeldungeon.item.TomoSagrado;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DoubleHighBlockItem;
@@ -39,43 +42,44 @@ public class ModItens {
     public static final DeferredRegister.Items ITENS = DeferredRegister.createItems(PixelDungeon.MODID);
 
     // ---- Armas (números do Shattered) ----
-    // nome, tier, dano mínimo, dano máximo, precisão, atraso entre ataques, defesa extra, surpresa forte,
-    // habilidade da Duelista e o número dela (dano a mais; no furtivo, o alcance em quadradinhos)
+    // Cada arma começa com os números padrão do tier (dano de tier até 5 x (tier + 1)) e muda o que tem de diferente.
+    // A habilidade é a que a Duelista usa com ela, e o número é o dano a mais (no furtivo, o alcance em quadradinhos).
 
     // Tier 1: as armas iniciais das classes
-    public static final DeferredItem<ArmaDoShattered> ESPADA_CURTA_DESGASTADA = arma("espada_curta_desgastada", 1, 1, 10, 1.0f, 1.0f, 0, 0,
-            Habilidade.CORTAR, 3);
+    public static final DeferredItem<ArmaDoShattered> ESPADA_CURTA_DESGASTADA = arma("espada_curta_desgastada",
+            Numeros.doTier(1).habilidade(Habilidade.CORTAR, 3));
     // Também lança mísseis mágicos com o clique direito (vem com a varinha de míssil mágico dentro)
     public static final DeferredItem<CajadoDoMago> CAJADO_DO_MAGO = ITENS.registerItem("cajado_do_mago", CajadoDoMago::new);
     // Ataque surpresa quase sempre no dano máximo
-    public static final DeferredItem<ArmaDoShattered> ADAGA = arma("adaga", 1, 1, 8, 1.0f, 1.0f, 0, 0.75f, Habilidade.FURTIVO, 5);
+    public static final DeferredItem<ArmaDoShattered> ADAGA = arma("adaga", Numeros.doTier(1).dano(1, 8).surpresa(0.75f).habilidade(Habilidade.FURTIVO, 5));
     // Ataca 2x mais rápido, mas bate fraco
-    public static final DeferredItem<ArmaDoShattered> LUVAS_CRAVEJADAS = arma("luvas_cravejadas", 1, 1, 5, 1.0f, 0.5f, 0, 0,
-            Habilidade.COMBINACAO, 3);
+    public static final DeferredItem<ArmaDoShattered> LUVAS_CRAVEJADAS = arma("luvas_cravejadas",
+            Numeros.doTier(1).dano(1, 5).rapida().habilidade(Habilidade.COMBINACAO, 3));
     // Dá 1 de defesa extra
-    public static final DeferredItem<ArmaDoShattered> FLORETE = arma("florete", 1, 1, 8, 1.0f, 1.0f, 1, 0, Habilidade.ESTOCADA, 5);
+    public static final DeferredItem<ArmaDoShattered> FLORETE = arma("florete", Numeros.doTier(1).dano(1, 8).defesa(1).habilidade(Habilidade.ESTOCADA, 5));
     // 40% a mais de precisão
-    public static final DeferredItem<ArmaDoShattered> MACA = arma("maca", 1, 1, 8, 1.4f, 1.0f, 0, 0, Habilidade.GOLPE_PESADO, 3);
+    public static final DeferredItem<ArmaDoShattered> MACA = arma("maca", Numeros.doTier(1).dano(1, 8).precisao(1.4f).habilidade(Habilidade.GOLPE_PESADO, 3));
 
     // Tier 2 (precisam de 12 de força)
-    public static final DeferredItem<ArmaDoShattered> ESPADA_CURTA = arma("espada_curta", 2, 2, 15, 1.0f, 1.0f, 0, 0, Habilidade.CORTAR, 4);
-    public static final DeferredItem<ArmaDoShattered> MACHADINHA = arma("machadinha", 2, 2, 12, 1.32f, 1.0f, 0, 0, Habilidade.GOLPE_PESADO, 4);
-    public static final DeferredItem<ArmaDoShattered> PUNHAL = arma("punhal", 2, 2, 12, 1.0f, 1.0f, 0, 0.67f, Habilidade.FURTIVO, 4);
+    public static final DeferredItem<ArmaDoShattered> ESPADA_CURTA = arma("espada_curta", Numeros.doTier(2).habilidade(Habilidade.CORTAR, 4));
+    public static final DeferredItem<ArmaDoShattered> MACHADINHA = arma("machadinha",
+            Numeros.doTier(2).dano(2, 12).precisao(1.32f).habilidade(Habilidade.GOLPE_PESADO, 4));
+    public static final DeferredItem<ArmaDoShattered> PUNHAL = arma("punhal", Numeros.doTier(2).dano(2, 12).surpresa(0.67f).habilidade(Habilidade.FURTIVO, 4));
 
     // Tier 3 (14 de força)
-    public static final DeferredItem<ArmaDoShattered> ESPADA = arma("espada", 3, 3, 20, 1.0f, 1.0f, 0, 0, Habilidade.CORTAR, 5);
-    public static final DeferredItem<ArmaDoShattered> CLAVA = arma("clava", 3, 3, 16, 1.28f, 1.0f, 0, 0, Habilidade.GOLPE_PESADO, 5);
-    public static final DeferredItem<ArmaDoShattered> SAI = arma("sai", 3, 3, 10, 1.0f, 0.5f, 0, 0, Habilidade.COMBINACAO, 4);
+    public static final DeferredItem<ArmaDoShattered> ESPADA = arma("espada", Numeros.doTier(3).habilidade(Habilidade.CORTAR, 5));
+    public static final DeferredItem<ArmaDoShattered> CLAVA = arma("clava", Numeros.doTier(3).dano(3, 16).precisao(1.28f).habilidade(Habilidade.GOLPE_PESADO, 5));
+    public static final DeferredItem<ArmaDoShattered> SAI = arma("sai", Numeros.doTier(3).dano(3, 10).rapida().habilidade(Habilidade.COMBINACAO, 4));
 
     // Tier 4 (16 de força)
-    public static final DeferredItem<ArmaDoShattered> KATANA = arma("katana", 4, 4, 20, 1.0f, 1.0f, 3, 0, Habilidade.ESTOCADA, 8);
-    public static final DeferredItem<ArmaDoShattered> LAMINA_ASSASSINA = arma("lamina_assassina", 4, 4, 20, 1.0f, 1.0f, 0, 0.5f,
-            Habilidade.FURTIVO, 3);
+    public static final DeferredItem<ArmaDoShattered> KATANA = arma("katana", Numeros.doTier(4).dano(4, 20).defesa(3).habilidade(Habilidade.ESTOCADA, 8));
+    public static final DeferredItem<ArmaDoShattered> LAMINA_ASSASSINA = arma("lamina_assassina",
+            Numeros.doTier(4).dano(4, 20).surpresa(0.5f).habilidade(Habilidade.FURTIVO, 3));
 
     // Tier 5 (18 de força)
-    public static final DeferredItem<ArmaDoShattered> ESPADA_LARGA = arma("espada_larga", 5, 5, 30, 1.0f, 1.0f, 0, 0, Habilidade.CORTAR, 7);
-    public static final DeferredItem<ArmaDoShattered> MARTELO_DE_GUERRA = arma("martelo_de_guerra", 5, 5, 24, 1.2f, 1.0f, 0, 0,
-            Habilidade.GOLPE_PESADO, 6);
+    public static final DeferredItem<ArmaDoShattered> ESPADA_LARGA = arma("espada_larga", Numeros.doTier(5).habilidade(Habilidade.CORTAR, 7));
+    public static final DeferredItem<ArmaDoShattered> MARTELO_DE_GUERRA = arma("martelo_de_guerra",
+            Numeros.doTier(5).dano(5, 24).precisao(1.2f).habilidade(Habilidade.GOLPE_PESADO, 6));
 
     // ---- Itens únicos das classes ----
 
@@ -96,11 +100,15 @@ public class ModItens {
     // Ouro: as moedas vão direto pra bolsa do herói quando ele encosta na pilha
     public static final DeferredItem<Ouro> OURO = ITENS.registerItem("ouro", Ouro::new);
 
-    // ---- Armaduras ----
+    // ---- Armaduras (números do Shattered: defesa 0 até 2 x tier, força 10 a 18) ----
 
-    // Armadura de pano: defesa 0-2, todas as classes começam com ela
-    public static final DeferredItem<ArmaduraDoShattered> ARMADURA_DE_PANO = ITENS.registerItem("armadura_de_pano",
-            propriedades -> new ArmaduraDoShattered(ModMateriais.PANO, propriedades, "armadura_de_pano", 1));
+    // Pano (0-2): todas as classes começam com ela
+    public static final DeferredItem<ArmaduraDoShattered> ARMADURA_DE_PANO = armadura("armadura_de_pano", ModMateriais.PANO, 1);
+    // Couro (0-4), malha (0-6), escamas (0-8) e placas (0-10)
+    public static final DeferredItem<ArmaduraDoShattered> ARMADURA_DE_COURO = armadura("armadura_de_couro", ModMateriais.COURO, 2);
+    public static final DeferredItem<ArmaduraDoShattered> ARMADURA_DE_MALHA = armadura("armadura_de_malha", ModMateriais.MALHA, 3);
+    public static final DeferredItem<ArmaduraDoShattered> ARMADURA_DE_ESCAMAS = armadura("armadura_de_escamas", ModMateriais.ESCAMAS, 4);
+    public static final DeferredItem<ArmaduraDoShattered> ARMADURA_DE_PLACAS = armadura("armadura_de_placas", ModMateriais.PLACAS, 5);
 
     // ---- Comida ----
 
@@ -172,10 +180,12 @@ public class ModItens {
     public static final DeferredItem<BlockItem> ESCADA_SUBIDA = ITENS.registerSimpleBlockItem("escada_subida", ModBlocos.ESCADA_SUBIDA);
     public static final DeferredItem<BlockItem> ESCADA_DESCIDA = ITENS.registerSimpleBlockItem("escada_descida", ModBlocos.ESCADA_DESCIDA);
 
-    private static DeferredItem<ArmaDoShattered> arma(String nome, int tier, int danoMinimo, int danoMaximo, float precisao, float atraso,
-            int defesa, float surpresa, Habilidade habilidade, int valorDaHabilidade) {
-        return ITENS.registerItem(nome, propriedades -> new ArmaDoShattered(propriedades, nome, tier, danoMinimo, danoMaximo, precisao, atraso,
-                defesa, surpresa, habilidade, valorDaHabilidade));
+    private static DeferredItem<ArmaDoShattered> arma(String nome, Numeros numeros) {
+        return ITENS.registerItem(nome, propriedades -> new ArmaDoShattered(propriedades, nome, numeros));
+    }
+
+    private static DeferredItem<ArmaduraDoShattered> armadura(String nome, Holder<ArmorMaterial> material, int tier) {
+        return ITENS.registerItem(nome, propriedades -> new ArmaduraDoShattered(material, propriedades, nome, tier));
     }
 
     private static List<DeferredItem<ItemPocao>> registrarPocoes() {

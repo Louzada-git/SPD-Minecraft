@@ -5,18 +5,23 @@ import java.util.Random;
 import java.util.UUID;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.combate.Combate;
+import com.louzada.pixeldungeon.combate.Combatente;
+import com.louzada.pixeldungeon.combate.Golpe;
 import com.louzada.pixeldungeon.dungeon.PlantasDoShattered;
 import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
 import com.louzada.pixeldungeon.entidade.NuvemDeGas;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
+import com.louzada.pixeldungeon.heroi.PesoDoEquipamento;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
+import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.EfeitosDePergaminho;
 import com.louzada.pixeldungeon.item.EscolhaDeItem;
 import com.louzada.pixeldungeon.item.Identificacao;
 import com.louzada.pixeldungeon.item.ItemSemente;
-import com.louzada.pixeldungeon.item.Maldicoes;
+import com.louzada.pixeldungeon.item.Maldicao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.item.TipoDePergaminho;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
@@ -32,7 +37,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
@@ -94,7 +103,7 @@ public class TestesDosItens {
         ItemStack espada = NivelDoItem.sortearDoChao(new ItemStack(ModItens.ESPADA.get()), new Random(3), true);
         boolean desconhecida = !NivelDoItem.identificado(espada);
         for (int golpe = 0; golpe < 20; golpe++) {
-            NivelDoItem.aoGolpear(heroi, espada);
+            NivelDoItem.aoUsar(heroi, espada);
         }
         PixelDungeon.LOGGER.info("Teste da identificação pelo uso: começou desconhecida = {}, depois de 20 golpes conhecida = {}", desconhecida,
                 NivelDoItem.identificado(espada));
@@ -134,7 +143,7 @@ public class TestesDosItens {
         boolean certo = true;
         if (alvo != null) {
             for (int golpe = 0; golpe < 10; golpe++) {
-                float dano = Maldicoes.aoGolpear(heroi, alvo, polarizante, 10);
+                float dano = Maldicao.aoGolpearCom(heroi, alvo, polarizante, 10);
                 certo &= dano == 0 || dano == 15;
             }
         }
@@ -149,6 +158,64 @@ public class TestesDosItens {
         ItemStack transmutada = heroi.getInventory().getItem(7);
         PixelDungeon.LOGGER.info("Teste da transmutação: virou outra arma = {}, nível = {}", !transmutada.is(ModItens.ESPADA.get()),
                 NivelDoItem.nivel(transmutada));
+
+        // Armaduras: uma de cada tier
+        int[] armadurasPorTier = new int[6];
+        for (var registrado : ModItens.ITENS.getEntries()) {
+            if (registrado.get() instanceof ArmaduraDoShattered armadura) {
+                armadurasPorTier[armadura.tier()]++;
+            }
+        }
+        PixelDungeon.LOGGER.info("Teste das armaduras: por tier {}/{}/{}/{}/{}", armadurasPorTier[1], armadurasPorTier[2], armadurasPorTier[3],
+                armadurasPorTier[4], armadurasPorTier[5]);
+
+        // Armadura achada: vem sem identificar e se identifica depois de 20 golpes recebidos
+        RatoMarsupial quemBate = ModEntidades.RATO_MARSUPIAL.get().create(mundo);
+        if (quemBate != null) {
+            quemBate.moveTo(lugar.getX() + 1.5, lugar.getY(), lugar.getZ() + 1.5);
+            ItemStack malha = NivelDoItem.sortearDoChao(new ItemStack(ModItens.ARMADURA_DE_MALHA.get()), new Random(9), true);
+            malha.remove(ModComponentes.MALDICAO.get());
+            heroi.setItemSlot(EquipmentSlot.CHEST, malha);
+            boolean desconhecidaNoComeco = !NivelDoItem.identificado(heroi.getItemBySlot(EquipmentSlot.CHEST));
+            Combatente comoCombatente = Combatente.de(heroi);
+            Golpe golpeDoRato = Golpe.de(Combatente.de(quemBate), comoCombatente);
+            for (int golpe = 0; golpe < 20; golpe++) {
+                comoCombatente.aoSerAtingido(golpeDoRato, 3);
+            }
+            PixelDungeon.LOGGER.info("Teste da armadura: começou desconhecida = {}, depois de 20 golpes recebidos conhecida = {}", desconhecidaNoComeco,
+                    NivelDoItem.identificado(heroi.getItemBySlot(EquipmentSlot.CHEST)));
+
+            // O combate inteiro: o rato bate no herói 20 vezes (acerta ou erra, e a armadura segura um pouco)
+            int acertos = 0;
+            for (int golpe = 0; golpe < 20; golpe++) {
+                if (Combate.resolver(Golpe.de(Combatente.de(quemBate), comoCombatente)) != Combate.ERROU) {
+                    acertos++;
+                }
+            }
+            PixelDungeon.LOGGER.info("Teste do combate: o rato acertou {} de 20 golpes no herói de malha", acertos);
+
+            // Armadura amaldiçoada: descobre ao vestir e gruda no corpo
+            ItemStack fedida = NivelDoItem.sortearDoChao(new ItemStack(ModItens.ARMADURA_DE_COURO.get()), new Random(2), false);
+            fedida.set(ModComponentes.MALDICAO.get(), "fedor");
+            heroi.setItemSlot(EquipmentSlot.CHEST, fedida);
+            NivelDoItem.aoEquipar(heroi, heroi.getItemBySlot(EquipmentSlot.CHEST));
+            PixelDungeon.LOGGER.info("Teste da armadura amaldiçoada: descobriu = {}, grudou = {}",
+                    NivelDoItem.maldicaoConhecida(heroi.getItemBySlot(EquipmentSlot.CHEST)),
+                    EnchantmentHelper.has(heroi.getItemBySlot(EquipmentSlot.CHEST), EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE));
+            NivelDoItem.removerMaldicao(heroi.getItemBySlot(EquipmentSlot.CHEST));
+            PixelDungeon.LOGGER.info("Teste da armadura amaldiçoada: soltou depois de remover a maldição = {}",
+                    !EnchantmentHelper.has(heroi.getItemBySlot(EquipmentSlot.CHEST), EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE));
+
+            // Armadura de placas com 10 de força: pesada demais, o herói fica mais lento
+            heroi.setItemSlot(EquipmentSlot.CHEST, new ItemStack(ModItens.ARMADURA_DE_PLACAS.get()));
+            dados.definirForca(10);
+            double antes = heroi.getAttributeValue(Attributes.MOVEMENT_SPEED);
+            PesoDoEquipamento.atualizar(heroi, dados);
+            double depois = heroi.getAttributeValue(Attributes.MOVEMENT_SPEED);
+            PixelDungeon.LOGGER.info("Teste do peso: placas com 10 de força deixam mais lento = {}", depois < antes);
+            heroi.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
+            PesoDoEquipamento.atualizar(heroi, dados);
+        }
 
         // O saque dos andares: 2 poções de força e 3 pergaminhos de melhoria no esgoto
         PixelDungeon.LOGGER.info("Teste do saque: poções de força = {}, pergaminhos de melhoria = {}", run.quedas(SaqueDoAndar.POCOES_DE_FORCA),

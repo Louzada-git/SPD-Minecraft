@@ -160,7 +160,7 @@ public class MagiasDoClerigo {
             jogador.displayClientMessage(Component.translatable("magia.pixeldungeon.intuicao_divina.sem_item").withStyle(ChatFormatting.GRAY), true);
             return false;
         }
-        // Revela se a arma tem maldição (os outros itens nunca são amaldiçoados)
+        // Revela se a arma ou a armadura tem maldição (os outros itens nunca são amaldiçoados)
         boolean amaldicoado = NivelDoItem.amaldicoado(item);
         if (NivelDoItem.podeIdentificar(item)) {
             item.remove(ModComponentes.MALDICAO_CONHECIDA.get());

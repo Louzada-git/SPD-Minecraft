@@ -2,13 +2,13 @@ package com.louzada.pixeldungeon;
 
 import org.slf4j.Logger;
 
+import com.louzada.pixeldungeon.combate.EventosDeCombate;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.dungeon.Baus;
 import com.louzada.pixeldungeon.dungeon.MapeamentoMagico;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.heroi.Escudos;
-import com.louzada.pixeldungeon.heroi.EventosDeCombate;
 import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
 import com.louzada.pixeldungeon.item.Comida;
 import com.louzada.pixeldungeon.item.Ouro;

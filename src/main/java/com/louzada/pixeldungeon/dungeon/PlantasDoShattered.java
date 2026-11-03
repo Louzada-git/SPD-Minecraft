@@ -28,7 +28,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
-// O que cada planta do Shattered faz em quem pisa nela (1 turno = 1 segundo):
+// O que cada planta do Shattered faz em quem pisa nela (1 turno = 2 segundos):
 //   grama-solar: cura até a vida máxima, devagar, enquanto não sair do lugar
 //   folha-fantasma: teletransporta pra outro lugar do andar
 //   muda-de-gelo: congela quem estiver perto

@@ -1,8 +1,8 @@
 package com.louzada.pixeldungeon.entidade;
 
 import com.louzada.pixeldungeon.combate.Particulas;
-import com.louzada.pixeldungeon.combate.Sorteio;
 import com.louzada.pixeldungeon.heroi.Talentos;
+import com.louzada.pixeldungeon.item.VarinhaDeMisselMagico;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 
 import net.minecraft.core.particles.ParticleTypes;
@@ -48,6 +48,11 @@ public class MisselMagico extends ThrowableProjectile {
     // Cor do raio
     protected int cor() {
         return BRANCO;
+    }
+
+    // O dano do raio (o da varinha de míssil mágico no nível dela; a luz guia é igual a uma varinha +0)
+    protected int sortearDano() {
+        return VarinhaDeMisselMagico.sortearDano(random, nivel);
     }
 
     // Dano a mais que quem lançou ganha (refeição empoderadora do Mago, só na varinha)
@@ -109,7 +114,7 @@ public class MisselMagico extends ThrowableProjectile {
         if (alvo instanceof LivingEntity criatura) {
             criatura.invulnerableTime = 0;
         }
-        int dano = Sorteio.normal(random, 2 + nivel, 8 + 2 * nivel);
+        int dano = sortearDano();
         if (getOwner() instanceof ServerPlayer jogador) {
             dano += bonusDeQuemLancou(jogador);
         }

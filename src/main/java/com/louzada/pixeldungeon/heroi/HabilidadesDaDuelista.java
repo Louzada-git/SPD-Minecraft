@@ -3,6 +3,9 @@ package com.louzada.pixeldungeon.heroi;
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.Turno;
+import com.louzada.pixeldungeon.combate.Combate;
+import com.louzada.pixeldungeon.combate.Combatente;
+import com.louzada.pixeldungeon.combate.Golpe;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
@@ -168,9 +171,10 @@ public class HabilidadesDaDuelista {
 
     // Golpe especial: acerto garantido, com dano a mais
     private static boolean golpear(ServerPlayer jogador, LivingEntity alvo, ArmaDoShattered arma, int bonus) {
-        float dano = CombateDoHeroi.calcular(jogador, alvo, jogador.getMainHandItem(), 1, 1, 1, bonus, true, false);
+        Golpe golpe = Golpe.de(Combatente.de(jogador), Combatente.de(alvo)).arma(jogador.getMainHandItem()).bonus(bonus).acertoGarantido();
+        float dano = Combate.resolver(golpe);
         jogador.swing(InteractionHand.MAIN_HAND, true);
-        CombateDoHeroi.aplicar(alvo, dano, jogador.damageSources().playerAttack(jogador));
+        Combate.aplicar(alvo, dano, jogador.damageSources().playerAttack(jogador));
         jogador.level().playSound(null, alvo.blockPosition(), SoundEvents.PLAYER_ATTACK_STRONG, SoundSource.PLAYERS, 1.0F, 0.9F);
         if (jogador.level() instanceof ServerLevel mundo) {
             mundo.sendParticles(ParticleTypes.SWEEP_ATTACK, alvo.getX(), alvo.getY(0.5), alvo.getZ(), 1, 0.0, 0.0, 0.0, 0.0);

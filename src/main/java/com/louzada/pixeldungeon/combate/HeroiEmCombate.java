@@ -1,0 +1,177 @@
+package com.louzada.pixeldungeon.combate;
+
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
+import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
+import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
+import com.louzada.pixeldungeon.heroi.Furtividade;
+import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
+import com.louzada.pixeldungeon.heroi.MagiasDoClerigo;
+import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
+import com.louzada.pixeldungeon.heroi.Talento;
+import com.louzada.pixeldungeon.heroi.Talentos;
+import com.louzada.pixeldungeon.item.Arma;
+import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
+import com.louzada.pixeldungeon.item.Maldicao;
+import com.louzada.pixeldungeon.item.NivelDoItem;
+import com.louzada.pixeldungeon.registro.ModEfeitos;
+
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+
+// O herói lutando com as regras do Shattered. Os números vêm do nível, da arma do golpe e da armadura no peito:
+//   precisão: 10 + nível - 1, vezes a precisão da arma (que cai sem força) e a maldição inconstante
+//   esquiva: 5 + nível - 1, que cai se faltar força pra armadura
+//   dano: o da arma (vezes a força do golpe do Minecraft); de mão vazia, 1 até força - 8
+//   armadura: a do peito, a defesa da arma (florete, katana), o escudo de luz e a armadura sagrada do Clérigo
+// E os talentos, as maldições e a identificação pelo uso entram nos golpes.
+public class HeroiEmCombate implements Combatente {
+    private ServerPlayer jogador;
+    private DadosDoHeroi dados;
+
+    public HeroiEmCombate(ServerPlayer jogador) {
+        this.jogador = jogador;
+        this.dados = RegrasDoHeroi.dados(jogador);
+    }
+
+    @Override
+    public LivingEntity entidade() {
+        return jogador;
+    }
+
+    public ServerPlayer jogador() {
+        return jogador;
+    }
+
+    @Nullable
+    private static Arma armaDo(Golpe golpe) {
+        return golpe.arma().getItem() instanceof Arma arma ? arma : null;
+    }
+
+    private ItemStack armadura() {
+        return jogador.getItemBySlot(EquipmentSlot.CHEST);
+    }
+
+    // ---- Números ----
+
+    @Override
+    public float precisao(Golpe golpe) {
+        float precisao = RegrasDoHeroi.precisao(dados.nivel());
+        Arma arma = armaDo(golpe);
+        if (arma != null) {
+            precisao *= arma.precisao(golpe.arma(), dados);
+        }
+        return precisao * Maldicao.multiplicadorDePrecisao(jogador, golpe.arma());
+    }
+
+    @Override
+    public float esquiva(Golpe golpe) {
+        float esquiva = RegrasDoHeroi.esquiva(dados.nivel());
+        if (armadura().getItem() instanceof ArmaduraDoShattered armadura) {
+            esquiva *= armadura.fatorDeEsquiva(armadura(), dados.forca());
+        }
+        return esquiva;
+    }
+
+    @Override
+    public float sortearDano(Golpe golpe) {
+        RandomSource sorteio = jogador.getRandom();
+        Arma arma = armaDo(golpe);
+        int dano = arma != null ? arma.sortearDano(golpe.arma(), sorteio, dados, golpe.surpresa()) : danoDeMaoVazia(sorteio);
+        return dano * golpe.forca();
+    }
+
+    // Igual ao Shattered: de mão vazia, 1 até (força - 8)
+    private int danoDeMaoVazia(RandomSource sorteio) {
+        return Sorteio.normal(sorteio, 1, Math.max(1, dados.forca() - 8));
+    }
+
+    @Override
+    public int sortearArmadura(Golpe golpe) {
+        RandomSource sorteio = jogador.getRandom();
+        int defesa = 0;
+        if (armadura().getItem() instanceof ArmaduraDoShattered armadura) {
+            defesa += armadura.sortearDefesa(armadura(), sorteio, dados.forca());
+        }
+        // A arma na mão também defende um pouco
+        ItemStack naMao = jogador.getMainHandItem();
+        if (naMao.getItem() instanceof Arma arma) {
+            defesa += arma.sortearDefesa(naMao, sorteio, dados);
+        }
+        // Escudo de luz do Clérigo: 2-4 / 3-6 de armadura contra o inimigo escolhido
+        UUID protegidoDe = dados.alvo(MagiasDoClerigo.ESCUDO_ALVO);
+        if (jogador.hasEffect(ModEfeitos.ESCUDO_DE_LUZ) && golpe.atacante().entidade().getUUID().equals(protegidoDe)) {
+            int minimo = 1 + dados.pontos(Talento.ESCUDO_DE_LUZ);
+            defesa += Sorteio.normal(sorteio, minimo, 2 * minimo);
+        }
+        // Armadura sagrada do Clérigo: bloqueia mais 1
+        if (jogador.hasEffect(ModEfeitos.ARMADURA_SAGRADA)) {
+            defesa += 1;
+        }
+        return defesa;
+    }
+
+    @Override
+    public boolean fazAtaqueSurpresa() {
+        return true;
+    }
+
+    // ---- Reações ----
+
+    // Luz abrasadora (Clérigo): o inimigo iluminado pela luz guia leva +3/+5
+    @Override
+    public float antesDaArmadura(Golpe golpe, float dano) {
+        int pontos = dados.pontos(Talento.LUZ_ABRASADORA);
+        if (golpe.iluminado() && pontos > 0) {
+            dano += 1 + 2 * pontos;
+        }
+        return dano;
+    }
+
+    // Apanhou: a maldição da armadura age, e a armadura vai se identificando
+    @Override
+    public float aoSerAtingido(Golpe golpe, float dano) {
+        ItemStack armadura = armadura();
+        if (armadura.getItem() instanceof ArmaduraDoShattered) {
+            dano = Maldicao.aoSerAtingidoCom(jogador, golpe.atacante().entidade(), armadura, dano);
+            NivelDoItem.aoUsar(jogador, armadura);
+        }
+        return dano;
+    }
+
+    // Acertou: talentos, arma celestial, a maldição da arma e a identificação pelo uso
+    @Override
+    public float aoAcertar(Golpe golpe, float dano) {
+        LivingEntity alvo = golpe.alvo().entidade();
+        long agora = jogador.level().getGameTime();
+        dano += Talentos.bonusDoGolpe(jogador, dados, alvo, golpe.surpresa(), golpe.deLonge(), agora);
+        if (jogador.hasEffect(ModEfeitos.ARMA_CELESTIAL)) {
+            dano += 2;
+            Particulas.sangue(alvo, 0xFFFF88, 2);
+        }
+        if (NivelDoItem.podeIdentificar(golpe.arma())) {
+            dano = Maldicao.aoGolpearCom(jogador, alvo, golpe.arma(), dano);
+            NivelDoItem.aoUsar(jogador, golpe.arma());
+        }
+        // A Duelista conta os golpes pra combinação das luvas
+        if (dados.classe() == ClasseDoHeroi.DUELISTA) {
+            HabilidadesDaDuelista.contarGolpe(dados, agora);
+        }
+        if (golpe.surpresa()) {
+            NumerosFlutuantes.mostrar(alvo, "✦", NumerosFlutuantes.AMARELO);
+            Particulas.faiscas(alvo);
+        }
+        return dano;
+    }
+
+    // Atacar tira a invisibilidade, acertando ou não
+    @Override
+    public void depoisDeAtacar(Golpe golpe, boolean acertou) {
+        Furtividade.revelar(jogador);
+    }
+}

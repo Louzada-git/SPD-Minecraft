@@ -6,10 +6,12 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.combate.Combatente;
+import com.louzada.pixeldungeon.combate.Golpe;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
-import com.louzada.pixeldungeon.item.ArmaComDano;
+import com.louzada.pixeldungeon.item.Arma;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 
 import net.minecraft.core.BlockPos;
@@ -22,6 +24,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -38,7 +41,7 @@ import net.minecraft.world.level.Level;
 //   - acerta com a precisão do herói e bate metade do dano da arma dele
 //   - os inimigos atacam as imagens também (elas distraem)
 //   - some se o herói ficar longe demais ou sair do jogo
-public class ImagemEspelhada extends PathfinderMob {
+public class ImagemEspelhada extends PathfinderMob implements Combatente {
     private static final EntityDataAccessor<Optional<UUID>> DONO = SynchedEntityData.defineId(ImagemEspelhada.class,
             EntityDataSerializers.OPTIONAL_UUID);
     private static final double DISTANCIA_MAXIMA = 48;
@@ -102,6 +105,33 @@ public class ImagemEspelhada extends PathfinderMob {
         targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, MobDoShattered.class, 5, true, false, alvo -> !(alvo instanceof Mimico)));
     }
 
+    // ---- Números do combate (metade dos do herói dono) ----
+
+    @Override
+    public LivingEntity entidade() {
+        return this;
+    }
+
+    @Override
+    public float precisao(Golpe golpe) {
+        return precisao();
+    }
+
+    @Override
+    public float esquiva(Golpe golpe) {
+        return esquiva();
+    }
+
+    @Override
+    public float sortearDano(Golpe golpe) {
+        return sortearDano();
+    }
+
+    @Override
+    public int sortearArmadura(Golpe golpe) {
+        return 0;
+    }
+
     // Metade do dano da arma do herói, arredondado pra cima
     public int sortearDano() {
         ServerPlayer dono = jogadorDono();
@@ -109,7 +139,7 @@ public class ImagemEspelhada extends PathfinderMob {
             return 1;
         }
         ItemStack arma = dono.getMainHandItem();
-        int dano = arma.getItem() instanceof ArmaComDano comDano ? comDano.sortearDano(arma, getRandom(), RegrasDoHeroi.dados(dono), false) : 1;
+        int dano = arma.getItem() instanceof Arma comDano ? comDano.sortearDano(arma, getRandom(), RegrasDoHeroi.dados(dono), false) : 1;
         return (dano + 1) / 2;
     }
 

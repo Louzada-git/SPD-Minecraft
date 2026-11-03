@@ -23,7 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
-// O que os efeitos do Shattered fazem a cada turno (1 segundo), pra heróis e inimigos:
+// O que os efeitos do Shattered fazem a cada turno (2 segundos), pra heróis e inimigos:
 //   veneno, sangramento, cura da poção, grama-do-sol, raiz-da-terra, sono mágico, levitação,
 //   e os inimigos cegos, tontos, aterrorizados ou furiosos.
 // Os números que precisam ser lembrados (quanto ainda falta curar, onde a planta pegou...) ficam nos

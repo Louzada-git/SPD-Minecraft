@@ -190,7 +190,7 @@ public class Talentos {
 
     // ---- Todo tick ----
 
-    // Golpe paciente: ficar parado 1 turno (1 segundo) conta como "esperar"
+    // Golpe paciente: ficar parado 1 turno (2 segundos) conta como "esperar"
     public static void aoTick(ServerPlayer jogador, DadosDoHeroi dados) {
         if (dados.pontos(Talento.GOLPE_PACIENTE) <= 0) {
             return;

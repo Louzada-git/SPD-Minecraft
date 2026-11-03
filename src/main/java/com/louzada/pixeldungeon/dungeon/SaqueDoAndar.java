@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
+import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.Identificacao;
 import com.louzada.pixeldungeon.item.ItemSemente;
@@ -27,7 +28,7 @@ import net.minecraft.world.item.ItemStack;
 
 // Os itens espalhados por cada andar, igual ao Shattered (RegularLevel.createItems):
 //   - 3 itens em 60% dos andares, 4 em 30% e 5 em 10%
-//   - cada item é ouro (10), poção (8), pergaminho (8), arma (2) ou semente (1), com esses pesos.
+//   - cada item é ouro (10), poção (8), pergaminho (8), arma (2), armadura (2) ou semente (1), com esses pesos.
 //     No Shattered também tem armaduras, varinhas, anéis... que o mod ainda não tem.
 //   - a arma é de um tier sorteado pela região (no esgoto: 75% tier 2, 20% tier 3, 4% tier 4, 1% tier 5),
 //     com nível +0 (75%), +1 (20%) ou +2 (5%), 30% amaldiçoada, e vem sem identificar
@@ -173,13 +174,14 @@ public class SaqueDoAndar {
         return sorteio.nextInt(5 - andarNaRegiao) < faltamNaRegiao;
     }
 
-    // Ouro (10), poção (8), pergaminho (8), arma (2) ou semente (1), igual ao peso deles no Shattered
+    // Ouro (10), poção (8), pergaminho (8), arma (2), armadura (2) ou semente (1), igual ao peso deles no Shattered
     public static ItemStack itemAleatorio(Random sorteio, int andar, long semente) {
-        return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 1 })) {
+        return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 2, 1 })) {
             case 0 -> Ouro.sortear(sorteio, andar);
             case 1 -> pocaoAleatoria(sorteio, semente);
             case 2 -> pergaminhoAleatorio(sorteio, semente);
             case 3 -> armaAleatoria(sorteio, andar);
+            case 4 -> armaduraAleatoria(sorteio, andar);
             default -> sementeAleatoria(sorteio);
         };
     }
@@ -212,9 +214,13 @@ public class SaqueDoAndar {
         return new ItemStack(ItemSemente.daPlanta(tipos[sortearPeso(sorteio, pesos)]));
     }
 
-    // O prêmio extra do mímico. No Shattered é ouro, arma, armadura, arma de arremesso ou anel; aqui, ouro ou arma.
+    // O prêmio extra do mímico. No Shattered é ouro, arma, armadura, arma de arremesso ou anel; aqui, ouro, arma ou armadura.
     public static ItemStack premioDoMimico(Random sorteio, int andar) {
-        return sorteio.nextBoolean() ? Ouro.sortear(sorteio, andar) : armaAleatoria(sorteio, andar);
+        return switch (sorteio.nextInt(3)) {
+            case 0 -> Ouro.sortear(sorteio, andar);
+            case 1 -> armaAleatoria(sorteio, andar);
+            default -> armaduraAleatoria(sorteio, andar);
+        };
     }
 
     // Uma arma do tier sorteado pela região do andar, com nível e talvez maldição, sem identificar
@@ -222,6 +228,18 @@ public class SaqueDoAndar {
         int regiao = Math.min(CHANCES_DOS_TIERS.length - 1, (andar - 1) / 5);
         int tier = 1 + sortearPeso(sorteio, CHANCES_DOS_TIERS[regiao]);
         return NivelDoItem.sortearDoChao(armaDoTier(sorteio, tier), sorteio, true);
+    }
+
+    // Uma armadura do tier sorteado pela região do andar (igual às armas), com nível e talvez maldição, sem identificar
+    public static ItemStack armaduraAleatoria(Random sorteio, int andar) {
+        int regiao = Math.min(CHANCES_DOS_TIERS.length - 1, (andar - 1) / 5);
+        int tier = 1 + sortearPeso(sorteio, CHANCES_DOS_TIERS[regiao]);
+        for (var registrado : ModItens.ITENS.getEntries()) {
+            if (registrado.get() instanceof ArmaduraDoShattered armadura && armadura.tier() == tier) {
+                return NivelDoItem.sortearDoChao(new ItemStack(armadura), sorteio, true);
+            }
+        }
+        return Ouro.sortear(sorteio, andar);
     }
 
     // Qualquer arma do tier (menos o cajado do Mago, que só o Mago tem)

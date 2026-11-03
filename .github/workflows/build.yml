@@ -110,6 +110,12 @@ jobs:
           if ! grep -q "Teste da transmutação: virou outra arma = true, nível = 2" servidor.log; then echo "A transmutação não funcionou"; exit 1; fi
           if ! grep -q "Teste do saque: poções de força = 2, pergaminhos de melhoria = 3" servidor.log; then echo "As poções de força e os pergaminhos de melhoria não caíram"; exit 1; fi
           if ! grep -q "Teste das sementes: 2 sementes sorteadas" servidor.log; then echo "As sementes não foram sorteadas"; exit 1; fi
+          if ! grep -q "Teste das armaduras: por tier 1/1/1/1/1" servidor.log; then echo "As armaduras não estão certas"; exit 1; fi
+          if ! grep -q "Teste da armadura: começou desconhecida = true, depois de 20 golpes recebidos conhecida = true" servidor.log; then echo "A armadura não se identificou"; exit 1; fi
+          if ! grep -qE "Teste do combate: o rato acertou [0-9]+ de 20 golpes" servidor.log; then echo "O combate novo não funcionou"; exit 1; fi
+          if ! grep -q "Teste da armadura amaldiçoada: descobriu = true, grudou = true" servidor.log; then echo "A armadura amaldiçoada não grudou"; exit 1; fi
+          if ! grep -q "Teste da armadura amaldiçoada: soltou depois de remover a maldição = true" servidor.log; then echo "A armadura não soltou"; exit 1; fi
+          if ! grep -q "Teste do peso: placas com 10 de força deixam mais lento = true" servidor.log; then echo "A armadura pesada não deixou lento"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
 
       # Liga o jogo de verdade (sem monitor, no Xvfb), entra no mundo do teste do servidor

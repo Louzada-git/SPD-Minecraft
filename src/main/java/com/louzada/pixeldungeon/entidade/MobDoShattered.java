@@ -3,6 +3,8 @@ package com.louzada.pixeldungeon.entidade;
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.Turno;
+import com.louzada.pixeldungeon.combate.Combatente;
+import com.louzada.pixeldungeon.combate.Golpe;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.combate.Sorteio;
@@ -18,6 +20,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -37,7 +40,7 @@ import net.minecraft.world.level.Level;
 //   - nasce dormindo quando o andar é criado ("z" em cima dele), e acorda quando nota um herói por perto ("!")
 //   - quem ataca um inimigo dormindo ou distraído faz um ataque surpresa (sempre acerta)
 //   - depois de apanhar, mostra uma barra de vida em cima da cabeça
-public abstract class MobDoShattered extends Monster {
+public abstract class MobDoShattered extends Monster implements Combatente {
 
     // Os números de um inimigo, iguais aos do Shattered.
     //   velocidade: velocidade de andar do Minecraft (0.25 = normal)
@@ -136,7 +139,44 @@ public abstract class MobDoShattered extends Monster {
         return ItemStack.EMPTY;
     }
 
-    // ---- Números do combate ----
+    // ---- Números do combate (o Combate pergunta pra cada inimigo) ----
+
+    @Override
+    public LivingEntity entidade() {
+        return this;
+    }
+
+    @Override
+    public float precisao(Golpe golpe) {
+        return precisao();
+    }
+
+    // Dormindo não dá pra desviar
+    @Override
+    public float esquiva(Golpe golpe) {
+        return dormindo ? 0 : esquiva();
+    }
+
+    @Override
+    public float sortearDano(Golpe golpe) {
+        return sortearDano();
+    }
+
+    @Override
+    public int sortearArmadura(Golpe golpe) {
+        return sortearArmadura();
+    }
+
+    @Override
+    public boolean surpreendidoPor(Combatente atacante) {
+        return atacante.entidade() instanceof Player jogador && surpreendidoPor(jogador);
+    }
+
+    @Override
+    public float aoAcertar(Golpe golpe, float dano) {
+        aoAcertar(golpe.alvo().entidade(), dano);
+        return dano;
+    }
 
     // O próximo golpe acerta sem sortear (a mordida do mímico escondido)
     public boolean acertoGarantido() {
