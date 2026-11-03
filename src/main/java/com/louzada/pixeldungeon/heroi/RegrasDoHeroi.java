@@ -4,6 +4,7 @@ import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.registro.ModAnexos;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 // A barra de XP do Minecraft passa a mostrar o nível do Shattered.
 public class RegrasDoHeroi {
     private static final ResourceLocation ID_VIDA_DO_NIVEL = ResourceLocation.fromNamespaceAndPath(PixelDungeon.MODID, "vida_do_nivel");
+    private static final ResourceLocation ID_ESPACO_DA_BLINDAGEM = ResourceLocation.fromNamespaceAndPath(PixelDungeon.MODID, "espaco_da_blindagem");
 
     public static DadosDoHeroi dados(Player jogador) {
         return jogador.getData(ModAnexos.HEROI);
@@ -64,6 +66,11 @@ public class RegrasDoHeroi {
         if (jogador.getHealth() > jogador.getMaxHealth()) {
             jogador.setHealth(jogador.getMaxHealth());
         }
+        // Espaço pros corações amarelos (a blindagem do Shattered). Sem isso o Minecraft não deixa ter nenhum.
+        AttributeInstance blindagem = jogador.getAttribute(Attributes.MAX_ABSORPTION);
+        if (blindagem != null) {
+            blindagem.addOrUpdateTransientModifier(new AttributeModifier(ID_ESPACO_DA_BLINDAGEM, 100, AttributeModifier.Operation.ADD_VALUE));
+        }
         mostrarNivel(jogador);
     }
 
@@ -92,6 +99,11 @@ public class RegrasDoHeroi {
             // Igual ao Shattered: cada nível dá +5 de vida máxima e cura esses 5
             jogador.heal(5 * niveisGanhos);
             jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.subiu_de_nivel", dados.nivel()), false);
+            // Do nível 2 ao 6, cada nível dá um ponto de talento
+            if (dados.pontosLivres() > 0) {
+                jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.ponto_de_talento",
+                        Component.keybind("key.pixeldungeon.talentos")).withStyle(ChatFormatting.YELLOW), false);
+            }
             jogador.level().playSound(null, jogador.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1.0F, 1.0F);
             // Brilho subindo em volta do herói
             Particulas.subindoEmVolta(jogador, ParticleTypes.END_ROD, 24, 0.12);

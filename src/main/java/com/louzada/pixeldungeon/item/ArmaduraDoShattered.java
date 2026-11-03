@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon.item;
 import java.util.List;
 
 import com.louzada.pixeldungeon.combate.Sorteio;
+import com.louzada.pixeldungeon.registro.ModComponentes;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
@@ -24,6 +25,10 @@ public class ArmaduraDoShattered extends ArmorItem {
         super(material, ArmorItem.Type.CHESTPLATE, propriedades.stacksTo(1));
         this.tier = tier;
         this.chaveDaDescricao = "item.pixeldungeon." + nome + ".descricao";
+    }
+
+    public int tier() {
+        return tier;
     }
 
     public int defesaMinima() {
@@ -52,6 +57,10 @@ public class ArmaduraDoShattered extends ArmorItem {
         linhas.add(Component.translatable("dica.pixeldungeon.tier", tier).withStyle(ChatFormatting.GRAY));
         linhas.add(Component.translatable("dica.pixeldungeon.defesa", defesaMinima(), defesaMaxima()).withStyle(ChatFormatting.GRAY));
         linhas.add(Component.translatable("dica.pixeldungeon.forca", forcaNecessaria()).withStyle(ChatFormatting.GRAY));
+        // Selo quebrado do Guerreiro: escudo de 3 + 2 x tier quando a vida cai pela metade
+        if (pilha.getOrDefault(ModComponentes.SELO.get(), false)) {
+            linhas.add(Component.translatable("dica.pixeldungeon.selo", 3 + 2 * tier).withStyle(ChatFormatting.GOLD));
+        }
         Textos.adicionarQuebrado(linhas, chaveDaDescricao, ChatFormatting.DARK_GRAY);
     }
 }
