@@ -51,6 +51,8 @@ public class NumerosFlutuantes {
         tag.putString("id", "minecraft:text_display");
         tag.putString("text", textoEmJson);
         tag.putString("billboard", "center");
+        // O Minecraft sempre lê o alinhamento; sem ele, cada número solta um aviso no log
+        tag.putString("alignment", "center");
         tag.putInt("background", 0);
         tag.putBoolean("shadow", true);
         tag.putInt("teleport_duration", 2);
