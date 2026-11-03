@@ -64,5 +64,7 @@ public class PixelDungeonCliente {
                         RenderizadorDeMob.texturaDoMinecraft("endermite"), 1.3F));
         // Slime: o slime do Minecraft
         evento.registerEntityRenderer(ModEntidades.SLIME.get(), RenderizadorDeSlime::new);
+        // Goo: um slime escuro e grande
+        evento.registerEntityRenderer(ModEntidades.GOO.get(), RenderizadorDeGoo::new);
     }
 }
