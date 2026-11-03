@@ -1,5 +1,8 @@
 package com.louzada.pixeldungeon.registro;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.bloco.BlocoComFormato;
 import com.louzada.pixeldungeon.bloco.CapimAlto;
@@ -7,6 +10,8 @@ import com.louzada.pixeldungeon.bloco.BlocoEscadaDescida;
 import com.louzada.pixeldungeon.bloco.BlocoEscadaSubida;
 import com.louzada.pixeldungeon.bloco.BlocoParedeEsgoto;
 import com.louzada.pixeldungeon.bloco.GramaBaixa;
+import com.louzada.pixeldungeon.bloco.PlantaDoShattered;
+import com.louzada.pixeldungeon.item.TipoDePlanta;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -61,10 +66,24 @@ public class ModBlocos {
     public static final DeferredBlock<GramaBaixa> GRAMA_BAIXA = BLOCOS.registerBlock("grama_baixa", GramaBaixa::new,
             planta().replaceable().offsetType(BlockBehaviour.OffsetType.XZ));
 
+    // ---- Plantas do Shattered (nascem das sementes) ----
+
+    // Uma pra cada tipo, na ordem do TipoDePlanta. Não dá pra quebrar: só pisando nelas.
+    public static final List<DeferredBlock<PlantaDoShattered>> PLANTAS = registrarPlantas();
+
     // ---- Escadas entre os andares ----
 
     public static final DeferredBlock<BlocoEscadaSubida> ESCADA_SUBIDA = BLOCOS.registerBlock("escada_subida", BlocoEscadaSubida::new, inquebravel().noOcclusion());
     public static final DeferredBlock<BlocoEscadaDescida> ESCADA_DESCIDA = BLOCOS.registerBlock("escada_descida", BlocoEscadaDescida::new, inquebravel());
+
+    private static List<DeferredBlock<PlantaDoShattered>> registrarPlantas() {
+        List<DeferredBlock<PlantaDoShattered>> lista = new ArrayList<>();
+        for (TipoDePlanta tipo : TipoDePlanta.values()) {
+            lista.add(BLOCOS.registerBlock(tipo.nomeDaPlanta(), propriedades -> new PlantaDoShattered(propriedades, tipo),
+                    planta().strength(-1.0F, 3600000.0F)));
+        }
+        return lista;
+    }
 
     // Planta: atravessável, quebra na hora, não dropa nada e não segura a luz
     public static BlockBehaviour.Properties planta() {

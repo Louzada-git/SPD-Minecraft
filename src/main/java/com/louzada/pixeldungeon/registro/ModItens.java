@@ -1,5 +1,8 @@
 package com.louzada.pixeldungeon.registro;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista.Habilidade;
 import com.louzada.pixeldungeon.item.ArcoEspiritual;
@@ -8,12 +11,18 @@ import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.Baga;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
+import com.louzada.pixeldungeon.item.CorDePocao;
 import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
 import com.louzada.pixeldungeon.item.ItemComDescricao;
 import com.louzada.pixeldungeon.item.ItemAnkh;
+import com.louzada.pixeldungeon.item.ItemPergaminho;
+import com.louzada.pixeldungeon.item.ItemPocao;
+import com.louzada.pixeldungeon.item.ItemSemente;
 import com.louzada.pixeldungeon.item.Odre;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.item.RacaoDeSuprimentos;
+import com.louzada.pixeldungeon.item.RunaDePergaminho;
+import com.louzada.pixeldungeon.item.TipoDePlanta;
 import com.louzada.pixeldungeon.item.TomoSagrado;
 
 import net.minecraft.world.food.FoodProperties;
@@ -108,6 +117,14 @@ public class ModItens {
     // Ração de suprimentos: aparece em baús pro Ladino com o talento rações guardadas
     public static final DeferredItem<RacaoDeSuprimentos> RACAO_DE_SUPRIMENTOS = ITENS.registerItem("racao_de_suprimentos", RacaoDeSuprimentos::new);
 
+    // ---- Poções, pergaminhos e sementes do Shattered ----
+
+    // Uma poção pra cada cor, um pergaminho pra cada runa, uma semente pra cada planta (na ordem dos enums).
+    // O que cada cor e cada runa faz muda a cada run (ver IdentidadesDaRun).
+    public static final List<DeferredItem<ItemPocao>> POCOES = registrarPocoes();
+    public static final List<DeferredItem<ItemPergaminho>> PERGAMINHOS = registrarPergaminhos();
+    public static final List<DeferredItem<ItemSemente>> SEMENTES = registrarSementes();
+
     // ---- Itens especiais ----
 
     // Traz de volta um aliado que morreu
@@ -159,6 +176,30 @@ public class ModItens {
             int defesa, float surpresa, Habilidade habilidade, int valorDaHabilidade) {
         return ITENS.registerItem(nome, propriedades -> new ArmaDoShattered(propriedades, nome, tier, danoMinimo, danoMaximo, precisao, atraso,
                 defesa, surpresa, habilidade, valorDaHabilidade));
+    }
+
+    private static List<DeferredItem<ItemPocao>> registrarPocoes() {
+        List<DeferredItem<ItemPocao>> lista = new ArrayList<>();
+        for (CorDePocao cor : CorDePocao.values()) {
+            lista.add(ITENS.registerItem(cor.nomeDoItem(), propriedades -> new ItemPocao(propriedades, cor)));
+        }
+        return lista;
+    }
+
+    private static List<DeferredItem<ItemPergaminho>> registrarPergaminhos() {
+        List<DeferredItem<ItemPergaminho>> lista = new ArrayList<>();
+        for (RunaDePergaminho runa : RunaDePergaminho.values()) {
+            lista.add(ITENS.registerItem(runa.nomeDoItem(), propriedades -> new ItemPergaminho(propriedades, runa)));
+        }
+        return lista;
+    }
+
+    private static List<DeferredItem<ItemSemente>> registrarSementes() {
+        List<DeferredItem<ItemSemente>> lista = new ArrayList<>();
+        for (TipoDePlanta planta : TipoDePlanta.values()) {
+            lista.add(ITENS.registerItem(planta.nomeDaSemente(), propriedades -> new ItemSemente(propriedades, planta)));
+        }
+        return lista;
     }
 
     // Usado pela aba do criativo para mostrar todos os itens do mod

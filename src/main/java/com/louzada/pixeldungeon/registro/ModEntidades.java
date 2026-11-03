@@ -8,12 +8,16 @@ import com.louzada.pixeldungeon.entidade.FlechaEspiritual;
 import com.louzada.pixeldungeon.entidade.GnollExplorador;
 import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.entidade.GotaDeOrvalho;
+import com.louzada.pixeldungeon.entidade.ImagemEspelhada;
 import com.louzada.pixeldungeon.entidade.LuzGuia;
 import com.louzada.pixeldungeon.entidade.Mimico;
 import com.louzada.pixeldungeon.entidade.MisselMagico;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
+import com.louzada.pixeldungeon.entidade.NuvemDeGas;
+import com.louzada.pixeldungeon.entidade.PocaoArremessada;
 import com.louzada.pixeldungeon.entidade.RatoAlbino;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
+import com.louzada.pixeldungeon.entidade.SementeArremessada;
 import com.louzada.pixeldungeon.entidade.SlimeDeEsgoto;
 
 import net.minecraft.core.registries.Registries;
@@ -83,6 +87,25 @@ public class ModEntidades {
             () -> EntityType.Builder.<GotaDeOrvalho>of(GotaDeOrvalho::new, MobCategory.MISC).sized(0.3F, 0.3F)
                     .clientTrackingRange(8).updateInterval(2).build("gota_de_orvalho"));
 
+    // ---- Poções, sementes e pergaminhos ----
+
+    // Poção arremessada (quebra onde bater)
+    public static final DeferredHolder<EntityType<?>, EntityType<PocaoArremessada>> POCAO_ARREMESSADA = ENTIDADES.register("pocao_arremessada",
+            () -> EntityType.Builder.<PocaoArremessada>of(PocaoArremessada::new, MobCategory.MISC).sized(0.25F, 0.25F)
+                    .clientTrackingRange(4).updateInterval(10).build("pocao_arremessada"));
+    // Semente arremessada (a planta nasce onde cair)
+    public static final DeferredHolder<EntityType<?>, EntityType<SementeArremessada>> SEMENTE_ARREMESSADA = ENTIDADES.register("semente_arremessada",
+            () -> EntityType.Builder.<SementeArremessada>of(SementeArremessada::new, MobCategory.MISC).sized(0.25F, 0.25F)
+                    .clientTrackingRange(4).updateInterval(10).build("semente_arremessada"));
+    // Nuvem de gás (tóxico, paralisante, confusão)
+    public static final DeferredHolder<EntityType<?>, EntityType<NuvemDeGas>> NUVEM_DE_GAS = ENTIDADES.register("nuvem_de_gas",
+            () -> EntityType.Builder.<NuvemDeGas>of(NuvemDeGas::new, MobCategory.MISC).sized(0.5F, 0.5F)
+                    .clientTrackingRange(8).updateInterval(20).build("nuvem_de_gas"));
+    // Imagem espelhada do herói (pergaminho)
+    public static final DeferredHolder<EntityType<?>, EntityType<ImagemEspelhada>> IMAGEM_ESPELHADA = ENTIDADES.register("imagem_espelhada",
+            () -> EntityType.Builder.of(ImagemEspelhada::new, MobCategory.MISC).sized(0.6F, 1.8F).clientTrackingRange(8)
+                    .build("imagem_espelhada"));
+
     // Diz ao Minecraft a vida, velocidade etc. de cada inimigo
     public static void aoCriarAtributos(EntityAttributeCreationEvent evento) {
         evento.put(RATO_MARSUPIAL.get(), MobDoShattered.atributosDoMinecraft(RatoMarsupial.ATRIBUTOS).build());
@@ -94,5 +117,6 @@ public class ModEntidades {
         evento.put(ENXAME_DE_MOSCAS.get(), EnxameDeMoscas.atributosDoEnxame().build());
         evento.put(GOO.get(), Goo.atributosDoGoo().build());
         evento.put(MIMICO.get(), MobDoShattered.atributosDoMinecraft(Mimico.ATRIBUTOS).build());
+        evento.put(IMAGEM_ESPELHADA.get(), ImagemEspelhada.atributosDaImagem().build());
     }
 }
