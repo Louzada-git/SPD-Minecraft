@@ -5,6 +5,7 @@ import com.louzada.pixeldungeon.entidade.CaranguejoDeEsgoto;
 import com.louzada.pixeldungeon.entidade.CobraDeEsgoto;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.GnollExplorador;
+import com.louzada.pixeldungeon.entidade.Mimico;
 import com.louzada.pixeldungeon.entidade.RatoAlbino;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
 import com.louzada.pixeldungeon.registro.ModBlocos;
@@ -78,6 +79,10 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.SLIME.get(), RenderizadorDeSlime::new);
         // Goo: um slime escuro e grande
         evento.registerEntityRenderer(ModEntidades.GOO.get(), RenderizadorDeGoo::new);
+        // Mímico: o baú do Minecraft, abrindo e fechando a tampa como uma boca
+        evento.registerEntityRenderer(ModEntidades.MIMICO.get(),
+                contexto -> new RenderizadorDeMob<Mimico, ModeloDoMimico>(contexto, new ModeloDoMimico(contexto.bakeLayer(ModelLayers.CHEST)),
+                        0.5F, RenderizadorDeMob.texturaDoMinecraft("chest/normal"), 1.0F));
         // Míssil mágico: não tem modelo, é só o rastro de luz (as partículas saem dele mesmo)
         evento.registerEntityRenderer(ModEntidades.MISSEL_MAGICO.get(), NoopRenderer::new);
         // Luz guia do Clérigo: igual ao míssil, só o rastro de luz
