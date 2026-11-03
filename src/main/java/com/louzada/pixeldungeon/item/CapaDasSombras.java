@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.Escudos;
@@ -143,7 +144,7 @@ public class CapaDasSombras extends Item {
     // Recarrega sozinha (menos enquanto está ligada)
     @Override
     public void inventoryTick(ItemStack pilha, Level mundo, Entity dono, int espaco, boolean naMao) {
-        if (!mundo.isClientSide() && dono.tickCount % 20 == 0 && dono instanceof Player jogador && !ativa(jogador)) {
+        if (!mundo.isClientSide() && Turno.virou(dono) && dono instanceof Player jogador && !ativa(jogador)) {
             Cargas.recarregar(pilha, mundo.getGameTime(), Artefato.cargasMaximas(pilha), Artefato::ticksParaCarregar);
         }
     }

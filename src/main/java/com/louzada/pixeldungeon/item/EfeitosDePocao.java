@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.dungeon.Andares;
@@ -38,10 +39,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-// O que cada poção do Shattered faz, com os números de lá (1 turno = 1 segundo).
+// O que cada poção do Shattered faz, com os números de lá (1 turno = 2 segundos).
 // As poções ruins (gelo, chama líquida, gases) quebram em volta de quem bebe; o certo é arremessar.
 public class EfeitosDePocao {
-    private static final int TURNO = 20;
 
     // ---- Beber ----
 
@@ -70,29 +70,29 @@ public class EfeitosDePocao {
             }
             case VISAO_MENTAL -> {
                 // Todos os inimigos do andar brilham através das paredes por 20 turnos
-                jogador.addEffect(new MobEffectInstance(ModEfeitos.VISAO_MENTAL, 20 * TURNO));
+                jogador.addEffect(new MobEffectInstance(ModEfeitos.VISAO_MENTAL, 20 * Turno.TICKS));
                 List<MobDoShattered> inimigos = inimigosDoAndar(jogador);
                 for (MobDoShattered inimigo : inimigos) {
-                    inimigo.addEffect(new MobEffectInstance(MobEffects.GLOWING, 20 * TURNO, 0, false, false));
+                    inimigo.addEffect(new MobEffectInstance(MobEffects.GLOWING, 20 * Turno.TICKS, 0, false, false));
                 }
                 avisar(jogador, Component.translatable(inimigos.isEmpty() ? "efeito.pixeldungeon.visao_mental.nenhum" : "efeito.pixeldungeon.visao_mental"),
                         ChatFormatting.AQUA);
             }
             case PRESSA -> {
-                jogador.addEffect(new MobEffectInstance(ModEfeitos.PRESSA, 20 * TURNO));
+                jogador.addEffect(new MobEffectInstance(ModEfeitos.PRESSA, 20 * Turno.TICKS));
                 avisar(jogador, Component.translatable("efeito.pixeldungeon.pressa"), ChatFormatting.YELLOW);
             }
             case INVISIBILIDADE -> {
-                Furtividade.ficarInvisivel(jogador, 20 * TURNO);
+                Furtividade.ficarInvisivel(jogador, 20 * Turno.TICKS);
                 mundo.playSound(null, jogador.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.PLAYERS, 1.0F, 1.0F);
                 avisar(jogador, Component.translatable("efeito.pixeldungeon.invisibilidade"), ChatFormatting.AQUA);
             }
             case LEVITACAO -> {
-                EfeitosNoTick.levitar(jogador, 20 * TURNO);
+                EfeitosNoTick.levitar(jogador, 20 * Turno.TICKS);
                 avisar(jogador, Component.translatable("efeito.pixeldungeon.levitacao"), ChatFormatting.AQUA);
             }
             case PUREZA -> {
-                jogador.addEffect(new MobEffectInstance(ModEfeitos.IMUNE_A_GAS, 20 * TURNO));
+                jogador.addEffect(new MobEffectInstance(ModEfeitos.IMUNE_A_GAS, 20 * Turno.TICKS));
                 avisar(jogador, Component.translatable("efeito.pixeldungeon.pureza"), ChatFormatting.AQUA);
             }
             // As ruins quebram em volta de quem bebeu
@@ -133,7 +133,7 @@ public class EfeitosDePocao {
             if (criatura.isSpectator()) {
                 continue;
             }
-            criatura.addEffect(new MobEffectInstance(ModEfeitos.CONGELADO, 10 * TURNO));
+            criatura.addEffect(new MobEffectInstance(ModEfeitos.CONGELADO, 10 * Turno.TICKS));
             criatura.setTicksFrozen(Math.max(criatura.getTicksFrozen(), 160));
             criatura.clearFire();
         }

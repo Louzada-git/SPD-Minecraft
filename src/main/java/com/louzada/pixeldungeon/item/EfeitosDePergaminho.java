@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.dungeon.MapeamentoMagico;
@@ -28,10 +29,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
-// O que cada pergaminho do Shattered faz, com os números de lá (1 turno = 1 segundo).
+// O que cada pergaminho do Shattered faz, com os números de lá (1 turno = 2 segundos).
 // "Visíveis" são os inimigos que o leitor consegue ver (até 32 blocos, sem parede no meio).
 public class EfeitosDePergaminho {
-    private static final int TURNO = 20;
     private static final double ALCANCE_DA_VISAO = 32;
     private static final int IMAGENS = 2;
 
@@ -84,7 +84,7 @@ public class EfeitosDePergaminho {
                     inimigo.getNavigation().moveTo(jogador, 1.0);
                 }
                 for (MobDoShattered inimigo : visiveis(jogador)) {
-                    inimigo.addEffect(new MobEffectInstance(ModEfeitos.FURIOSO, 5 * TURNO));
+                    inimigo.addEffect(new MobEffectInstance(ModEfeitos.FURIOSO, 5 * Turno.TICKS));
                 }
                 mundo.playSound(null, jogador.blockPosition(), SoundEvents.RAVAGER_ROAR, SoundSource.PLAYERS, 1.0F, 1.2F);
                 avisar(jogador, "efeito.pixeldungeon.furia");
@@ -98,10 +98,10 @@ public class EfeitosDePergaminho {
                     inimigo.invulnerableTime = 0;
                     inimigo.hurt(jogador.damageSources().indirectMagic(jogador, jogador), dano);
                     if (inimigo.isAlive()) {
-                        EfeitosNoTick.cegar(inimigo, 10 * TURNO);
+                        EfeitosNoTick.cegar(inimigo, 10 * Turno.TICKS);
                     }
                 }
-                EfeitosNoTick.cegar(jogador, 10 * TURNO);
+                EfeitosNoTick.cegar(jogador, 10 * Turno.TICKS);
                 Particulas.explosao(mundo, ParticleTypes.FLASH, jogador.getX(), jogador.getY(1.0), jogador.getZ(), 1, 0, 0);
                 mundo.playSound(null, jogador.blockPosition(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.0F, 1.4F);
                 avisar(jogador, "efeito.pixeldungeon.retribuicao");
@@ -110,7 +110,7 @@ public class EfeitosDePergaminho {
                 List<MobDoShattered> afetados = visiveis(jogador);
                 for (MobDoShattered inimigo : afetados) {
                     inimigo.acordar();
-                    inimigo.addEffect(new MobEffectInstance(ModEfeitos.ATERRORIZADO, 20 * TURNO));
+                    inimigo.addEffect(new MobEffectInstance(ModEfeitos.ATERRORIZADO, 20 * Turno.TICKS));
                     inimigo.setTarget(null);
                 }
                 Particulas.subindoEmVolta(jogador, Particulas.poeira(0xFF0000, 1.5F), 20, 0.1);

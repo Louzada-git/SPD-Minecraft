@@ -1,5 +1,6 @@
 package com.louzada.pixeldungeon.item;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.registro.ModComponentes;
 
 import net.minecraft.ChatFormatting;
@@ -25,7 +26,7 @@ public class Artefato {
     }
 
     public static long ticksParaCarregar(int faltando) {
-        return (45 - faltando) * 20L;
+        return (45 - faltando) * (long) Turno.TICKS;
     }
 
     // Igual ao Shattered: o nível "certo" do herói pra um artefato é 1 + 2 x nível do artefato

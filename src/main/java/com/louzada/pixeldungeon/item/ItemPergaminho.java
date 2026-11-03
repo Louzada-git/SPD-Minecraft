@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.List;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.heroi.Furtividade;
 import com.louzada.pixeldungeon.registro.ModItens;
 
@@ -22,7 +23,6 @@ import net.minecraft.world.level.Level;
 // Clique direito: lê (1 turno). Ler sempre revela o tipo do pergaminho, igual ao Shattered.
 // Alguns (melhoria, identificação, remover maldição, transmutação) abrem uma tela pra escolher o item.
 public class ItemPergaminho extends Item {
-    private static final int TURNO = 20;
     private RunaDePergaminho runa;
 
     public ItemPergaminho(Properties propriedades, RunaDePergaminho runa) {
@@ -57,7 +57,7 @@ public class ItemPergaminho extends Item {
         boolean eraDesconhecido = !Identificacao.conhece(leitor, runa);
         Identificacao.identificar(leitor, runa);
         mundo.playSound(null, jogador.blockPosition(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 1.0F, 1.0F);
-        jogador.getCooldowns().addCooldown(this, TURNO);
+        jogador.getCooldowns().addCooldown(this, Turno.TICKS);
         // Ler tira a invisibilidade (igual a usar qualquer item no Shattered)
         Furtividade.revelar(leitor);
 
