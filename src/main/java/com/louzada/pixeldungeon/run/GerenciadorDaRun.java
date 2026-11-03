@@ -11,6 +11,7 @@ import com.louzada.pixeldungeon.dungeon.ConstrutorDeAndar;
 import com.louzada.pixeldungeon.dungeon.GeradorDeAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
+import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
@@ -18,9 +19,11 @@ import com.louzada.pixeldungeon.rede.PacoteAbrirMenu;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
@@ -31,6 +34,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 //   - quem escolhe depois entra no andar 1 da run que já está rolando
 //   - quem morre vira espectador até alguém usar um ankh
 //   - quando todos morrem, a run acaba e todo mundo volta pro menu
+//   - nos andares de chefe, a saída só abre quando o chefe morre, e ninguém sobe a escada no meio da luta
 public class GerenciadorDaRun {
     // Onde fica quem está no menu antes de qualquer run começar (no vazio, como espectador)
     private static final BlockPos LUGAR_DE_ESPERA = new BlockPos(0, 200, 0);
@@ -230,6 +234,11 @@ public class GerenciadorDaRun {
 
     // Chamado pelo alçapão de descida
     public static void descer(ServerPlayer jogador, int andarAtual) {
+        DadosDaRun dados = DadosDaRun.pegar(jogador.serverLevel().getServer());
+        if (Andares.ehAndarDeChefe(andarAtual) && !dados.chefeDerrotado(andarAtual)) {
+            jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.saida_trancada"), true);
+            return;
+        }
         if (andarAtual >= Andares.ULTIMO_ANDAR_LIBERADO) {
             jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.bloqueado"), true);
             return;
@@ -243,6 +252,36 @@ public class GerenciadorDaRun {
             jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.sem_amuleto"), true);
             return;
         }
+        if (Andares.ehAndarDeChefe(andarAtual) && chefeLutando(jogador.serverLevel(), andarAtual)) {
+            // Igual ao Shattered: o andar fica selado enquanto o chefe luta
+            jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.selado"), true);
+            return;
+        }
         levarPara(jogador, andarAtual - 1, false);
+    }
+
+    private static boolean chefeLutando(ServerLevel mundo, int andar) {
+        BlockPos origem = Andares.origemDoAndar(DadosDaRun.pegar(mundo.getServer()).numeroDaRun(), andar);
+        return !mundo.getEntitiesOfClass(Goo.class, PopulacaoDoAndar.caixaDoAndar(origem), Goo::lutando).isEmpty();
+    }
+
+    // Chamado quando um chefe morre: a saída do andar abre e todo mundo fica sabendo
+    public static void aoDerrotarChefe(ServerLevel mundo, Entity chefe) {
+        MinecraftServer servidor = mundo.getServer();
+        DadosDaRun dados = DadosDaRun.pegar(servidor);
+        Integer andar = PopulacaoDoAndar.andarEm(dados, chefe.getX(), chefe.getY(), chefe.getZ());
+        if (!dados.ativa() || andar == null || !Andares.ehAndarDeChefe(andar) || dados.chefeDerrotado(andar)) {
+            return;
+        }
+        dados.marcarChefeDerrotado(andar);
+        PixelDungeon.LOGGER.info("Chefe do andar {} derrotado", andar);
+
+        servidor.getPlayerList().broadcastSystemMessage(Component.translatable("mensagem.pixeldungeon.chefe_derrotado",
+                chefe.getType().getDescription()), false);
+        // Quem estava no andar vê "Chefe derrotado!" no meio da tela, igual ao Shattered
+        BlockPos origem = Andares.origemDoAndar(dados.numeroDaRun(), andar);
+        for (ServerPlayer jogador : mundo.getEntitiesOfClass(ServerPlayer.class, PopulacaoDoAndar.caixaDoAndar(origem))) {
+            jogador.connection.send(new ClientboundSetTitleTextPacket(Component.translatable("tela.pixeldungeon.chefe_derrotado")));
+        }
     }
 }

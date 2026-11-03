@@ -5,6 +5,7 @@ import com.louzada.pixeldungeon.entidade.CaranguejoDeEsgoto;
 import com.louzada.pixeldungeon.entidade.CobraDeEsgoto;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.GnollExplorador;
+import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.entidade.RatoAlbino;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
@@ -45,6 +46,10 @@ public class ModEntidades {
     public static final DeferredHolder<EntityType<?>, EntityType<EnxameDeMoscas>> ENXAME_DE_MOSCAS = ENTIDADES.register("enxame_de_moscas",
             () -> EntityType.Builder.of(EnxameDeMoscas::new, MobCategory.MONSTER).sized(0.6F, 0.6F).build("enxame_de_moscas"));
 
+    // Chefe do andar 5: uma gosma larga e baixa
+    public static final DeferredHolder<EntityType<?>, EntityType<Goo>> GOO = ENTIDADES.register("goo",
+            () -> EntityType.Builder.of(Goo::new, MobCategory.MONSTER).sized(1.8F, 1.4F).build("goo"));
+
     // Diz ao Minecraft a vida, velocidade etc. de cada inimigo
     public static void aoCriarAtributos(EntityAttributeCreationEvent evento) {
         evento.put(RATO_MARSUPIAL.get(), MobDoShattered.atributosDoMinecraft(RatoMarsupial.ATRIBUTOS).build());
@@ -54,5 +59,6 @@ public class ModEntidades {
         evento.put(SLIME.get(), MobDoShattered.atributosDoMinecraft(SlimeDeEsgoto.ATRIBUTOS).build());
         evento.put(RATO_ALBINO.get(), MobDoShattered.atributosDoMinecraft(RatoAlbino.ATRIBUTOS).build());
         evento.put(ENXAME_DE_MOSCAS.get(), EnxameDeMoscas.atributosDoEnxame().build());
+        evento.put(GOO.get(), Goo.atributosDoGoo().build());
     }
 }

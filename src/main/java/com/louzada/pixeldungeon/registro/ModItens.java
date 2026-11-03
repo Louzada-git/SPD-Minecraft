@@ -4,6 +4,7 @@ import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
+import com.louzada.pixeldungeon.item.ItemComDescricao;
 import com.louzada.pixeldungeon.item.ItemAnkh;
 
 import net.minecraft.world.food.FoodProperties;
@@ -52,6 +53,10 @@ public class ModItens {
     // Traz de volta um aliado que morreu
     public static final DeferredItem<ItemAnkh> ANKH = ITENS.registerItem("ankh", ItemAnkh::new);
 
+    // Bolha de gosma: cai do Goo quando ele morre (sozinha não faz nada; vai servir pra alquimia)
+    public static final DeferredItem<ItemComDescricao> BOLHA_DE_GOSMA = ITENS.registerItem("bolha_de_gosma",
+            propriedades -> new ItemComDescricao(propriedades, "bolha_de_gosma"));
+
     // ---- Ovos dos inimigos (pra testar no criativo) ----
 
     public static final DeferredItem<DeferredSpawnEggItem> OVO_RATO_MARSUPIAL = ITENS.registerItem("ovo_rato_marsupial",
@@ -68,6 +73,8 @@ public class ModItens {
             propriedades -> new DeferredSpawnEggItem(ModEntidades.ENXAME_DE_MOSCAS, 0x2B2B2B, 0x7A9E3B, propriedades));
     public static final DeferredItem<DeferredSpawnEggItem> OVO_SLIME = ITENS.registerItem("ovo_slime",
             propriedades -> new DeferredSpawnEggItem(ModEntidades.SLIME, 0x5DBB3A, 0x2E6B1E, propriedades));
+    public static final DeferredItem<DeferredSpawnEggItem> OVO_GOO = ITENS.registerItem("ovo_goo",
+            propriedades -> new DeferredSpawnEggItem(ModEntidades.GOO, 0x262626, 0x808080, propriedades));
 
     // ---- Blocos (pra poder pegar no criativo e testar) ----
 
