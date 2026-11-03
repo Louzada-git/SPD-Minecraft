@@ -98,5 +98,22 @@
   "item.pixeldungeon.carne_misteriosa.pernas": "Você não sente suas pernas!",
   "item.pixeldungeon.carne_misteriosa.mal": "Você não se sente bem.",
   "item.pixeldungeon.carne_misteriosa.estufado": "Você está estufado.",
-  "item.pixeldungeon.carne_misteriosa.esquisito": "A comida estava com um gosto... esquisito."
+  "item.pixeldungeon.carne_misteriosa.esquisito": "A comida estava com um gosto... esquisito.",
+
+  "entity.pixeldungeon.goo": "Goo",
+  "item.pixeldungeon.ovo_goo": "Ovo de Goo",
+  "goo.pixeldungeon.notou": "GULP-GULP!",
+  "goo.pixeldungeon.derrotado": "gulp... gulp...",
+  "goo.pixeldungeon.bombeando": "Goo está bombeando!",
+  "goo.pixeldungeon.furioso": "furioso",
+  "goo.pixeldungeon.gluuurp": "GUUUULP!",
+  "mensagem.pixeldungeon.fala": "%s: \"%s\"",
+  "mensagem.pixeldungeon.saida_trancada": "A saída está trancada enquanto o chefe deste andar estiver vivo.",
+  "mensagem.pixeldungeon.selado": "O andar está selado! Não dá pra fugir no meio da luta.",
+  "mensagem.pixeldungeon.chefe_derrotado": "%s foi derrotado! A saída do andar se abriu.",
+  "tela.pixeldungeon.chefe_derrotado": "Chefe Derrotado",
+  "effect.pixeldungeon.muco_caustico": "Muco Cáustico",
+  "efeito.pixeldungeon.muco_caustico.aviso": "Muco cáustico está devorando a sua carne! Lave-o na água!",
+  "item.pixeldungeon.bolha_de_gosma": "Bolha de Gosma",
+  "item.pixeldungeon.bolha_de_gosma.descricao": "Um pedaço gelatinoso de gosma, separou-se de Goo enquanto ele morria. É quase como uma grande bola de geleia, apesar de você não se atrever a comê-la. Por si só não faz nada, mas pode ser útil se combinada com certas poções ou uma bomba."
 }

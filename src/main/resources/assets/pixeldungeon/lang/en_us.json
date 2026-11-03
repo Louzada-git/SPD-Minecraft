@@ -98,5 +98,22 @@
   "item.pixeldungeon.carne_misteriosa.pernas": "You can't feel your legs!",
   "item.pixeldungeon.carne_misteriosa.mal": "You are not feeling well.",
   "item.pixeldungeon.carne_misteriosa.estufado": "You are stuffed.",
-  "item.pixeldungeon.carne_misteriosa.esquisito": "That food tasted... strange."
+  "item.pixeldungeon.carne_misteriosa.esquisito": "That food tasted... strange.",
+
+  "entity.pixeldungeon.goo": "Goo",
+  "item.pixeldungeon.ovo_goo": "Goo Spawn Egg",
+  "goo.pixeldungeon.notou": "GLURP-GLURP!",
+  "goo.pixeldungeon.derrotado": "glurp... glurp...",
+  "goo.pixeldungeon.bombeando": "Goo is pumping itself up!",
+  "goo.pixeldungeon.furioso": "enraged",
+  "goo.pixeldungeon.gluuurp": "GLUUUURP!",
+  "mensagem.pixeldungeon.fala": "%s: \"%s\"",
+  "mensagem.pixeldungeon.saida_trancada": "The exit is locked while the boss of this depth is alive.",
+  "mensagem.pixeldungeon.selado": "The level is sealed! You can't flee in the middle of the fight.",
+  "mensagem.pixeldungeon.chefe_derrotado": "%s was defeated! The exit of the depth is open.",
+  "tela.pixeldungeon.chefe_derrotado": "Boss Slain",
+  "effect.pixeldungeon.muco_caustico": "Caustic Ooze",
+  "efeito.pixeldungeon.muco_caustico.aviso": "Caustic ooze eats your flesh. Wash it away!",
+  "item.pixeldungeon.bolha_de_gosma": "Blob of Goo",
+  "item.pixeldungeon.bolha_de_gosma.descricao": "A jiggly blob of goop, split off from Goo as it died. It's almost like a big ball of jelly, though you wouldn't dare eat it. It does nothing on its own, but it might be useful when combined with certain potions, or a bomb."
 }
