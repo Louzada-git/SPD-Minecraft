@@ -9,6 +9,7 @@ import com.louzada.pixeldungeon.entidade.GnollExplorador;
 import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.entidade.GotaDeOrvalho;
 import com.louzada.pixeldungeon.entidade.LuzGuia;
+import com.louzada.pixeldungeon.entidade.Mimico;
 import com.louzada.pixeldungeon.entidade.MisselMagico;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.entidade.RatoAlbino;
@@ -50,6 +51,10 @@ public class ModEntidades {
     public static final DeferredHolder<EntityType<?>, EntityType<EnxameDeMoscas>> ENXAME_DE_MOSCAS = ENTIDADES.register("enxame_de_moscas",
             () -> EntityType.Builder.of(EnxameDeMoscas::new, MobCategory.MONSTER).sized(0.6F, 0.6F).build("enxame_de_moscas"));
 
+    // Mímico: do tamanho de um baú (escondido, ele é um baú de verdade)
+    public static final DeferredHolder<EntityType<?>, EntityType<Mimico>> MIMICO = ENTIDADES.register("mimico",
+            () -> EntityType.Builder.of(Mimico::new, MobCategory.MONSTER).sized(0.875F, 0.875F).build("mimico"));
+
     // Chefe do andar 5: uma gosma larga e baixa
     public static final DeferredHolder<EntityType<?>, EntityType<Goo>> GOO = ENTIDADES.register("goo",
             () -> EntityType.Builder.of(Goo::new, MobCategory.MONSTER).sized(1.8F, 1.4F).build("goo"));
@@ -88,5 +93,6 @@ public class ModEntidades {
         evento.put(RATO_ALBINO.get(), MobDoShattered.atributosDoMinecraft(RatoAlbino.ATRIBUTOS).build());
         evento.put(ENXAME_DE_MOSCAS.get(), EnxameDeMoscas.atributosDoEnxame().build());
         evento.put(GOO.get(), Goo.atributosDoGoo().build());
+        evento.put(MIMICO.get(), MobDoShattered.atributosDoMinecraft(Mimico.ATRIBUTOS).build());
     }
 }

@@ -135,6 +135,8 @@ public class ModItens {
             propriedades -> new DeferredSpawnEggItem(ModEntidades.SLIME, 0x5DBB3A, 0x2E6B1E, propriedades));
     public static final DeferredItem<DeferredSpawnEggItem> OVO_GOO = ITENS.registerItem("ovo_goo",
             propriedades -> new DeferredSpawnEggItem(ModEntidades.GOO, 0x262626, 0x808080, propriedades));
+    public static final DeferredItem<DeferredSpawnEggItem> OVO_MIMICO = ITENS.registerItem("ovo_mimico",
+            propriedades -> new DeferredSpawnEggItem(ModEntidades.MIMICO, 0x8B5A2B, 0xE0B040, propriedades));
 
     // ---- Blocos (pra poder pegar no criativo e testar) ----
 

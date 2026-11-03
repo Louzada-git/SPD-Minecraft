@@ -86,7 +86,8 @@ public class EventosDeCombate {
 
         // Um inimigo batendo
         RandomSource sorteio = alvo.getRandom();
-        if (!RegrasDoHeroi.acertou(sorteio, precisaoDe(atacante), esquivaDe(alvo))) {
+        boolean acertoGarantido = atacante instanceof MobDoShattered quemBateu && quemBateu.acertoGarantido();
+        if (!acertoGarantido && !RegrasDoHeroi.acertou(sorteio, precisaoDe(atacante), esquivaDe(alvo))) {
             evento.setCanceled(true);
             mostrarErro(alvo, atacante);
             return;

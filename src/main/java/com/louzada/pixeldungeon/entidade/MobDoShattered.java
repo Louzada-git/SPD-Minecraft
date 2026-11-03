@@ -102,6 +102,11 @@ public abstract class MobDoShattered extends Monster {
         return atributos;
     }
 
+    // Quem fica mais forte nos andares mais fundos (o mímico) troca os números depois de nascer
+    protected void trocarAtributos(Atributos novos) {
+        atributos = novos;
+    }
+
     // Precisão e esquiva agora (o Goo muda as dele quando fica furioso)
     public int precisao() {
         return atributos.precisao();
@@ -127,6 +132,11 @@ public abstract class MobDoShattered extends Monster {
     }
 
     // ---- Números do combate ----
+
+    // O próximo golpe acerta sem sortear (a mordida do mímico escondido)
+    public boolean acertoGarantido() {
+        return false;
+    }
 
     public int sortearDano() {
         return Sorteio.normal(getRandom(), atributos.danoMinimo(), atributos.danoMaximo());
