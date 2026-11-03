@@ -1,13 +1,18 @@
 package com.louzada.pixeldungeon.heroi;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 
@@ -18,8 +23,15 @@ import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 //   - os pontos em cada talento
 //   - o "estado": efeitos que duram um tempo (os buffs do Shattered), como a raiva provocada,
 //     o escudo do selo, as cargas das habilidades da Duelista... Cada um tem um nome (a chave).
+//   - os tipos de poção e pergaminho que ele já identificou nesta run
+//   - com quem ele compartilha o que identifica (essa escolha continua de uma run pra outra)
 public class DadosDoHeroi {
     public static final int FORCA_INICIAL = 10;
+
+    // Com quem o jogador compartilha o que identifica
+    public static final String COMPARTILHAR_COM_TODOS = "todos";
+    public static final String COMPARTILHAR_COM_NINGUEM = "ninguem";
+    public static final String COMPARTILHAR_COM_ESCOLHIDOS = "escolhidos";
 
     private String classe = "";
     private int forca = FORCA_INICIAL;
@@ -29,6 +41,10 @@ public class DadosDoHeroi {
     private int run = 0;
     private Map<String, Integer> talentos = new HashMap<>();
     private CompoundTag estado = new CompoundTag();
+    // Tipos de poção e pergaminho que o jogador já sabe (ex.: "pocao:cura")
+    private Set<String> conhecidos = new HashSet<>();
+    private String modoDeCompartilhar = COMPARTILHAR_COM_TODOS;
+    private Set<String> compartilharCom = new HashSet<>();
 
     // Zera tudo e começa com a classe escolhida
     public void comecar(ClasseDoHeroi novaClasse, int numeroDaRun) {
@@ -40,6 +56,39 @@ public class DadosDoHeroi {
         run = numeroDaRun;
         talentos.clear();
         estado = new CompoundTag();
+        conhecidos.clear();
+    }
+
+    // ---- Identificação ----
+
+    public boolean conhece(String chave) {
+        return conhecidos.contains(chave);
+    }
+
+    // Devolve true se era novidade
+    public boolean aprender(String chave) {
+        return conhecidos.add(chave);
+    }
+
+    public String modoDeCompartilhar() {
+        return modoDeCompartilhar;
+    }
+
+    public Set<String> compartilharCom() {
+        return compartilharCom;
+    }
+
+    public void definirCompartilhamento(String modo, Set<String> nomes) {
+        modoDeCompartilhar = modo;
+        compartilharCom = new HashSet<>(nomes);
+    }
+
+    // Esse jogador recebe o que eu identificar?
+    public boolean compartilhaCom(String nomeDoOutro) {
+        if (COMPARTILHAR_COM_TODOS.equals(modoDeCompartilhar)) {
+            return true;
+        }
+        return COMPARTILHAR_COM_ESCOLHIDOS.equals(modoDeCompartilhar) && compartilharCom.contains(nomeDoOutro);
     }
 
     @Nullable
@@ -170,6 +219,11 @@ public class DadosDoHeroi {
                 dados.talentos.put(id, talentos.getInt(id));
             }
             dados.estado = tag.getCompound("estado");
+            dados.conhecidos = lerLista(tag, "conhecidos");
+            if (tag.contains("compartilhar")) {
+                dados.modoDeCompartilhar = tag.getString("compartilhar");
+            }
+            dados.compartilharCom = lerLista(tag, "compartilhar_com");
             return dados;
         }
 
@@ -188,7 +242,27 @@ public class DadosDoHeroi {
             }
             tag.put("talentos", talentos);
             tag.put("estado", dados.estado.copy());
+            tag.put("conhecidos", escreverLista(dados.conhecidos));
+            tag.putString("compartilhar", dados.modoDeCompartilhar);
+            tag.put("compartilhar_com", escreverLista(dados.compartilharCom));
             return tag;
+        }
+
+        private static Set<String> lerLista(CompoundTag tag, String nome) {
+            Set<String> conjunto = new HashSet<>();
+            ListTag lista = tag.getList(nome, Tag.TAG_STRING);
+            for (int i = 0; i < lista.size(); i++) {
+                conjunto.add(lista.getString(i));
+            }
+            return conjunto;
+        }
+
+        private static ListTag escreverLista(Set<String> conjunto) {
+            ListTag lista = new ListTag();
+            for (String texto : conjunto) {
+                lista.add(StringTag.valueOf(texto));
+            }
+            return lista;
         }
     }
 }
