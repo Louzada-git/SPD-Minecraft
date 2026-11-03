@@ -2,7 +2,7 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.List;
 
-import com.louzada.pixeldungeon.entidade.MisselMagico;
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.heroi.Furtividade;
 import com.louzada.pixeldungeon.heroi.Talentos;
 
@@ -19,29 +19,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
-// Cajado do Mago: bate como arma (1-6) e já vem com a varinha de míssil mágico dentro.
-// Clique direito lança um míssil mágico (2-8 de dano). Igual ao Shattered:
-//   - a varinha de míssil mágico tem 3 cargas, e o cajado dá +1 (4 no total)
-//   - as cargas voltam sozinhas com o tempo: quanto mais vazio, mais rápido (de ~33 a ~45 turnos por carga)
-//   - lançar gasta 1 turno (1 segundo)
-//   - cada nível (pergaminho de melhoria) dá +1 carga (até 10) e +1/+2 no dano do míssil
+// Cajado do Mago: bate como arma (1-6) e leva uma varinha dentro (a de míssil mágico). Igual ao Shattered:
+//   - o cajado dá 1 carga a mais que a varinha sozinha (3 + 1 = 4)
+//   - clique direito lança a varinha (gasta 1 carga e 1 turno)
+//   - cada nível (pergaminho de melhoria) melhora o cajado e a varinha juntos: +1 carga (até 10) e um míssil mais forte
 public class CajadoDoMago extends ArmaDoShattered {
-    public static final int CARGAS_INICIAIS = 4;
+    // A varinha que vai dentro do cajado
+    private static final Varinha VARINHA = new VarinhaDeMisselMagico();
+    private static final int CARGA_DO_CAJADO = 1;
     private static final int COR_DA_BARRA = 0xB07CFF;
 
     public CajadoDoMago(Properties propriedades) {
-        super(propriedades, "cajado_do_mago", 1, 1, 6, 1.0f, 1.0f, 0, 0.0f, null, 0);
+        super(propriedades, "cajado_do_mago", Numeros.doTier(1).dano(1, 6));
     }
 
     // ---- Cargas ----
 
-    // Igual ao recarregador das varinhas do Shattered: 10 + 40 * 0,875^(cargas que faltam) turnos por carga
-    private static long ticksParaCarregar(int faltando) {
-        return Math.round((10 + 40 * Math.pow(0.875, faltando)) * 20);
-    }
-
     public static int cargasMaximas(ItemStack pilha) {
-        return Math.min(10, CARGAS_INICIAIS + NivelDoItem.nivel(pilha));
+        return VARINHA.cargasMaximas(NivelDoItem.nivel(pilha), CARGA_DO_CAJADO);
     }
 
     public static int cargas(ItemStack pilha) {
@@ -49,7 +44,7 @@ public class CajadoDoMago extends ArmaDoShattered {
     }
 
     private static void recarregar(ItemStack pilha, long agora) {
-        Cargas.recarregar(pilha, agora, cargasMaximas(pilha), CajadoDoMago::ticksParaCarregar);
+        Cargas.recarregar(pilha, agora, cargasMaximas(pilha), Varinha::ticksParaCarregar);
     }
 
     // Pergaminho de recarga: enche tudo na hora
@@ -57,10 +52,10 @@ public class CajadoDoMago extends ArmaDoShattered {
         Cargas.somar(pilha, cargasMaximas(pilha), cargasMaximas(pilha));
     }
 
-    // Uma vez por segundo, no servidor, vê se encheu alguma carga
+    // Uma vez por turno, no servidor, vê se encheu alguma carga
     @Override
     public void inventoryTick(ItemStack pilha, Level mundo, Entity dono, int espaco, boolean naMao) {
-        if (!mundo.isClientSide() && dono.tickCount % 20 == 0) {
+        if (!mundo.isClientSide() && Turno.virou(dono)) {
             recarregar(pilha, mundo.getGameTime());
         }
     }
@@ -70,31 +65,25 @@ public class CajadoDoMago extends ArmaDoShattered {
     @Override
     public InteractionResultHolder<ItemStack> use(Level mundo, Player jogador, InteractionHand mao) {
         ItemStack pilha = jogador.getItemInHand(mao);
-        if (mundo.isClientSide()) {
+        if (!(jogador instanceof ServerPlayer heroi)) {
             return cargas(pilha) > 0 ? InteractionResultHolder.success(pilha) : InteractionResultHolder.fail(pilha);
         }
         long agora = mundo.getGameTime();
         recarregar(pilha, agora);
         int cargas = cargas(pilha);
         if (cargas <= 0) {
-            jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.varinha_sem_carga").withStyle(ChatFormatting.GRAY), true);
-            mundo.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 0.5F, 1.4F);
+            heroi.displayClientMessage(Component.translatable("mensagem.pixeldungeon.varinha_sem_carga").withStyle(ChatFormatting.GRAY), true);
+            mundo.playSound(null, heroi.getX(), heroi.getY(), heroi.getZ(), SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 0.5F, 1.4F);
             return InteractionResultHolder.fail(pilha);
         }
 
         // Talentos do Mago (magia prolongada, barreira de apoio) e a invisibilidade acaba
-        if (jogador instanceof ServerPlayer heroi) {
-            Talentos.aoUsarVarinha(heroi, cargas);
-            Furtividade.revelar(heroi);
-        }
-        MisselMagico missil = new MisselMagico(mundo, jogador, NivelDoItem.nivel(pilha));
-        missil.shootFromRotation(jogador, jogador.getXRot(), jogador.getYRot(), 0.0F, 2.0F, 0.0F);
-        mundo.addFreshEntity(missil);
-        mundo.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS, 0.8F, 1.4F);
-
+        Talentos.aoUsarVarinha(heroi, cargas);
+        Furtividade.revelar(heroi);
+        VARINHA.lancar(heroi, NivelDoItem.nivel(pilha));
         Cargas.gastar(pilha, agora, cargasMaximas(pilha), 1);
         // Lançar gasta um turno
-        jogador.getCooldowns().addCooldown(this, 20);
+        heroi.getCooldowns().addCooldown(this, Turno.TICKS);
         return InteractionResultHolder.success(pilha);
     }
 
@@ -124,8 +113,7 @@ public class CajadoDoMago extends ArmaDoShattered {
 
     @Override
     public void appendHoverText(ItemStack pilha, TooltipContext contexto, List<Component> linhas, TooltipFlag opcoes) {
-        int nivel = NivelDoItem.nivel(pilha);
-        linhas.add(Component.translatable("dica.pixeldungeon.missel_magico", 2 + nivel, 8 + 2 * nivel).withStyle(ChatFormatting.LIGHT_PURPLE));
+        VARINHA.dica(linhas, NivelDoItem.nivel(pilha));
         linhas.add(Component.translatable("dica.pixeldungeon.cargas", cargas(pilha), cargasMaximas(pilha)).withStyle(ChatFormatting.LIGHT_PURPLE));
         super.appendHoverText(pilha, contexto, linhas, opcoes);
     }
