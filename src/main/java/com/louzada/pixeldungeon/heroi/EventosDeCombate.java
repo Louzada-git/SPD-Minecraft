@@ -24,6 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
@@ -152,24 +153,30 @@ public class EventosDeCombate {
     }
 
     // Quem mata um inimigo do Shattered ganha o XP dele (se não passou do nível máximo dele).
-    // Alguns inimigos deixam itens (carne misteriosa...).
+    // Alguns inimigos deixam itens (carne misteriosa, ouro...). Igual ao Shattered, herói com mais de
+    // 2 níveis acima do máximo do inimigo não ganha mais itens dele, e os itens nunca somem do chão.
     public static void aoMorrerAlguem(LivingDeathEvent evento) {
         if (!(evento.getEntity() instanceof MobDoShattered inimigo) || inimigo.level().isClientSide()) {
             return;
         }
-        ItemStack saque = inimigo.sortearSaque();
+        ServerPlayer matador = evento.getSource().getEntity() instanceof ServerPlayer quem ? quem : null;
+        boolean ganhaItens = matador == null || RegrasDoHeroi.dados(matador).nivel() <= inimigo.atributos().nivelMaximo() + 2;
+        ItemStack saque = ganhaItens ? inimigo.sortearSaque() : ItemStack.EMPTY;
         if (!saque.isEmpty()) {
-            inimigo.spawnAtLocation(saque);
+            ItemEntity noChao = inimigo.spawnAtLocation(saque);
+            if (noChao != null) {
+                noChao.setUnlimitedLifetime();
+            }
         }
-        if (evento.getSource().getEntity() instanceof ServerPlayer jogador) {
-            DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
+        if (matador != null) {
+            DadosDoHeroi dados = RegrasDoHeroi.dados(matador);
             int xp = inimigo.xpAoMorrer();
             if (xp > 0 && dados.nivel() <= inimigo.atributos().nivelMaximo()) {
-                NumerosFlutuantes.mostrar(jogador, "+" + xp + " XP", NumerosFlutuantes.ROXO);
-                RegrasDoHeroi.ganharXp(jogador, xp);
+                NumerosFlutuantes.mostrar(matador, "+" + xp + " XP", NumerosFlutuantes.ROXO);
+                RegrasDoHeroi.ganharXp(matador, xp);
             }
             if (dados.classe() == ClasseDoHeroi.DUELISTA) {
-                HabilidadesDaDuelista.aoMatar(dados, jogador.level().getGameTime());
+                HabilidadesDaDuelista.aoMatar(dados, matador.level().getGameTime());
             }
         }
     }
