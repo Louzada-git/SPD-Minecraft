@@ -1,5 +1,7 @@
 package com.louzada.pixeldungeon.dungeon;
 
+import java.util.Random;
+
 import com.louzada.pixeldungeon.bloco.CapimAlto;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.GotaDeOrvalho;
@@ -31,12 +33,14 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 // Pisotear a grama alta, igual ao Shattered. A grama vale pelo quadradinho inteiro (4x4 blocos):
 // encostou em qualquer parte, o quadradinho todo é pisoteado e vira grama baixa.
 //   - 1 em 6: cai uma gota de orvalho (ela voa sozinha pro odre de quem estiver perto)
+//   - 1 em 25: cai uma semente
 //   - Caçadora: passa sem derrubar a grama (fica "trilhada"), mas ainda ganha o que cair
 //   - Caçadora com recompensa da natureza: às vezes cai uma baga
 // Quem voa (o enxame de moscas) não pisoteia.
 public class Grama {
     private static final int T = Andares.TAMANHO_DO_QUADRADINHO;
     private static final int UMA_GOTA_EM = 6;
+    private static final int UMA_SEMENTE_EM = 25;
     private static final String BAGAS_DADAS = "bagas_dadas";
 
     public static void pisotear(ServerLevel mundo, BlockPos posicao, BlockState estado, Entity entidade) {
@@ -91,6 +95,9 @@ public class Grama {
         RandomSource sorteio = mundo.getRandom();
         if (sorteio.nextInt(UMA_GOTA_EM) == 0) {
             GotaDeOrvalho.soltar(mundo, x, y, z);
+        }
+        if (sorteio.nextInt(UMA_SEMENTE_EM) == 0) {
+            SaqueDoAndar.soltar(mundo, x, y, z, SaqueDoAndar.sementeAleatoria(new Random(sorteio.nextLong())));
         }
         if (quemPisou instanceof ServerPlayer jogador && GerenciadorDoHeroi.emJogo(jogador)) {
             talvezBaga(mundo, jogador, x, y, z);

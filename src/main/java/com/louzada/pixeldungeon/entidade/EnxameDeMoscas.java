@@ -1,5 +1,9 @@
 package com.louzada.pixeldungeon.entidade;
 
+import com.louzada.pixeldungeon.item.Identificacao;
+import com.louzada.pixeldungeon.item.TipoDePocao;
+import com.louzada.pixeldungeon.run.DadosDaRun;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -12,12 +16,16 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 // Enxame de moscas (andares 3 e 4): voa, e cada golpe que leva divide ele em dois enxames menores.
 // Igual ao Shattered: se a vida for pelo menos o dano + 2, metade do que sobrar vira um enxame novo.
 // Os enxames que nasceram de uma divisão não dão XP.
+// Às vezes deixam uma poção de cura: 1 em 6 no enxame original, menos nos pedaços,
+// e cada poção que já caiu na run deixa a próxima mais difícil (no máximo 5).
 public class EnxameDeMoscas extends MobDoShattered {
+    private static final String POCOES_DO_ENXAME = "pocao_do_enxame";
     public static final Atributos ATRIBUTOS = new Atributos(50, 10, 5, 1, 4, 0, 0, 3, 9, 0.25);
     public static final Sons SONS = new Sons(SoundEvents.BEE_LOOP_AGGRESSIVE, SoundEvents.BEE_HURT, SoundEvents.BEE_DEATH);
 
@@ -56,6 +64,20 @@ public class EnxameDeMoscas extends MobDoShattered {
     @Override
     public int xpAoMorrer() {
         return geracao == 0 ? super.xpAoMorrer() : 0;
+    }
+
+    @Override
+    public ItemStack sortearSaque() {
+        if (!(level() instanceof ServerLevel mundo)) {
+            return ItemStack.EMPTY;
+        }
+        DadosDaRun run = DadosDaRun.pegar(mundo.getServer());
+        float chance = 1F / (6 * (geracao + 1)) * (5 - run.quedas(POCOES_DO_ENXAME)) / 5F;
+        if (getRandom().nextFloat() < chance) {
+            run.contarQueda(POCOES_DO_ENXAME);
+            return Identificacao.pocao(run.semente(), TipoDePocao.CURA);
+        }
+        return ItemStack.EMPTY;
     }
 
     // Chamado antes de levar o golpe: se dá pra dividir, nasce um enxame novo do lado

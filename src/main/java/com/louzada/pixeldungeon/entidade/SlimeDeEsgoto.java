@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon.entidade;
 import java.util.Random;
 
 import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
+import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.run.DadosDaRun;
 
 import net.minecraft.server.level.ServerLevel;
@@ -41,7 +42,9 @@ public class SlimeDeEsgoto extends MobDoShattered {
         float chance = 0.2F * (float) Math.pow(0.25, run.quedas(ARMA_DO_SLIME));
         if (getRandom().nextFloat() < chance) {
             run.contarQueda(ARMA_DO_SLIME);
-            return SaqueDoAndar.armaDoTier(new Random(getRandom().nextLong()), 2);
+            // Igual ao Shattered: nível +0, mas pode vir amaldiçoada (e vem sem identificar)
+            Random sorteio = new Random(getRandom().nextLong());
+            return NivelDoItem.sortearDoChao(SaqueDoAndar.armaDoTier(sorteio, 2), sorteio, false);
         }
         return ItemStack.EMPTY;
     }
