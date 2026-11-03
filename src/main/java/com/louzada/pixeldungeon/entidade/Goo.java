@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon.entidade;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.combate.Sorteio;
@@ -56,7 +57,7 @@ public class Goo extends MobDoShattered {
     // Distância em que os heróis contam como "na luta" (e veem a barra do chefe)
     private static final double DISTANCIA_DA_LUTA = 48;
     // Bombear leva 2 turnos antes de soltar o golpe
-    private static final int TICKS_PARA_SOLTAR = 2 * 20;
+    private static final int TICKS_PARA_SOLTAR = Turno.ticks(2);
 
     // Quanto o Goo já bombeou (0 = nada, 1 e 2 = inchando). O jogo do jogador usa pra desenhar ele inchado.
     private static final EntityDataAccessor<Integer> CARGA = SynchedEntityData.defineId(Goo.class, EntityDataSerializers.INT);
@@ -291,7 +292,7 @@ public class Goo extends MobDoShattered {
         if (carga() > 0) {
             continuarBombeando();
         }
-        if (tickCount % 20 == 0) {
+        if (Turno.virou(this)) {
             umTurno();
         }
     }

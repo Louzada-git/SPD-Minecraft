@@ -1,5 +1,6 @@
 package com.louzada.pixeldungeon.entidade;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.registro.ModItens;
 
 import net.minecraft.world.effect.MobEffectInstance;
@@ -22,7 +23,7 @@ public class RatoAlbino extends MobDoShattered {
     @Override
     public void aoAcertar(Entity alvo, float dano) {
         if (dano > 0 && alvo instanceof LivingEntity criatura && getRandom().nextBoolean()) {
-            criatura.addEffect(new MobEffectInstance(MobEffects.POISON, 3 * 20));
+            criatura.addEffect(new MobEffectInstance(MobEffects.POISON, Turno.ticks(3)));
         }
     }
 

@@ -1,5 +1,6 @@
 package com.louzada.pixeldungeon.entidade;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
@@ -43,10 +44,9 @@ public class NuvemDeGas extends Entity {
 
     private static final EntityDataAccessor<Integer> TIPO = SynchedEntityData.defineId(NuvemDeGas.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> RAIO = SynchedEntityData.defineId(NuvemDeGas.class, EntityDataSerializers.FLOAT);
-    private static final int TURNO = 20;
     private static final double ALTURA = 3.0;
 
-    private int ticksRestantes = 10 * TURNO;
+    private int ticksRestantes = 10 * Turno.TICKS;
 
     public NuvemDeGas(EntityType<? extends NuvemDeGas> tipo, Level mundo) {
         super(tipo, mundo);
@@ -58,7 +58,7 @@ public class NuvemDeGas extends Entity {
         nuvem.setPos(lugar.x, lugar.y, lugar.z);
         nuvem.entityData.set(TIPO, tipo.ordinal());
         nuvem.entityData.set(RAIO, raio);
-        nuvem.ticksRestantes = turnos * TURNO;
+        nuvem.ticksRestantes = turnos * Turno.TICKS;
         mundo.addFreshEntity(nuvem);
         return nuvem;
     }
@@ -95,7 +95,7 @@ public class NuvemDeGas extends Entity {
             discard();
             return;
         }
-        if (tickCount % TURNO != 0) {
+        if (tickCount % Turno.TICKS != 0) {
             return;
         }
         for (LivingEntity criatura : level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(raio, ALTURA, raio))) {
@@ -111,11 +111,11 @@ public class NuvemDeGas extends Entity {
                 }
                 case PARALISANTE -> {
                     MobEffectInstance atual = criatura.getEffect(ModEfeitos.PARALISADO);
-                    if (atual == null || atual.getDuration() < 10 * TURNO) {
-                        criatura.addEffect(new MobEffectInstance(ModEfeitos.PARALISADO, 10 * TURNO));
+                    if (atual == null || atual.getDuration() < 10 * Turno.TICKS) {
+                        criatura.addEffect(new MobEffectInstance(ModEfeitos.PARALISADO, 10 * Turno.TICKS));
                     }
                 }
-                case CONFUSAO -> EfeitosNoTick.tontear(criatura, 2 * TURNO);
+                case CONFUSAO -> EfeitosNoTick.tontear(criatura, 2 * Turno.TICKS);
             }
         }
     }
