@@ -22,6 +22,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
@@ -185,7 +187,8 @@ public class NivelDoItem {
     // Igual ao Shattered, a armadura amaldiçoada (que já se sabe que é) gruda no corpo.
     // Usa a "maldição do ligamento" do Minecraft, escondida (sem brilho nem nome na dica).
     private static void prenderSeAmaldicoada(ServerPlayer jogador, ItemStack pilha) {
-        if (!amaldicoado(pilha) || !maldicaoConhecida(pilha) || pilha.has(DataComponents.ENCHANTMENTS)) {
+        // (todo item já vem com a lista de encantamentos vazia: o que importa é se já está grudada)
+        if (!amaldicoado(pilha) || !maldicaoConhecida(pilha) || grudada(pilha)) {
             return;
         }
         Holder<Enchantment> ligamento = jogador.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.BINDING_CURSE);
@@ -196,8 +199,13 @@ public class NivelDoItem {
         jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.armadura_grudou").withStyle(ChatFormatting.DARK_PURPLE), false);
     }
 
+    public static boolean grudada(ItemStack pilha) {
+        return EnchantmentHelper.has(pilha, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE);
+    }
+
+    // Volta a lista de encantamentos pra vazia, igual à de qualquer item
     private static void soltar(ItemStack pilha) {
-        pilha.remove(DataComponents.ENCHANTMENTS);
+        pilha.set(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         pilha.remove(DataComponents.ENCHANTMENT_GLINT_OVERRIDE);
     }
 
