@@ -189,7 +189,7 @@ public class DadosDoHeroi {
         estado.putUUID(chave, alvo);
     }
 
-    // Efeito com tempo: fica ativo por "ticks" a partir de agora (20 ticks = 1 turno)
+    // Efeito com tempo: fica ativo por "ticks" a partir de agora (40 ticks = 1 turno)
     public void ativarPor(String chave, long agora, int ticks) {
         estado.putLong(chave, agora + ticks);
     }
