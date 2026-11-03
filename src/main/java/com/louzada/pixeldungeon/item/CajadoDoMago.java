@@ -24,10 +24,9 @@ import net.minecraft.world.level.Level;
 //   - a varinha de míssil mágico tem 3 cargas, e o cajado dá +1 (4 no total)
 //   - as cargas voltam sozinhas com o tempo: quanto mais vazio, mais rápido (de ~33 a ~45 turnos por carga)
 //   - lançar gasta 1 turno (1 segundo)
+//   - cada nível (pergaminho de melhoria) dá +1 carga (até 10) e +1/+2 no dano do míssil
 public class CajadoDoMago extends ArmaDoShattered {
-    public static final int CARGAS_MAXIMAS = 4;
-    // Nível da varinha (pergaminhos de melhoria vão aumentar depois)
-    private static final int NIVEL = 0;
+    public static final int CARGAS_INICIAIS = 4;
     private static final int COR_DA_BARRA = 0xB07CFF;
 
     public CajadoDoMago(Properties propriedades) {
@@ -41,12 +40,21 @@ public class CajadoDoMago extends ArmaDoShattered {
         return Math.round((10 + 40 * Math.pow(0.875, faltando)) * 20);
     }
 
+    public static int cargasMaximas(ItemStack pilha) {
+        return Math.min(10, CARGAS_INICIAIS + NivelDoItem.nivel(pilha));
+    }
+
     public static int cargas(ItemStack pilha) {
-        return Cargas.cargas(pilha, CARGAS_MAXIMAS);
+        return Cargas.cargas(pilha, cargasMaximas(pilha));
     }
 
     private static void recarregar(ItemStack pilha, long agora) {
-        Cargas.recarregar(pilha, agora, CARGAS_MAXIMAS, CajadoDoMago::ticksParaCarregar);
+        Cargas.recarregar(pilha, agora, cargasMaximas(pilha), CajadoDoMago::ticksParaCarregar);
+    }
+
+    // Pergaminho de recarga: enche tudo na hora
+    public static void encher(ItemStack pilha) {
+        Cargas.somar(pilha, cargasMaximas(pilha), cargasMaximas(pilha));
     }
 
     // Uma vez por segundo, no servidor, vê se encheu alguma carga
@@ -79,12 +87,12 @@ public class CajadoDoMago extends ArmaDoShattered {
             Talentos.aoUsarVarinha(heroi, cargas);
             Furtividade.revelar(heroi);
         }
-        MisselMagico missil = new MisselMagico(mundo, jogador, NIVEL);
+        MisselMagico missil = new MisselMagico(mundo, jogador, NivelDoItem.nivel(pilha));
         missil.shootFromRotation(jogador, jogador.getXRot(), jogador.getYRot(), 0.0F, 2.0F, 0.0F);
         mundo.addFreshEntity(missil);
         mundo.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS, 0.8F, 1.4F);
 
-        Cargas.gastar(pilha, agora, CARGAS_MAXIMAS, 1);
+        Cargas.gastar(pilha, agora, cargasMaximas(pilha), 1);
         // Lançar gasta um turno
         jogador.getCooldowns().addCooldown(this, 20);
         return InteractionResultHolder.success(pilha);
@@ -100,7 +108,7 @@ public class CajadoDoMago extends ArmaDoShattered {
 
     @Override
     public int getBarWidth(ItemStack pilha) {
-        return Cargas.larguraDaBarra(pilha, CARGAS_MAXIMAS);
+        return Cargas.larguraDaBarra(pilha, cargasMaximas(pilha));
     }
 
     @Override
@@ -116,8 +124,9 @@ public class CajadoDoMago extends ArmaDoShattered {
 
     @Override
     public void appendHoverText(ItemStack pilha, TooltipContext contexto, List<Component> linhas, TooltipFlag opcoes) {
-        linhas.add(Component.translatable("dica.pixeldungeon.missel_magico", 2 + NIVEL, 8 + 2 * NIVEL).withStyle(ChatFormatting.LIGHT_PURPLE));
-        linhas.add(Component.translatable("dica.pixeldungeon.cargas", cargas(pilha), CARGAS_MAXIMAS).withStyle(ChatFormatting.LIGHT_PURPLE));
+        int nivel = NivelDoItem.nivel(pilha);
+        linhas.add(Component.translatable("dica.pixeldungeon.missel_magico", 2 + nivel, 8 + 2 * nivel).withStyle(ChatFormatting.LIGHT_PURPLE));
+        linhas.add(Component.translatable("dica.pixeldungeon.cargas", cargas(pilha), cargasMaximas(pilha)).withStyle(ChatFormatting.LIGHT_PURPLE));
         super.appendHoverText(pilha, contexto, linhas, opcoes);
     }
 }

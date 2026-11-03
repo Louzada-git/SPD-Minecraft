@@ -18,19 +18,26 @@ public class Textos {
             texto = String.format(texto, numeros);
         }
         texto = texto.replace("_", "");
-        StringBuilder linha = new StringBuilder();
-        for (String palavra : texto.split(" ")) {
-            if (linha.length() > 0 && linha.length() + 1 + palavra.length() > LARGURA_DA_LINHA) {
-                linhas.add(Component.literal(linha.toString()).withStyle(cor));
-                linha.setLength(0);
+        // Cada parágrafo (separado por \n) é quebrado sozinho
+        for (String paragrafo : texto.split("\n")) {
+            if (paragrafo.isBlank()) {
+                linhas.add(Component.empty());
+                continue;
+            }
+            StringBuilder linha = new StringBuilder();
+            for (String palavra : paragrafo.split(" ")) {
+                if (linha.length() > 0 && linha.length() + 1 + palavra.length() > LARGURA_DA_LINHA) {
+                    linhas.add(Component.literal(linha.toString()).withStyle(cor));
+                    linha.setLength(0);
+                }
+                if (linha.length() > 0) {
+                    linha.append(' ');
+                }
+                linha.append(palavra);
             }
             if (linha.length() > 0) {
-                linha.append(' ');
+                linhas.add(Component.literal(linha.toString()).withStyle(cor));
             }
-            linha.append(palavra);
-        }
-        if (linha.length() > 0) {
-            linhas.add(Component.literal(linha.toString()).withStyle(cor));
         }
     }
 }

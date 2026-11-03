@@ -41,7 +41,7 @@ public class ArcoEspiritual extends Item implements ArmaComDano {
     }
 
     @Override
-    public int sortearDano(RandomSource sorteio, DadosDoHeroi heroi, boolean surpresa) {
+    public int sortearDano(ItemStack pilha, RandomSource sorteio, DadosDoHeroi heroi, boolean surpresa) {
         int dano = Sorteio.normal(sorteio, danoMinimo(heroi.nivel()), danoMaximo(heroi.nivel()));
         int forcaSobrando = heroi.forca() - FORCA_NECESSARIA;
         if (forcaSobrando > 0) {
@@ -51,7 +51,7 @@ public class ArcoEspiritual extends Item implements ArmaComDano {
     }
 
     @Override
-    public float precisaoCom(DadosDoHeroi heroi) {
+    public float precisaoCom(ItemStack pilha, DadosDoHeroi heroi) {
         int forcaFaltando = FORCA_NECESSARIA - heroi.forca();
         return forcaFaltando > 0 ? (float) (1.0 / Math.pow(1.5, forcaFaltando)) : 1.0F;
     }

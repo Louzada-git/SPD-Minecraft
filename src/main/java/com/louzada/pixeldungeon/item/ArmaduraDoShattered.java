@@ -15,8 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 // Armadura do Shattered: vai no peito e reduz o dano de cada golpe recebido.
-//   defesa: sorteada de 0 até 2 x tier a cada golpe (pano = 0 a 2)
-//   força necessária: 8 + 2 por tier; cada ponto que falta tira 2 de defesa
+//   defesa: sorteada de nível até tier x (2 + nível) a cada golpe (pano +0 = 0 a 2)
+//   força necessária: 8 + 2 por tier, um pouco menos a cada nível; cada ponto que falta tira 2 de defesa
 public class ArmaduraDoShattered extends ArmorItem {
     private int tier;
     private String chaveDaDescricao;
@@ -31,32 +31,41 @@ public class ArmaduraDoShattered extends ArmorItem {
         return tier;
     }
 
-    public int defesaMinima() {
-        return 0;
+    public int defesaMinima(int nivel) {
+        return nivel;
     }
 
-    public int defesaMaxima() {
-        return tier * 2;
+    public int defesaMaxima(int nivel) {
+        return tier * (2 + nivel);
     }
 
-    public int forcaNecessaria() {
-        return 8 + tier * 2;
+    public int forcaNecessaria(int nivel) {
+        return NivelDoItem.forcaNecessaria(tier, nivel);
     }
 
-    public int sortearDefesa(RandomSource sorteio, int forcaDoHeroi) {
-        int defesa = Sorteio.normal(sorteio, defesaMinima(), defesaMaxima());
-        int forcaFaltando = forcaNecessaria() - forcaDoHeroi;
+    public int sortearDefesa(ItemStack pilha, RandomSource sorteio, int forcaDoHeroi) {
+        int nivel = NivelDoItem.nivel(pilha);
+        int defesa = Sorteio.normal(sorteio, defesaMinima(nivel), defesaMaxima(nivel));
+        int forcaFaltando = forcaNecessaria(nivel) - forcaDoHeroi;
         if (forcaFaltando > 0) {
             defesa -= 2 * forcaFaltando;
         }
         return Math.max(0, defesa);
     }
 
+    // "Armadura de pano +1"
+    @Override
+    public Component getName(ItemStack pilha) {
+        int nivel = NivelDoItem.nivel(pilha);
+        return nivel > 0 ? super.getName(pilha).copy().append(" +" + nivel) : super.getName(pilha);
+    }
+
     @Override
     public void appendHoverText(ItemStack pilha, TooltipContext contexto, List<Component> linhas, TooltipFlag opcoes) {
+        int nivel = NivelDoItem.nivel(pilha);
         linhas.add(Component.translatable("dica.pixeldungeon.tier", tier).withStyle(ChatFormatting.GRAY));
-        linhas.add(Component.translatable("dica.pixeldungeon.defesa", defesaMinima(), defesaMaxima()).withStyle(ChatFormatting.GRAY));
-        linhas.add(Component.translatable("dica.pixeldungeon.forca", forcaNecessaria()).withStyle(ChatFormatting.GRAY));
+        linhas.add(Component.translatable("dica.pixeldungeon.defesa", defesaMinima(nivel), defesaMaxima(nivel)).withStyle(ChatFormatting.GRAY));
+        linhas.add(Component.translatable("dica.pixeldungeon.forca", forcaNecessaria(nivel)).withStyle(ChatFormatting.GRAY));
         // Selo quebrado do Guerreiro: escudo de 3 + 2 x tier quando a vida cai pela metade
         if (pilha.getOrDefault(ModComponentes.SELO.get(), false)) {
             linhas.add(Component.translatable("dica.pixeldungeon.selo", 3 + 2 * tier).withStyle(ChatFormatting.GOLD));
