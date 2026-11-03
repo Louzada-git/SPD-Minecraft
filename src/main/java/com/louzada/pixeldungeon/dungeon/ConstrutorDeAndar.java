@@ -196,6 +196,8 @@ public class ConstrutorDeAndar {
                 colocar(qx, qy, pelaX ? 1 : coluna, 1 + linha, pelaX ? coluna : 1, porta.pedaco(eixo, coluna, linha, trancada));
             }
         }
+        // Uma luz fraca do lado da porta (no alto, fora do caminho dela)
+        colocar(qx, qy, pelaX ? 3 : 1, Andares.ALTURA_DO_CORREDOR, pelaX ? 1 : 3, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, LUZ_DOS_CORREDORES));
         // O controle (coluna 0, linha 0) começa a olhar em volta
         nivel.scheduleTick(controleDaPorta(origem, planta, qx, qy), porta, 4);
     }

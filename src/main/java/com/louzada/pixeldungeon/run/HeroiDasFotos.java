@@ -70,8 +70,8 @@ public class HeroiDasFotos {
             if (inimigo == null) {
                 continue;
             }
-            // Em fila de lado, 5 blocos na frente (olhando pro sul)
-            inimigo.moveTo(entrada.getX() + 0.5 + (i - 4) * 1.6, entrada.getY(), entrada.getZ() + 6.5, 180.0F, 0.0F);
+            // Em fila de lado, 4 blocos na frente (olhando pro sul); em volta da escada sempre tem chão livre
+            inimigo.moveTo(entrada.getX() + 0.5 + (i - 4) * 1.25, entrada.getY(), entrada.getZ() + 4.0, 180.0F, 0.0F);
             jogador.serverLevel().addFreshEntity(inimigo);
             inimigo.dormir();
         }
@@ -91,12 +91,13 @@ public class HeroiDasFotos {
                 if (planta.tipo(x, y) != procurado) {
                     continue;
                 }
-                // Um lado aberto, 2 quadradinhos longe da porta
+                // Um lado aberto, 2 quadradinhos longe da porta, sem grama alta no meio
                 int[][] lados = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
                 for (int[] lado : lados) {
                     int qx = x + lado[0] * 2;
                     int qy = y + lado[1] * 2;
-                    if (!planta.passavel(x + lado[0], y + lado[1]) || !planta.passavel(qx, qy)) {
+                    if (!planta.passavel(x + lado[0], y + lado[1]) || !planta.passavel(qx, qy)
+                            || planta.grama(x + lado[0], y + lado[1]) == PlantaDoAndar.GRAMA_ALTA || planta.grama(qx, qy) == PlantaDoAndar.GRAMA_ALTA) {
                         continue;
                     }
                     double px = origem.getX() + qx * t + t / 2.0;
