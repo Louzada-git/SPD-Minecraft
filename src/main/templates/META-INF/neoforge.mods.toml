@@ -19,6 +19,10 @@ O Shattered Pixel Dungeon dentro do Minecraft: o mundo inteiro é a dungeon.
 [[accessTransformers]]
 file="META-INF/accesstransformer.cfg"
 
+# Pequenas mudanças no próprio Minecraft (correr com fome)
+[[mixins]]
+config="pixeldungeon.mixins.json"
+
 [[dependencies.${mod_id}]]
     modId="neoforge"
     type="required"

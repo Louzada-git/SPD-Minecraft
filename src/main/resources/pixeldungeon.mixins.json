@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.louzada.pixeldungeon.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "CorrerComFome"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
