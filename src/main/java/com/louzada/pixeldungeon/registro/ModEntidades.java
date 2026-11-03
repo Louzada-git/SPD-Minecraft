@@ -7,6 +7,7 @@ import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.FlechaEspiritual;
 import com.louzada.pixeldungeon.entidade.GnollExplorador;
 import com.louzada.pixeldungeon.entidade.Goo;
+import com.louzada.pixeldungeon.entidade.GotaDeOrvalho;
 import com.louzada.pixeldungeon.entidade.LuzGuia;
 import com.louzada.pixeldungeon.entidade.MisselMagico;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
@@ -69,6 +70,13 @@ public class ModEntidades {
     public static final DeferredHolder<EntityType<?>, EntityType<FlechaEspiritual>> FLECHA_ESPIRITUAL = ENTIDADES.register("flecha_espiritual",
             () -> EntityType.Builder.<FlechaEspiritual>of(FlechaEspiritual::new, MobCategory.MISC).sized(0.25F, 0.25F)
                     .clientTrackingRange(4).updateInterval(10).build("flecha_espiritual"));
+
+    // ---- Coisas do chão ----
+
+    // Gota de orvalho: cai da grama alta e voa pro odre
+    public static final DeferredHolder<EntityType<?>, EntityType<GotaDeOrvalho>> GOTA_DE_ORVALHO = ENTIDADES.register("gota_de_orvalho",
+            () -> EntityType.Builder.<GotaDeOrvalho>of(GotaDeOrvalho::new, MobCategory.MISC).sized(0.3F, 0.3F)
+                    .clientTrackingRange(8).updateInterval(2).build("gota_de_orvalho"));
 
     // Diz ao Minecraft a vida, velocidade etc. de cada inimigo
     public static void aoCriarAtributos(EntityAttributeCreationEvent evento) {
