@@ -12,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -23,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 //   precisão: 10 no nível 1, +1 por nível
 //   esquiva:   5 no nível 1, +1 por nível
 //   XP pra subir do nível N: 5 + 5 * N
+// (como esses números entram nos golpes fica no HeroiEmCombate)
 // A barra de XP do Minecraft passa a mostrar o nível do Shattered.
 public class RegrasDoHeroi {
     private static final ResourceLocation ID_VIDA_DO_NIVEL = ResourceLocation.fromNamespaceAndPath(PixelDungeon.MODID, "vida_do_nivel");
@@ -46,12 +46,6 @@ public class RegrasDoHeroi {
 
     public static int xpParaSubir(int nivel) {
         return 5 + 5 * nivel;
-    }
-
-    // Regra de acerto do Shattered: sorteia de 0 até a precisão do atacante e de 0 até a esquiva do defensor;
-    // acerta se o sorteio do atacante for maior ou igual
-    public static boolean acertou(RandomSource sorteio, float precisaoDoAtacante, float esquivaDoDefensor) {
-        return sorteio.nextFloat() * precisaoDoAtacante >= sorteio.nextFloat() * esquivaDoDefensor;
     }
 
     // Ajusta a vida máxima do jogador pro nível dele e atualiza a barra de XP
