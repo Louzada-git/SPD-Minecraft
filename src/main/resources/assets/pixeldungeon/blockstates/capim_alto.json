@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "half=lower,trilhado=false": {
+      "model": "pixeldungeon:block/capim_alto_baixo"
+    },
+    "half=lower,trilhado=true": {
+      "model": "pixeldungeon:block/capim_alto_baixo"
+    },
+    "half=upper,trilhado=false": {
+      "model": "pixeldungeon:block/capim_alto_cima"
+    },
+    "half=upper,trilhado=true": {
+      "model": "pixeldungeon:block/capim_alto_cima"
+    }
+  }
+}
