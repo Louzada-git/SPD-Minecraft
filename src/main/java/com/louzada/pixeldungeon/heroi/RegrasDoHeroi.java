@@ -1,8 +1,10 @@
 package com.louzada.pixeldungeon.heroi;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.registro.ModAnexos;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
 import net.minecraft.resources.ResourceLocation;
@@ -91,6 +93,9 @@ public class RegrasDoHeroi {
             jogador.heal(5 * niveisGanhos);
             jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.subiu_de_nivel", dados.nivel()), false);
             jogador.level().playSound(null, jogador.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1.0F, 1.0F);
+            // Brilho subindo em volta do herói
+            Particulas.subindoEmVolta(jogador, ParticleTypes.END_ROD, 24, 0.12);
+            Particulas.subindoEmVolta(jogador, Particulas.poeira(0xFFFF44, 1.0F), 16, 0.0);
         } else {
             mostrarNivel(jogador);
         }
