@@ -5,6 +5,7 @@ import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.Goo;
+import com.louzada.pixeldungeon.entidade.MisselMagico;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 
@@ -27,6 +28,9 @@ public class EventosDaRun {
     private static Goo gooDoTeste = null;
     private static int vidaDoGooNoTeste = 0;
     private static int ticksParaOTesteDoGoo = 0;
+    // Teste do míssil mágico: o rato do teste de combate leva um míssil
+    private static RatoMarsupial ratoDoMissil = null;
+    private static float vidaDoRatoAntesDoMissil = 0;
 
     // Servidor ligou (também acontece no single player, ao abrir o mundo)
     public static void aoIniciarServidor(ServerStartedEvent evento) {
@@ -78,6 +82,15 @@ public class EventosDaRun {
         int enxames = mundo.getEntitiesOfClass(EnxameDeMoscas.class, enxame.getBoundingBox().inflate(4)).size();
         PixelDungeon.LOGGER.info("Teste do enxame: {} enxames depois do golpe", enxames);
 
+        // Míssil mágico lançado pelo outro rato, voando reto até o rato do teste
+        mundo.setChunkForced(alvo.chunkPosition().x, alvo.chunkPosition().z, true);
+        MisselMagico missil = new MisselMagico(mundo, atacante, 0);
+        missil.setPos(alvo.getX() - 2.5, alvo.getY() + 0.3, alvo.getZ());
+        missil.shoot(1.0, 0.0, 0.0, 1.0F, 0.0F);
+        mundo.addFreshEntity(missil);
+        ratoDoMissil = alvo;
+        vidaDoRatoAntesDoMissil = alvo.getHealth();
+
         // O Goo tem que estar dormindo no ninho (na água) e se curar lá
         BlockPos origem = Andares.origemDoAndar(DadosDaRun.pegar(servidor).numeroDaRun(), 5);
         List<Goo> goos = mundo.getEntitiesOfClass(Goo.class, PopulacaoDoAndar.caixaDoAndar(origem));
@@ -97,6 +110,13 @@ public class EventosDaRun {
     public static void aoTickDoServidor(ServerTickEvent.Post evento) {
         if (gooDoTeste == null || --ticksParaOTesteDoGoo > 0) {
             return;
+        }
+        if (ratoDoMissil != null) {
+            boolean acertou = !ratoDoMissil.isAlive() || ratoDoMissil.getHealth() < vidaDoRatoAntesDoMissil;
+            PixelDungeon.LOGGER.info("Teste do míssil mágico: acertou o rato = {} (vida {} -> {})", acertou, vidaDoRatoAntesDoMissil,
+                    ratoDoMissil.isAlive() ? ratoDoMissil.getHealth() : 0);
+            evento.getServer().overworld().setChunkForced(ratoDoMissil.chunkPosition().x, ratoDoMissil.chunkPosition().z, false);
+            ratoDoMissil = null;
         }
         PixelDungeon.LOGGER.info("Teste do Goo: tinha {} de vida, depois de 5 s na água ficou com {} (na água: {})",
                 vidaDoGooNoTeste, Math.round(gooDoTeste.getHealth()), gooDoTeste.isInWater());
