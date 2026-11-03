@@ -4,17 +4,20 @@ import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.item.ArcoEspiritual;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
+import com.louzada.pixeldungeon.item.Baga;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
 import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
 import com.louzada.pixeldungeon.item.ItemComDescricao;
 import com.louzada.pixeldungeon.item.ItemAnkh;
+import com.louzada.pixeldungeon.item.Odre;
 import com.louzada.pixeldungeon.item.RacaoDeSuprimentos;
 import com.louzada.pixeldungeon.item.TomoSagrado;
 
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -50,6 +53,11 @@ public class ModItens {
     // A flecha que o arco solta (não dá pra pegar; só serve pra desenhar a flecha voando)
     public static final DeferredItem<Item> FLECHA_ESPIRITUAL = ITENS.registerSimpleItem("flecha_espiritual");
 
+    // Odre: todo herói começa com um; guarda as gotas de orvalho
+    public static final DeferredItem<Odre> ODRE = ITENS.registerItem("odre", Odre::new);
+    // A gota de orvalho voando (não dá pra pegar; ela vai sozinha pro odre)
+    public static final DeferredItem<Item> GOTA_DE_ORVALHO = ITENS.registerSimpleItem("gota_de_orvalho");
+
     // ---- Armaduras ----
 
     // Armadura de pano: defesa 0-2, todas as classes começam com ela
@@ -64,6 +72,9 @@ public class ModItens {
 
     // Carne misteriosa: cai de caranguejos e ratos albinos (comer é arriscado)
     public static final DeferredItem<ItemCarneMisteriosa> CARNE_MISTERIOSA = ITENS.registerItem("carne_misteriosa", ItemCarneMisteriosa::new);
+
+    // Baga: cai da grama alta pra Caçadora com o talento recompensa da natureza
+    public static final DeferredItem<Baga> BAGA = ITENS.registerItem("baga", Baga::new);
 
     // Ração de suprimentos: aparece em baús pro Ladino com o talento rações guardadas
     public static final DeferredItem<RacaoDeSuprimentos> RACAO_DE_SUPRIMENTOS = ITENS.registerItem("racao_de_suprimentos", RacaoDeSuprimentos::new);
@@ -107,6 +118,9 @@ public class ModItens {
     public static final DeferredItem<BlockItem> LANTERNA_ESGOTO = ITENS.registerSimpleBlockItem("lanterna_esgoto", ModBlocos.LANTERNA_ESGOTO);
     public static final DeferredItem<BlockItem> CORRENTE_ESGOTO = ITENS.registerSimpleBlockItem("corrente_esgoto", ModBlocos.CORRENTE_ESGOTO);
     public static final DeferredItem<BlockItem> MUSGO_ESGOTO = ITENS.registerSimpleBlockItem("musgo_esgoto", ModBlocos.MUSGO_ESGOTO);
+    public static final DeferredItem<DoubleHighBlockItem> CAPIM_ALTO = ITENS.registerItem("capim_alto",
+            propriedades -> new DoubleHighBlockItem(ModBlocos.CAPIM_ALTO.get(), propriedades));
+    public static final DeferredItem<BlockItem> GRAMA_BAIXA = ITENS.registerSimpleBlockItem("grama_baixa", ModBlocos.GRAMA_BAIXA);
     public static final DeferredItem<BlockItem> ESCADA_SUBIDA = ITENS.registerSimpleBlockItem("escada_subida", ModBlocos.ESCADA_SUBIDA);
     public static final DeferredItem<BlockItem> ESCADA_DESCIDA = ITENS.registerSimpleBlockItem("escada_descida", ModBlocos.ESCADA_DESCIDA);
 
@@ -119,7 +133,7 @@ public class ModItens {
     // Usado pela aba do criativo para mostrar todos os itens do mod
     public static void colocarTodos(CreativeModeTab.Output saida) {
         for (var item : ITENS.getEntries()) {
-            if (item.get() != FLECHA_ESPIRITUAL.get()) {
+            if (item.get() != FLECHA_ESPIRITUAL.get() && item.get() != GOTA_DE_ORVALHO.get()) {
                 saida.accept(item.get());
             }
         }

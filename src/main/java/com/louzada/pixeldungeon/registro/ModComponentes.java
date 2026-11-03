@@ -33,6 +33,10 @@ public class ModComponentes {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> EXPERIENCIA = COMPONENTES.registerComponentType(
             "experiencia", construtor -> construtor.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 
+    // Gotas de orvalho guardadas no odre (de 0 a 20)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> VOLUME = COMPONENTES.registerComponentType("volume",
+            construtor -> construtor.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
     // Selo quebrado do Guerreiro afixado na armadura
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> SELO = COMPONENTES.registerComponentType("selo",
             construtor -> construtor.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
