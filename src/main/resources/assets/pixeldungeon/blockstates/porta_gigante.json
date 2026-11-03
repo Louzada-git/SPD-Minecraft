@@ -1,0 +1,1204 @@
+{
+ "multipart": [
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "0",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c0_l0",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "0",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c0_l1",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "0",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c0_l2",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "0",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c0_l3",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "0",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c0_l4",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "0",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c0_l5",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "1",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c1_l0",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "1",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c1_l1",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "1",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c1_l2",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "1",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c1_l3",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "1",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c1_l4",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "1",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c1_l5",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "2",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c2_l0",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "2",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c2_l1",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "2",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c2_l2",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "2",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c2_l3",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "2",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c2_l4",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "2",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c2_l5",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "3",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c3_l0",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "3",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c3_l1",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "3",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c3_l2",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "3",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c3_l3",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "3",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c3_l4",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "3",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c3_l5",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "0",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c0_l0",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "0",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c0_l1",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "0",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c0_l2",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "0",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c0_l3",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "0",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c0_l4",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "0",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c0_l5",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "1",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c1_l0",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "1",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c1_l1",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "1",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c1_l2",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "1",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c1_l3",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "1",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c1_l4",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "1",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c1_l5",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "2",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c2_l0",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "2",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c2_l1",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "2",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c2_l2",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "2",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c2_l3",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "2",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c2_l4",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "2",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c2_l5",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "3",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c3_l0",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "3",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c3_l1",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "3",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c3_l2",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "3",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c3_l3",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "3",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c3_l4",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "x",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "3",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c3_l5",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "0",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c0_l0"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "0",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c0_l1"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "0",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c0_l2"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "0",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c0_l3"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "0",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c0_l4"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "0",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c0_l5"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "1",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c1_l0"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "1",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c1_l1"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "1",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c1_l2"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "1",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c1_l3"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "1",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c1_l4"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "1",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c1_l5"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "2",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c2_l0"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "2",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c2_l1"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "2",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c2_l2"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "2",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c2_l3"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "2",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c2_l4"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "2",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c2_l5"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "3",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c3_l0"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "3",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c3_l1"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "3",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c3_l2"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "3",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c3_l3"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "3",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c3_l4"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "false",
+    "coluna": "3",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/comum_c3_l5"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "0",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c0_l0"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "0",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c0_l1"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "0",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c0_l2"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "0",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c0_l3"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "0",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c0_l4"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "0",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c0_l5"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "1",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c1_l0"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "1",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c1_l1"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "1",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c1_l2"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "1",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c1_l3"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "1",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c1_l4"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "1",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c1_l5"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "2",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c2_l0"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "2",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c2_l1"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "2",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c2_l2"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "2",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c2_l3"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "2",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c2_l4"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "2",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c2_l5"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "3",
+    "linha": "0"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c3_l0"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "3",
+    "linha": "1"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c3_l1"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "3",
+    "linha": "2"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c3_l2"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "3",
+    "linha": "3"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c3_l3"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "3",
+    "linha": "4"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c3_l4"
+   }
+  },
+  {
+   "when": {
+    "axis": "z",
+    "open": "false",
+    "trancada": "true",
+    "coluna": "3",
+    "linha": "5"
+   },
+   "apply": {
+    "model": "pixeldungeon:block/porta_gigante/trancada_c3_l5"
+   }
+  }
+ ]
+}

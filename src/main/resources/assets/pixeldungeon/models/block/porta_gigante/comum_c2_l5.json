@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "pixeldungeon:block/porta_gigante/comum_c2_l5",
+    "south": "pixeldungeon:block/porta_gigante/comum_c2_l5",
+    "north": "pixeldungeon:block/porta_gigante/comum_c1_l5",
+    "east": "pixeldungeon:block/porta_gigante/lado",
+    "west": "pixeldungeon:block/porta_gigante/lado",
+    "up": "pixeldungeon:block/porta_gigante/lado",
+    "down": "pixeldungeon:block/porta_gigante/lado"
+  }
+}
