@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon;
 import org.slf4j.Logger;
 
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
+import com.louzada.pixeldungeon.dungeon.Baus;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.heroi.Escudos;
 import com.louzada.pixeldungeon.heroi.EventosDeCombate;
@@ -69,5 +70,9 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(PopulacaoDoAndar::aoTickDoServidor);
         // Ouro: encostou na pilha, as moedas vão pra bolsa
         NeoForge.EVENT_BUS.addListener(Ouro::aoEncostar);
+        // Baús: ninguém quebra, e os mímicos mordem quem mexe neles
+        NeoForge.EVENT_BUS.addListener(Baus::aoClicarComDireito);
+        NeoForge.EVENT_BUS.addListener(Baus::aoClicarComEsquerdo);
+        NeoForge.EVENT_BUS.addListener(Baus::aoQuebrar);
     }
 }
