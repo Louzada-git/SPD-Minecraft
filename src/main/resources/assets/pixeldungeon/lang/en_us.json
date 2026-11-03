@@ -567,5 +567,13 @@
   "dica.pixeldungeon.defesa_tipica": "Typical defense: %s-%s",
   "dica.pixeldungeon.armadura_nao_identificada": "Unidentified: its level is unknown.",
   "dica.pixeldungeon.armadura_amaldicoada": "Cursed! Once worn, it won't come off.",
-  "dica.pixeldungeon.armadura_sem_maldicao": "This armor is free of malevolent magic."
+  "dica.pixeldungeon.armadura_sem_maldicao": "This armor is free of malevolent magic.",
+  "block.pixeldungeon.porta_gigante": "Door",
+  "block.pixeldungeon.barril_esgoto": "Storage Barrel",
+  "block.pixeldungeon.estante_esgoto": "Bookshelf",
+  "item.pixeldungeon.chave_de_ferro": "Iron key",
+  "item.pixeldungeon.chave_de_ferro.descricao": "The notches on this ancient iron key are well worn; its leather lanyard is battered by age. What door might it open?",
+  "dica.pixeldungeon.chave_do_andar": "Opens a locked door on depth %s",
+  "mensagem.pixeldungeon.porta_trancada": "This door is locked, you need a matching key to unlock it.",
+  "mensagem.pixeldungeon.porta_destrancada": "You unlocked the door with the iron key."
 }

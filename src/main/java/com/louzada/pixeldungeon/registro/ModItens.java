@@ -12,6 +12,7 @@ import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.Baga;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
+import com.louzada.pixeldungeon.item.ChaveDeFerro;
 import com.louzada.pixeldungeon.item.CorDePocao;
 import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
 import com.louzada.pixeldungeon.item.ItemComDescricao;
@@ -138,6 +139,9 @@ public class ModItens {
     // Traz de volta um aliado que morreu
     public static final DeferredItem<ItemAnkh> ANKH = ITENS.registerItem("ankh", ItemAnkh::new);
 
+    // Chave de ferro: abre uma porta trancada do andar dela
+    public static final DeferredItem<ChaveDeFerro> CHAVE_DE_FERRO = ITENS.registerItem("chave_de_ferro", ChaveDeFerro::new);
+
     // Bolha de gosma: cai do Goo quando ele morre (sozinha não faz nada; vai servir pra alquimia)
     public static final DeferredItem<ItemComDescricao> BOLHA_DE_GOSMA = ITENS.registerItem("bolha_de_gosma",
             propriedades -> new ItemComDescricao(propriedades, "bolha_de_gosma"));
@@ -177,6 +181,8 @@ public class ModItens {
     public static final DeferredItem<DoubleHighBlockItem> CAPIM_ALTO = ITENS.registerItem("capim_alto",
             propriedades -> new DoubleHighBlockItem(ModBlocos.CAPIM_ALTO.get(), propriedades));
     public static final DeferredItem<BlockItem> GRAMA_BAIXA = ITENS.registerSimpleBlockItem("grama_baixa", ModBlocos.GRAMA_BAIXA);
+    public static final DeferredItem<BlockItem> BARRIL_ESGOTO = ITENS.registerSimpleBlockItem("barril_esgoto", ModBlocos.BARRIL_ESGOTO);
+    public static final DeferredItem<BlockItem> ESTANTE_ESGOTO = ITENS.registerSimpleBlockItem("estante_esgoto", ModBlocos.ESTANTE_ESGOTO);
     public static final DeferredItem<BlockItem> ESCADA_SUBIDA = ITENS.registerSimpleBlockItem("escada_subida", ModBlocos.ESCADA_SUBIDA);
     public static final DeferredItem<BlockItem> ESCADA_DESCIDA = ITENS.registerSimpleBlockItem("escada_descida", ModBlocos.ESCADA_DESCIDA);
 

@@ -5,16 +5,22 @@ import java.util.List;
 import java.util.Random;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Premio;
+import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.PremioNoChao;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
+import com.louzada.pixeldungeon.item.ChaveDeFerro;
+import com.louzada.pixeldungeon.item.Equipamento;
 import com.louzada.pixeldungeon.item.Identificacao;
 import com.louzada.pixeldungeon.item.ItemSemente;
+import com.louzada.pixeldungeon.item.Maldicao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.item.TipoDePergaminho;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 import com.louzada.pixeldungeon.item.TipoDePocao;
+import com.louzada.pixeldungeon.registro.ModComponentes;
 import com.louzada.pixeldungeon.registro.ModItens;
 import com.louzada.pixeldungeon.run.DadosDaRun;
 
@@ -35,15 +41,17 @@ import net.minecraft.world.item.ItemStack;
 //   - cada item fica: num baú (4 em 20), dentro de um mímico (1 em 20, só a partir do andar 2) ou largado no chão
 //   - todo andar também tem uma ração largada no chão
 //   - em cada região caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares
+//   - cada porta trancada tem a chave de ferro dela largada numa sala comum
+//   - as salas especiais (arsenal, tesouraria, biblioteca, jardim, cripta) têm os prêmios delas
 //   - andares de chefe não têm nada
 // Onde tem item, a grama alta vira grama baixa (senão ninguém acharia o item), igual ao Shattered.
 // Os itens no chão nunca somem sozinhos.
 public class SaqueDoAndar {
     private static final int T = Andares.TAMANHO_DO_QUADRADINHO;
 
-    // Onde o item fica
+    // Onde o item fica (PLANTADA: a semente vira uma planta no chão)
     public enum Onde {
-        CHAO, BAU, MIMICO
+        CHAO, BAU, MIMICO, PLANTADA
     }
 
     // Um quadradinho com itens
@@ -111,6 +119,17 @@ public class SaqueDoAndar {
             saques.add(new Saque(lugar[0], lugar[1], List.of(item), Onde.CHAO));
         }
 
+        // As chaves de ferro das portas trancadas
+        for (int i = 0; i < planta.chavesDeFerro() && !lugares.isEmpty(); i++) {
+            int[] lugar = lugares.remove(sorteio.nextInt(lugares.size()));
+            saques.add(new Saque(lugar[0], lugar[1], List.of(ChaveDeFerro.criar(run.numeroDaRun(), andar)), Onde.CHAO));
+        }
+
+        // Os prêmios das salas especiais
+        for (PremioNoChao premio : planta.premios()) {
+            saques.add(saqueDoPremio(premio, sorteio, andar, semente));
+        }
+
         for (Saque saque : saques) {
             if (planta.grama(saque.x(), saque.y()) == PlantaDoAndar.GRAMA_ALTA) {
                 planta.definirGrama(saque.x(), saque.y(), PlantaDoAndar.GRAMA);
@@ -119,13 +138,58 @@ public class SaqueDoAndar {
         return saques;
     }
 
+    // O item de verdade de cada prêmio das salas especiais
+    private static Saque saqueDoPremio(PremioNoChao premio, Random sorteio, int andar, long semente) {
+        Onde onde = premio.noBau() ? Onde.BAU : Onde.CHAO;
+        ItemStack item = switch (premio.premio()) {
+            case ARMA -> armaAleatoria(sorteio, andar);
+            case ARMADURA -> armaduraAleatoria(sorteio, andar);
+            case OURO -> Ouro.sortear(sorteio, andar);
+            case OURO_POUCO -> Ouro.pilha(5 + sorteio.nextInt(8));
+            case PERGAMINHO -> pergaminhoAleatorio(sorteio, semente);
+            case PERGAMINHO_DE_IDENTIFICAR_OU_REMOVER ->
+                Identificacao.pergaminho(semente, sorteio.nextBoolean() ? TipoDePergaminho.IDENTIFICACAO : TipoDePergaminho.REMOVER_MALDICAO);
+            case ARMADURA_AMALDICOADA -> armaduraDaCripta(sorteio, andar);
+            case PLANTA_ALEATORIA -> sementeAleatoria(sorteio);
+            case PLANTA_GRAMA_SOLAR -> new ItemStack(ItemSemente.daPlanta(TipoDePlanta.GRAMA_SOLAR));
+        };
+        if (premio.premio() == Premio.PLANTA_ALEATORIA || premio.premio() == Premio.PLANTA_GRAMA_SOLAR) {
+            onde = Onde.PLANTADA;
+        }
+        // Igual ao Shattered: a partir do andar 2, cada baú de ouro da tesouraria tem 1 chance em 5 de ser um mímico
+        if (onde == Onde.BAU && premio.premio() == Premio.OURO && andar > 1 && sorteio.nextInt(5) == 0) {
+            onde = Onde.MIMICO;
+        }
+        return new Saque(premio.x(), premio.y(), List.of(item), onde);
+    }
+
+    // A armadura do túmulo da cripta (igual ao Shattered): de um tier da região seguinte, sempre amaldiçoada
+    // e já se sabe disso. Se ela não tinha maldição, ganha +1 de nível junto com a maldição.
+    private static ItemStack armaduraDaCripta(Random sorteio, int andar) {
+        ItemStack armadura = armaduraAleatoria(sorteio, andar + 5);
+        if (!NivelDoItem.amaldicoado(armadura) && armadura.getItem() instanceof Equipamento equipamento) {
+            NivelDoItem.definirNivel(armadura, NivelDoItem.nivel(armadura) + 1);
+            List<Maldicao> possiveis = Maldicao.doAlvo(equipamento.alvoDasMaldicoes());
+            armadura.set(ModComponentes.MALDICAO.get(), possiveis.get(sorteio.nextInt(possiveis.size())).id());
+        }
+        armadura.remove(ModComponentes.MALDICAO_CONHECIDA.get());
+        return armadura;
+    }
+
     // Coloca os itens no andar já construído
     public static void colocar(ServerLevel mundo, BlockPos origem, int andar, List<Saque> saques) {
         int noChao = 0;
         int baus = 0;
         int mimicos = 0;
         for (Saque saque : saques) {
-            if (saque.onde() == Onde.CHAO) {
+            if (saque.onde() == Onde.PLANTADA) {
+                BlockPos lugar = new BlockPos(origem.getX() + saque.x() * T + 1, origem.getY() + 1, origem.getZ() + saque.y() * T + 1);
+                for (ItemStack item : saque.itens()) {
+                    if (item.getItem() instanceof ItemSemente semente) {
+                        ItemSemente.plantar(mundo, lugar, semente.planta());
+                    }
+                }
+            } else if (saque.onde() == Onde.CHAO) {
                 // Bem no meio do quadradinho
                 for (ItemStack item : saque.itens()) {
                     soltar(mundo, origem.getX() + saque.x() * T + T / 2.0, origem.getY() + 1, origem.getZ() + saque.y() * T + T / 2.0, item);

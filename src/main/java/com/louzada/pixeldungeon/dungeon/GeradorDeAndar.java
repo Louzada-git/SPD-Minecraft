@@ -1,25 +1,25 @@
 package com.louzada.pixeldungeon.dungeon;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
+import com.louzada.pixeldungeon.dungeon.geracao.ComodoEspecial;
+import com.louzada.pixeldungeon.dungeon.geracao.GeracaoDoShattered;
 
-// Gera a planta de um andar: salas ligadas por corredores, com entrada, saída e poças de água.
-// A mesma semente + o mesmo andar sempre geram a mesma planta.
+// Gera a planta de um andar. Os andares comuns são gerados igual ao Shattered (ver o pacote "geracao");
+// o andar do chefe é a arena do Goo. A mesma semente + o mesmo andar sempre geram a mesma planta.
 public class GeradorDeAndar {
 
     public static PlantaDoAndar gerar(long semente, int andar) {
-        Random sorteio = new Random(semente * 1000003L + andar);
-
         if (Andares.ehAndarDeChefe(andar)) {
             return gerarArenaDoChefe();
         }
-
-        // Às vezes o sorteio cria poucas salas; aí tenta de novo
+        Random sorteio = new Random(semente * 1000003L + andar);
+        List<ComodoEspecial.Tipo> especiais = ComodoEspecial.doAndar(semente, andar);
+        // Às vezes o andar sai grande demais; aí gera de novo
         for (int tentativa = 0; tentativa < 50; tentativa++) {
-            PlantaDoAndar planta = tentarGerar(sorteio);
+            PlantaDoAndar planta = GeracaoDoShattered.gerar(sorteio, andar, especiais, Andares.TAMANHO_DA_PLANTA);
             if (planta != null) {
                 return planta;
             }
@@ -27,75 +27,10 @@ public class GeradorDeAndar {
         return gerarArenaDoChefe();
     }
 
-    private static PlantaDoAndar tentarGerar(Random sorteio) {
-        int tamanho = Andares.TAMANHO_DA_PLANTA;
-        PlantaDoAndar planta = new PlantaDoAndar(tamanho, tamanho);
-
-        // 1. Espalha salas sem deixar uma encostar na outra
-        List<Sala> salas = new ArrayList<>();
-        int quantidadeDesejada = 8 + sorteio.nextInt(5);
-        for (int i = 0; i < 400 && salas.size() < quantidadeDesejada; i++) {
-            int largura = 3 + sorteio.nextInt(5);
-            int altura = 3 + sorteio.nextInt(5);
-            int x = 1 + sorteio.nextInt(tamanho - largura - 1);
-            int y = 1 + sorteio.nextInt(tamanho - altura - 1);
-            Sala nova = new Sala(x, y, largura, altura);
-
-            boolean encosta = false;
-            for (Sala sala : salas) {
-                if (nova.encostaEm(sala, 1)) {
-                    encosta = true;
-                    break;
-                }
-            }
-            if (!encosta) {
-                salas.add(nova);
-            }
-        }
-        if (salas.size() < 5) {
-            return null;
-        }
-
-        for (Sala sala : salas) {
-            planta.adicionarSala(sala);
-        }
-
-        // 2. Liga todas as salas (árvore geradora mínima) e depois adiciona alguns caminhos extras
-        //    para formar voltas, como no Shattered
-        ligarSalas(planta, salas, sorteio);
-
-        // 3. Entrada numa sala qualquer e saída na sala mais longe dela
-        Sala salaDaEntrada = salas.get(sorteio.nextInt(salas.size()));
-        Sala salaDaSaida = salaDaEntrada;
-        int maiorDistancia = -1;
-        for (Sala sala : salas) {
-            int distancia = distancia(sala, salaDaEntrada);
-            if (distancia > maiorDistancia) {
-                maiorDistancia = distancia;
-                salaDaSaida = sala;
-            }
-        }
-        planta.definirEntrada(salaDaEntrada.centroX(), salaDaEntrada.centroY());
-        planta.definirSaida(salaDaSaida.centroX(), salaDaSaida.centroY());
-
-        // 4. Poças de água (o esgoto do Shattered é cheio delas)
-        int pocas = 2 + sorteio.nextInt(3);
-        for (int i = 0; i < pocas; i++) {
-            Sala sala = salas.get(sorteio.nextInt(salas.size()));
-            espalharAgua(planta, sala.centroX(), sala.centroY(), 6 + sorteio.nextInt(9), sorteio);
-        }
-
-        // 5. Grama (igual ao esgoto do Shattered: 20% de chance, em manchas)
-        espalharGrama(planta, sorteio, 0.20F, 4);
-
-        return planta;
-    }
-
     // O andar 5 do esgoto: a arena do Goo (a primeira sala da planta), uma salinha de entrada embaixo
     // e a sala da saída do lado. A saída fica trancada até o Goo morrer.
     private static PlantaDoAndar gerarArenaDoChefe() {
-        int tamanho = Andares.TAMANHO_DA_PLANTA;
-        PlantaDoAndar planta = new PlantaDoAndar(tamanho, tamanho);
+        PlantaDoAndar planta = new PlantaDoAndar(32, 32);
 
         Sala arena = new Sala(8, 4, 16, 16);
         Sala entrada = new Sala(13, 23, 6, 5);
@@ -164,139 +99,6 @@ public class GeradorDeAndar {
     private static void abrir(PlantaDoAndar planta, int x, int y) {
         if (planta.tipo(x, y) == PlantaDoAndar.PAREDE) {
             planta.definir(x, y, PlantaDoAndar.CHAO);
-        }
-    }
-
-    private static void ligarSalas(PlantaDoAndar planta, List<Sala> salas, Random sorteio) {
-        int quantidade = salas.size();
-        boolean[] conectada = new boolean[quantidade];
-        boolean[][] ligadas = new boolean[quantidade][quantidade];
-        conectada[0] = true;
-
-        // Algoritmo de Prim: sempre liga a sala desconectada mais perto de alguma sala já conectada
-        for (int passo = 1; passo < quantidade; passo++) {
-            int melhorA = -1;
-            int melhorB = -1;
-            int melhorDistancia = Integer.MAX_VALUE;
-            for (int a = 0; a < quantidade; a++) {
-                if (!conectada[a]) {
-                    continue;
-                }
-                for (int b = 0; b < quantidade; b++) {
-                    if (conectada[b]) {
-                        continue;
-                    }
-                    int distancia = distancia(salas.get(a), salas.get(b));
-                    if (distancia < melhorDistancia) {
-                        melhorDistancia = distancia;
-                        melhorA = a;
-                        melhorB = b;
-                    }
-                }
-            }
-            conectada[melhorB] = true;
-            ligadas[melhorA][melhorB] = true;
-            ligadas[melhorB][melhorA] = true;
-            ligar(planta, salas.get(melhorA), salas.get(melhorB), sorteio);
-        }
-
-        // Caminhos extras: cada sala tem 30% de chance de ganhar uma ligação com a vizinha mais próxima
-        for (int a = 0; a < quantidade; a++) {
-            if (sorteio.nextInt(100) >= 30) {
-                continue;
-            }
-            int maisPerto = -1;
-            int menorDistancia = Integer.MAX_VALUE;
-            for (int b = 0; b < quantidade; b++) {
-                if (b == a || ligadas[a][b]) {
-                    continue;
-                }
-                int distancia = distancia(salas.get(a), salas.get(b));
-                if (distancia < menorDistancia) {
-                    menorDistancia = distancia;
-                    maisPerto = b;
-                }
-            }
-            if (maisPerto >= 0) {
-                ligadas[a][maisPerto] = true;
-                ligadas[maisPerto][a] = true;
-                ligar(planta, salas.get(a), salas.get(maisPerto), sorteio);
-            }
-        }
-    }
-
-    private static void ligar(PlantaDoAndar planta, Sala a, Sala b, Random sorteio) {
-        cavarCorredor(planta, a.centroX(), a.centroY(), b.centroX(), b.centroY(), sorteio.nextBoolean());
-    }
-
-    private static int distancia(Sala a, Sala b) {
-        return Math.abs(a.centroX() - b.centroX()) + Math.abs(a.centroY() - b.centroY());
-    }
-
-    // Grama igual ao Shattered: sorteia manchas na planta inteira (cada quadradinho olha os 8 vizinhos e fica
-    // igual à maioria, várias vezes) e põe grama no chão das salas que cair numa mancha.
-    // Quanto mais vizinhos com grama, maior a chance de ser grama alta (de 1 em 12 até 9 em 12).
-    private static void espalharGrama(PlantaDoAndar planta, Random sorteio, float preenchimento, int suavizar) {
-        int largura = planta.largura();
-        int altura = planta.altura();
-        boolean[] mancha = new boolean[largura * altura];
-        float chance = preenchimento + (0.5F - preenchimento) * 0.5F;
-        for (int i = 0; i < mancha.length; i++) {
-            mancha[i] = sorteio.nextFloat() < chance;
-        }
-        for (int vez = 0; vez < suavizar; vez++) {
-            boolean[] nova = new boolean[mancha.length];
-            for (int y = 0; y < altura; y++) {
-                for (int x = 0; x < largura; x++) {
-                    int comGrama = 0;
-                    int vizinhos = 0;
-                    for (int dy = -1; dy <= 1; dy++) {
-                        for (int dx = -1; dx <= 1; dx++) {
-                            if (planta.dentro(x + dx, y + dy)) {
-                                vizinhos++;
-                                if (mancha[(y + dy) * largura + x + dx]) {
-                                    comGrama++;
-                                }
-                            }
-                        }
-                    }
-                    nova[y * largura + x] = 2 * comGrama >= vizinhos;
-                }
-            }
-            mancha = nova;
-        }
-        for (int y = 0; y < altura; y++) {
-            for (int x = 0; x < largura; x++) {
-                if (!mancha[y * largura + x] || planta.tipo(x, y) != PlantaDoAndar.CHAO || planta.ehCorredor(x, y)) {
-                    continue;
-                }
-                int comGrama = 1;
-                for (int dy = -1; dy <= 1; dy++) {
-                    for (int dx = -1; dx <= 1; dx++) {
-                        if ((dx != 0 || dy != 0) && planta.dentro(x + dx, y + dy) && mancha[(y + dy) * largura + x + dx]) {
-                            comGrama++;
-                        }
-                    }
-                }
-                planta.definirGrama(x, y, sorteio.nextFloat() < comGrama / 12.0F ? PlantaDoAndar.GRAMA_ALTA : PlantaDoAndar.GRAMA);
-            }
-        }
-    }
-
-    // Caminha aleatoriamente a partir de um ponto, transformando chão em água
-    private static void espalharAgua(PlantaDoAndar planta, int x, int y, int passos, Random sorteio) {
-        for (int i = 0; i < passos; i++) {
-            if (planta.tipo(x, y) == PlantaDoAndar.CHAO) {
-                planta.definir(x, y, PlantaDoAndar.AGUA);
-            }
-            int direcao = sorteio.nextInt(4);
-            int novoX = x + (direcao == 0 ? 1 : direcao == 1 ? -1 : 0);
-            int novoY = y + (direcao == 2 ? 1 : direcao == 3 ? -1 : 0);
-            // Só anda por lugares abertos, pra água nunca entrar na parede
-            if (planta.aberto(novoX, novoY)) {
-                x = novoX;
-                y = novoY;
-            }
         }
     }
 }

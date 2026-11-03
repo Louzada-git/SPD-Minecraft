@@ -11,6 +11,7 @@ import com.louzada.pixeldungeon.bloco.BlocoEscadaSubida;
 import com.louzada.pixeldungeon.bloco.BlocoParedeEsgoto;
 import com.louzada.pixeldungeon.bloco.GramaBaixa;
 import com.louzada.pixeldungeon.bloco.PlantaDoShattered;
+import com.louzada.pixeldungeon.bloco.PortaGigante;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 
 import net.minecraft.world.level.block.Block;
@@ -44,6 +45,15 @@ public class ModBlocos {
     // Degraus de cabeça pra baixo no alto das paredes: fazem a cornija das salas e os arcos dos túneis
     public static final DeferredBlock<StairBlock> CORNIJA_ESGOTO = BLOCOS.registerBlock("cornija_esgoto",
             propriedades -> new StairBlock(Blocks.STONE_BRICKS.defaultBlockState(), propriedades), inquebravel());
+
+    // Barris de armazenamento (o enfeite do esgoto do Shattered)
+    public static final DeferredBlock<Block> BARRIL_ESGOTO = BLOCOS.registerSimpleBlock("barril_esgoto", inquebravel().sound(SoundType.WOOD));
+    // Estantes de livros (a biblioteca)
+    public static final DeferredBlock<Block> ESTANTE_ESGOTO = BLOCOS.registerSimpleBlock("estante_esgoto", inquebravel().sound(SoundType.WOOD));
+    // As portas gigantes (4 de largura, 6 de altura), comuns e trancadas
+    public static final DeferredBlock<PortaGigante> PORTA_GIGANTE = BLOCOS.registerBlock("porta_gigante", PortaGigante::new,
+            inquebravel().sound(SoundType.WOOD).noOcclusion().isSuffocating((estado, mundo, posicao) -> false)
+                    .isViewBlocking((estado, mundo, posicao) -> false));
 
     // ---- Decoração ----
 

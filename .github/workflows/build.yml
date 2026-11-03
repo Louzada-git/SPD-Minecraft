@@ -91,7 +91,13 @@ jobs:
           if ! grep -qE "Teste do Goo: tinha 80 de vida, depois de 5 s na água ficou com 8[1-9]" servidor.log; then echo "O Goo não se curou na água"; exit 1; fi
           echo "----- saque dos andares -----"
           grep -E "Andar [0-9]+: [0-9]+ itens" servidor.log || true
-          if ! grep -qE "Andar 1: [4-8] itens" servidor.log; then echo "Os itens do andar 1 não apareceram"; exit 1; fi
+          if ! grep -qE "Andar 1: ([4-9]|[1-9][0-9]) itens" servidor.log; then echo "Os itens do andar 1 não apareceram"; exit 1; fi
+          echo "----- salas e portas -----"
+          grep -E "Andar [0-9]+: [0-9]+x[0-9]+ quadradinhos" servidor.log || true
+          if ! grep -qE "Andar 1: [0-9]+x[0-9]+ quadradinhos, [0-9]+ salas, [1-9][0-9]* portas, [1-9] trancadas, [1-9] chaves de ferro" servidor.log; then echo "O andar 1 não tem as portas do Shattered"; exit 1; fi
+          if ! grep -q "Teste das portas: comum fechada no começo = true, trancada fechada no começo = true" servidor.log; then echo "As portas não começaram fechadas"; exit 1; fi
+          if ! grep -q "Teste das portas: a comum abriu com o rato perto = true, a trancada continuou fechada = true" servidor.log; then echo "As portas não abriram direito"; exit 1; fi
+          if ! grep -q "Teste da chave de ferro: destrancou = true, gastou a chave = true, ficou comum = true" servidor.log; then echo "A chave de ferro não funcionou"; exit 1; fi
           if ! grep -q "Teste das armas: 15 armas, 15 com habilidade, por tier 5/3/3/2/2" servidor.log; then echo "As armas novas não estão certas"; exit 1; fi
           if ! grep -q "Teste da espada larga: o rato morreu = true" servidor.log; then echo "A espada larga não cortou"; exit 1; fi
           if ! grep -q "Teste do ouro: ouro do herói = 50, a pilha sumiu = true, pilha do andar 3 com moedas entre 60 e 120 = true" servidor.log; then echo "O ouro não funcionou"; exit 1; fi

@@ -567,5 +567,13 @@
   "dica.pixeldungeon.defesa_tipica": "Defesa típica: %s-%s",
   "dica.pixeldungeon.armadura_nao_identificada": "Não identificada: o nível dela é desconhecido.",
   "dica.pixeldungeon.armadura_amaldicoada": "Amaldiçoada! Depois de vestida, não sai mais.",
-  "dica.pixeldungeon.armadura_sem_maldicao": "Esta armadura está livre de magia maléfica."
+  "dica.pixeldungeon.armadura_sem_maldicao": "Esta armadura está livre de magia maléfica.",
+  "block.pixeldungeon.porta_gigante": "Porta",
+  "block.pixeldungeon.barril_esgoto": "Barril de Armazenamento",
+  "block.pixeldungeon.estante_esgoto": "Estante de Livros",
+  "item.pixeldungeon.chave_de_ferro": "Chave de ferro",
+  "item.pixeldungeon.chave_de_ferro.descricao": "Os entalhes nesta chave de ferro antiga estão bem desgastados; seu cordão de couro está desgastado pela idade. Que porta poderia abrir?",
+  "dica.pixeldungeon.chave_do_andar": "Abre uma porta trancada do andar %s",
+  "mensagem.pixeldungeon.porta_trancada": "Esta porta está trancada. Você precisa de uma chave correspondente para destrancá-la.",
+  "mensagem.pixeldungeon.porta_destrancada": "Você destrancou a porta com a chave de ferro."
 }

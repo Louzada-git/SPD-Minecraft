@@ -235,22 +235,9 @@ public class PopulacaoDoAndar {
         return 1.0 + 0.5 * Math.max(0, herois - 1);
     }
 
-    // Quadradinhos de chão (sem água, sem escada) que não ficam colados na entrada
+    // Onde inimigos e itens podem aparecer (ver PlantaDoAndar.lugaresLivres)
     public static List<int[]> lugaresLivres(PlantaDoAndar planta) {
-        List<int[]> lugares = new ArrayList<>();
-        for (int qy = 0; qy < planta.altura(); qy++) {
-            for (int qx = 0; qx < planta.largura(); qx++) {
-                if (planta.tipo(qx, qy) != PlantaDoAndar.CHAO) {
-                    continue;
-                }
-                boolean pertoDaEntrada = Math.abs(qx - planta.entradaX()) <= RAIO_LIVRE_EM_VOLTA_DA_ENTRADA
-                        && Math.abs(qy - planta.entradaY()) <= RAIO_LIVRE_EM_VOLTA_DA_ENTRADA;
-                if (!pertoDaEntrada) {
-                    lugares.add(new int[] { qx, qy });
-                }
-            }
-        }
-        return lugares;
+        return planta.lugaresLivres(RAIO_LIVRE_EM_VOLTA_DA_ENTRADA);
     }
 
     private static PlantaDoAndar planta(long semente, int andar) {

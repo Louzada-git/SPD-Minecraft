@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "pixeldungeon:item/chave_de_ferro"
+  }
+}
