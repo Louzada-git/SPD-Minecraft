@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
 // Pisotear a grama alta, igual ao Shattered. A grama vale pelo quadradinho inteiro (4x4 blocos):
-// encostou em qualquer parte, o quadradinho todo é pisoteado e vira grama baixa.
+// encostou em qualquer parte, o quadradinho todo é pisoteado e vira um tapete de musgo.
 //   - 1 em 6: cai uma gota de orvalho (ela voa sozinha pro odre de quem estiver perto)
 //   - 1 em 25: cai uma semente
 //   - Caçadora: passa sem derrubar a grama (fica "trilhada"), mas ainda ganha o que cair
@@ -59,7 +59,7 @@ public class Grama {
         int baixo = estado.getValue(CapimAlto.HALF) == DoubleBlockHalf.LOWER ? posicao.getY() : posicao.getY() - 1;
         int inicioX = posicao.getX() - Math.floorMod(posicao.getX(), T);
         int inicioZ = posicao.getZ() - Math.floorMod(posicao.getZ(), T);
-        BlockState gramaBaixa = ModBlocos.GRAMA_BAIXA.get().defaultBlockState();
+        BlockState musgo = ModBlocos.MUSGO_ESGOTO.get().defaultBlockState();
         int flags = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
 
         for (int dx = 0; dx < T; dx++) {
@@ -79,7 +79,7 @@ public class Grama {
                     mundo.setBlock(embaixo.above(), aqui.setValue(CapimAlto.TRILHADO, true).setValue(CapimAlto.HALF, DoubleBlockHalf.UPPER), flags);
                 } else {
                     mundo.setBlock(embaixo.above(), Blocks.AIR.defaultBlockState(), flags);
-                    mundo.setBlock(embaixo, gramaBaixa, flags);
+                    mundo.setBlock(embaixo, musgo, flags);
                 }
             }
         }

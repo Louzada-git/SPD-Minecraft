@@ -1,5 +1,6 @@
 package com.louzada.pixeldungeon.entidade;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 
@@ -14,7 +15,7 @@ import net.minecraft.world.level.Level;
 public class LuzGuia extends MisselMagico {
     private static final int AMARELO = 0xFFFF44;
     // No Shattered a luz fica até alguém bater; aqui dura 1 minuto
-    private static final int DURACAO_DA_LUZ = 60 * 20;
+    private static final int DURACAO_DA_LUZ = Turno.ticks(60);
 
     public LuzGuia(EntityType<? extends LuzGuia> tipo, Level mundo) {
         super(tipo, mundo);

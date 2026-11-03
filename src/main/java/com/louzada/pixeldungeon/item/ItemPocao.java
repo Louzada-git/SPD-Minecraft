@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.List;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.entidade.PocaoArremessada;
 import com.louzada.pixeldungeon.registro.ModItens;
 
@@ -16,17 +17,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 
 // Uma poção de uma cor. O que ela faz depende da run (veja IdentidadesDaRun).
-//   clique direito: bebe (1 turno)
+//   clique direito: bebe na hora
 //   agachado + clique direito: arremessa
 // Igual ao Shattered, quem já sabe que a poção é ruim (gelo, chama, gases) arremessa com o clique direito.
 public class ItemPocao extends Item {
-    private static final int TURNO = 20;
+    // Um tempinho entre uma poção e outra, pra não beber duas sem querer
+    private static final int INTERVALO = 10;
     private CorDePocao cor;
 
     public ItemPocao(Properties propriedades, CorDePocao cor) {
@@ -61,16 +61,6 @@ public class ItemPocao extends Item {
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack pilha) {
-        return UseAnim.DRINK;
-    }
-
-    @Override
-    public int getUseDuration(ItemStack pilha, LivingEntity quem) {
-        return TURNO;
-    }
-
-    @Override
     public InteractionResultHolder<ItemStack> use(Level mundo, Player jogador, InteractionHand mao) {
         ItemStack pilha = jogador.getItemInHand(mao);
         TipoDePocao conhecido = tipoConhecido(jogador);
@@ -78,7 +68,12 @@ public class ItemPocao extends Item {
             arremessar(mundo, jogador, pilha);
             return InteractionResultHolder.sidedSuccess(pilha, mundo.isClientSide());
         }
-        return ItemUtils.startUsingInstantly(mundo, jogador, mao);
+        // Bebe na hora (sem a animação de beber do Minecraft)
+        if (!mundo.isClientSide()) {
+            finishUsingItem(pilha, mundo, jogador);
+        }
+        jogador.getCooldowns().addCooldown(this, INTERVALO);
+        return InteractionResultHolder.sidedSuccess(pilha, mundo.isClientSide());
     }
 
     private void arremessar(Level mundo, Player jogador, ItemStack pilha) {
@@ -89,13 +84,13 @@ public class ItemPocao extends Item {
             mundo.addFreshEntity(pocao);
         }
         mundo.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.SPLASH_POTION_THROW, SoundSource.PLAYERS, 0.5F, 0.5F);
-        jogador.getCooldowns().addCooldown(this, TURNO);
+        jogador.getCooldowns().addCooldown(this, Turno.TICKS);
         if (!jogador.getAbilities().instabuild) {
             pilha.shrink(1);
         }
     }
 
-    // Terminou de beber: o efeito e, igual ao Shattered, descobre o tipo
+    // Bebeu: o efeito e, igual ao Shattered, descobre o tipo
     @Override
     public ItemStack finishUsingItem(ItemStack pilha, Level mundo, LivingEntity quem) {
         if (quem instanceof ServerPlayer jogador) {

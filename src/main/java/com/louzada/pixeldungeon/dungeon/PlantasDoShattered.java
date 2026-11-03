@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.dungeon;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.entidade.Goo;
@@ -41,7 +42,6 @@ import net.minecraft.world.phys.Vec3;
 //   flor-estrela: abençoa (+25% de precisão e esquiva) por 30 turnos
 // Auxílio da natureza (Caçadora): quando uma planta é ativada perto dela, ganha pele de árvore.
 public class PlantasDoShattered {
-    private static final int TURNO = 20;
     private static final double ALCANCE_DO_CARDO = 16;
     private static final double ALCANCE_DO_AUXILIO = 32;
 
@@ -76,24 +76,24 @@ public class PlantasDoShattered {
                 if (quem instanceof Player) {
                     // O tempo para em volta do herói: os inimigos perto ficam parados
                     for (MobDoShattered inimigo : mundo.getEntitiesOfClass(MobDoShattered.class, quem.getBoundingBox().inflate(ALCANCE_DO_CARDO))) {
-                        inimigo.addEffect(new MobEffectInstance(ModEfeitos.PARALISADO, 5 * TURNO));
+                        inimigo.addEffect(new MobEffectInstance(ModEfeitos.PARALISADO, 5 * Turno.TICKS));
                     }
                 } else if (quem != null) {
-                    quem.addEffect(new MobEffectInstance(ModEfeitos.PRESSA, 5 * TURNO));
+                    quem.addEffect(new MobEffectInstance(ModEfeitos.PRESSA, 5 * Turno.TICKS));
                 }
                 Particulas.explosao(mundo, ParticleTypes.ENCHANT, centro.x, centro.y + 1, centro.z, 30, 1.0, 0.5);
                 mundo.playSound(null, posicao, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 0.6F, 1.6F);
             }
             case CEGUERVA -> {
                 if (quem != null) {
-                    EfeitosNoTick.cegar(quem, 10 * TURNO);
-                    quem.addEffect(new MobEffectInstance(ModEfeitos.ALEIJADO, 10 * TURNO));
+                    EfeitosNoTick.cegar(quem, 10 * Turno.TICKS);
+                    quem.addEffect(new MobEffectInstance(ModEfeitos.ALEIJADO, 10 * Turno.TICKS));
                 }
                 Particulas.explosao(mundo, ParticleTypes.FLASH, centro.x, centro.y + 0.5, centro.z, 1, 0, 0);
             }
             case VINHA_TEMPESTUOSA -> {
                 if (quem != null) {
-                    EfeitosNoTick.tontear(quem, 10 * TURNO);
+                    EfeitosNoTick.tontear(quem, 10 * Turno.TICKS);
                 }
                 Particulas.explosao(mundo, Particulas.poeira(0x6688FF, 1.2F), centro.x, centro.y + 1, centro.z, 16, 0.5, 0.05);
             }
@@ -115,7 +115,7 @@ public class PlantasDoShattered {
             }
             case FLOR_ESTRELA -> {
                 if (quem != null) {
-                    quem.addEffect(new MobEffectInstance(ModEfeitos.ABENCOADO, 30 * TURNO));
+                    quem.addEffect(new MobEffectInstance(ModEfeitos.ABENCOADO, 30 * Turno.TICKS));
                 }
                 Particulas.explosao(mundo, ParticleTypes.END_ROD, centro.x, centro.y + 1, centro.z, 20, 0.5, 0.1);
             }
@@ -131,7 +131,7 @@ public class PlantasDoShattered {
                     || jogador.position().distanceTo(centro) > ALCANCE_DO_AUXILIO) {
                 continue;
             }
-            jogador.addEffect(new MobEffectInstance(ModEfeitos.PELE_DE_ARVORE, (1 + 2 * pontos) * TURNO, 1));
+            jogador.addEffect(new MobEffectInstance(ModEfeitos.PELE_DE_ARVORE, (1 + 2 * pontos) * Turno.TICKS, 1));
             Particulas.subindoEmVolta(jogador, Particulas.poeira(0x8B5A2B, 1.0F), 10, 0.05);
         }
     }

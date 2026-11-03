@@ -104,6 +104,12 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
         }
     }
 
+    // Igual ao Shattered: com o inventário aberto, o tempo para (no mundo de um jogador só)
+    @Override
+    public boolean isPauseScreen() {
+        return true;
+    }
+
     @Override
     public void removed() {
         for (int i = 0; i < menu.slots.size() && i < xOriginal.length; i++) {

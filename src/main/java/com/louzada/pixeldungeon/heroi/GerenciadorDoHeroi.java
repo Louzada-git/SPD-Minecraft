@@ -1,14 +1,13 @@
 package com.louzada.pixeldungeon.heroi;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
 import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.rede.RedeDoHeroi;
 import com.louzada.pixeldungeon.run.GerenciadorDaRun;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 // O que acontece com o herói sozinho, com o tempo: blindagem, talentos, capa, cargas da Duelista.
@@ -29,7 +28,7 @@ public class GerenciadorDoHeroi {
         if (jogador.tickCount % 10 == 0) {
             NivelDoItem.aoSegurar(jogador, jogador.getMainHandItem());
         }
-        boolean umTurno = jogador.tickCount % 20 == 0;
+        boolean umTurno = Turno.virou(jogador);
         Escudos.aoTick(jogador, dados, umTurno);
         Talentos.aoTick(jogador, dados);
         CapaDasSombras.aoTickDoHeroi(jogador, dados, umTurno);
@@ -39,13 +38,6 @@ public class GerenciadorDoHeroi {
         // O jogo do jogador precisa saber dos talentos e das cargas (tela de talentos, barra da Duelista)
         if (jogador.tickCount % 10 == 0) {
             RedeDoHeroi.enviarEstado(jogador, false);
-        }
-    }
-
-    // Terminou de comer: talentos de refeição
-    public static void aoTerminarDeUsar(LivingEntityUseItemEvent.Finish evento) {
-        if (evento.getEntity() instanceof ServerPlayer jogador && emJogo(jogador) && evento.getItem().has(DataComponents.FOOD)) {
-            Talentos.aoComer(jogador, RegrasDoHeroi.dados(jogador));
         }
     }
 }

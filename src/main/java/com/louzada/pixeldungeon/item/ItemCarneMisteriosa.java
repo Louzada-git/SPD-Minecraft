@@ -2,6 +2,8 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.List;
 
+import com.louzada.pixeldungeon.Turno;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,7 +19,6 @@ import net.minecraft.world.level.Level;
 // Carne misteriosa: cai de caranguejos e ratos albinos. Mata metade da fome de uma ração,
 // mas igual ao Shattered, pode dar ruim: queimar, travar as pernas, envenenar ou deixar lento.
 public class ItemCarneMisteriosa extends Item {
-    private static final int SEGUNDO = 20;
 
     public ItemCarneMisteriosa(Properties propriedades) {
         super(propriedades.food(new FoodProperties.Builder().nutrition(5).saturationModifier(0.3F).build()));
@@ -29,12 +30,12 @@ public class ItemCarneMisteriosa extends Item {
         if (quem instanceof ServerPlayer jogador) {
             switch (jogador.getRandom().nextInt(5)) {
                 case 0 -> {
-                    jogador.setRemainingFireTicks(5 * SEGUNDO);
+                    jogador.setRemainingFireTicks(5 * Turno.TICKS);
                     avisar(jogador, "item.pixeldungeon.carne_misteriosa.quente");
                 }
                 case 1 -> {
                     // Raízes: não consegue andar por um tempo
-                    jogador.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10 * SEGUNDO, 9));
+                    jogador.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10 * Turno.TICKS, 9));
                     avisar(jogador, "item.pixeldungeon.carne_misteriosa.pernas");
                 }
                 case 2 -> {
@@ -44,7 +45,7 @@ public class ItemCarneMisteriosa extends Item {
                     avisar(jogador, "item.pixeldungeon.carne_misteriosa.mal");
                 }
                 case 3 -> {
-                    jogador.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10 * SEGUNDO, 1));
+                    jogador.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10 * Turno.TICKS, 1));
                     avisar(jogador, "item.pixeldungeon.carne_misteriosa.estufado");
                 }
                 default -> avisar(jogador, "item.pixeldungeon.carne_misteriosa.esquisito");

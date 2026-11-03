@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.efeito;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.dungeon.Andares;
@@ -28,7 +29,6 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 // Os números que precisam ser lembrados (quanto ainda falta curar, onde a planta pegou...) ficam nos
 // dados extras da própria criatura.
 public class EfeitosNoTick {
-    private static final int TURNO = 20;
     private static final String CURA_RESTANTE = "pixeldungeon_cura_restante";
     private static final String GRAMA_RESTANTE = "pixeldungeon_grama_restante";
     private static final String GRAMA_PARCIAL = "pixeldungeon_grama_parcial";
@@ -44,7 +44,7 @@ public class EfeitosNoTick {
     // Veneno do Shattered: dura "turnos" turnos e o dano de cada turno é (turnos que faltam) / 3 + 1
     public static void envenenar(LivingEntity alvo, int turnos) {
         MobEffectInstance atual = alvo.getEffect(ModEfeitos.VENENO);
-        int duracao = Math.max(turnos * TURNO, atual == null ? 0 : atual.getDuration());
+        int duracao = Math.max(turnos * Turno.TICKS, atual == null ? 0 : atual.getDuration());
         alvo.addEffect(new MobEffectInstance(ModEfeitos.VENENO, duracao));
     }
 
@@ -67,7 +67,7 @@ public class EfeitosNoTick {
     public static void tontear(LivingEntity alvo, int ticks) {
         alvo.addEffect(new MobEffectInstance(ModEfeitos.VERTIGEM, ticks));
         if (alvo instanceof Player) {
-            alvo.addEffect(new MobEffectInstance(MobEffects.CONFUSION, ticks + 3 * TURNO));
+            alvo.addEffect(new MobEffectInstance(MobEffects.CONFUSION, ticks + 3 * Turno.TICKS));
         }
     }
 
@@ -124,7 +124,7 @@ public class EfeitosNoTick {
 
     // Canção de ninar: depois de 5 turnos sonolento, dorme
     public static void deixarSonolento(LivingEntity alvo) {
-        alvo.addEffect(new MobEffectInstance(ModEfeitos.SONOLENTO, 5 * TURNO));
+        alvo.addEffect(new MobEffectInstance(ModEfeitos.SONOLENTO, 5 * Turno.TICKS));
     }
 
     // ---- Quando acaba ----
@@ -153,7 +153,7 @@ public class EfeitosNoTick {
 
     public static void aoTick(EntityTickEvent.Post evento) {
         if (!(evento.getEntity() instanceof LivingEntity criatura) || criatura.level().isClientSide() || !criatura.isAlive()
-                || criatura.tickCount % TURNO != 0) {
+                || criatura.tickCount % Turno.TICKS != 0) {
             return;
         }
         CompoundTag dados = criatura.getPersistentData();
@@ -162,7 +162,7 @@ public class EfeitosNoTick {
         MobEffectInstance veneno = criatura.getEffect(ModEfeitos.VENENO);
         if (veneno != null) {
             criatura.invulnerableTime = 0;
-            criatura.hurt(criatura.damageSources().magic(), veneno.getDuration() / TURNO / 3 + 1);
+            criatura.hurt(criatura.damageSources().magic(), veneno.getDuration() / Turno.TICKS / 3 + 1);
         }
 
         // Sangramento: o nível cai pra entre a metade e ele mesmo, e esse é o dano
@@ -232,7 +232,7 @@ public class EfeitosNoTick {
                 jogador.getAbilities().flying = false;
                 jogador.onUpdateAbilities();
             }
-            jogador.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 5 * TURNO));
+            jogador.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 5 * Turno.TICKS));
         }
 
         if (criatura instanceof MobDoShattered inimigo) {
@@ -308,7 +308,8 @@ public class EfeitosNoTick {
     // Quem não consegue agir (paralisado, congelado, dormindo, aterrorizado) não ataca
     public static boolean impedidoDeAtacar(@Nullable Entity atacante) {
         return atacante instanceof LivingEntity criatura && (criatura.hasEffect(ModEfeitos.PARALISADO) || criatura.hasEffect(ModEfeitos.CONGELADO)
-                || criatura.hasEffect(ModEfeitos.SONO_MAGICO) || criatura.hasEffect(ModEfeitos.ATERRORIZADO));
+                || criatura.hasEffect(ModEfeitos.SONO_MAGICO) || criatura.hasEffect(ModEfeitos.ATERRORIZADO)
+                || criatura.hasEffect(ModEfeitos.COMENDO));
     }
 
     // Quem está preso (paralisado, congelado, dormindo) não consegue desviar

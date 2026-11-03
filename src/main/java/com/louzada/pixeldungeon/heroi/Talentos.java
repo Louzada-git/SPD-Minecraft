@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon.heroi;
 import java.util.Random;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.dungeon.Andares;
@@ -127,7 +128,7 @@ public class Talentos {
         if (pontos > 0) {
             if (aDistancia) {
                 dados.definirAlvo(CONSECUTIVO_ALVO, alvo.getUUID());
-                dados.ativarPor(CONSECUTIVO, agora, 5 * 20);
+                dados.ativarPor(CONSECUTIVO, agora, Turno.ticks(5));
             } else if (dados.ativo(CONSECUTIVO, agora) && alvo.getUUID().equals(dados.alvo(CONSECUTIVO_ALVO))) {
                 bonus += 1 + pontos;
                 dados.desativar(CONSECUTIVO);
@@ -155,7 +156,7 @@ public class Talentos {
     public static void aoUsarVarinha(ServerPlayer jogador, int cargasAntes) {
         DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
         if (dados.pontos(Talento.MAGIA_PROLONGADA) > 0) {
-            dados.ativarPor(MAGIA, jogador.level().getGameTime(), 5 * 20);
+            dados.ativarPor(MAGIA, jogador.level().getGameTime(), Turno.ticks(5));
         }
         // Barreira de apoio: gastou a última carga, ganha 3/5 de blindagem
         int pontos = dados.pontos(Talento.BARREIRA_DE_APOIO);
@@ -205,7 +206,7 @@ public class Talentos {
         }
         int parado = dados.inteiro(PARADO) + 1;
         dados.definir(PARADO, parado);
-        if (parado == 20) {
+        if (parado == Turno.TICKS) {
             dados.definir(PACIENTE, true);
             Particulas.subindoEmVolta(jogador, Particulas.poeira(0x8000FF, 0.8F), 6, 0.0);
         }

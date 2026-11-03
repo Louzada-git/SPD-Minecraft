@@ -1,5 +1,6 @@
 package com.louzada.pixeldungeon.item;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.dungeon.Teleporte;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.ItemStack;
 
 // O que cada maldição de arma faz quando o herói acerta um golpe, com as chances do Shattered.
 public class Maldicoes {
-    private static final int TURNO = 20;
     private static final double ALCANCE_DA_VISAO = 32;
 
     // Inconstante ativada: a precisão cai pra um quinto
@@ -71,7 +71,7 @@ public class Maldicoes {
                 if (jogador.hasEffect(ModEfeitos.DESVIANTE)) {
                     jogador.removeEffect(ModEfeitos.DESVIANTE);
                 } else if (sorteio.nextFloat() < 1 / 4F) {
-                    jogador.addEffect(new MobEffectInstance(ModEfeitos.DESVIANTE, 10 * TURNO));
+                    jogador.addEffect(new MobEffectInstance(ModEfeitos.DESVIANTE, 10 * Turno.TICKS));
                 }
             }
         }
@@ -95,9 +95,9 @@ public class Maldicoes {
         jogador.level().playSound(null, alvo.blockPosition(), SoundEvents.FIREWORK_ROCKET_BLAST, SoundSource.PLAYERS, 1.0F, 1.0F);
         for (LivingEntity quemViu : jogador.level().getEntitiesOfClass(LivingEntity.class, alvo.getBoundingBox().inflate(ALCANCE_DA_VISAO))) {
             if (quemViu == jogador) {
-                EfeitosNoTick.cegar(quemViu, 10 * TURNO);
+                EfeitosNoTick.cegar(quemViu, 10 * Turno.TICKS);
             } else if (quemViu.hasLineOfSight(alvo)) {
-                EfeitosNoTick.cegar(quemViu, 5 * TURNO);
+                EfeitosNoTick.cegar(quemViu, 5 * Turno.TICKS);
             }
         }
     }

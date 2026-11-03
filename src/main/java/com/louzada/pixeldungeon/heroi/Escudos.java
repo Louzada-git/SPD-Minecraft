@@ -1,5 +1,6 @@
 package com.louzada.pixeldungeon.heroi;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
@@ -122,7 +123,7 @@ public class Escudos {
             selo -= doSelo;
             barreira -= daBarreira;
             if (quebrou && dados.pontos(Talento.RAIVA_PROVOCADA) > 0) {
-                dados.ativarPor(Talentos.RAIVA, jogador.level().getGameTime(), 5 * 20);
+                dados.ativarPor(Talentos.RAIVA, jogador.level().getGameTime(), Turno.ticks(5));
             }
         }
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.registro.ModComponentes;
 
@@ -83,7 +84,7 @@ public class Odre extends Item {
         NumerosFlutuantes.mostrar(jogador, "+" + cura, NumerosFlutuantes.VERDE);
         pilha.set(ModComponentes.VOLUME.get(), volume - gotas);
         mundo.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
-        jogador.getCooldowns().addCooldown(this, 20);
+        jogador.getCooldowns().addCooldown(this, Turno.TICKS);
         return InteractionResultHolder.success(pilha);
     }
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.cliente.ClienteDoMod;
 
 import net.minecraft.ChatFormatting;
@@ -55,7 +56,7 @@ public class TomoSagrado extends Item {
 
     @Override
     public void inventoryTick(ItemStack pilha, Level mundo, Entity dono, int espaco, boolean naMao) {
-        if (!mundo.isClientSide() && dono.tickCount % 20 == 0) {
+        if (!mundo.isClientSide() && Turno.virou(dono)) {
             Cargas.recarregar(pilha, mundo.getGameTime(), Artefato.cargasMaximas(pilha), Artefato::ticksParaCarregar);
         }
     }

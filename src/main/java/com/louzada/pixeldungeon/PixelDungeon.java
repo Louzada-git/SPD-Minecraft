@@ -10,6 +10,7 @@ import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.heroi.Escudos;
 import com.louzada.pixeldungeon.heroi.EventosDeCombate;
 import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
+import com.louzada.pixeldungeon.item.Comida;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.rede.ModRede;
 import com.louzada.pixeldungeon.registro.ModAbas;
@@ -66,7 +67,7 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(EventPriority.LOW, Escudos::aoReceberDano);
         // Herói: blindagem, talentos, capa, cargas da Duelista, comida
         NeoForge.EVENT_BUS.addListener(GerenciadorDoHeroi::aoTickDoJogador);
-        NeoForge.EVENT_BUS.addListener(GerenciadorDoHeroi::aoTerminarDeUsar);
+        NeoForge.EVENT_BUS.addListener(Comida::aoUsarItem);
         NeoForge.EVENT_BUS.addListener(NumerosFlutuantes::aoTickDoServidor);
         NeoForge.EVENT_BUS.addListener(NumerosFlutuantes::aoEntrarNoMundo);
         NeoForge.EVENT_BUS.addListener(PopulacaoDoAndar::aoTickDoServidor);

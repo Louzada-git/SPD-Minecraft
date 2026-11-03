@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.entidade;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.combate.Sorteio;
@@ -22,7 +23,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -80,14 +80,14 @@ public abstract class MobDoShattered extends Monster {
             goalSelector.addGoal(1, new FloatGoal(this));
         }
         // Ataca uma vez por segundo, que é um turno do Shattered
-        goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, false));
+        goalSelector.addGoal(2, new AtaqueDoShattered(this, 1.0, false));
         goalSelector.addGoal(5, passeio());
         goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         goalSelector.addGoal(7, new RandomLookAroundGoal(this));
         targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        // Não enxerga heróis invisíveis (capa das sombras, habilidade furtiva da adaga), nem enxerga nada quando está cego
+        // Não enxerga nada quando está cego. Herói invisível ele ainda segue, mas não consegue atacar (AtaqueDoShattered).
         targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false,
-                alvo -> !Furtividade.invisivel(alvo) && !hasEffect(ModEfeitos.CEGO) && !hasEffect(ModEfeitos.ATERRORIZADO)));
+                alvo -> !hasEffect(ModEfeitos.CEGO) && !hasEffect(ModEfeitos.ATERRORIZADO)));
         // As imagens espelhadas distraem os inimigos (o mímico só se importa com quem mexeu nele)
         targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ImagemEspelhada.class, 10, true, false,
                 alvo -> !hasEffect(ModEfeitos.CEGO) && !hasEffect(ModEfeitos.ATERRORIZADO)));
@@ -193,21 +193,18 @@ public abstract class MobDoShattered extends Monster {
         levouGolpeSurpresa = true;
     }
 
-    // O herói pega o inimigo de surpresa se ele está dormindo ou não está de olho nesse herói
+    // O herói pega o inimigo de surpresa se ele está dormindo, não está de olho nesse herói,
+    // ou se o herói está invisível (igual ao Shattered)
     public boolean surpreendidoPor(Player jogador) {
-        return dormindo || getTarget() != jogador;
+        return dormindo || getTarget() != jogador || Furtividade.invisivel(jogador);
     }
 
     @Override
     public void tick() {
         super.tick();
-        // Igual ao Shattered: quem estava caçando um herói que ficou invisível perde ele de vista
-        if (!level().isClientSide() && tickCount % 10 == 0 && getTarget() instanceof Player alvo && Furtividade.invisivel(alvo)) {
-            setTarget(null);
-        }
-        // Uma vez por segundo, quem está dormindo pode notar um herói por perto.
+        // Uma vez por turno, quem está dormindo pode notar um herói por perto.
         // Igual ao Shattered: a chance é maior quanto mais perto (1 quadradinho = 4 blocos).
-        if (dormindo && !level().isClientSide() && tickCount % 20 == 0) {
+        if (dormindo && !level().isClientSide() && Turno.virou(this)) {
             // De vez em quando sobe um "z" em cima de quem dorme (só se tiver alguém por perto pra ver)
             if (tickCount % 60 == 0 && level().getNearestPlayer(this, 16) != null) {
                 NumerosFlutuantes.mostrar(this, "z", NumerosFlutuantes.BRANCO);

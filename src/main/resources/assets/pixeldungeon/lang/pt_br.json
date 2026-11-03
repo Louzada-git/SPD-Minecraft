@@ -537,7 +537,8 @@
   "hud.pixeldungeon.mochila": "Inventário [%s]",
   "hud.pixeldungeon.mochila.descricao": "Clique para fechar.",
   "hud.pixeldungeon.esperar": "Esperar",
-  "hud.pixeldungeon.esperar.descricao": "No Shattered, passa um turno. Aqui os turnos passam sozinhos (1 turno = 1 segundo).",
+  "hud.pixeldungeon.esperar.descricao": "No Shattered, passa um turno. Aqui os turnos passam sozinhos (1 turno = 2 segundos).",
   "hud.pixeldungeon.procurar": "Procurar",
-  "hud.pixeldungeon.procurar.descricao": "No Shattered, procura segredos em volta. Aqui ainda não tem segredos para achar."
+  "hud.pixeldungeon.procurar.descricao": "No Shattered, procura segredos em volta. Aqui ainda não tem segredos para achar.",
+  "effect.pixeldungeon.comendo": "Comendo"
 }

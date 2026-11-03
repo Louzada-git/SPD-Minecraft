@@ -230,8 +230,8 @@ public class EventosDaRun {
             if (eraAlta) {
                 Grama.pisotear(mundo, grama, mundo.getBlockState(grama), heroi);
             }
-            PixelDungeon.LOGGER.info("Teste da grama: era grama alta = {}, virou grama baixa = {}", eraAlta,
-                    mundo.getBlockState(grama).is(ModBlocos.GRAMA_BAIXA.get()));
+            PixelDungeon.LOGGER.info("Teste da grama: era grama alta = {}, virou musgo = {}", eraAlta,
+                    mundo.getBlockState(grama).is(ModBlocos.MUSGO_ESGOTO.get()));
         } else {
             PixelDungeon.LOGGER.info("Teste da grama: o andar 1 não tem grama alta");
         }

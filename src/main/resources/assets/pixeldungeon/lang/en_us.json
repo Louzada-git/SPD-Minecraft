@@ -537,7 +537,8 @@
   "hud.pixeldungeon.mochila": "Inventory [%s]",
   "hud.pixeldungeon.mochila.descricao": "Click to close.",
   "hud.pixeldungeon.esperar": "Wait",
-  "hud.pixeldungeon.esperar.descricao": "In Shattered, this passes a turn. Here turns pass by themselves (1 turn = 1 second).",
+  "hud.pixeldungeon.esperar.descricao": "In Shattered, this passes a turn. Here turns pass by themselves (1 turn = 2 seconds).",
   "hud.pixeldungeon.procurar": "Search",
-  "hud.pixeldungeon.procurar.descricao": "In Shattered, this searches for secrets around you. There are no secrets to find here yet."
+  "hud.pixeldungeon.procurar.descricao": "In Shattered, this searches for secrets around you. There are no secrets to find here yet.",
+  "effect.pixeldungeon.comendo": "Eating"
 }

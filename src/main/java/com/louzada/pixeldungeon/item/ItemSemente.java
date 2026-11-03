@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.List;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.bloco.PlantaDoShattered;
 import com.louzada.pixeldungeon.entidade.SementeArremessada;
 import com.louzada.pixeldungeon.registro.ModBlocos;
@@ -26,7 +27,6 @@ import net.minecraft.world.level.Level;
 //   clique direito no chão: planta ali (a planta vale pelo quadradinho inteiro)
 //   clique direito no ar: arremessa (a planta nasce onde a semente cair)
 public class ItemSemente extends Item {
-    private static final int TURNO = 20;
     private TipoDePlanta planta;
 
     public ItemSemente(Properties propriedades, TipoDePlanta planta) {
@@ -69,7 +69,7 @@ public class ItemSemente extends Item {
         }
         Player jogador = contexto.getPlayer();
         if (jogador != null) {
-            jogador.getCooldowns().addCooldown(this, TURNO);
+            jogador.getCooldowns().addCooldown(this, Turno.TICKS);
             if (!jogador.getAbilities().instabuild) {
                 contexto.getItemInHand().shrink(1);
             }
@@ -87,7 +87,7 @@ public class ItemSemente extends Item {
             mundo.addFreshEntity(semente);
         }
         mundo.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.PLAYERS, 0.5F, 1.2F);
-        jogador.getCooldowns().addCooldown(this, TURNO);
+        jogador.getCooldowns().addCooldown(this, Turno.TICKS);
         if (!jogador.getAbilities().instabuild) {
             pilha.shrink(1);
         }

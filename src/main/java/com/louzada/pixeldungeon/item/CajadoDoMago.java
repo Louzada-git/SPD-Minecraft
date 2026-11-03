@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.List;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.entidade.MisselMagico;
 import com.louzada.pixeldungeon.heroi.Furtividade;
 import com.louzada.pixeldungeon.heroi.Talentos;
@@ -37,7 +38,7 @@ public class CajadoDoMago extends ArmaDoShattered {
 
     // Igual ao recarregador das varinhas do Shattered: 10 + 40 * 0,875^(cargas que faltam) turnos por carga
     private static long ticksParaCarregar(int faltando) {
-        return Math.round((10 + 40 * Math.pow(0.875, faltando)) * 20);
+        return Math.round((10 + 40 * Math.pow(0.875, faltando)) * Turno.TICKS);
     }
 
     public static int cargasMaximas(ItemStack pilha) {
@@ -60,7 +61,7 @@ public class CajadoDoMago extends ArmaDoShattered {
     // Uma vez por segundo, no servidor, vê se encheu alguma carga
     @Override
     public void inventoryTick(ItemStack pilha, Level mundo, Entity dono, int espaco, boolean naMao) {
-        if (!mundo.isClientSide() && dono.tickCount % 20 == 0) {
+        if (!mundo.isClientSide() && Turno.virou(dono)) {
             recarregar(pilha, mundo.getGameTime());
         }
     }
@@ -94,7 +95,7 @@ public class CajadoDoMago extends ArmaDoShattered {
 
         Cargas.gastar(pilha, agora, cargasMaximas(pilha), 1);
         // Lançar gasta um turno
-        jogador.getCooldowns().addCooldown(this, 20);
+        jogador.getCooldowns().addCooldown(this, Turno.TICKS);
         return InteractionResultHolder.success(pilha);
     }
 

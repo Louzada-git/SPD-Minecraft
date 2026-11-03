@@ -36,9 +36,6 @@ public class ConstrutorDeAndar {
     // Luz invisível de fundo (0 a 15); as lanternas dão a luz forte
     private static final int LUZ_DAS_SALAS = 10;
     private static final int LUZ_DOS_CORREDORES = 9;
-    // Chance (em %) de nascer musgo num bloco de chão
-    private static final int CHANCE_DE_MUSGO_PERTO_DA_AGUA = 30;
-    private static final int CHANCE_DE_MUSGO = 4;
 
     private ServerLevel nivel;
     private PlantaDoAndar planta;
@@ -53,7 +50,6 @@ public class ConstrutorDeAndar {
     private BlockState moldura = ModBlocos.MOLDURA_ESGOTO.get().defaultBlockState();
     private BlockState lanterna = ModBlocos.LANTERNA_ESGOTO.get().defaultBlockState();
     private BlockState corrente = ModBlocos.CORRENTE_ESGOTO.get().defaultBlockState();
-    private BlockState musgo = ModBlocos.MUSGO_ESGOTO.get().defaultBlockState();
     private BlockState agua = Blocks.WATER.defaultBlockState();
     private BlockState escadaSubida = ModBlocos.ESCADA_SUBIDA.get().defaultBlockState();
     private BlockState escadaDescida = ModBlocos.ESCADA_DESCIDA.get().defaultBlockState();
@@ -67,7 +63,7 @@ public class ConstrutorDeAndar {
         this.sorteio = new Random(semente);
     }
 
-    // semente: decide onde cai o musgo (mesma semente = mesma decoração)
+    // semente: decide a decoração (mesma semente = mesma decoração)
     public static void construir(ServerLevel nivel, PlantaDoAndar planta, BlockPos origem, long semente) {
         new ConstrutorDeAndar(nivel, planta, origem, semente).construirTudo();
     }
@@ -106,13 +102,12 @@ public class ConstrutorDeAndar {
         }
     }
 
-    // ---- Chão, teto, cornija, luz e musgo ----
+    // ---- Chão, teto, cornija, luz e grama ----
 
     private void construirQuadradinhoAberto(int qx, int qy) {
         byte tipo = planta.tipo(qx, qy);
         int alturaLivre = alturaLivre(qx, qy);
         boolean temLanterna = temLanterna(qx, qy);
-        boolean pertoDaAgua = encostaEmAgua(qx, qy);
 
         for (int dx = 0; dx < T; dx++) {
             for (int dz = 0; dz < T; dz++) {
@@ -145,12 +140,6 @@ public class ConstrutorDeAndar {
                     colocar(qx, qy, dx, 2, dz, capimAlto.setValue(CapimAlto.HALF, DoubleBlockHalf.UPPER));
                 } else if (grama == PlantaDoAndar.GRAMA) {
                     colocar(qx, qy, dx, 1, dz, gramaBaixa);
-                } else if (tipo == PlantaDoAndar.CHAO) {
-                    // Musgo pelo chão, mais perto das poças
-                    int chance = pertoDaAgua ? CHANCE_DE_MUSGO_PERTO_DA_AGUA : CHANCE_DE_MUSGO;
-                    if (sorteio.nextInt(100) < chance) {
-                        colocar(qx, qy, dx, 1, dz, musgo);
-                    }
                 }
             }
         }
@@ -199,13 +188,6 @@ public class ConstrutorDeAndar {
         return ModBlocos.CORNIJA_ESGOTO.get().defaultBlockState()
                 .setValue(StairBlock.FACING, ladoDaParede)
                 .setValue(StairBlock.HALF, Half.TOP);
-    }
-
-    private boolean encostaEmAgua(int qx, int qy) {
-        return planta.tipo(qx + 1, qy) == PlantaDoAndar.AGUA
-                || planta.tipo(qx - 1, qy) == PlantaDoAndar.AGUA
-                || planta.tipo(qx, qy + 1) == PlantaDoAndar.AGUA
-                || planta.tipo(qx, qy - 1) == PlantaDoAndar.AGUA;
     }
 
     // Lanternas no centro de cada sala e, nas salas grandes, a cada 4 quadradinhos a partir do centro

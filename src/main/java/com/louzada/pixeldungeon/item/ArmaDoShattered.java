@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.Sorteio;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
@@ -33,7 +34,7 @@ public class ArmaDoShattered extends Item implements ArmaComDano {
     private int danoMaximo;
     // Multiplicador de precisão (1.0 = normal, 1.4 = 40% a mais)
     private float precisao;
-    // Tempo entre ataques, em turnos (1 turno = 1 segundo). 0.5 = ataca 2x mais rápido.
+    // Tempo entre ataques, em turnos (1 turno = 2 segundos). 0.5 = ataca 2x mais rápido.
     private float atraso;
     // Defesa extra que a arma dá (o florete dá 1, a katana 3)
     private int defesa;
@@ -64,7 +65,7 @@ public class ArmaDoShattered extends Item implements ArmaComDano {
 
     // Velocidade de ataque do Minecraft: o jogador tem 4 de base, então somamos (ataques por segundo - 4)
     private static ItemAttributeModifiers atributos(float atraso) {
-        double ataquesPorSegundo = 1.0 / atraso;
+        double ataquesPorSegundo = 20.0 / (atraso * Turno.TICKS);
         return ItemAttributeModifiers.builder()
                 .add(Attributes.ATTACK_SPEED,
                         new AttributeModifier(BASE_ATTACK_SPEED_ID, ataquesPorSegundo - 4.0, AttributeModifier.Operation.ADD_VALUE),

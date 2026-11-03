@@ -27,7 +27,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
@@ -97,7 +96,7 @@ public class ImagemEspelhada extends PathfinderMob {
     @Override
     protected void registerGoals() {
         goalSelector.addGoal(1, new FloatGoal(this));
-        goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, true));
+        goalSelector.addGoal(2, new AtaqueDoShattered(this, 1.2, true));
         goalSelector.addGoal(3, new SeguirDono(this));
         goalSelector.addGoal(4, new RandomLookAroundGoal(this));
         targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, MobDoShattered.class, 5, true, false, alvo -> !(alvo instanceof Mimico)));

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.entidade.LuzGuia;
 import com.louzada.pixeldungeon.item.Artefato;
@@ -34,7 +35,6 @@ import net.minecraft.world.item.ItemStack;
 //   escudo de luz (talento, 1 carga): 2-4 / 3-6 de armadura contra o inimigo na mira por 5 turnos
 public class MagiasDoClerigo {
     public static final String ESCUDO_ALVO = "escudo_de_luz_alvo";
-    private static final int TURNO = 20;
 
     public enum Magia {
         LUZ_GUIA("luz_guia"),
@@ -139,13 +139,13 @@ public class MagiasDoClerigo {
         jogador.level().addFreshEntity(luz);
         jogador.level().playSound(null, jogador.blockPosition(), SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS, 0.8F, 1.6F);
         // Lançar a luz gasta um turno
-        jogador.getCooldowns().addCooldown(tomo.getItem(), TURNO);
+        jogador.getCooldowns().addCooldown(tomo.getItem(), Turno.TICKS);
         return true;
     }
 
     // Arma celestial e armadura sagrada: 50 turnos, sem gastar tempo
     private static boolean abencoar(ServerPlayer jogador, Holder<MobEffect> efeito, String chave) {
-        jogador.addEffect(new MobEffectInstance(efeito, 50 * TURNO));
+        jogador.addEffect(new MobEffectInstance(efeito, 50 * Turno.TICKS));
         Particulas.subindoEmVolta(jogador, Particulas.poeira(0xFFEE77, 1.2F), 20, 0.0);
         Particulas.subindoEmVolta(jogador, ParticleTypes.END_ROD, 8, 0.08);
         jogador.level().playSound(null, jogador.blockPosition(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 0.8F, 1.2F);
@@ -181,7 +181,7 @@ public class MagiasDoClerigo {
             return false;
         }
         dados.definirAlvo(ESCUDO_ALVO, alvo.getUUID());
-        jogador.addEffect(new MobEffectInstance(ModEfeitos.ESCUDO_DE_LUZ, 5 * TURNO));
+        jogador.addEffect(new MobEffectInstance(ModEfeitos.ESCUDO_DE_LUZ, 5 * Turno.TICKS));
         Particulas.subindoEmVolta(jogador, Particulas.poeira(0xFFFFCC, 1.3F), 20, 0.0);
         jogador.level().playSound(null, jogador.blockPosition(), SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 0.6F, 1.6F);
         return true;

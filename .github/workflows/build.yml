@@ -84,7 +84,7 @@ jobs:
           if ! grep -q "Teste do Clérigo: arma celestial = true, cargas do tomo = 1" servidor.log; then echo "O tomo do Clérigo não funcionou"; exit 1; fi
           if ! grep -q "Teste do Ladino: invisível = true, cargas da capa = 2" servidor.log; then echo "A capa do Ladino não funcionou"; exit 1; fi
           if ! grep -qE "Andar [1-4]: [0-9]+ quadradinhos de grama \([1-9][0-9]* de grama alta\)" servidor.log; then echo "Não nasceu grama alta"; exit 1; fi
-          if ! grep -qE "Teste da grama: (era grama alta = true, virou grama baixa = true|o andar 1 não tem grama alta)" servidor.log; then echo "A grama alta não foi pisoteada"; exit 1; fi
+          if ! grep -qE "Teste da grama: (era grama alta = true, virou musgo = true|o andar 1 não tem grama alta)" servidor.log; then echo "A grama alta não foi pisoteada"; exit 1; fi
           if ! grep -q "Teste do odre: gotas depois da gota = 1, vida 15.0 -> 16.0, gotas depois de beber = 0" servidor.log; then echo "O odre não funcionou"; exit 1; fi
           if ! grep -q "Teste do míssil mágico: acertou o rato = true" servidor.log; then echo "O míssil mágico não acertou o rato"; exit 1; fi
           if ! grep -q "Andar 5: Goo no ninho" servidor.log; then echo "O Goo não nasceu no andar 5"; exit 1; fi

@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
 import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
@@ -34,7 +35,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 //   - quanto mais jogadores, mais vida os inimigos têm (+50% por jogador a mais)
 //   - nos andares de chefe só tem o chefe, dormindo no meio da arena (no andar 5, o Goo no ninho dele)
 public class PopulacaoDoAndar {
-    private static final int TICKS_PARA_RENASCER = 50 * 20;
+    private static final int TICKS_PARA_RENASCER = Turno.ticks(50);
     private static final double DISTANCIA_MINIMA_DOS_HEROIS = 24;
     private static final int RAIO_LIVRE_EM_VOLTA_DA_ENTRADA = 3;
 

@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.List;
 
+import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.Sorteio;
 import com.louzada.pixeldungeon.entidade.FlechaEspiritual;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
@@ -65,7 +66,7 @@ public class ArcoEspiritual extends Item implements ArmaComDano {
             flecha.shootFromRotation(jogador, jogador.getXRot(), jogador.getYRot(), 0.0F, 3.0F, 0.0F);
             mundo.addFreshEntity(flecha);
             mundo.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 0.8F, 1.3F);
-            jogador.getCooldowns().addCooldown(this, 20);
+            jogador.getCooldowns().addCooldown(this, Turno.TICKS);
         }
         return InteractionResultHolder.sidedSuccess(pilha, mundo.isClientSide());
     }
