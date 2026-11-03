@@ -7,6 +7,7 @@ import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.heroi.Escudos;
 import com.louzada.pixeldungeon.heroi.EventosDeCombate;
 import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
+import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.rede.ModRede;
 import com.louzada.pixeldungeon.registro.ModAbas;
 import com.louzada.pixeldungeon.registro.ModAnexos;
@@ -66,5 +67,7 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(NumerosFlutuantes::aoTickDoServidor);
         NeoForge.EVENT_BUS.addListener(NumerosFlutuantes::aoEntrarNoMundo);
         NeoForge.EVENT_BUS.addListener(PopulacaoDoAndar::aoTickDoServidor);
+        // Ouro: encostou na pilha, as moedas vão pra bolsa
+        NeoForge.EVENT_BUS.addListener(Ouro::aoEncostar);
     }
 }

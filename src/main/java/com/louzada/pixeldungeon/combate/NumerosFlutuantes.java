@@ -27,6 +27,7 @@ public class NumerosFlutuantes {
     public static final String AMARELO = "#ffff44";
     public static final String ROXO = "#cc77ff";
     public static final String VERDE = "#55ff55";
+    public static final String DOURADO = "#ffd700";
 
     private record Numero(Entity texto, int[] ticksRestantes) {
     }

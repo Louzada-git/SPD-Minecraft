@@ -12,6 +12,7 @@ import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
 import com.louzada.pixeldungeon.item.ItemComDescricao;
 import com.louzada.pixeldungeon.item.ItemAnkh;
 import com.louzada.pixeldungeon.item.Odre;
+import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.item.RacaoDeSuprimentos;
 import com.louzada.pixeldungeon.item.TomoSagrado;
 
@@ -82,6 +83,9 @@ public class ModItens {
     public static final DeferredItem<Odre> ODRE = ITENS.registerItem("odre", Odre::new);
     // A gota de orvalho voando (não dá pra pegar; ela vai sozinha pro odre)
     public static final DeferredItem<Item> GOTA_DE_ORVALHO = ITENS.registerSimpleItem("gota_de_orvalho");
+
+    // Ouro: as moedas vão direto pra bolsa do herói quando ele encosta na pilha
+    public static final DeferredItem<Ouro> OURO = ITENS.registerItem("ouro", Ouro::new);
 
     // ---- Armaduras ----
 
