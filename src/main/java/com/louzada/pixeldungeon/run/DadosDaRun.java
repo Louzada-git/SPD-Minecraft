@@ -16,7 +16,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 
 // Tudo sobre a run atual que precisa continuar salvo quando o mundo fecha:
-// número da run, se ela está acontecendo, semente, andares já construídos e chefes já derrotados.
+// número da run, se ela está acontecendo, semente, andares já construídos, chefes já derrotados
+// e quantas vezes caíram os itens que são limitados por run (as armas do slime).
 // (Em qual run cada jogador está fica salvo no próprio jogador, no DadosDoHeroi.)
 public class DadosDaRun extends SavedData {
     private static final String NOME_DO_ARQUIVO = "pixeldungeon_run";
@@ -32,6 +33,8 @@ public class DadosDaRun extends SavedData {
     private Map<Integer, InfoAndar> andares = new HashMap<>();
     // Andares de chefe em que o chefe já morreu (a saída deles fica aberta)
     private Set<Integer> chefesDerrotados = new HashSet<>();
+    // Igual aos "LimitedDrops" do Shattered: quantas vezes cada item limitado já caiu nesta run
+    private Map<String, Integer> quedas = new HashMap<>();
 
     // Pega os dados salvos no mundo (ou cria do zero se ainda não existem)
     public static DadosDaRun pegar(MinecraftServer servidor) {
@@ -57,6 +60,7 @@ public class DadosDaRun extends SavedData {
         semente = novaSemente;
         andares.clear();
         chefesDerrotados.clear();
+        quedas.clear();
         setDirty();
     }
 
@@ -84,6 +88,15 @@ public class DadosDaRun extends SavedData {
         setDirty();
     }
 
+    public int quedas(String item) {
+        return quedas.getOrDefault(item, 0);
+    }
+
+    public void contarQueda(String item) {
+        quedas.put(item, quedas(item) + 1);
+        setDirty();
+    }
+
     // ---- Salvar e carregar ----
 
     @Override
@@ -104,6 +117,11 @@ public class DadosDaRun extends SavedData {
         }
         tag.put("andares", listaDeAndares);
         tag.putIntArray("chefes_derrotados", chefesDerrotados.stream().mapToInt(Integer::intValue).toArray());
+        CompoundTag quedasTag = new CompoundTag();
+        for (Map.Entry<String, Integer> item : quedas.entrySet()) {
+            quedasTag.putInt(item.getKey(), item.getValue());
+        }
+        tag.put("quedas", quedasTag);
         return tag;
     }
 
@@ -122,6 +140,10 @@ public class DadosDaRun extends SavedData {
         }
         for (int andar : tag.getIntArray("chefes_derrotados")) {
             dados.chefesDerrotados.add(andar);
+        }
+        CompoundTag quedasTag = tag.getCompound("quedas");
+        for (String item : quedasTag.getAllKeys()) {
+            dados.quedas.put(item, quedasTag.getInt(item));
         }
         return dados;
     }
