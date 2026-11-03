@@ -6,6 +6,7 @@ import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.Talento;
 import com.louzada.pixeldungeon.rede.PacoteAprimorarTalento;
+import com.louzada.pixeldungeon.rede.PacotePedirCompartilhar;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -56,6 +57,11 @@ public class TelaDeTalentos extends Screen {
         }
         botaoAprimorar = addRenderableWidget(Button.builder(Component.translatable("tela.pixeldungeon.aprimorar"), botao -> aprimorar())
                 .bounds(esquerda + LARGURA / 2 - 50, topo + ALTURA - 28, 100, 20)
+                .build());
+        // Com quem compartilhar o que identificar (poções e pergaminhos)
+        addRenderableWidget(Button.builder(Component.translatable("tela.pixeldungeon.compartilhar.botao"),
+                botao -> PacketDistributor.sendToServer(new PacotePedirCompartilhar()))
+                .bounds(esquerda + LARGURA + 6, topo, 90, 20)
                 .build());
     }
 
