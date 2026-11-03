@@ -15,6 +15,7 @@ import net.minecraft.client.model.OcelotModel;
 import net.minecraft.client.model.SilverfishModel;
 import net.minecraft.client.model.SpiderModel;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -66,5 +67,7 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.SLIME.get(), RenderizadorDeSlime::new);
         // Goo: um slime escuro e grande
         evento.registerEntityRenderer(ModEntidades.GOO.get(), RenderizadorDeGoo::new);
+        // Míssil mágico: não tem modelo, é só o rastro de luz (as partículas saem dele mesmo)
+        evento.registerEntityRenderer(ModEntidades.MISSEL_MAGICO.get(), NoopRenderer::new);
     }
 }

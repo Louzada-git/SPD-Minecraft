@@ -6,6 +6,7 @@ import com.louzada.pixeldungeon.entidade.CobraDeEsgoto;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.GnollExplorador;
 import com.louzada.pixeldungeon.entidade.Goo;
+import com.louzada.pixeldungeon.entidade.MisselMagico;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.entidade.RatoAlbino;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
@@ -49,6 +50,13 @@ public class ModEntidades {
     // Chefe do andar 5: uma gosma larga e baixa
     public static final DeferredHolder<EntityType<?>, EntityType<Goo>> GOO = ENTIDADES.register("goo",
             () -> EntityType.Builder.of(Goo::new, MobCategory.MONSTER).sized(1.8F, 1.4F).build("goo"));
+
+    // ---- Magias ----
+
+    // Míssil mágico do cajado do Mago
+    public static final DeferredHolder<EntityType<?>, EntityType<MisselMagico>> MISSEL_MAGICO = ENTIDADES.register("missel_magico",
+            () -> EntityType.Builder.<MisselMagico>of(MisselMagico::new, MobCategory.MISC).sized(0.25F, 0.25F)
+                    .clientTrackingRange(4).updateInterval(10).build("missel_magico"));
 
     // Diz ao Minecraft a vida, velocidade etc. de cada inimigo
     public static void aoCriarAtributos(EntityAttributeCreationEvent evento) {
