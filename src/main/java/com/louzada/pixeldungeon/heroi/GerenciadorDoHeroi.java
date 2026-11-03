@@ -1,6 +1,7 @@
 package com.louzada.pixeldungeon.heroi;
 
 import com.louzada.pixeldungeon.item.CapaDasSombras;
+import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.rede.RedeDoHeroi;
 import com.louzada.pixeldungeon.run.GerenciadorDaRun;
 
@@ -24,6 +25,10 @@ public class GerenciadorDoHeroi {
             return;
         }
         DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
+        // Segurar uma arma desconhecida revela se ela é amaldiçoada
+        if (jogador.tickCount % 10 == 0) {
+            NivelDoItem.aoSegurar(jogador, jogador.getMainHandItem());
+        }
         boolean umTurno = jogador.tickCount % 20 == 0;
         Escudos.aoTick(jogador, dados, umTurno);
         Talentos.aoTick(jogador, dados);

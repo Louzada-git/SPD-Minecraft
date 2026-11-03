@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.dungeon.Baus;
+import com.louzada.pixeldungeon.dungeon.MapeamentoMagico;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
+import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.heroi.Escudos;
 import com.louzada.pixeldungeon.heroi.EventosDeCombate;
 import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
@@ -70,6 +72,10 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(PopulacaoDoAndar::aoTickDoServidor);
         // Ouro: encostou na pilha, as moedas vão pra bolsa
         NeoForge.EVENT_BUS.addListener(Ouro::aoEncostar);
+        // Efeitos do Shattered que agem a cada turno (veneno, cura, sono...) e o mapeamento mágico
+        NeoForge.EVENT_BUS.addListener(EfeitosNoTick::aoTick);
+        NeoForge.EVENT_BUS.addListener(EfeitosNoTick::aoAcabarEfeito);
+        NeoForge.EVENT_BUS.addListener(MapeamentoMagico::aoTickDoServidor);
         // Baús: ninguém quebra, e os mímicos mordem quem mexe neles
         NeoForge.EVENT_BUS.addListener(Baus::aoClicarComDireito);
         NeoForge.EVENT_BUS.addListener(Baus::aoClicarComEsquerdo);

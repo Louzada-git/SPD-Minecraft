@@ -19,6 +19,7 @@ import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.Talentos;
+import com.louzada.pixeldungeon.item.Identificacao;
 import com.louzada.pixeldungeon.rede.RedeDoHeroi;
 import com.louzada.pixeldungeon.rede.PacoteAbrirMenu;
 
@@ -71,6 +72,8 @@ public class GerenciadorDaRun {
         MinecraftServer servidor = jogador.serverLevel().getServer();
         DadosDaRun dados = DadosDaRun.pegar(servidor);
         jogador.setGameMode(GameType.SPECTATOR);
+        // Fora da run, não sabe o que é nenhuma poção nem pergaminho
+        Identificacao.sincronizar(jogador);
 
         BlockPos lugar = LUGAR_DE_ESPERA;
         DadosDaRun.InfoAndar primeiroAndar = dados.ativa() ? dados.andar(1) : null;
@@ -118,6 +121,7 @@ public class GerenciadorDaRun {
         jogador.getFoodData().setFoodLevel(20);
         levarPara(jogador, 1, true);
         RedeDoHeroi.enviarEstado(jogador, true);
+        Identificacao.sincronizar(jogador);
 
         servidor.getPlayerList().broadcastSystemMessage(Component.translatable("mensagem.pixeldungeon.entrou",
                 jogador.getDisplayName(), Component.translatable(classe.chaveDoNome())), false);
@@ -145,6 +149,7 @@ public class GerenciadorDaRun {
         }
         RegrasDoHeroi.aplicar(jogador);
         RedeDoHeroi.enviarEstado(jogador, true);
+        Identificacao.sincronizar(jogador);
     }
 
     // ---- Morte e ankh ----
@@ -207,7 +212,7 @@ public class GerenciadorDaRun {
         PlantaDoAndar planta = GeradorDeAndar.gerar(dados.semente(), andar);
         BlockPos origem = Andares.origemDoAndar(dados.numeroDaRun(), andar);
         // Os itens do andar são sorteados antes de construir, porque onde tem item a grama alta é aparada
-        List<SaqueDoAndar.Saque> saque = SaqueDoAndar.sortear(planta, andar, dados.semente());
+        List<SaqueDoAndar.Saque> saque = SaqueDoAndar.sortear(planta, andar, dados);
         long inicio = System.currentTimeMillis();
         ConstrutorDeAndar.construir(servidor.overworld(), planta, origem, dados.semente() * 31 + andar);
         PixelDungeon.LOGGER.info("Andar {} construído em {} ms", andar, System.currentTimeMillis() - inicio);

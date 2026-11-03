@@ -91,6 +91,13 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.FLECHA_ESPIRITUAL.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, true));
         // Gota de orvalho: o desenho da gota do Shattered, brilhando
         evento.registerEntityRenderer(ModEntidades.GOTA_DE_ORVALHO.get(), contexto -> new ThrownItemRenderer<>(contexto, 0.8F, true));
+        // Poção e semente arremessadas: o desenho delas voando
+        evento.registerEntityRenderer(ModEntidades.POCAO_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, false));
+        evento.registerEntityRenderer(ModEntidades.SEMENTE_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 0.8F, false));
+        // Nuvem de gás: só a fumaça (as partículas saem dela mesma)
+        evento.registerEntityRenderer(ModEntidades.NUVEM_DE_GAS.get(), NoopRenderer::new);
+        // Imagem espelhada: igual ao herói dono dela
+        evento.registerEntityRenderer(ModEntidades.IMAGEM_ESPELHADA.get(), RenderizadorDaImagem::new);
     }
 
     // A grama usa as texturas cinza da grama do Minecraft; aqui ela ganha a cor verde do esgoto
