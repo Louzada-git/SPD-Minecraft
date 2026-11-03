@@ -115,5 +115,10 @@
   "effect.pixeldungeon.muco_caustico": "Caustic Ooze",
   "efeito.pixeldungeon.muco_caustico.aviso": "Caustic ooze eats your flesh. Wash it away!",
   "item.pixeldungeon.bolha_de_gosma": "Blob of Goo",
-  "item.pixeldungeon.bolha_de_gosma.descricao": "A jiggly blob of goop, split off from Goo as it died. It's almost like a big ball of jelly, though you wouldn't dare eat it. It does nothing on its own, but it might be useful when combined with certain potions, or a bomb."
+  "item.pixeldungeon.bolha_de_gosma.descricao": "A jiggly blob of goop, split off from Goo as it died. It's almost like a big ball of jelly, though you wouldn't dare eat it. It does nothing on its own, but it might be useful when combined with certain potions, or a bomb.",
+
+  "entity.pixeldungeon.missel_magico": "Magic Missile",
+  "dica.pixeldungeon.missel_magico": "Right click: magic missile (%s-%s damage)",
+  "dica.pixeldungeon.cargas": "Charges: %s/%s",
+  "mensagem.pixeldungeon.varinha_sem_carga": "Your wand fizzles; it must not have enough charge."
 }
