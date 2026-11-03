@@ -1,12 +1,16 @@
 package com.louzada.pixeldungeon.registro;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.item.ArcoEspiritual;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
+import com.louzada.pixeldungeon.item.CapaDasSombras;
 import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
 import com.louzada.pixeldungeon.item.ItemComDescricao;
 import com.louzada.pixeldungeon.item.ItemAnkh;
+import com.louzada.pixeldungeon.item.RacaoDeSuprimentos;
+import com.louzada.pixeldungeon.item.TomoSagrado;
 
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
@@ -35,6 +39,17 @@ public class ModItens {
     // 40% a mais de precisão
     public static final DeferredItem<ArmaDoShattered> MACA = arma("maca", 1, 1, 8, 1.4f, 1.0f, 0, false);
 
+    // ---- Itens únicos das classes ----
+
+    // Ladino: fica invisível
+    public static final DeferredItem<CapaDasSombras> CAPA_DAS_SOMBRAS = ITENS.registerItem("capa_das_sombras", CapaDasSombras::new);
+    // Caçadora: flechas infinitas
+    public static final DeferredItem<ArcoEspiritual> ARCO_ESPIRITUAL = ITENS.registerItem("arco_espiritual", ArcoEspiritual::new);
+    // Clérigo: magias
+    public static final DeferredItem<TomoSagrado> TOMO_SAGRADO = ITENS.registerItem("tomo_sagrado", TomoSagrado::new);
+    // A flecha que o arco solta (não dá pra pegar; só serve pra desenhar a flecha voando)
+    public static final DeferredItem<Item> FLECHA_ESPIRITUAL = ITENS.registerSimpleItem("flecha_espiritual");
+
     // ---- Armaduras ----
 
     // Armadura de pano: defesa 0-2, todas as classes começam com ela
@@ -49,6 +64,9 @@ public class ModItens {
 
     // Carne misteriosa: cai de caranguejos e ratos albinos (comer é arriscado)
     public static final DeferredItem<ItemCarneMisteriosa> CARNE_MISTERIOSA = ITENS.registerItem("carne_misteriosa", ItemCarneMisteriosa::new);
+
+    // Ração de suprimentos: aparece em baús pro Ladino com o talento rações guardadas
+    public static final DeferredItem<RacaoDeSuprimentos> RACAO_DE_SUPRIMENTOS = ITENS.registerItem("racao_de_suprimentos", RacaoDeSuprimentos::new);
 
     // ---- Itens especiais ----
 
@@ -101,7 +119,9 @@ public class ModItens {
     // Usado pela aba do criativo para mostrar todos os itens do mod
     public static void colocarTodos(CreativeModeTab.Output saida) {
         for (var item : ITENS.getEntries()) {
-            saida.accept(item.get());
+            if (item.get() != FLECHA_ESPIRITUAL.get()) {
+                saida.accept(item.get());
+            }
         }
     }
 }

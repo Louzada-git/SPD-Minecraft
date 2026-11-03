@@ -4,8 +4,10 @@ import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.entidade.CaranguejoDeEsgoto;
 import com.louzada.pixeldungeon.entidade.CobraDeEsgoto;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
+import com.louzada.pixeldungeon.entidade.FlechaEspiritual;
 import com.louzada.pixeldungeon.entidade.GnollExplorador;
 import com.louzada.pixeldungeon.entidade.Goo;
+import com.louzada.pixeldungeon.entidade.LuzGuia;
 import com.louzada.pixeldungeon.entidade.MisselMagico;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.entidade.RatoAlbino;
@@ -57,6 +59,16 @@ public class ModEntidades {
     public static final DeferredHolder<EntityType<?>, EntityType<MisselMagico>> MISSEL_MAGICO = ENTIDADES.register("missel_magico",
             () -> EntityType.Builder.<MisselMagico>of(MisselMagico::new, MobCategory.MISC).sized(0.25F, 0.25F)
                     .clientTrackingRange(4).updateInterval(10).build("missel_magico"));
+
+    // Luz guia do Clérigo
+    public static final DeferredHolder<EntityType<?>, EntityType<LuzGuia>> LUZ_GUIA = ENTIDADES.register("luz_guia",
+            () -> EntityType.Builder.<LuzGuia>of(LuzGuia::new, MobCategory.MISC).sized(0.25F, 0.25F)
+                    .clientTrackingRange(4).updateInterval(10).build("luz_guia"));
+
+    // Flecha do arco espiritual da Caçadora
+    public static final DeferredHolder<EntityType<?>, EntityType<FlechaEspiritual>> FLECHA_ESPIRITUAL = ENTIDADES.register("flecha_espiritual",
+            () -> EntityType.Builder.<FlechaEspiritual>of(FlechaEspiritual::new, MobCategory.MISC).sized(0.25F, 0.25F)
+                    .clientTrackingRange(4).updateInterval(10).build("flecha_espiritual"));
 
     // Diz ao Minecraft a vida, velocidade etc. de cada inimigo
     public static void aoCriarAtributos(EntityAttributeCreationEvent evento) {
