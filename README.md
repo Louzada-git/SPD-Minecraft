@@ -10,6 +10,7 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 - Andares do esgoto (1 a 4) gerados com salas, corredores e poças de água, no estilo do Shattered.
   - 1 quadradinho do Shattered = 4x4 blocos. As paredes têm 8 blocos de altura.
   - Paredes, chão e teto são inquebráveis.
+- Em cima das poças, a água pinga do teto (igual às goteiras do esgoto do Shattered).
 - Andar 5: a arena do **Goo**, com 4 pilares grossos, uma poça grande no meio (o ninho dele) e poças em volta dos pilares. A sala da saída fica do lado e só abre quando ele morre.
 - Visual construído:
   - Salas com 8 blocos de altura, cornija de degraus no alto das paredes e pilares de tufo entalhado nos cantos.
@@ -28,7 +29,7 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 | Classe | Arma | Dano | Especial |
 |---|---|---|---|
 | Guerreiro | Espada Curta Desgastada | 1-10 | |
-| Mago | Cajado do Mago | 1-6 | |
+| Mago | Cajado do Mago | 1-6 | clique direito lança míssil mágico (2-8) |
 | Ladino | Adaga | 1-8 | |
 | Caçadora | Luvas Cravejadas | 1-5 | ataca 2x mais rápido |
 | Duelista | Florete | 1-8 | |
@@ -38,6 +39,8 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 - A run começa quando alguém escolhe a classe. Quem entra depois escolhe a sua e começa no andar 1.
 - Quem morre vira espectador. Um aliado pode trazer ele de volta usando um **ankh** (clique direito). Se todos morrerem, a run acaba e todo mundo volta pro menu.
 - As armas já vêm com os ataques do Better Combat (funciona com ou sem ele instalado).
+- **Cajado do Mago:** igual ao Shattered, já vem com a varinha de míssil mágico dentro. Clique direito lança um raio de luz branca que sempre acerta e dá 2-8 de dano mágico (a armadura não segura). Tem 4 cargas (3 da varinha + 1 do cajado), mostradas na barrinha roxa do ícone. As cargas voltam sozinhas, de ~33 a ~45 segundos cada (quanto mais vazio, mais rápido). O míssil passa pelos outros heróis.
+- Os itens únicos das outras classes (selo do Guerreiro, capa do Ladino, arco da Caçadora, habilidade da Duelista, tomo do Clérigo) ainda não existem: por enquanto essas armas só batem corpo a corpo.
 
 ### Combate e inimigos
 
@@ -61,6 +64,7 @@ Inimigos do esgoto com os números do Shattered:
 - Caranguejos (1 em 6) e ratos albinos (sempre) deixam **carne misteriosa**: mata metade da fome de uma ração, mas pode queimar, travar as pernas, envenenar ou deixar lento.
 - Quem dorme solta um "z" de vez em quando; quem nota você mostra um "!". Depois de apanhar, o inimigo ganha uma **barra de vida** em cima da cabeça.
 - Cada inimigo tem os seus sons (por enquanto, sons de bichos do Minecraft).
+- **Partículas:** todo golpe espirra sangue da cor do Shattered (vermelho; verde no slime; amarelado no caranguejo; esverdeado no enxame; gosma preta no Goo). O ataque surpresa solta faíscas, e subir de nível faz um brilho subir em volta do herói.
 - **Armadura:** cada golpe recebido perde de 0 até a defesa da armadura (pano = 0-2). O florete dá 1 de defesa extra.
 - O dano é sorteado mais pro meio do intervalo, igual ao Shattered.
 - Números de dano sobem em cima de quem apanhou (laranja nos inimigos, vermelho nos heróis), "desviou" quando erra, "✦" no ataque surpresa e "+XP" ao matar. A barra de ação mostra a vida que sobrou no alvo.
@@ -77,8 +81,8 @@ Inimigos do esgoto com os números do Shattered:
 
 - Dorme no ninho, no meio da arena. Quando acorda grita "GULP-GULP!" e aparece a **barra de vida de chefe** no alto da tela.
 - **Na água ele se cura** 1 de vida por segundo (até dormindo). O segredo é tirar ele da poça.
-- **Golpe carregado:** 1 em cada 5 ataques (1 em 2 furioso) ele bombeia em vez de bater: aparece "!!!", ele incha e um círculo de gosma no chão mostra o alcance (2 quadradinhos). Depois de 2 segundos solta um golpe com **3x o dano e 2x a precisão**. Quem sai do círculo antes faz ele desistir.
-- Com metade da vida ou menos fica **furioso**: bate mais forte, acerta mais, esquiva mais e bombeia mais vezes. A barra fica vermelha. Se ele se curar na água acima da metade, acalma.
+- **Golpe carregado:** 1 em cada 5 ataques (1 em 2 furioso) ele bombeia em vez de bater: aparece "!!!", ele incha e sobe fumaça escura de todo o chão que o golpe vai pegar (2 quadradinhos), com um círculo marcando a borda. Depois de 2 segundos solta um golpe com **3x o dano e 2x a precisão**. Quem sai do círculo antes faz ele desistir.
+- Com metade da vida ou menos fica **furioso**: bate mais forte, acerta mais, esquiva mais e bombeia mais vezes. A barra fica vermelha e ele fica espirrando pedaços de gosma. Se ele se curar na água acima da metade, acalma.
 - 1 em cada 3 golpes deixa **muco cáustico**: 1 de dano por segundo durante 20 segundos. Entrar na água lava na hora.
 - Enquanto ele luta, o andar fica **selado**: ninguém sobe a escada. A luta acaba se não sobrar nenhum herói vivo perto dele.
 - Quando morre deixa 2 a 4 **bolhas de gosma** e a saída do andar abre. Todo mundo no andar vê "Chefe Derrotado". A prisão (andar 6 em diante) ainda não existe, então o alçapão avisa que o caminho está bloqueado.
@@ -158,10 +162,10 @@ src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas e blocos de decoração
-  item/                        armas, armadura, ankh e bolha de gosma
-  entidade/                    os inimigos do Shattered e o Goo
+  item/                        armas, cajado do Mago, armadura, ankh e bolha de gosma
+  entidade/                    os inimigos do Shattered, o Goo e o míssil mágico
   efeito/                      efeitos do Shattered (muco cáustico)
-  combate/                     sorteio de dano e números flutuantes
+  combate/                     sorteio de dano, números flutuantes e partículas
   heroi/
     ClasseDoHeroi.java         as 6 classes e o kit de cada uma
     DadosDoHeroi.java          classe, força, nível e XP de cada jogador
