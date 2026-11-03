@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
+import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.combate.Sorteio;
 import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.efeito.MucoCaustico;
@@ -12,6 +13,7 @@ import com.louzada.pixeldungeon.registro.ModItens;
 import com.louzada.pixeldungeon.run.GerenciadorDaRun;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -142,9 +144,7 @@ public class Goo extends MobDoShattered {
         }
         boolean jaTinha = criatura.hasEffect(ModEfeitos.MUCO_CAUSTICO);
         criatura.addEffect(new MobEffectInstance(ModEfeitos.MUCO_CAUSTICO, MucoCaustico.DURACAO));
-        if (level() instanceof ServerLevel mundo) {
-            mundo.sendParticles(ParticleTypes.SQUID_INK, criatura.getX(), criatura.getY(0.5), criatura.getZ(), 5, 0.3, 0.3, 0.3, 0.05);
-        }
+        espirrarGosma(criatura.getX(), criatura.getY(0.5), criatura.getZ(), 8, 0.12);
         if (!jaTinha && criatura instanceof ServerPlayer jogador) {
             jogador.displayClientMessage(Component.translatable("efeito.pixeldungeon.muco_caustico.aviso").withStyle(ChatFormatting.RED), false);
         }
@@ -176,6 +176,7 @@ public class Goo extends MobDoShattered {
         NumerosFlutuantes.mostrar(this, "!!!", NumerosFlutuantes.LARANJA);
         avisarQuemEstaPerto(Component.translatable("goo.pixeldungeon.bombeando").withStyle(ChatFormatting.RED));
         playSound(SoundEvents.SLIME_JUMP, 1.5F, 0.5F);
+        mostrarAlcance();
     }
 
     private void pararDeBombear() {
@@ -208,8 +209,25 @@ public class Goo extends MobDoShattered {
         soltando = false;
         pararDeBombear();
         playSound(SoundEvents.SLIME_ATTACK, 2.0F, 0.5F);
+        playSound(SoundEvents.GENERIC_EXPLODE.value(), 0.6F, 1.6F);
         if (level() instanceof ServerLevel mundo) {
-            mundo.sendParticles(ParticleTypes.SQUID_INK, alvo.getX(), alvo.getY(0.5), alvo.getZ(), 30, 0.6, 0.6, 0.6, 0.1);
+            // A energia escura explode em cima do alvo e uma onda de gosma sai do Goo
+            mundo.sendParticles(ParticleTypes.EXPLOSION, alvo.getX(), alvo.getY(0.5), alvo.getZ(), 1, 0.0, 0.0, 0.0, 0.0);
+            Particulas.explosao(mundo, ParticleTypes.SQUID_INK, alvo.getX(), alvo.getY(0.5), alvo.getZ(), 30, 0.6, 0.1);
+            espirrarGosma(alvo.getX(), alvo.getY(0.5), alvo.getZ(), 20, 0.25);
+            int pontos = 24;
+            for (int i = 0; i < pontos; i++) {
+                double angulo = i * Math.PI * 2 / pontos;
+                mundo.sendParticles(ParticleTypes.SQUID_INK, getX(), getY() + 0.3, getZ(), 0, Math.cos(angulo), 0.05, Math.sin(angulo), 0.6);
+            }
+        }
+    }
+
+    // Pedacinhos de gosma preta que voam e caem (o "sangue" do Goo no Shattered)
+    private void espirrarGosma(double x, double y, double z, int quantidade, double velocidade) {
+        if (level() instanceof ServerLevel mundo) {
+            ItemParticleOption gosma = new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(ModItens.BOLHA_DE_GOSMA.get()));
+            mundo.sendParticles(gosma, x, y, z, quantidade, 0.3, 0.3, 0.3, velocidade);
         }
     }
 
@@ -222,18 +240,29 @@ public class Goo extends MobDoShattered {
                 && hasLineOfSight(alvo);
     }
 
-    // Um círculo de gosma escura no chão mostra até onde o golpe carregado alcança
+    // Igual ao Shattered: fumaça escura sobe de todo o chão que o golpe carregado vai pegar,
+    // e um círculo marca a borda. Quanto mais ele bombeia, mais fumaça.
     private void mostrarAlcance() {
         if (!(level() instanceof ServerLevel mundo)) {
             return;
         }
-        int pontos = 32;
+        double raio = ALCANCE_DO_GOLPE_CARREGADO;
+        int pontos = 40;
         for (int i = 0; i < pontos; i++) {
             double angulo = i * Math.PI * 2 / pontos;
-            mundo.sendParticles(ParticleTypes.SQUID_INK, getX() + Math.cos(angulo) * ALCANCE_DO_GOLPE_CARREGADO, getY() + 0.2,
-                    getZ() + Math.sin(angulo) * ALCANCE_DO_GOLPE_CARREGADO, 1, 0.0, 0.0, 0.0, 0.0);
+            mundo.sendParticles(Particulas.poeira(0x3A1A4A, 1.6F), getX() + Math.cos(angulo) * raio, getY() + 0.2,
+                    getZ() + Math.sin(angulo) * raio, 1, 0.0, 0.0, 0.0, 0.0);
         }
+        int dentro = 30 * Math.max(1, carga());
+        for (int i = 0; i < dentro; i++) {
+            double angulo = getRandom().nextDouble() * Math.PI * 2;
+            double distancia = Math.sqrt(getRandom().nextDouble()) * raio;
+            mundo.sendParticles(Particulas.poeira(0x111111, 1.0F), getX() + Math.cos(angulo) * distancia, getY() + 0.2,
+                    getZ() + Math.sin(angulo) * distancia, 0, 0.0, 1.0, 0.0, 0.5);
+        }
+        // O próprio Goo solta energia escura enquanto incha
         mundo.sendParticles(ParticleTypes.SQUID_INK, getX(), getY(0.6), getZ(), 6, 0.6, 0.4, 0.6, 0.02);
+        mundo.sendParticles(ParticleTypes.WITCH, getX(), getY(0.8), getZ(), 4 * Math.max(1, carga()), 0.7, 0.4, 0.7, 0.0);
     }
 
     // Bombeando, ele fica parado no lugar
@@ -273,6 +302,12 @@ public class Goo extends MobDoShattered {
             heal(1.0F);
             if (level().getNearestPlayer(this, 32) != null) {
                 NumerosFlutuantes.mostrar(this, "+1", NumerosFlutuantes.VERDE);
+                // Bolhas e respingos: ele está sugando a água do esgoto
+                if (level() instanceof ServerLevel mundo) {
+                    mundo.sendParticles(ParticleTypes.SPLASH, getX(), getY() + 0.9, getZ(), 12, 0.7, 0.1, 0.7, 0.0);
+                    mundo.sendParticles(ParticleTypes.BUBBLE_POP, getX(), getY() + 0.9, getZ(), 6, 0.6, 0.1, 0.6, 0.02);
+                    Particulas.subindoEmVolta(this, Particulas.poeira(0x55FF55, 0.8F), 4, 0.0);
+                }
             }
         }
         atualizarLuta();
@@ -285,14 +320,15 @@ public class Goo extends MobDoShattered {
             barra.setColor(BossEvent.BossBarColor.RED);
             NumerosFlutuantes.mostrarTraduzido(this, "goo.pixeldungeon.furioso", NumerosFlutuantes.LARANJA);
             gritar("goo.pixeldungeon.gluuurp");
+            espirrarGosma(getX(), getY(0.7), getZ(), 25, 0.3);
         } else if (!agora && estavaFurioso) {
             // Se curou na água e passou da metade da vida: acalma
             estavaFurioso = false;
             barra.setColor(BossEvent.BossBarColor.GREEN);
         }
-        // Furioso, ele espirra gosma pra todo lado
-        if (estavaFurioso && tickCount % 10 == 0 && level() instanceof ServerLevel mundo) {
-            mundo.sendParticles(ParticleTypes.SQUID_INK, getX(), getY(0.8), getZ(), 2, 0.5, 0.2, 0.5, 0.05);
+        // Furioso, ele espirra gosma pra todo lado (igual ao sprite do Shattered)
+        if (estavaFurioso && tickCount % 4 == 0) {
+            espirrarGosma(getX(), getY(0.9), getZ(), 2, 0.15);
         }
     }
 
@@ -364,6 +400,12 @@ public class Goo extends MobDoShattered {
             return;
         }
         gritar("goo.pixeldungeon.derrotado");
+        // Ele se desfaz numa poça de gosma
+        espirrarGosma(getX(), getY(0.5), getZ(), 50, 0.35);
+        if (level() instanceof ServerLevel mundo) {
+            Particulas.explosao(mundo, ParticleTypes.SQUID_INK, getX(), getY(0.5), getZ(), 40, 0.8, 0.15);
+            Particulas.explosao(mundo, Particulas.poeira(0x111111, 2.0F), getX(), getY(0.3), getZ(), 30, 1.0, 0.0);
+        }
         barra.removeAllPlayers();
 
         // Igual ao Shattered: 60% de chance de 2 bolhas de gosma, 30% de 3 e 10% de 4
