@@ -159,8 +159,7 @@ public class TelaEscolhaDeHeroi extends Screen {
         y += 8;
 
         // O que a classe recebe agora
-        Component kit = Component.translatable("tela.pixeldungeon.kit", Component.translatable(escolhida.armaInicial().getDescriptionId()))
-                .withStyle(ChatFormatting.GRAY);
+        Component kit = Component.translatable(escolhida.chaveDoKit()).withStyle(ChatFormatting.GRAY);
         y = escreverCentralizado(desenho, kit, y, larguraDoTexto, COR_DO_TEXTO);
 
         if (runEmAndamento) {

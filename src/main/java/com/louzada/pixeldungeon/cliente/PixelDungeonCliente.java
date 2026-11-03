@@ -16,11 +16,13 @@ import net.minecraft.client.model.SilverfishModel;
 import net.minecraft.client.model.SpiderModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.NoopRenderer;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 // Parte do mod que só roda no jogo do jogador (nunca no servidor): desenhos, telas...
 @Mod(value = PixelDungeon.MODID, dist = Dist.CLIENT)
@@ -28,6 +30,10 @@ public class PixelDungeonCliente {
 
     public PixelDungeonCliente(IEventBus barramentoDoMod, ModContainer container) {
         barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarRenderizadores);
+        // Teclas (K talentos, V habilidade) e os avisos perto da barra de itens
+        barramentoDoMod.addListener(TeclasDoMod::aoRegistrar);
+        barramentoDoMod.addListener(HudDoHeroi::aoRegistrar);
+        NeoForge.EVENT_BUS.addListener(TeclasDoMod::aoTick);
     }
 
     // Como cada inimigo aparece na tela.
@@ -69,5 +75,9 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.GOO.get(), RenderizadorDeGoo::new);
         // Míssil mágico: não tem modelo, é só o rastro de luz (as partículas saem dele mesmo)
         evento.registerEntityRenderer(ModEntidades.MISSEL_MAGICO.get(), NoopRenderer::new);
+        // Luz guia do Clérigo: igual ao míssil, só o rastro de luz
+        evento.registerEntityRenderer(ModEntidades.LUZ_GUIA.get(), NoopRenderer::new);
+        // Flecha espiritual: o desenho da flecha do Shattered, brilhando
+        evento.registerEntityRenderer(ModEntidades.FLECHA_ESPIRITUAL.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, true));
     }
 }
