@@ -90,6 +90,7 @@ public class EventosDaRun {
             testarCombate(servidor);
             testarClasses(servidor);
             testarSaque(servidor);
+            TestesDosItens.testar(servidor);
         }
     }
 

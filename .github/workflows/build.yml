@@ -98,4 +98,16 @@ jobs:
           if ! grep -q "Teste do baú: tem a espada dentro = true" servidor.log; then echo "O baú não guardou o item"; exit 1; fi
           if ! grep -q "Teste do mímico: era mímico = true, o baú sumiu = true, vida 12.0, guardava 2 itens, caíram 2" servidor.log; then echo "O mímico não funcionou"; exit 1; fi
           if ! grep -q "Teste dos drops: gnoll deixou ouro = true, slime deixou arma de tier 2 = true" servidor.log; then echo "Os inimigos não deixaram itens"; exit 1; fi
+          if ! grep -q "Teste da poção de força: força 10 -> 11, conhece = true" servidor.log; then echo "A poção de força não funcionou"; exit 1; fi
+          if ! grep -q "Teste da poção de cura: curando = true" servidor.log; then echo "A poção de cura não funcionou"; exit 1; fi
+          if ! grep -q "Teste do gás paralisante: o rato ficou paralisado = true" servidor.log; then echo "O gás paralisante não funcionou"; exit 1; fi
+          if ! grep -q "Teste das plantas: plantou = true, ativou = true, a planta sumiu = true" servidor.log; then echo "As plantas não funcionaram"; exit 1; fi
+          if ! grep -q "Teste da identificação pelo uso: começou desconhecida = true, depois de 20 golpes conhecida = true" servidor.log; then echo "A arma não se identificou com o uso"; exit 1; fi
+          if ! grep -q "Teste do pergaminho de identificação: arma identificada = true, pergaminho gasto = true" servidor.log; then echo "O pergaminho de identificação não funcionou"; exit 1; fi
+          if ! grep -qE "Teste do pergaminho de melhoria: nível (0 -> 1|1 -> 2|2 -> 3)" servidor.log; then echo "O pergaminho de melhoria não funcionou"; exit 1; fi
+          if ! grep -q "Teste do pergaminho de remover maldição: ainda amaldiçoada = false" servidor.log; then echo "O pergaminho de remover maldição não funcionou"; exit 1; fi
+          if ! grep -q "Teste da maldição polarizante: dano 0 ou 15 = true" servidor.log; then echo "A maldição polarizante não funcionou"; exit 1; fi
+          if ! grep -q "Teste da transmutação: virou outra arma = true, nível = 2" servidor.log; then echo "A transmutação não funcionou"; exit 1; fi
+          if ! grep -q "Teste do saque: poções de força = 2, pergaminhos de melhoria = 3" servidor.log; then echo "As poções de força e os pergaminhos de melhoria não caíram"; exit 1; fi
+          if ! grep -q "Teste das sementes: 2 sementes sorteadas" servidor.log; then echo "As sementes não foram sorteadas"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
