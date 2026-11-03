@@ -14,6 +14,11 @@ public class PlantaDoAndar {
     public static final byte ENTRADA = 3;
     public static final byte SAIDA = 4;
 
+    // Grama por cima do chão (uma camada separada, o quadradinho continua sendo chão)
+    public static final byte SEM_GRAMA = 0;
+    public static final byte GRAMA = 1;
+    public static final byte GRAMA_ALTA = 2;
+
     // Uma sala retangular. x, y = canto; largura e altura em quadradinhos.
     public record Sala(int x, int y, int largura, int altura) {
         public int centroX() {
@@ -36,6 +41,7 @@ public class PlantaDoAndar {
     private int largura;
     private int altura;
     private byte[] quadradinhos;
+    private byte[] grama;
     // Número da sala de cada quadradinho (-1 = não é sala, ou seja, corredor ou parede)
     private int[] salaDoQuadradinho;
     private List<Sala> salas = new ArrayList<>();
@@ -50,6 +56,7 @@ public class PlantaDoAndar {
         this.largura = largura;
         this.altura = altura;
         this.quadradinhos = new byte[largura * altura];
+        this.grama = new byte[largura * altura];
         this.salaDoQuadradinho = new int[largura * altura];
         Arrays.fill(salaDoQuadradinho, -1);
     }
@@ -100,6 +107,16 @@ public class PlantaDoAndar {
     public void definir(int x, int y, byte tipo) {
         if (dentro(x, y)) {
             quadradinhos[y * largura + x] = tipo;
+        }
+    }
+
+    public byte grama(int x, int y) {
+        return dentro(x, y) ? grama[y * largura + x] : SEM_GRAMA;
+    }
+
+    public void definirGrama(int x, int y, byte tipo) {
+        if (dentro(x, y)) {
+            grama[y * largura + x] = tipo;
         }
     }
 

@@ -85,6 +85,9 @@ public class GeradorDeAndar {
             espalharAgua(planta, sala.centroX(), sala.centroY(), 6 + sorteio.nextInt(9), sorteio);
         }
 
+        // 5. Grama (igual ao esgoto do Shattered: 20% de chance, em manchas)
+        espalharGrama(planta, sorteio, 0.20F, 4);
+
         return planta;
     }
 
@@ -228,6 +231,56 @@ public class GeradorDeAndar {
 
     private static int distancia(Sala a, Sala b) {
         return Math.abs(a.centroX() - b.centroX()) + Math.abs(a.centroY() - b.centroY());
+    }
+
+    // Grama igual ao Shattered: sorteia manchas na planta inteira (cada quadradinho olha os 8 vizinhos e fica
+    // igual à maioria, várias vezes) e põe grama no chão das salas que cair numa mancha.
+    // Quanto mais vizinhos com grama, maior a chance de ser grama alta (de 1 em 12 até 9 em 12).
+    private static void espalharGrama(PlantaDoAndar planta, Random sorteio, float preenchimento, int suavizar) {
+        int largura = planta.largura();
+        int altura = planta.altura();
+        boolean[] mancha = new boolean[largura * altura];
+        float chance = preenchimento + (0.5F - preenchimento) * 0.5F;
+        for (int i = 0; i < mancha.length; i++) {
+            mancha[i] = sorteio.nextFloat() < chance;
+        }
+        for (int vez = 0; vez < suavizar; vez++) {
+            boolean[] nova = new boolean[mancha.length];
+            for (int y = 0; y < altura; y++) {
+                for (int x = 0; x < largura; x++) {
+                    int comGrama = 0;
+                    int vizinhos = 0;
+                    for (int dy = -1; dy <= 1; dy++) {
+                        for (int dx = -1; dx <= 1; dx++) {
+                            if (planta.dentro(x + dx, y + dy)) {
+                                vizinhos++;
+                                if (mancha[(y + dy) * largura + x + dx]) {
+                                    comGrama++;
+                                }
+                            }
+                        }
+                    }
+                    nova[y * largura + x] = 2 * comGrama >= vizinhos;
+                }
+            }
+            mancha = nova;
+        }
+        for (int y = 0; y < altura; y++) {
+            for (int x = 0; x < largura; x++) {
+                if (!mancha[y * largura + x] || planta.tipo(x, y) != PlantaDoAndar.CHAO || planta.ehCorredor(x, y)) {
+                    continue;
+                }
+                int comGrama = 1;
+                for (int dy = -1; dy <= 1; dy++) {
+                    for (int dx = -1; dx <= 1; dx++) {
+                        if ((dx != 0 || dy != 0) && planta.dentro(x + dx, y + dy) && mancha[(y + dy) * largura + x + dx]) {
+                            comGrama++;
+                        }
+                    }
+                }
+                planta.definirGrama(x, y, sorteio.nextFloat() < comGrama / 12.0F ? PlantaDoAndar.GRAMA_ALTA : PlantaDoAndar.GRAMA);
+            }
+        }
     }
 
     // Caminha aleatoriamente a partir de um ponto, transformando chão em água
