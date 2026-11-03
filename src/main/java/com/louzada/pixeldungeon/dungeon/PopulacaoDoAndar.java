@@ -12,6 +12,8 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
+import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.run.DadosDaRun;
@@ -30,6 +32,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 //   - a cada 50 turnos (50 s), se o andar tiver menos inimigos que o limite, nasce mais um longe dos heróis
 //   - no andar 1 não nasce mais nenhum depois do começo
 //   - quanto mais jogadores, mais vida os inimigos têm (+50% por jogador a mais)
+//   - nos andares de chefe só tem o chefe, dormindo no meio da arena (no andar 5, o Goo no ninho dele)
 public class PopulacaoDoAndar {
     private static final int TICKS_PARA_RENASCER = 50 * 20;
     private static final double DISTANCIA_MINIMA_DOS_HEROIS = 24;
@@ -81,6 +84,7 @@ public class PopulacaoDoAndar {
 
     public static void povoarNoInicio(ServerLevel mundo, PlantaDoAndar planta, BlockPos origem, int andar, long semente) {
         if (Andares.ehAndarDeChefe(andar)) {
+            criarChefe(mundo, planta, origem, andar);
             return;
         }
         Random sorteio = new Random(semente * 31 + andar * 7L);
@@ -103,6 +107,30 @@ public class PopulacaoDoAndar {
             }
         }
         PixelDungeon.LOGGER.info("Andar {}: {} inimigos", andar, criados);
+    }
+
+    // O chefe nasce dormindo bem no meio da arena (a primeira sala da planta)
+    private static void criarChefe(ServerLevel mundo, PlantaDoAndar planta, BlockPos origem, int andar) {
+        if (andar != 5) {
+            return;
+        }
+        Goo goo = ModEntidades.GOO.get().create(mundo);
+        if (goo == null) {
+            return;
+        }
+        int t = Andares.TAMANHO_DO_QUADRADINHO;
+        Sala arena = planta.salas().get(0);
+        double x = origem.getX() + arena.x() * t + arena.largura() * t / 2.0;
+        double z = origem.getZ() + arena.y() * t + arena.altura() * t / 2.0;
+        // Na água o chão fica 1 bloco mais fundo
+        boolean naAgua = planta.tipo(arena.centroX(), arena.centroY()) == PlantaDoAndar.AGUA;
+        double y = origem.getY() + (naAgua ? 0 : 1);
+        goo.moveTo(x, y, z, 0.0F, 0.0F);
+        goo.ajustarVida(mundo, multiplicadorDeVida(mundo.getServer()));
+        goo.setPersistenceRequired();
+        mundo.addFreshEntity(goo);
+        goo.dormir();
+        PixelDungeon.LOGGER.info("Andar {}: Goo no ninho ({} de vida)", andar, Math.round(goo.getMaxHealth()));
     }
 
     // ---- Renascimento ----
@@ -217,7 +245,8 @@ public class PopulacaoDoAndar {
         return plantas.computeIfAbsent(semente + ":" + andar, chave -> GeradorDeAndar.gerar(semente, andar));
     }
 
-    private static AABB caixaDoAndar(BlockPos origem) {
+    // O espaço de um andar inteiro (pra procurar quem está nele)
+    public static AABB caixaDoAndar(BlockPos origem) {
         int tamanho = Andares.TAMANHO_DA_PLANTA * Andares.TAMANHO_DO_QUADRADINHO;
         return new AABB(origem.getX(), origem.getY() - 1, origem.getZ(),
                 origem.getX() + tamanho, origem.getY() + Andares.ALTURA_DA_PAREDE + 2, origem.getZ() + tamanho);
@@ -226,14 +255,20 @@ public class PopulacaoDoAndar {
     // Em que andar da run atual o jogador está (ou null se está fora da dungeon dessa run)
     @Nullable
     private static Integer andarDoJogador(DadosDaRun dados, ServerPlayer jogador) {
+        return andarEm(dados, jogador.getX(), jogador.getY(), jogador.getZ());
+    }
+
+    // Em que andar da run atual fica esse lugar (ou null se fica fora da dungeon dessa run)
+    @Nullable
+    public static Integer andarEm(DadosDaRun dados, double x, double y, double z) {
         BlockPos origem = Andares.origemDoAndar(dados.numeroDaRun(), 1);
         int tamanho = Andares.TAMANHO_DA_PLANTA * Andares.TAMANHO_DO_QUADRADINHO;
-        boolean dentro = jogador.getX() >= origem.getX() && jogador.getX() < origem.getX() + tamanho
-                && jogador.getZ() >= origem.getZ() && jogador.getZ() < origem.getZ() + tamanho;
+        boolean dentro = x >= origem.getX() && x < origem.getX() + tamanho
+                && z >= origem.getZ() && z < origem.getZ() + tamanho;
         if (!dentro) {
             return null;
         }
-        int andar = Andares.andarPelaAltura((int) Math.floor(jogador.getY()));
+        int andar = Andares.andarPelaAltura((int) Math.floor(y));
         if (andar < 1 || andar > Andares.ULTIMO_ANDAR_LIBERADO) {
             return null;
         }
