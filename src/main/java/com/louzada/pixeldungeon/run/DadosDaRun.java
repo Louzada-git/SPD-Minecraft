@@ -1,7 +1,9 @@
 package com.louzada.pixeldungeon.run;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -14,7 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 
 // Tudo sobre a run atual que precisa continuar salvo quando o mundo fecha:
-// número da run, se ela está acontecendo, semente e andares já construídos.
+// número da run, se ela está acontecendo, semente, andares já construídos e chefes já derrotados.
 // (Em qual run cada jogador está fica salvo no próprio jogador, no DadosDoHeroi.)
 public class DadosDaRun extends SavedData {
     private static final String NOME_DO_ARQUIVO = "pixeldungeon_run";
@@ -28,6 +30,8 @@ public class DadosDaRun extends SavedData {
     private boolean ativa = false;
     private long semente = 0;
     private Map<Integer, InfoAndar> andares = new HashMap<>();
+    // Andares de chefe em que o chefe já morreu (a saída deles fica aberta)
+    private Set<Integer> chefesDerrotados = new HashSet<>();
 
     // Pega os dados salvos no mundo (ou cria do zero se ainda não existem)
     public static DadosDaRun pegar(MinecraftServer servidor) {
@@ -52,6 +56,7 @@ public class DadosDaRun extends SavedData {
         ativa = true;
         semente = novaSemente;
         andares.clear();
+        chefesDerrotados.clear();
         setDirty();
     }
 
@@ -67,6 +72,15 @@ public class DadosDaRun extends SavedData {
 
     public void guardarAndar(int andar, InfoAndar info) {
         andares.put(andar, info);
+        setDirty();
+    }
+
+    public boolean chefeDerrotado(int andar) {
+        return chefesDerrotados.contains(andar);
+    }
+
+    public void marcarChefeDerrotado(int andar) {
+        chefesDerrotados.add(andar);
         setDirty();
     }
 
@@ -89,6 +103,7 @@ public class DadosDaRun extends SavedData {
             listaDeAndares.add(andarTag);
         }
         tag.put("andares", listaDeAndares);
+        tag.putIntArray("chefes_derrotados", chefesDerrotados.stream().mapToInt(Integer::intValue).toArray());
         return tag;
     }
 
@@ -104,6 +119,9 @@ public class DadosDaRun extends SavedData {
             BlockPos entrada = carregarPosicao(andarTag, "entrada");
             BlockPos saida = andarTag.contains("saida_x") ? carregarPosicao(andarTag, "saida") : null;
             dados.andares.put(andarTag.getInt("andar"), new InfoAndar(entrada, saida));
+        }
+        for (int andar : tag.getIntArray("chefes_derrotados")) {
+            dados.chefesDerrotados.add(andar);
         }
         return dados;
     }
