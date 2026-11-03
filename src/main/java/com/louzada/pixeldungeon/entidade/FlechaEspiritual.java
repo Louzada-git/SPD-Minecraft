@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -77,7 +78,7 @@ public class FlechaEspiritual extends ThrowableItemProjectile {
         }
         if (getOwner() instanceof ServerPlayer jogador) {
             // As regras do herói: acerto, dano do arco, armadura e talentos (ataque consecutivo marca o alvo)
-            float dano = CombateDoHeroi.calcular(jogador, alvo, ModItens.ARCO_ESPIRITUAL.get(), 1, 1, 1, 0, false, true);
+            float dano = CombateDoHeroi.calcular(jogador, alvo, new ItemStack(ModItens.ARCO_ESPIRITUAL.get()), 1, 1, 1, 0, false, true);
             if (dano >= 0) {
                 CombateDoHeroi.aplicar(alvo, dano, damageSources().thrown(this, jogador));
             }

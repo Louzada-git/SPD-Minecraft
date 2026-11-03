@@ -7,9 +7,10 @@ import javax.annotation.Nullable;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.combate.Sorteio;
+import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
+import com.louzada.pixeldungeon.entidade.ImagemEspelhada;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
-import com.louzada.pixeldungeon.item.ArmaComDano;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
@@ -20,6 +21,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -61,6 +63,11 @@ public class EventosDeCombate {
 
         // Magia e ataques de longe
         boolean corpoACorpo = atacante != null && fonte.getDirectEntity() == atacante;
+        // Paralisado, congelado, dormindo ou aterrorizado não consegue bater
+        if (corpoACorpo && EfeitosNoTick.impedidoDeAtacar(atacante)) {
+            evento.setCanceled(true);
+            return;
+        }
         if (!corpoACorpo) {
             if (atacante != null && alvo instanceof MobDoShattered inimigo) {
                 evento.setAmount(inimigo.reduzirDanoRecebido(evento.getAmount()));
@@ -71,7 +78,7 @@ public class EventosDeCombate {
 
         // O herói batendo
         if (atacante instanceof ServerPlayer jogador) {
-            ArmaComDano arma = jogador.getMainHandItem().getItem() instanceof ArmaDoShattered armaDeVerdade ? armaDeVerdade : null;
+            ItemStack arma = jogador.getMainHandItem().getItem() instanceof ArmaDoShattered ? jogador.getMainHandItem() : ItemStack.EMPTY;
             // O Minecraft já calculou o golpe com base 1 (vezes a recarga e o crítico).
             // Mantemos essa proporção e trocamos o 1 pelo dano sorteado da arma.
             double ataqueBase = jogador.getAttributeValue(Attributes.ATTACK_DAMAGE);
@@ -96,6 +103,8 @@ public class EventosDeCombate {
         float dano = evento.getAmount();
         if (atacante instanceof MobDoShattered inimigo) {
             dano = inimigo.sortearDano();
+        } else if (atacante instanceof ImagemEspelhada imagem) {
+            dano = imagem.sortearDano();
         }
         dano = Math.max(0, dano - armaduraDe(alvo, atacante, sorteio));
         // Armadura sagrada do Clérigo: bloqueia mais 1
@@ -108,11 +117,13 @@ public class EventosDeCombate {
         finalizarGolpe(evento, alvo, atacante, dano);
     }
 
-    // O que acontece com quem apanha depois do dano calculado: o slime amortece, o enxame se divide, e acorda
+    // O que acontece com quem apanha depois do dano calculado: o slime amortece, a raiz-da-terra segura,
+    // o enxame se divide, e acorda
     private static void finalizarGolpe(LivingIncomingDamageEvent evento, LivingEntity alvo, @Nullable Entity atacante, float dano) {
         if (alvo instanceof MobDoShattered inimigo) {
             dano = inimigo.reduzirDanoRecebido(dano);
         }
+        dano = EfeitosNoTick.segurarComARaiz(alvo, dano);
         if (alvo instanceof EnxameDeMoscas enxame && dano > 0) {
             enxame.dividir(dano);
         }
@@ -135,6 +146,8 @@ public class EventosDeCombate {
         }
         String cor = alvo instanceof Player ? NumerosFlutuantes.VERMELHO : NumerosFlutuantes.LARANJA;
         NumerosFlutuantes.mostrar(alvo, String.valueOf(Math.max(1, Math.round(evento.getNewDamage()))), cor);
+        // Apanhar acorda do sono mágico
+        EfeitosNoTick.aoApanhar(alvo);
 
         // Sangue (o slime espirra verde, o Goo espirra gosma preta...)
         int corDoSangue = alvo instanceof MobDoShattered inimigo ? inimigo.corDoSangue() : Particulas.SANGUE_PADRAO;
@@ -160,6 +173,10 @@ public class EventosDeCombate {
             return;
         }
         ServerPlayer matador = evento.getSource().getEntity() instanceof ServerPlayer quem ? quem : null;
+        // O que a imagem espelhada mata conta pro herói dela
+        if (evento.getSource().getEntity() instanceof ImagemEspelhada imagem) {
+            matador = imagem.jogadorDono();
+        }
         boolean ganhaItens = matador == null || RegrasDoHeroi.dados(matador).nivel() <= inimigo.atributos().nivelMaximo() + 2;
         ItemStack saque = ganhaItens ? inimigo.sortearSaque() : ItemStack.EMPTY;
         if (!saque.isEmpty()) {
@@ -189,10 +206,15 @@ public class EventosDeCombate {
             precisao = RegrasDoHeroi.precisao(RegrasDoHeroi.dados(jogador).nivel());
         } else if (atacante instanceof MobDoShattered inimigo) {
             precisao = inimigo.precisao();
+        } else if (atacante instanceof ImagemEspelhada imagem) {
+            precisao = imagem.precisao();
         }
-        // Atordoado: precisão pela metade
+        // Atordoado: precisão pela metade. Abençoado (flor-estrela): +25%.
         if (atacante instanceof LivingEntity criatura && criatura.hasEffect(ModEfeitos.ATORDOADO)) {
             precisao *= 0.5F;
+        }
+        if (atacante instanceof LivingEntity criatura && criatura.hasEffect(ModEfeitos.ABENCOADO)) {
+            precisao *= 1.25F;
         }
         return precisao;
     }
@@ -204,9 +226,18 @@ public class EventosDeCombate {
         } else if (alvo instanceof MobDoShattered inimigo) {
             // Dormindo não dá pra desviar
             esquiva = inimigo.dormindo() ? 0 : inimigo.esquiva();
+        } else if (alvo instanceof ImagemEspelhada imagem) {
+            esquiva = imagem.esquiva();
         }
         if (alvo.hasEffect(ModEfeitos.ATORDOADO)) {
             esquiva *= 0.5F;
+        }
+        if (alvo.hasEffect(ModEfeitos.ABENCOADO)) {
+            esquiva *= 1.25F;
+        }
+        // Paralisado, congelado ou dormindo não consegue desviar
+        if (EfeitosNoTick.semDefesa(alvo)) {
+            esquiva = 0;
         }
         return esquiva;
     }
@@ -214,16 +245,23 @@ public class EventosDeCombate {
     // Herói: armadura no peito + defesa da arma (florete) + escudo de luz contra esse inimigo.
     // Inimigo: a armadura dele.
     public static int armaduraDe(LivingEntity alvo, @Nullable Entity atacante, RandomSource sorteio) {
+        // Pele de árvore (auxílio da natureza): 0 até o nível dela, pra qualquer um
+        MobEffectInstance pele = alvo.getEffect(ModEfeitos.PELE_DE_ARVORE);
+        int extra = pele == null ? 0 : Sorteio.normal(sorteio, 0, pele.getAmplifier() + 1);
+        return extra + armaduraSemEfeitos(alvo, atacante, sorteio);
+    }
+
+    private static int armaduraSemEfeitos(LivingEntity alvo, @Nullable Entity atacante, RandomSource sorteio) {
         if (alvo instanceof Player jogador) {
             DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
             int forca = dados.forca();
             int defesa = 0;
             ItemStack peito = jogador.getItemBySlot(EquipmentSlot.CHEST);
             if (peito.getItem() instanceof ArmaduraDoShattered armadura) {
-                defesa += armadura.sortearDefesa(sorteio, forca);
+                defesa += armadura.sortearDefesa(peito, sorteio, forca);
             }
             if (jogador.getMainHandItem().getItem() instanceof ArmaDoShattered arma) {
-                defesa += arma.sortearDefesa(sorteio, forca);
+                defesa += arma.sortearDefesa(jogador.getMainHandItem(), sorteio, forca);
             }
             // Escudo de luz do Clérigo: 2-4 / 3-6 de armadura contra o inimigo escolhido
             UUID protegidoDe = dados.alvo(MagiasDoClerigo.ESCUDO_ALVO);

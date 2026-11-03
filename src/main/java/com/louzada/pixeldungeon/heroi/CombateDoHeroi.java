@@ -6,18 +6,23 @@ import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.item.ArmaComDano;
+import com.louzada.pixeldungeon.item.ArmaDoShattered;
+import com.louzada.pixeldungeon.item.Maldicoes;
+import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 // Um golpe do herói com as regras do Shattered. Usado pelos golpes normais, pelas habilidades da Duelista
 // e pelas flechas do arco espiritual:
 //   1. acerto: surpresa e inimigo iluminado sempre acertam; senão, precisão contra esquiva
 //   2. dano da arma (vezes o multiplicador, mais o bônus da habilidade)
 //   3. luz abrasadora (inimigo iluminado), armadura do inimigo, talentos e arma celestial
+//   4. maldição da arma, e cada acerto ajuda a identificar a arma
 public class CombateDoHeroi {
     // Colado no inimigo, o arco acerta pior (igual às armas de arremesso do Shattered)
     private static final double DISTANCIA_COLADO = 4.5;
@@ -30,10 +35,13 @@ public class CombateDoHeroi {
     }
 
     // Devolve o dano final, ou -1 se errou (aí já mostra "desviou")
+    //   pilhaDaArma: a arma usada (vazia = mão vazia)
     //   danoSemArma: dano de quem bate de mão vazia
     //   proporcao: força do golpe do Minecraft (golpe com a barra de ataque cheia = 1)
-    public static float calcular(ServerPlayer jogador, LivingEntity alvo, @Nullable ArmaComDano arma, float danoSemArma, float proporcao,
+    public static float calcular(ServerPlayer jogador, LivingEntity alvo, ItemStack pilhaDaArma, float danoSemArma, float proporcao,
             float multiplicador, int bonus, boolean acertoGarantido, boolean aDistancia) {
+        @Nullable
+        ArmaComDano arma = pilhaDaArma.getItem() instanceof ArmaComDano comDano ? comDano : null;
         RandomSource sorteio = jogador.getRandom();
         DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
         long agora = jogador.level().getGameTime();
@@ -44,7 +52,11 @@ public class CombateDoHeroi {
         if (!acertoGarantido && !surpresa && !iluminado) {
             float precisao = RegrasDoHeroi.precisao(dados.nivel());
             if (arma != null) {
-                precisao *= arma.precisaoCom(dados);
+                precisao *= arma.precisaoCom(pilhaDaArma, dados);
+            }
+            precisao *= Maldicoes.multiplicadorDePrecisao(jogador, pilhaDaArma);
+            if (jogador.hasEffect(ModEfeitos.ABENCOADO)) {
+                precisao *= 1.25F;
             }
             if (aDistancia && jogador.distanceTo(alvo) < DISTANCIA_COLADO) {
                 precisao *= 0.5F;
@@ -60,7 +72,7 @@ public class CombateDoHeroi {
         }
 
         // 2. Dano
-        float dano = arma != null ? arma.sortearDano(sorteio, dados, surpresa) * proporcao : danoSemArma;
+        float dano = arma != null ? arma.sortearDano(pilhaDaArma, sorteio, dados, surpresa) * proporcao : danoSemArma;
         dano = dano * multiplicador + bonus;
 
         // 3. A luz guia some com o golpe (e a luz abrasadora queima mais)
@@ -76,6 +88,12 @@ public class CombateDoHeroi {
         if (jogador.hasEffect(ModEfeitos.ARMA_CELESTIAL)) {
             dano += 2;
             Particulas.sangue(alvo, 0xFFFF88, 2);
+        }
+
+        // A maldição da arma (polarizante, sacrificante...) e a identificação pelo uso
+        if (pilhaDaArma.getItem() instanceof ArmaDoShattered) {
+            dano = Maldicoes.aoGolpear(jogador, alvo, pilhaDaArma, dano);
+            NivelDoItem.aoGolpear(jogador, pilhaDaArma);
         }
 
         // A Duelista conta os golpes pra combinação das luvas

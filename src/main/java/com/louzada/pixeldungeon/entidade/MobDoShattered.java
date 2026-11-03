@@ -6,6 +6,7 @@ import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.combate.Sorteio;
 import com.louzada.pixeldungeon.heroi.Furtividade;
+import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -84,8 +85,12 @@ public abstract class MobDoShattered extends Monster {
         goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         goalSelector.addGoal(7, new RandomLookAroundGoal(this));
         targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        // Não enxerga heróis invisíveis (capa das sombras, habilidade furtiva da adaga)
-        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, alvo -> !Furtividade.invisivel(alvo)));
+        // Não enxerga heróis invisíveis (capa das sombras, habilidade furtiva da adaga), nem enxerga nada quando está cego
+        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false,
+                alvo -> !Furtividade.invisivel(alvo) && !hasEffect(ModEfeitos.CEGO) && !hasEffect(ModEfeitos.ATERRORIZADO)));
+        // As imagens espelhadas distraem os inimigos (o mímico só se importa com quem mexeu nele)
+        targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ImagemEspelhada.class, 10, true, false,
+                alvo -> !hasEffect(ModEfeitos.CEGO) && !hasEffect(ModEfeitos.ATERRORIZADO)));
     }
 
     // Como o inimigo anda à toa quando não está caçando ninguém (o enxame sobrescreve pra voar)
@@ -208,7 +213,8 @@ public abstract class MobDoShattered extends Monster {
                 NumerosFlutuantes.mostrar(this, "z", NumerosFlutuantes.BRANCO);
             }
             for (Player jogador : level().players()) {
-                if (jogador.isSpectator() || jogador.isCreative() || Furtividade.invisivel(jogador) || !hasLineOfSight(jogador)) {
+                if (jogador.isSpectator() || jogador.isCreative() || Furtividade.invisivel(jogador) || !hasLineOfSight(jogador)
+                        || hasEffect(ModEfeitos.CEGO)) {
                     continue;
                 }
                 double distanciaEmQuadradinhos = distanceTo(jogador) / 4.0;

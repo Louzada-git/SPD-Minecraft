@@ -6,6 +6,7 @@ import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
+import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.ChatFormatting;
@@ -135,7 +136,7 @@ public class HabilidadesDaDuelista {
             avisar(jogador, "mensagem.pixeldungeon.habilidade_sem_arma");
             return;
         }
-        if (dados.forca() < armaDoShattered.forcaNecessaria()) {
+        if (dados.forca() < armaDoShattered.forcaNecessaria(jogador.getMainHandItem())) {
             avisar(jogador, "mensagem.pixeldungeon.habilidade_sem_forca");
             return;
         }
@@ -167,7 +168,7 @@ public class HabilidadesDaDuelista {
 
     // Golpe especial: acerto garantido, com dano a mais
     private static boolean golpear(ServerPlayer jogador, LivingEntity alvo, ArmaDoShattered arma, int bonus) {
-        float dano = CombateDoHeroi.calcular(jogador, alvo, arma, 1, 1, 1, bonus, true, false);
+        float dano = CombateDoHeroi.calcular(jogador, alvo, jogador.getMainHandItem(), 1, 1, 1, bonus, true, false);
         jogador.swing(InteractionHand.MAIN_HAND, true);
         CombateDoHeroi.aplicar(alvo, dano, jogador.damageSources().playerAttack(jogador));
         jogador.level().playSound(null, alvo.blockPosition(), SoundEvents.PLAYER_ATTACK_STRONG, SoundSource.PLAYERS, 1.0F, 0.9F);
@@ -193,7 +194,7 @@ public class HabilidadesDaDuelista {
             return false;
         }
         boolean eraGratis = dados.ativo(CORTE_GRATIS, agora);
-        golpear(jogador, alvo, arma, arma.valorDaHabilidade());
+        golpear(jogador, alvo, arma, arma.valorDaHabilidade(jogador.getMainHandItem()));
         dados.desativar(CORTE_GRATIS);
         // Matou: o próximo corte nos próximos 5 turnos não gasta carga (mas não dá pra encadear dois de graça)
         if (!alvo.isAlive() && !eraGratis) {
@@ -205,7 +206,7 @@ public class HabilidadesDaDuelista {
     // Adagas: furtivo
     private static boolean furtivo(ServerPlayer jogador, ArmaDoShattered arma) {
         ServerLevel mundo = jogador.serverLevel();
-        Vec3 mira = Mira.ponto(jogador, arma.valorDaHabilidade() * BLOCOS_POR_QUADRADINHO);
+        Vec3 mira = Mira.ponto(jogador, arma.valorDaHabilidade(jogador.getMainHandItem()) * BLOCOS_POR_QUADRADINHO);
         Vec3 destino = lugarPraFicar(jogador, mira);
         if (destino == null) {
             avisar(jogador, "mensagem.pixeldungeon.habilidade_fora_de_alcance");
@@ -216,7 +217,8 @@ public class HabilidadesDaDuelista {
         jogador.resetFallDistance();
         Particulas.explosao(mundo, ParticleTypes.POOF, destino.x, destino.y + 1, destino.z, 10, 0.3, 0.02);
         mundo.playSound(null, jogador.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.PLAYERS, 1.0F, 1.2F);
-        Furtividade.ficarInvisivel(jogador, 2 * TURNO);
+        // Igual ao Shattered: 2 turnos invisível, +1 por nível da arma
+        Furtividade.ficarInvisivel(jogador, (2 + NivelDoItem.nivel(jogador.getMainHandItem())) * TURNO);
         return true;
     }
 
@@ -229,7 +231,7 @@ public class HabilidadesDaDuelista {
         int golpes = golpesSeguidos(dados, agora);
         dados.definir(COMBO, 0);
         dados.desativar(COMBO_ATE);
-        golpear(jogador, alvo, arma, arma.valorDaHabilidade() * golpes);
+        golpear(jogador, alvo, arma, arma.valorDaHabilidade(jogador.getMainHandItem()) * golpes);
         if (golpes >= 2) {
             Particulas.faiscas(alvo);
         }
@@ -261,7 +263,7 @@ public class HabilidadesDaDuelista {
         }
         jogador.teleportTo(destino.x, destino.y, destino.z);
         jogador.level().playSound(null, jogador.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.0F, 1.3F);
-        return golpear(jogador, alvo, arma, arma.valorDaHabilidade());
+        return golpear(jogador, alvo, arma, arma.valorDaHabilidade(jogador.getMainHandItem()));
     }
 
     // Maças, machadinha e martelo: golpe pesado
@@ -272,7 +274,7 @@ public class HabilidadesDaDuelista {
         }
         // Só dá o dano a mais de surpresa (igual ao Shattered)
         boolean surpresa = alvo instanceof MobDoShattered inimigo && inimigo.surpreendidoPor(jogador);
-        golpear(jogador, alvo, arma, surpresa ? arma.valorDaHabilidade() : 0);
+        golpear(jogador, alvo, arma, surpresa ? arma.valorDaHabilidade(jogador.getMainHandItem()) : 0);
         if (alvo.isAlive()) {
             alvo.addEffect(new MobEffectInstance(ModEfeitos.ATORDOADO, 5 * TURNO));
             NumerosFlutuantes.mostrarTraduzido(alvo, "efeito.pixeldungeon.atordoado.mostrar", NumerosFlutuantes.AMARELO);
