@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon.registro;
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
+import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
 import com.louzada.pixeldungeon.item.ItemComDescricao;
 import com.louzada.pixeldungeon.item.ItemAnkh;
@@ -23,7 +24,8 @@ public class ModItens {
     // nome, tier, dano mínimo, dano máximo, precisão, atraso entre ataques, defesa extra, surpresa forte
 
     public static final DeferredItem<ArmaDoShattered> ESPADA_CURTA_DESGASTADA = arma("espada_curta_desgastada", 1, 1, 10, 1.0f, 1.0f, 0, false);
-    public static final DeferredItem<ArmaDoShattered> CAJADO_DO_MAGO = arma("cajado_do_mago", 1, 1, 6, 1.0f, 1.0f, 0, false);
+    // Também lança mísseis mágicos com o clique direito (vem com a varinha de míssil mágico dentro)
+    public static final DeferredItem<CajadoDoMago> CAJADO_DO_MAGO = ITENS.registerItem("cajado_do_mago", CajadoDoMago::new);
     // Ataque surpresa quase sempre no dano máximo
     public static final DeferredItem<ArmaDoShattered> ADAGA = arma("adaga", 1, 1, 8, 1.0f, 1.0f, 0, true);
     // Ataca 2x mais rápido, mas bate fraco

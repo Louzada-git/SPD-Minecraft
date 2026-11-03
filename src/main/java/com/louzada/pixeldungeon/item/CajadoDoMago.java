@@ -1,0 +1,145 @@
+package com.louzada.pixeldungeon.item;
+
+import java.util.List;
+
+import com.louzada.pixeldungeon.entidade.MisselMagico;
+import com.louzada.pixeldungeon.registro.ModComponentes;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+
+// Cajado do Mago: bate como arma (1-6) e já vem com a varinha de míssil mágico dentro.
+// Clique direito lança um míssil mágico (2-8 de dano). Igual ao Shattered:
+//   - a varinha de míssil mágico tem 3 cargas, e o cajado dá +1 (4 no total)
+//   - as cargas voltam sozinhas com o tempo: quanto mais vazio, mais rápido (de ~33 a ~45 turnos por carga)
+//   - lançar gasta 1 turno (1 segundo)
+public class CajadoDoMago extends ArmaDoShattered {
+    public static final int CARGAS_MAXIMAS = 4;
+    // Nível da varinha (pergaminhos de melhoria vão aumentar depois)
+    private static final int NIVEL = 0;
+    private static final int COR_DA_BARRA = 0xB07CFF;
+
+    public CajadoDoMago(Properties propriedades) {
+        super(propriedades, "cajado_do_mago", 1, 1, 6, 1.0f, 1.0f, 0, false);
+    }
+
+    // ---- Cargas ----
+
+    // Igual ao recarregador das varinhas do Shattered: 10 + 40 * 0,875^(cargas que faltam) turnos por carga
+    private static long ticksParaCarregar(int faltando) {
+        return Math.round((10 + 40 * Math.pow(0.875, faltando)) * 20);
+    }
+
+    public static int cargas(ItemStack pilha) {
+        return pilha.getOrDefault(ModComponentes.CARGAS.get(), CARGAS_MAXIMAS);
+    }
+
+    // Conta as cargas que encheram desde a última vez. Só mexe no item quando uma carga enche,
+    // pra não ficar mandando o item pela rede toda hora.
+    private static void recarregar(ItemStack pilha, long agora) {
+        int cargas = cargas(pilha);
+        if (cargas >= CARGAS_MAXIMAS) {
+            pilha.remove(ModComponentes.INICIO_DA_RECARGA.get());
+            return;
+        }
+        Long inicio = pilha.get(ModComponentes.INICIO_DA_RECARGA.get());
+        if (inicio == null || inicio > agora) {
+            pilha.set(ModComponentes.INICIO_DA_RECARGA.get(), agora);
+            return;
+        }
+        long comeco = inicio;
+        int novas = cargas;
+        while (novas < CARGAS_MAXIMAS && agora - comeco >= ticksParaCarregar(CARGAS_MAXIMAS - novas)) {
+            comeco += ticksParaCarregar(CARGAS_MAXIMAS - novas);
+            novas++;
+        }
+        if (novas != cargas) {
+            pilha.set(ModComponentes.CARGAS.get(), novas);
+            if (novas >= CARGAS_MAXIMAS) {
+                pilha.remove(ModComponentes.INICIO_DA_RECARGA.get());
+            } else {
+                pilha.set(ModComponentes.INICIO_DA_RECARGA.get(), comeco);
+            }
+        }
+    }
+
+    // Uma vez por segundo, no servidor, vê se encheu alguma carga
+    @Override
+    public void inventoryTick(ItemStack pilha, Level mundo, Entity dono, int espaco, boolean naMao) {
+        if (!mundo.isClientSide() && dono.tickCount % 20 == 0) {
+            recarregar(pilha, mundo.getGameTime());
+        }
+    }
+
+    // ---- Lançar ----
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level mundo, Player jogador, InteractionHand mao) {
+        ItemStack pilha = jogador.getItemInHand(mao);
+        if (mundo.isClientSide()) {
+            return cargas(pilha) > 0 ? InteractionResultHolder.success(pilha) : InteractionResultHolder.fail(pilha);
+        }
+        long agora = mundo.getGameTime();
+        recarregar(pilha, agora);
+        int cargas = cargas(pilha);
+        if (cargas <= 0) {
+            jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.varinha_sem_carga").withStyle(ChatFormatting.GRAY), true);
+            mundo.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 0.5F, 1.4F);
+            return InteractionResultHolder.fail(pilha);
+        }
+
+        MisselMagico missil = new MisselMagico(mundo, jogador, NIVEL);
+        missil.shootFromRotation(jogador, jogador.getXRot(), jogador.getYRot(), 0.0F, 2.0F, 0.0F);
+        mundo.addFreshEntity(missil);
+        mundo.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS, 0.8F, 1.4F);
+
+        // Se estava cheio, a recarga começa agora
+        if (cargas >= CARGAS_MAXIMAS) {
+            pilha.set(ModComponentes.INICIO_DA_RECARGA.get(), agora);
+        }
+        pilha.set(ModComponentes.CARGAS.get(), cargas - 1);
+        // Lançar gasta um turno
+        jogador.getCooldowns().addCooldown(this, 20);
+        return InteractionResultHolder.success(pilha);
+    }
+
+    // ---- Aparência ----
+
+    // A barrinha embaixo do ícone mostra as cargas (como o "3/4" do Shattered)
+    @Override
+    public boolean isBarVisible(ItemStack pilha) {
+        return true;
+    }
+
+    @Override
+    public int getBarWidth(ItemStack pilha) {
+        return Math.round(13.0F * cargas(pilha) / CARGAS_MAXIMAS);
+    }
+
+    @Override
+    public int getBarColor(ItemStack pilha) {
+        return COR_DA_BARRA;
+    }
+
+    // Mudar as cargas não faz o cajado "piscar" na mão
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack antes, ItemStack depois, boolean trocouDeEspaco) {
+        return trocouDeEspaco || !ItemStack.isSameItem(antes, depois);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pilha, TooltipContext contexto, List<Component> linhas, TooltipFlag opcoes) {
+        linhas.add(Component.translatable("dica.pixeldungeon.missel_magico", 2 + NIVEL, 8 + 2 * NIVEL).withStyle(ChatFormatting.LIGHT_PURPLE));
+        linhas.add(Component.translatable("dica.pixeldungeon.cargas", cargas(pilha), CARGAS_MAXIMAS).withStyle(ChatFormatting.LIGHT_PURPLE));
+        super.appendHoverText(pilha, contexto, linhas, opcoes);
+    }
+}
