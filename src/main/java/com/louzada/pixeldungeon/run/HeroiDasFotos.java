@@ -1,5 +1,6 @@
 package com.louzada.pixeldungeon.run;
 
+import java.util.List;
 import java.util.Random;
 
 import com.louzada.pixeldungeon.PixelDungeon;
@@ -7,17 +8,20 @@ import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.dungeon.GeradorDeAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
+import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.item.Identificacao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
+import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 
 // Só no teste do GitHub que tira fotos da tela (propriedade pixeldungeon.fotografar):
@@ -53,11 +57,33 @@ public class HeroiDasFotos {
         PixelDungeon.LOGGER.info("Herói das fotos pronto: {}", jogador.getName().getString());
     }
 
-    // Leva o herói pra olhar uma porta do andar 1 (comum ou trancada) de 2 quadradinhos de distância
+    // Os inimigos do esgoto dormindo em fila na frente do herói (pra foto dos desenhos do Shattered)
+    public static void mostrarInimigos(ServerPlayer jogador) {
+        DadosDaRun run = DadosDaRun.pegar(jogador.getServer());
+        BlockPos entrada = run.andar(1).entrada();
+        jogador.teleportTo(jogador.serverLevel(), entrada.getX() + 0.5, entrada.getY(), entrada.getZ() + 0.5, 0.0F, 10.0F);
+        List<EntityType<? extends MobDoShattered>> tipos = List.of(ModEntidades.RATO_MARSUPIAL.get(), ModEntidades.RATO_ALBINO.get(),
+                ModEntidades.COBRA_DE_ESGOTO.get(), ModEntidades.GNOLL_EXPLORADOR.get(), ModEntidades.CARANGUEJO_DE_ESGOTO.get(),
+                ModEntidades.ENXAME_DE_MOSCAS.get(), ModEntidades.SLIME.get(), ModEntidades.MIMICO.get(), ModEntidades.GOO.get());
+        for (int i = 0; i < tipos.size(); i++) {
+            MobDoShattered inimigo = tipos.get(i).create(jogador.serverLevel());
+            if (inimigo == null) {
+                continue;
+            }
+            // Em fila de lado, 5 blocos na frente (olhando pro sul)
+            inimigo.moveTo(entrada.getX() + 0.5 + (i - 4) * 1.6, entrada.getY(), entrada.getZ() + 6.5, 180.0F, 0.0F);
+            jogador.serverLevel().addFreshEntity(inimigo);
+            inimigo.dormir();
+        }
+        PixelDungeon.LOGGER.info("Herói das fotos olhando os inimigos");
+    }
+
+    // Leva o herói pra olhar uma porta do andar 2 (comum ou trancada) de 2 quadradinhos de distância.
+    // (As do andar 1 já foram mexidas pelo teste do servidor.)
     public static void olharPraPorta(ServerPlayer jogador, boolean trancada) {
         DadosDaRun run = DadosDaRun.pegar(jogador.getServer());
-        PlantaDoAndar planta = GeradorDeAndar.gerar(run.semente(), 1);
-        BlockPos origem = Andares.origemDoAndar(run.numeroDaRun(), 1);
+        PlantaDoAndar planta = GeradorDeAndar.gerar(run.semente(), 2);
+        BlockPos origem = Andares.origemDoAndar(run.numeroDaRun(), 2);
         byte procurado = trancada ? PlantaDoAndar.PORTA_TRANCADA : PlantaDoAndar.PORTA;
         int t = Andares.TAMANHO_DO_QUADRADINHO;
         for (int y = 0; y < planta.altura(); y++) {
@@ -84,6 +110,6 @@ public class HeroiDasFotos {
                 }
             }
         }
-        PixelDungeon.LOGGER.info("Herói das fotos: o andar 1 não tem porta {}", trancada ? "trancada" : "comum");
+        PixelDungeon.LOGGER.info("Herói das fotos: o andar 2 não tem porta {}", trancada ? "trancada" : "comum");
     }
 }

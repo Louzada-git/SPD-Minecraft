@@ -41,6 +41,7 @@ import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
 import com.mojang.authlib.GameProfile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -77,6 +78,7 @@ public class EventosDaRun {
     // Teste das portas: um rato dormindo do lado de uma porta comum e outro do lado de uma trancada
     private static BlockPos portaDoTeste = null;
     private static BlockPos trancadaDoTeste = null;
+    private static List<RatoMarsupial> ratosDasPortas = new ArrayList<>();
     // Teste do míssil mágico: o rato do teste de combate leva um míssil
     private static RatoMarsupial ratoDoMissil = null;
     private static float vidaDoRatoAntesDoMissil = 0;
@@ -190,6 +192,7 @@ public class EventosDaRun {
                 rato.moveTo(porta.getX() + (pelaX ? 2.5 : 1.5), porta.getY(), porta.getZ() + (pelaX ? 1.5 : 2.5));
                 mundo.addFreshEntity(rato);
                 rato.dormir();
+                ratosDasPortas.add(rato);
             }
         }
     }
@@ -410,6 +413,10 @@ public class EventosDaRun {
             boolean destrancou = ModBlocos.PORTA_GIGANTE.get().usarChave(mundo, trancadaDoTeste, heroi);
             PixelDungeon.LOGGER.info("Teste da chave de ferro: destrancou = {}, gastou a chave = {}, ficou comum = {}", destrancou,
                     ChaveDeFerro.procurar(heroi, run.numeroDaRun(), 1).isEmpty(), !mundo.getBlockState(trancadaDoTeste).getValue(PortaGigante.TRANCADA));
+            for (RatoMarsupial rato : ratosDasPortas) {
+                rato.discard();
+            }
+            ratosDasPortas.clear();
             for (BlockPos porta : List.of(portaDoTeste, trancadaDoTeste)) {
                 mundo.setChunkForced(porta.getX() >> 4, porta.getZ() >> 4, false);
             }

@@ -81,10 +81,13 @@ public class FotosDeTeste {
                 jogo.setScreen(null);
                 noServidor(jogo, jogador -> HeroiDasFotos.olharPraPorta(jogador, false));
             }
-            case 300 -> foto(jogo, "porta.png");
-            case 305 -> noServidor(jogo, jogador -> HeroiDasFotos.olharPraPorta(jogador, true));
-            case 345 -> foto(jogo, "porta_trancada.png");
-            case 365 -> {
+            case 330 -> foto(jogo, "porta.png");
+            case 335 -> noServidor(jogo, jogador -> HeroiDasFotos.olharPraPorta(jogador, true));
+            case 405 -> foto(jogo, "porta_trancada.png");
+            // Os inimigos com os desenhos do Shattered
+            case 410 -> noServidor(jogo, HeroiDasFotos::mostrarInimigos);
+            case 480 -> foto(jogo, "inimigos.png");
+            case 500 -> {
                 PixelDungeon.LOGGER.info("Fotos de teste: pronto");
                 jogo.stop();
             }

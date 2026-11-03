@@ -1,23 +1,10 @@
 package com.louzada.pixeldungeon.cliente;
 
 import com.louzada.pixeldungeon.PixelDungeon;
-import com.louzada.pixeldungeon.entidade.CaranguejoDeEsgoto;
-import com.louzada.pixeldungeon.entidade.CobraDeEsgoto;
-import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
-import com.louzada.pixeldungeon.entidade.GnollExplorador;
-import com.louzada.pixeldungeon.entidade.Mimico;
-import com.louzada.pixeldungeon.entidade.RatoAlbino;
-import com.louzada.pixeldungeon.entidade.RatoMarsupial;
 import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
 
-import net.minecraft.client.model.EndermiteModel;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.OcelotModel;
-import net.minecraft.client.model.SilverfishModel;
-import net.minecraft.client.model.SpiderModel;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.neoforged.api.distmarker.Dist;
@@ -49,47 +36,18 @@ public class PixelDungeonCliente {
         }
     }
 
-    // Como cada inimigo aparece na tela.
-    // Por enquanto são modelos e texturas do Minecraft; depois entram as texturas próprias.
+    // Como cada inimigo aparece na tela: com o desenho animado do Shattered (ver RenderizadorDeSprite)
     private static void aoRegistrarRenderizadores(EntityRenderersEvent.RegisterRenderers evento) {
-        // Rato: modelo de gato, pequeno e cinza
-        evento.registerEntityRenderer(ModEntidades.RATO_MARSUPIAL.get(),
-                contexto -> new RenderizadorDeMob<RatoMarsupial, OcelotModel<RatoMarsupial>>(contexto,
-                        new OcelotModel<RatoMarsupial>(contexto.bakeLayer(ModelLayers.OCELOT)), 0.4F,
-                        RenderizadorDeMob.texturaDoMinecraft("cat/british_shorthair"), 0.75F));
-        // Cobra: modelo de traça (comprido e com gomos), maior
-        evento.registerEntityRenderer(ModEntidades.COBRA_DE_ESGOTO.get(),
-                contexto -> new RenderizadorDeMob<CobraDeEsgoto, SilverfishModel<CobraDeEsgoto>>(contexto,
-                        new SilverfishModel<CobraDeEsgoto>(contexto.bakeLayer(ModelLayers.SILVERFISH)), 0.3F,
-                        RenderizadorDeMob.texturaDoMinecraft("silverfish"), 1.4F));
-        // Gnoll: humanoide com a pele do zumbi do deserto
-        evento.registerEntityRenderer(ModEntidades.GNOLL_EXPLORADOR.get(),
-                contexto -> new RenderizadorDeMob<GnollExplorador, HumanoidModel<GnollExplorador>>(contexto,
-                        new HumanoidModel<GnollExplorador>(contexto.bakeLayer(ModelLayers.ZOMBIE)), 0.5F,
-                        RenderizadorDeMob.texturaDoMinecraft("zombie/husk"), 1.0F));
-        // Caranguejo: modelo de aranha, baixinho
+        evento.registerEntityRenderer(ModEntidades.RATO_MARSUPIAL.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.RATO, 0.35F));
+        evento.registerEntityRenderer(ModEntidades.RATO_ALBINO.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.RATO_ALBINO, 0.35F));
+        evento.registerEntityRenderer(ModEntidades.COBRA_DE_ESGOTO.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.COBRA, 0.3F));
+        evento.registerEntityRenderer(ModEntidades.GNOLL_EXPLORADOR.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.GNOLL, 0.45F));
         evento.registerEntityRenderer(ModEntidades.CARANGUEJO_DE_ESGOTO.get(),
-                contexto -> new RenderizadorDeMob<CaranguejoDeEsgoto, SpiderModel<CaranguejoDeEsgoto>>(contexto,
-                        new SpiderModel<CaranguejoDeEsgoto>(contexto.bakeLayer(ModelLayers.SPIDER)), 0.8F,
-                        RenderizadorDeMob.texturaDoMinecraft("spider/cave_spider"), 0.65F));
-        // Rato albino: o mesmo gato pequeno, branco
-        evento.registerEntityRenderer(ModEntidades.RATO_ALBINO.get(),
-                contexto -> new RenderizadorDeMob<RatoAlbino, OcelotModel<RatoAlbino>>(contexto,
-                        new OcelotModel<RatoAlbino>(contexto.bakeLayer(ModelLayers.OCELOT)), 0.4F,
-                        RenderizadorDeMob.texturaDoMinecraft("cat/white"), 0.75F));
-        // Enxame de moscas: modelo de endermite, voando
-        evento.registerEntityRenderer(ModEntidades.ENXAME_DE_MOSCAS.get(),
-                contexto -> new RenderizadorDeMob<EnxameDeMoscas, EndermiteModel<EnxameDeMoscas>>(contexto,
-                        new EndermiteModel<EnxameDeMoscas>(contexto.bakeLayer(ModelLayers.ENDERMITE)), 0.3F,
-                        RenderizadorDeMob.texturaDoMinecraft("endermite"), 1.3F));
-        // Slime: o slime do Minecraft
-        evento.registerEntityRenderer(ModEntidades.SLIME.get(), RenderizadorDeSlime::new);
-        // Goo: um slime escuro e grande
+                contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.CARANGUEJO, 0.45F));
+        evento.registerEntityRenderer(ModEntidades.ENXAME_DE_MOSCAS.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.ENXAME, 0.25F));
+        evento.registerEntityRenderer(ModEntidades.SLIME.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.SLIME, 0.5F));
         evento.registerEntityRenderer(ModEntidades.GOO.get(), RenderizadorDeGoo::new);
-        // Mímico: o baú do Minecraft, abrindo e fechando a tampa como uma boca
-        evento.registerEntityRenderer(ModEntidades.MIMICO.get(),
-                contexto -> new RenderizadorDeMob<Mimico, ModeloDoMimico>(contexto, new ModeloDoMimico(contexto.bakeLayer(ModelLayers.CHEST)),
-                        0.5F, RenderizadorDeMob.texturaDoMinecraft("chest/normal"), 1.0F));
+        evento.registerEntityRenderer(ModEntidades.MIMICO.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.MIMICO, 0.45F));
         // Míssil mágico: não tem modelo, é só o rastro de luz (as partículas saem dele mesmo)
         evento.registerEntityRenderer(ModEntidades.MISSEL_MAGICO.get(), NoopRenderer::new);
         // Luz guia do Clérigo: igual ao míssil, só o rastro de luz
