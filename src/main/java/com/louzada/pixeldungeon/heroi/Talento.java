@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 // Os 4 primeiros talentos (tier 1) de cada classe, iguais aos do Shattered.
 // Cada talento vai até +2. O herói ganha 1 ponto por nível do 2 ao 6 (5 pontos no total).
 //
-// Alguns talentos dependem de coisas que o mod ainda não tem (itens não identificados, grama alta, plantas).
+// Alguns talentos dependem de coisas que o mod ainda não tem (itens não identificados, plantas).
 // Eles podem ser escolhidos, mas a dica avisa que ainda não fazem nada ("pendente").
 public enum Talento {
     // Guerreiro
@@ -27,7 +27,7 @@ public enum Talento {
     GOLPE_SURPRESA("golpe_surpresa", ClasseDoHeroi.LADINO, null),
     SOMBRAS_PROTETORAS("sombras_protetoras", ClasseDoHeroi.LADINO, null),
     // Caçadora
-    RECOMPENSA_DA_NATUREZA("recompensa_da_natureza", ClasseDoHeroi.CACADORA, "grama"),
+    RECOMPENSA_DA_NATUREZA("recompensa_da_natureza", ClasseDoHeroi.CACADORA, null),
     INTUICAO_DE_SOBREVIVENTE("intuicao_de_sobrevivente", ClasseDoHeroi.CACADORA, "identificar"),
     ATAQUE_CONSECUTIVO("ataque_consecutivo", ClasseDoHeroi.CACADORA, null),
     AUXILIO_DA_NATUREZA("auxilio_da_natureza", ClasseDoHeroi.CACADORA, "plantas"),

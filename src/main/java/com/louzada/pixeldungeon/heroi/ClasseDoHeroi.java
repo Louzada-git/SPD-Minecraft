@@ -56,7 +56,9 @@ public enum ClasseDoHeroi {
     // O que a classe recebe ao começar a run (a armadura já vai vestida)
     public List<ItemStack> kitInicial() {
         ItemStack armadura = new ItemStack(ModItens.ARMADURA_DE_PANO.get());
-        List<ItemStack> kit = new ArrayList<>(List.of(new ItemStack(armaInicial.get()), armadura, new ItemStack(ModItens.RACAO.get())));
+        // Igual ao Shattered: todo herói também leva um odre (vazio)
+        List<ItemStack> kit = new ArrayList<>(List.of(new ItemStack(armaInicial.get()), armadura, new ItemStack(ModItens.RACAO.get()),
+                new ItemStack(ModItens.ODRE.get())));
         switch (this) {
             case GUERREIRO -> armadura.set(ModComponentes.SELO.get(), true);
             case LADINO -> kit.add(new ItemStack(ModItens.CAPA_DAS_SOMBRAS.get()));
