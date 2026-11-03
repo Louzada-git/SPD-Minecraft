@@ -89,11 +89,23 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 | Espada larga | 5 | 5-30 | 18 | |
 | Martelo de guerra | 5 | 5-24 | 18 | +20% de precisão |
 
-- Igual ao Shattered, cada ponto de força que falta deixa a arma bem menos precisa, e a Duelista não consegue usar a habilidade. Os heróis começam com 10 de força e ainda não existe poção de força, então por enquanto as armas de tier 2 pra cima são mais difíceis de usar.
+- Igual ao Shattered, cada ponto de força que falta deixa a arma bem menos precisa, e a Duelista não consegue usar a habilidade. Os heróis começam com 10 de força; cada **poção de força** dá +1 (caem 2 no esgoto).
+- **Nível:** o pergaminho de melhoria dá +1 de nível: +1 no dano mínimo, +(tier + 1) no máximo (as armas rápidas ganham metade) e um pouco menos de força necessária. Na armadura, +1 de defesa mínima e +tier na máxima. No cajado do Mago, +1 carga (até 10) e um míssil mais forte.
+- **Identificação:** as armas achadas na dungeon vêm sem identificar: o nome não mostra o nível, e a dica mostra os números "típicos" (+0). Elas vêm +0 (75%), +1 (20%) ou +2 (5%). A arma se identifica sozinha depois de 20 golpes; a intuição de veterano (Guerreiro) acelera pra 1,75x / 2,5x, e a intuição de aventureiro (Duelista) pra 2,5x / na hora de segurar.
+- **Maldições:** 30% das armas achadas são amaldiçoadas. Segurar a arma revela se ela tem maldição. A intuição divina do Clérigo também revela. O pergaminho de remover maldição tira, e o de melhoria tira 1 vez em 3.
+
+| Maldição | O que faz |
+|---|---|
+| Irritante | 1 em 20 golpes: a arma grita e chama todos os inimigos do andar |
+| De deslocamento | 1 em 12 golpes: o inimigo é teletransportado pra outro lugar do andar |
+| Ofuscante | 1 em 10 golpes: um clarão cega quem bateu (10 turnos) e quem estava vendo (5) |
+| Polarizante | metade dos golpes dá 50% a mais de dano; a outra metade não dá nada |
+| Sacrificante | 1 em 10 golpes: quem bate sangra (mais, quanto mais vida tiver) |
+| Inconstante | 1 em 4 golpes: a precisão cai pra um quinto por 10 turnos (acertar desfaz) |
 
 ### Ouro, baús e mímicos
 
-- Cada andar (menos o do chefe) tem de 3 a 5 itens espalhados (60% / 30% / 10%), mais uma ração. Cada item é **ouro** ou uma **arma**, na mesma proporção entre eles que no Shattered (poções, pergaminhos e o resto ainda não existem).
+- Cada andar (menos o do chefe) tem de 3 a 5 itens espalhados (60% / 30% / 10%), mais uma ração. Cada item é **ouro** (10), **poção** (8), **pergaminho** (8), **arma** (2) ou **semente** (1), com os pesos do Shattered (armaduras, varinhas e anéis ainda não existem). Em cada região também caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares.
 - **Ouro:** uma pilha tem de 30 + 10 por andar até 60 + 20 por andar moedas. Encostou, as moedas vão direto pra bolsa (não ocupam o inventário), sobe um "+N" dourado e o total aparece do lado direito da barra de itens. Cada herói tem o seu ouro, pras lojas que vão vir.
 - De cada 20 itens, 4 ficam num **baú** (um baú comum do Minecraft, com o item no meio), 1 fica dentro de um **mímico** (a partir do andar 2) e o resto fica largado no chão. Onde tem item, a grama alta é aparada. Os itens nunca somem do chão.
 - Ninguém consegue quebrar um baú (só no criativo).
@@ -103,6 +115,58 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 |---|---|---|---|---|---|---|
 | Mímico (nível = andar) | (1 + nível) × 6 | 6 + nível | 2 + nível / 2 | 1 + nível a 2 + 2 × nível | 0 a 1 + nível / 2 | 0 |
 
+### Poções, pergaminhos e plantas
+
+- Igual ao Shattered, em cada run as **cores das poções** e as **runas dos pergaminhos** são sorteadas de novo: numa run a poção escarlate é de cura, na outra é de gás tóxico. Beber, ler ou ver o efeito revela o tipo pro resto da run, e o nome muda na hora.
+- **Compartilhar:** no botão "Compartilhar" da tela de talentos (K), cada jogador escolhe se o que ele descobre vai pra todo mundo, pra ninguém ou só pra quem ele marcar.
+- Poções: clique direito bebe (1 turno), agachado + clique direito arremessa. Quem já sabe que a poção é ruim arremessa com o clique direito.
+
+| Poção | Beber | Arremessar |
+|---|---|---|
+| Força | +1 de força pra sempre | espirra sem efeito |
+| Cura | cura 80% da vida + 14 aos poucos e tira os efeitos ruins | espirra sem efeito |
+| Visão mental | os inimigos do andar brilham através das paredes por 20 turnos | espirra sem efeito |
+| Gélida | congela em volta de quem bebeu | congela por 10 turnos quem estiver perto |
+| Chama líquida | fogo em volta de quem bebeu | fogo |
+| Gás tóxico | nuvem em volta de quem bebeu | nuvem: 1 + andar/5 de dano por turno |
+| Pressa | 3x mais rápido por 20 turnos | espirra sem efeito |
+| Invisibilidade | invisível por 20 turnos | espirra sem efeito |
+| Levitação | dá pra voar por 20 turnos | nuvem de confusão |
+| Gás paralítico | nuvem em volta de quem bebeu | nuvem: paralisa por 10 turnos |
+| Pureza | imune a gases por 20 turnos | some com os gases e o fogo em volta |
+| Experiência | ganha um nível | espirra sem efeito |
+
+| Pergaminho | O que faz |
+|---|---|
+| Aprimoramento | escolhe uma arma ou armadura: +1 de nível |
+| Identificação | escolhe um item: revela tudo dele |
+| Remover maldição | escolhe uma arma: tira a maldição |
+| Imagem espelhada | 2 cópias do herói lutam do lado dele (somem com qualquer golpe) |
+| Recarga | enche as cargas do cajado do Mago |
+| Teletransportação | leva pra outro lugar do andar, longe de onde estava |
+| Acalento | os inimigos visíveis (e quem leu) dormem depois de 5 turnos; o herói dormindo cura 1 por turno |
+| Mapeamento mágico | diz pra que lado e a quantos quadradinhos fica a saída, e colunas de luz marcam a saída e a entrada |
+| Fúria | todos os inimigos do andar vêm atrás de quem leu; os visíveis atacam qualquer um por 5 turnos |
+| Retribuição | dano nos inimigos visíveis (mais, quanto menos vida o leitor tiver); cega todo mundo |
+| Terror | os inimigos visíveis fogem por 20 turnos |
+| Transmutação | escolhe um item: uma arma vira outra do mesmo tier, uma semente vira outra, poções e pergaminhos viram outro tipo |
+
+- **Sementes:** clique direito no chão planta; no ar, arremessa (a planta nasce onde a semente cair). A grama alta solta uma semente 1 vez em 25. A planta vale pelo quadradinho inteiro: quem pisar nele ativa o efeito e a planta some (quem voa não ativa).
+
+| Planta | O que faz em quem pisa |
+|---|---|
+| Grama-solar | cura até a vida máxima, devagar, enquanto não sair do lugar |
+| Folha-fantasma | teletransporta pra outro lugar do andar |
+| Muda-de-gelo | congela quem estiver perto |
+| Flor-de-fogo | fogo |
+| Sofrimusgo | veneno (5 + 2/3 do andar turnos; o dano vai caindo) |
+| Cardo-ligeiro | o tempo para em volta: os inimigos perto ficam parados por 5 turnos |
+| Ceguerva | cego e aleijado por 10 turnos |
+| Vinha-tempestuosa | vertigem por 10 turnos |
+| Terraíz | armadura de raízes enquanto não sair do lugar |
+| Magi-real | tira os efeitos ruins |
+| Flor-estrela | abençoado: +25% de precisão e esquiva por 30 turnos |
+
 ### Talentos
 
 - Tecla **K** abre a tela de talentos, no estilo do Shattered. Do nível 2 ao 6, cada nível dá 1 ponto (5 no total), e cada talento vai até +2.
@@ -110,14 +174,14 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 
 | Classe | Talentos |
 |---|---|
-| Guerreiro | refeição saudável, intuição de veterano*, raiva provocada, determinação de ferro |
+| Guerreiro | refeição saudável, intuição de veterano (identifica armas mais rápido), raiva provocada, determinação de ferro |
 | Mago | refeição empoderadora, intuição do estudioso*, magia prolongada, barreira de apoio |
 | Ladino | rações guardadas (baús com rações de suprimentos), intuição do ladrão*, golpe surpresa, sombras protetoras |
-| Caçadora | recompensa da natureza (bagas na grama alta), intuição de sobrevivente*, ataque consecutivo, auxílio da natureza* |
-| Duelista | refeição fortalecedora, intuição de aventureiro*, golpe paciente (ficar parado 1 turno antes de bater), barreira agressiva |
+| Caçadora | recompensa da natureza (bagas na grama alta), intuição de sobrevivente*, ataque consecutivo, auxílio da natureza (pele de árvore quando uma planta é ativada perto dela) |
+| Duelista | refeição fortalecedora, intuição de aventureiro (identifica armas mais rápido, e na hora com +2), golpe paciente (ficar parado 1 turno antes de bater), barreira agressiva |
 | Clérigo | magias saciadas, intuição divina, luz abrasadora, escudo de luz |
 
-\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: itens não identificados (as intuições) e plantas (auxílio da natureza). A tela de talentos avisa isso.
+\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: varinhas (estudioso), anéis (ladrão) e armas de arremesso (sobrevivente). A tela de talentos avisa isso.
 
 ### Combate e inimigos
 
@@ -139,7 +203,7 @@ Inimigos do esgoto com os números do Shattered:
 - O **enxame de moscas** voa e se divide em dois a cada golpe que leva (os pedaços não dão XP).
 - O **rato albino** aparece no lugar de 1 em cada 50 ratos. Metade das mordidas fazem sangrar.
 - Caranguejos (1 em 6) e ratos albinos (sempre) deixam **carne misteriosa**: mata metade da fome de uma ração, mas pode queimar, travar as pernas, envenenar ou deixar lento.
-- Gnolls deixam **ouro** metade das vezes. O slime às vezes deixa uma **arma de tier 2** (1 em 5 na primeira, e cada uma que já caiu deixa a próxima 4x mais difícil). A cobra (sementes) e o enxame (poção de cura) ainda não deixam nada, porque esses itens não existem.
+- Gnolls deixam **ouro** metade das vezes. O slime às vezes deixa uma **arma de tier 2** (1 em 5 na primeira, e cada uma que já caiu deixa a próxima 4x mais difícil). A cobra deixa uma **semente** 1 vez em 4, e o enxame às vezes deixa uma **poção de cura** (no máximo 5 por run).
 - Herói com mais de 2 níveis acima do nível máximo de um inimigo não ganha mais itens dele, igual ao Shattered.
 - Quem dorme solta um "z" de vez em quando; quem nota você mostra um "!". Depois de apanhar, o inimigo ganha uma **barra de vida** em cima da cabeça.
 - Cada inimigo tem os seus sons (por enquanto, sons de bichos do Minecraft).
@@ -231,8 +295,8 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 
 ## O que vem depois
 
-1. **Itens:** poções e pergaminhos desconhecidos (já começados, com cor e runa aleatórias por run), poção de força e pergaminho de melhoria (as armas ainda não têm nível), itens não identificados, sementes e plantas (pra os talentos que faltam), e opção no menu pra compartilhar o que foi identificado.
-2. **Texturas próprias** dos inimigos e dos blocos.
+1. **Texturas próprias** dos inimigos e dos blocos.
+2. **Mais itens:** armaduras (couro, malha, escamas, placas), varinhas, anéis e armas de arremesso (pras intuições que faltam), poções e pergaminhos exóticos, alquimia e encantamentos.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
 
@@ -242,10 +306,10 @@ Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod 
 src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
-  bloco/                       escadas e blocos de decoração
-  item/                        armas, armadura, itens das classes, cargas e artefatos
-  entidade/                    os inimigos do Shattered, o Goo, o mímico, o míssil mágico, a luz guia e a flecha espiritual
-  efeito/                      efeitos do Shattered (muco cáustico)
+  bloco/                       escadas, plantas e blocos de decoração
+  item/                        armas, armadura, poções, pergaminhos, sementes, identificação e maldições
+  entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o míssil mágico, as nuvens de gás...
+  efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
   combate/                     sorteio de dano, números flutuantes e partículas
   heroi/
     ClasseDoHeroi.java         as 6 classes e o kit de cada uma
@@ -269,8 +333,10 @@ src/main/java/com/louzada/pixeldungeon/
     GeradorDeAndar.java        sorteia salas e corredores
     ConstrutorDeAndar.java     transforma o mapa em blocos
     PopulacaoDoAndar.java      inimigos de cada andar e renascimento
-    SaqueDoAndar.java          ouro e armas espalhados pelo andar
+    SaqueDoAndar.java          o que fica espalhado pelo andar
     Baus.java                  baús e mímicos disfarçados
+    PlantasDoShattered.java    o que cada planta faz
+    Teleporte.java             teletransporte pra outro lugar do andar
   run/
     DadosDaRun.java            o que fica salvo no mundo
     GerenciadorDaRun.java      começar run, construir andar, levar jogador
