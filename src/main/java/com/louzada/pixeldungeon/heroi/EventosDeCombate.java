@@ -1,6 +1,7 @@
 package com.louzada.pixeldungeon.heroi;
 
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
+import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
@@ -28,8 +29,9 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 //   3. Dano sorteado pela arma (herói) ou pelo inimigo
 //   4. A armadura do defensor tira um pouco do dano
 //   5. Efeitos especiais (o enxame se divide, o rato albino faz sangrar)
-//   6. O dano aparece flutuando em cima de quem apanhou, e o inimigo ganha uma barra de vida
-// Ataques de longe (flechas etc.) ficam pra depois.
+//   6. O dano aparece flutuando em cima de quem apanhou, espirra sangue da cor dele, e o inimigo ganha uma barra de vida
+// Magia e ataques de longe (o míssil mágico do cajado) não sorteiam acerto nem passam pela armadura, igual às varinhas
+// do Shattered: só acordam o inimigo.
 public class EventosDeCombate {
     // Mobs que não são do Shattered (do Minecraft ou de outros mods) usam estes valores
     private static final float PRECISAO_PADRAO = 10;
@@ -40,7 +42,14 @@ public class EventosDeCombate {
         DamageSource fonte = evento.getSource();
         Entity atacante = fonte.getEntity();
         boolean corpoACorpo = atacante != null && fonte.getDirectEntity() == atacante;
-        if (!corpoACorpo || alvo.level().isClientSide()) {
+        if (alvo.level().isClientSide()) {
+            return;
+        }
+        if (!corpoACorpo) {
+            if (atacante != null && alvo instanceof MobDoShattered inimigo) {
+                evento.setAmount(inimigo.reduzirDanoRecebido(evento.getAmount()));
+                acordar(alvo, atacante);
+            }
             return;
         }
         RandomSource sorteio = alvo.getRandom();
@@ -88,6 +97,7 @@ public class EventosDeCombate {
 
         if (surpresa) {
             NumerosFlutuantes.mostrar(alvo, "✦", NumerosFlutuantes.AMARELO);
+            Particulas.faiscas(alvo);
         }
         acordar(alvo, atacante);
     }
@@ -100,6 +110,10 @@ public class EventosDeCombate {
         }
         String cor = alvo instanceof Player ? NumerosFlutuantes.VERMELHO : NumerosFlutuantes.LARANJA;
         NumerosFlutuantes.mostrar(alvo, String.valueOf(Math.max(1, Math.round(evento.getNewDamage()))), cor);
+
+        // Sangue (o slime espirra verde, o Goo espirra gosma preta...)
+        int corDoSangue = alvo instanceof MobDoShattered inimigo ? inimigo.corDoSangue() : Particulas.SANGUE_PADRAO;
+        Particulas.sangue(alvo, corDoSangue, evento.getNewDamage());
 
         // Barra de vida em cima do inimigo
         if (alvo instanceof MobDoShattered inimigo) {
