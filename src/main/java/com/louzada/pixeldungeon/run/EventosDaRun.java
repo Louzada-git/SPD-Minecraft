@@ -101,6 +101,7 @@ public class EventosDaRun {
             testarClasses(servidor);
             testarSaque(servidor);
             TestesDosItens.testar(servidor);
+            TestesDoTier2.testar(servidor);
         }
     }
 

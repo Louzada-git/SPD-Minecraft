@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.heroi.Talento;
 import com.louzada.pixeldungeon.run.HeroiDasFotos;
 
 import net.minecraft.client.Minecraft;
@@ -87,7 +88,18 @@ public class FotosDeTeste {
             // Os inimigos com os desenhos do Shattered
             case 410 -> noServidor(jogo, HeroiDasFotos::mostrarInimigos);
             case 480 -> foto(jogo, "inimigos.png");
-            case 500 -> {
+            // A tela de talentos (com o tier 2) e a do tomo com as 9 magias, na interface automática
+            // (a maior que cabe: é onde falta mais espaço)
+            case 485 -> {
+                jogo.options.guiScale().set(0);
+                jogo.resizeDisplay();
+                noServidor(jogo, HeroiDasFotos::mostrarTalentos);
+            }
+            case 510 -> jogo.setScreen(new TelaDeTalentos(Talento.RAIO_SOLAR));
+            case 530 -> foto(jogo, "talentos.png");
+            case 535 -> jogo.setScreen(new TelaDoTomo());
+            case 555 -> foto(jogo, "tomo.png");
+            case 575 -> {
                 PixelDungeon.LOGGER.info("Fotos de teste: pronto");
                 jogo.stop();
             }

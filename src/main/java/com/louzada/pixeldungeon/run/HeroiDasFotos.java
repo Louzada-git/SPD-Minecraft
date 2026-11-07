@@ -10,10 +10,15 @@ import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
+import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
+import com.louzada.pixeldungeon.heroi.Talento;
+import com.louzada.pixeldungeon.heroi.Talentos;
 import com.louzada.pixeldungeon.item.Identificacao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.item.Ouro;
+import com.louzada.pixeldungeon.item.TomoSagrado;
+import com.louzada.pixeldungeon.rede.RedeDoHeroi;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
@@ -76,6 +81,23 @@ public class HeroiDasFotos {
             inimigo.dormir();
         }
         PixelDungeon.LOGGER.info("Herói das fotos olhando os inimigos");
+    }
+
+    // O herói vira um Clérigo do nível 12 com o tomo e talentos dos dois tiers
+    // (pra foto da tela de talentos e da tela do tomo com todas as magias)
+    public static void mostrarTalentos(ServerPlayer jogador) {
+        DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
+        dados.comecar(ClasseDoHeroi.CLERIGO, DadosDaRun.pegar(jogador.getServer()).numeroDaRun());
+        dados.definirNivel(12);
+        for (Talento talento : List.of(Talento.REFEICAO_ILUMINADA, Talento.INTUICAO_DIVINA, Talento.ESCUDO_DE_LUZ, Talento.ESCUDO_DE_LUZ,
+                Talento.RECUPERAR_INSCRICAO, Talento.RAIO_SOLAR, Talento.RAIO_SOLAR, Talento.SENTIDO_DIVINO, Talento.BENCAO)) {
+            Talentos.aprimorar(jogador, talento);
+        }
+        if (TomoSagrado.acharTomo(jogador) == null) {
+            jogador.getInventory().add(new ItemStack(ModItens.TOMO_SAGRADO.get()));
+        }
+        RedeDoHeroi.enviarEstado(jogador, false);
+        PixelDungeon.LOGGER.info("Herói das fotos virou Clérigo do nível {} com {} pontos livres", dados.nivel(), dados.pontosLivres());
     }
 
     // Leva o herói pra olhar uma porta do andar 2 (comum ou trancada) de 2 quadradinhos de distância.

@@ -122,6 +122,15 @@ jobs:
           if ! grep -q "Teste da armadura amaldiçoada: descobriu = true, grudou = true" servidor.log; then echo "A armadura amaldiçoada não grudou"; exit 1; fi
           if ! grep -q "Teste da armadura amaldiçoada: soltou depois de remover a maldição = true" servidor.log; then echo "A armadura não soltou"; exit 1; fi
           if ! grep -q "Teste do peso: placas com 10 de força deixam mais lento = true" servidor.log; then echo "A armadura pesada não deixou lento"; exit 1; fi
+          if ! grep -q "Teste do tier 2: no nível 6 aprimorou = false, no nível 7 tinha 1 ponto e aprimorou = true, no nível 12 sobram 5 do tier 2 e 5 do tier 1" servidor.log; then echo "Os pontos do tier 2 não estão certos"; exit 1; fi
+          if ! grep -q "Teste do estômago de ferro: a ração leva 1 turno" servidor.log; then echo "O estômago de ferro não funcionou"; exit 1; fi
+          if ! grep -qE "Teste da tenacidade líquida: ganhou [1-9][0-9.]* de blindagem, 10% da vida máxima = true" servidor.log; then echo "A tenacidade líquida não funcionou"; exit 1; fi
+          if ! grep -q "Teste do ímpeto letal: ataque pronto = true" servidor.log; then echo "O ímpeto letal não funcionou"; exit 1; fi
+          if ! grep -q "Teste do poder inscrito: depois de um pergaminho = 2, depois da melhoria = 4, bônus do disparo = 2, sobraram 3" servidor.log; then echo "O poder inscrito não funcionou"; exit 1; fi
+          if ! grep -q "Teste dos passos silenciosos: silencioso a 2 = false, a 3 = true" servidor.log; then echo "Os passos silenciosos não funcionaram"; exit 1; fi
+          if ! grep -q "Teste da Duelista no tier 2: cargas depois de comer = 1, evasão 10 -> 30.0" servidor.log; then echo "A refeição focada ou a agilidade líquida não funcionaram"; exit 1; fi
+          if ! grep -q "Teste da recuperar inscrição: conhece as 7 magias = true, repetiu a recarga = true, cargas do tomo = 0, ainda lembra = false" servidor.log; then echo "A recuperar inscrição não funcionou"; exit 1; fi
+          if ! grep -q "Teste da bênção: sentido divino = true, abençoado = true, blindagem +10.0, cargas do tomo = 0" servidor.log; then echo "A bênção ou o sentido divino não funcionaram"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
 
       # Liga o jogo de verdade (sem monitor, no Xvfb), entra no mundo do teste do servidor
