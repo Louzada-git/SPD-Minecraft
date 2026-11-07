@@ -68,8 +68,9 @@ public class Combate {
         LivingEntity quemBate = golpe.atacante().entidade();
         LivingEntity quemApanha = golpe.alvo().entidade();
         float precisao = golpe.atacante().precisao(golpe) * pelosEfeitos(quemBate);
-        if (golpe.deLonge() && quemBate.distanceTo(quemApanha) < DISTANCIA_COLADO) {
-            precisao *= 0.5F;
+        // Igual ao Shattered: o que é arremessado ou atirado acerta 1,5x melhor de longe e pela metade colado no alvo
+        if (golpe.deLonge()) {
+            precisao *= quemBate.distanceTo(quemApanha) < DISTANCIA_COLADO ? 0.5F : 1.5F;
         }
         // Paralisado, congelado ou dormindo não consegue desviar
         float esquiva = EfeitosNoTick.semDefesa(quemApanha) ? 0 : golpe.alvo().esquiva(golpe) * pelosEfeitos(quemApanha);

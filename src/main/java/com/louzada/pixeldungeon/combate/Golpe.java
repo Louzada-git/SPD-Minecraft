@@ -64,7 +64,7 @@ public class Golpe {
         return this;
     }
 
-    // Flechas: colado no inimigo acerta pior
+    // Flechas e armas de arremesso: de longe acertam melhor, colado no inimigo pior
     public Golpe aDistancia() {
         aDistancia = true;
         return this;

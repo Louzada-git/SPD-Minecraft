@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon.combate;
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
+import com.louzada.pixeldungeon.entidade.ArmaArremessada;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.ImagemEspelhada;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
@@ -130,6 +131,8 @@ public class EventosDeCombate {
         if (!(evento.getEntity() instanceof MobDoShattered inimigo) || inimigo.level().isClientSide()) {
             return;
         }
+        // As armas de arremesso cravadas nele caem
+        ArmaArremessada.soltarEspetados(inimigo);
         ServerPlayer matador = evento.getSource().getEntity() instanceof ServerPlayer quem ? quem : null;
         // O que a imagem espelhada mata conta pro herói dela
         if (evento.getSource().getEntity() instanceof ImagemEspelhada imagem) {
