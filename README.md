@@ -86,7 +86,7 @@ Igual à interface completa do Shattered. Durante a run, a barra de itens, os co
 | Florete, katana | **Estocada:** avança até um inimigo a 1 quadradinho e golpeia com +5/+8, acerto garantido |
 | Maça, machadinha, clava, martelo de guerra | **Golpe pesado:** acerto garantido, atordoa 5 turnos (precisão e esquiva pela metade); de surpresa, +3/+4/+5/+6 |
 
-- **Tomo sagrado (Clérigo):** clique direito abre a lista de magias. Começa com 3 cargas e fica mais forte com o uso.
+- **Tomo sagrado (Clérigo):** clique direito abre a lista de magias (em linhas de 5). Começa com 3 cargas e fica mais forte com o uso.
 
 | Magia | Custo | O que faz |
 |---|---|---|
@@ -95,6 +95,10 @@ Igual à interface completa do Shattered. Durante a run, a barra de itens, os co
 | Armadura sagrada | 1 | bloqueia mais 1 de dano em cada golpe por 50 turnos |
 | Intuição divina (talento) | 3/2 | diz se o item na outra mão é amaldiçoado |
 | Escudo de luz (talento) | 1 | 2-4 / 3-6 de armadura contra o inimigo na mira por 5 turnos |
+| Recuperar inscrição (talento) | 3 (6 na transmutação) | repete o último pergaminho lido em 10/300 turnos (menos o de aprimoramento), uma vez por pergaminho |
+| Raio solar (talento) | 1 | raio de 4-8 / 6-12 de dano que cega por 4/6 turnos; acertando de novo enquanto o alvo está cego, paralisa |
+| Sentido divino (talento) | 2 | vê os inimigos a 8/12 quadradinhos através das paredes por 50 turnos |
+| Bênção (talento) | 1 | no aliado na mira: 10/15 turnos de bênção e 10/15 de cura (a sobra vira blindagem); sem aliado, no Clérigo: 6/10 turnos de bênção e 10/15 de blindagem |
 
 - **Odre (todas as classes):** guarda até 20 gotas de orvalho. Clique direito bebe: cada gota cura 5% da vida, e só gasta as gotas que precisa. A barrinha azul do ícone mostra quantas gotas tem.
 
@@ -194,7 +198,7 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 | Identificação | escolhe um item: revela tudo dele |
 | Remover maldição | escolhe uma arma: tira a maldição |
 | Imagem espelhada | 2 cópias do herói lutam do lado dele (somem com qualquer golpe) |
-| Recarga | enche as cargas do cajado do Mago |
+| Recarga | enche as cargas do cajado do Mago e dá 30 turnos de recarga (o cajado continua carregando mais rápido) |
 | Teletransportação | leva pra outro lugar do andar, longe de onde estava |
 | Acalento | os inimigos visíveis (e quem leu) dormem depois de 5 turnos; o herói dormindo cura 1 por turno |
 | Mapeamento mágico | diz pra que lado e a quantos quadradinhos fica a saída, e colunas de luz marcam a saída e a entrada |
@@ -221,8 +225,8 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 
 ### Talentos
 
-- Tecla **K** abre a tela de talentos, no estilo do Shattered. Do nível 2 ao 6, cada nível dá 1 ponto (5 no total), e cada talento vai até +2.
-- Os 4 primeiros talentos de cada classe, com os números do Shattered:
+- Tecla **K** abre a tela de talentos, no estilo do Shattered, com uma linha por tier. Do nível 2 ao 6, cada nível dá 1 ponto do tier 1 (5 no total); o tier 2 libera no nível 7, e do 7 ao 12 cada nível dá 1 ponto dele (6 no total). Cada talento vai até +2.
+- Tier 1, com os números do Shattered:
 
 | Classe | Talentos |
 |---|---|
@@ -233,7 +237,19 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 | Duelista | refeição fortalecedora, intuição de aventureiro (identifica armas mais rápido, e na hora com +2), golpe paciente (ficar parado 1 turno antes de bater), barreira agressiva |
 | Clérigo | magias saciadas, intuição divina, luz abrasadora, escudo de luz |
 
-\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: varinhas (estudioso), anéis (ladrão) e armas de arremesso (sobrevivente). A tela de talentos avisa isso.
+- Tier 2, também com os números do Shattered:
+
+| Classe | Talentos |
+|---|---|
+| Guerreiro | estômago de ferro (comer leva 1 turno e protege do dano), tenacidade líquida (blindagem ao usar poção), transferência rúnica*, ímpeto letal (golpe mortal deixa o próximo ataque pronto), projéteis improvisados (poção ou semente arremessada cega) |
+| Mago | refeição energética (recarga do cajado), poder inscrito (pergaminho dá +2 níveis nos próximos disparos), preservação de varinha*, visão arcana (quem leva o disparo brilha através das paredes), bateria de escudo (usar o cajado agachado troca as cargas por blindagem) |
+| Ladino | refeição mística (recarga da capa e do tomo; rações de suprimentos na hora), furtividade inscrita (pergaminho deixa invisível), grande busca*, passos silenciosos, previsão do ladino* |
+| Caçadora | refeição revigorante (pressa; bagas na hora), natureza líquida (poção faz grama alta e enraíza os inimigos perto), passos rejuvenescedores (grama alta onde pisa), sentidos apurados (vê através das paredes perto dela), projéteis duráveis* |
+| Duelista | refeição focada (carga de arma), agilidade líquida (poção dá esquiva e precisão), recarga de arma, pressa letal (golpe mortal com habilidade dá pressa forte), empunhar ágil (trocar de arma não perde o ataque carregado) |
+| Clérigo | refeição iluminada (carga do tomo), recuperar inscrição, raio solar, sentido divino, bênção (as 4 últimas são magias novas do tomo) |
+
+\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: varinhas (estudioso e preservação), anéis (ladrão), armas de arremesso (sobrevivente e projéteis duráveis), glifos (transferência rúnica), a ação de procurar (grande busca) e salas secretas (previsão do ladino). A tela de talentos avisa isso.
+- "Visão mental" (ver através das paredes) faz os inimigos brilharem com o contorno do Minecraft.
 
 ### Combate e inimigos
 
@@ -380,7 +396,8 @@ src/main/java/com/louzada/pixeldungeon/
     DadosDoHeroi.java          classe, força, nível e XP de cada jogador
     RegrasDoHeroi.java         contas de vida, precisão, esquiva e XP
     PesoDoEquipamento.java     armadura e arma pesadas demais deixam mais lento
-    Talento.java / Talentos.java    os talentos e o que cada um faz
+    Talento.java / Talentos.java    os talentos e o que os do tier 1 fazem
+    TalentosDoTier2.java       o que os talentos do tier 2 fazem
     Escudos.java               blindagem e o selo do Guerreiro
     HabilidadesDaDuelista.java      as habilidades das armas
     MagiasDoClerigo.java       as magias do tomo sagrado
