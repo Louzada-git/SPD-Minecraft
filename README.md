@@ -55,11 +55,11 @@ Igual à interface completa do Shattered. Durante a run, a barra de itens, os co
 
 | Classe | Arma | Dano | Item único |
 |---|---|---|---|
-| Guerreiro | Espada Curta Desgastada | 1-10 | selo quebrado (na armadura) |
+| Guerreiro | Espada Curta Desgastada | 1-10 | selo quebrado (na armadura) e 3 pedras de arremesso |
 | Mago | Cajado do Mago | 1-6 | varinha de míssil mágico (dentro do cajado) |
-| Ladino | Adaga | 1-8 | capa das sombras |
+| Ladino | Adaga | 1-8 | capa das sombras e 3 facas de arremesso |
 | Caçadora | Luvas Cravejadas (2x mais rápidas) | 1-5 | arco espiritual |
-| Duelista | Florete (+1 de defesa) | 1-8 | habilidades das armas (tecla V) |
+| Duelista | Florete (+1 de defesa) | 1-8 | habilidades das armas (tecla V) e 2 agulhas de arremesso |
 | Clérigo | Maça (+40% de precisão) | 1-8 | tomo sagrado |
 
 - Regras do Shattered: força (começa em 10), nível, vida (20, +5 por nível), precisão e esquiva. Todo golpe corpo a corpo sorteia se acerta, e o dano é sorteado pela arma. A barra de XP mostra o nível do Shattered.
@@ -132,6 +132,33 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 | Polarizante | metade dos golpes dá 50% a mais de dano; a outra metade não dá nada |
 | Sacrificante | 1 em 10 golpes: quem bate sangra (mais, quanto mais vida tiver) |
 | Inconstante | 1 em 4 golpes: a precisão cai pra um quinto por 10 turnos (acertar desfaz) |
+
+### Armas de arremesso
+
+As 15 armas de arremesso do Shattered, com os mesmos números. Clique direito arremessa uma (gasta 1 turno). Elas aparecem pelos andares em conjuntos de 3, com o mesmo sorteio de tier das armas.
+
+| Arma | Tier | Dano | Usos | Especial |
+|---|---|---|---|---|
+| Pedra de arremesso | 1 | 2-5 | 5 | não gruda |
+| Faca de arremesso | 1 | 2-6 | 5 | mais forte de surpresa |
+| Agulha de arremesso | 1 | 2-5 | 12 | |
+| Lança de pesca | 2 | 4-10 | 8 | |
+| Bastão de arremesso | 2 | 4-8 | 12 | não gruda |
+| Shuriken | 2 | 4-8 | 5 | sai na hora, uma vez a cada 20 turnos |
+| Lança de arremesso | 3 | 6-15 | 8 | |
+| Kunai | 3 | 6-12 | 8 | mais forte de surpresa |
+| Boleadeiras | 3 | 4-9 | 5 | aleija por 5 turnos |
+| Javelin | 4 | 8-20 | 8 | |
+| Tomahawk | 4 | 6-16 | 5 | faz sangrar 3-6 |
+| Bumerangue pesado | 4 | 8-16 | 5 | volta pra onde foi arremessado depois de 5 turnos |
+| Tridente | 5 | 10-25 | 8 | |
+| Martelo de arremesso | 5 | 10-20 | 12 | não gruda |
+| Cubo de força | 5 | 10-30 | 5 | acerta todo mundo perto de onde cai |
+
+- Igual ao Shattered, acertam 1,5x melhor de longe e pela metade coladas no inimigo (o arco espiritual agora também ganha esse bônus de longe). Pedem 1 de força a menos que as armas do mesmo tier.
+- **Durabilidade:** o conjunto se desgasta a cada acerto; depois dos usos da tabela, uma delas quebra. A barrinha embaixo do ícone mostra quanto falta. Cada nível multiplica os usos por 1,5, e com 100 usos ou mais o conjunto dura pra sempre. As que voltam pra mochila se juntam de novo ao conjunto.
+- A maioria fica cravada no inimigo e cai no chão quando ele morre; as que não grudam (e as que erram) caem no chão ali.
+- Vêm sem identificar e podem ser amaldiçoadas, igual às armas, mas se identificam com 10 acertos. A maldição só aparece quando uma delas acerta alguém.
 
 ### Armaduras
 
@@ -233,7 +260,7 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 | Guerreiro | refeição saudável, intuição de veterano (identifica armas mais rápido), raiva provocada, determinação de ferro |
 | Mago | refeição empoderadora, intuição do estudioso*, magia prolongada, barreira de apoio |
 | Ladino | rações guardadas (baús com rações de suprimentos), intuição do ladrão*, golpe surpresa, sombras protetoras |
-| Caçadora | recompensa da natureza (bagas na grama alta), intuição de sobrevivente*, ataque consecutivo, auxílio da natureza (pele de árvore quando uma planta é ativada perto dela) |
+| Caçadora | recompensa da natureza (bagas na grama alta), intuição de sobrevivente (identifica armas de arremesso 3x mais rápido, e ao acertar com +2), ataque consecutivo, auxílio da natureza (pele de árvore quando uma planta é ativada perto dela) |
 | Duelista | refeição fortalecedora, intuição de aventureiro (identifica armas mais rápido, e na hora com +2), golpe paciente (ficar parado 1 turno antes de bater), barreira agressiva |
 | Clérigo | magias saciadas, intuição divina, luz abrasadora, escudo de luz |
 
@@ -244,11 +271,11 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 | Guerreiro | estômago de ferro (comer leva 1 turno e protege do dano), tenacidade líquida (blindagem ao usar poção), transferência rúnica*, ímpeto letal (golpe mortal deixa o próximo ataque pronto), projéteis improvisados (poção ou semente arremessada cega) |
 | Mago | refeição energética (recarga do cajado), poder inscrito (pergaminho dá +2 níveis nos próximos disparos), preservação de varinha*, visão arcana (quem leva o disparo brilha através das paredes), bateria de escudo (usar o cajado agachado troca as cargas por blindagem) |
 | Ladino | refeição mística (recarga da capa e do tomo; rações de suprimentos na hora), furtividade inscrita (pergaminho deixa invisível), grande busca*, passos silenciosos, previsão do ladino* |
-| Caçadora | refeição revigorante (pressa; bagas na hora), natureza líquida (poção faz grama alta e enraíza os inimigos perto), passos rejuvenescedores (grama alta onde pisa), sentidos apurados (vê através das paredes perto dela), projéteis duráveis* |
+| Caçadora | refeição revigorante (pressa; bagas na hora), natureza líquida (poção faz grama alta e enraíza os inimigos perto), passos rejuvenescedores (grama alta onde pisa), sentidos apurados (vê através das paredes perto dela), projéteis duráveis (armas de arremesso duram +50%/+75%) |
 | Duelista | refeição focada (carga de arma), agilidade líquida (poção dá esquiva e precisão), recarga de arma, pressa letal (golpe mortal com habilidade dá pressa forte), empunhar ágil (trocar de arma não perde o ataque carregado) |
 | Clérigo | refeição iluminada (carga do tomo), recuperar inscrição, raio solar, sentido divino, bênção (as 4 últimas são magias novas do tomo) |
 
-\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: varinhas (estudioso e preservação), anéis (ladrão), armas de arremesso (sobrevivente e projéteis duráveis), glifos (transferência rúnica), a ação de procurar (grande busca) e salas secretas (previsão do ladino). A tela de talentos avisa isso.
+\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: varinhas (estudioso e preservação), anéis (ladrão), glifos (transferência rúnica), a ação de procurar (grande busca) e salas secretas (previsão do ladino). A tela de talentos avisa isso.
 - "Visão mental" (ver através das paredes) faz os inimigos brilharem com o contorno do Minecraft.
 
 ### Combate e inimigos
@@ -369,7 +396,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 ## O que vem depois
 
 1. **Texturas próprias** dos blocos.
-2. **Mais itens:** varinhas, anéis e armas de arremesso (pras intuições que faltam), poções e pergaminhos exóticos, alquimia e encantamentos.
+2. **Mais itens:** varinhas e anéis (pras intuições que faltam), glifos, poções e pergaminhos exóticos, alquimia e encantamentos.
 3. **O resto do esgoto do Shattered:** portas escondidas (que precisam ser procuradas), armadilhas e as salas que precisam de abismo.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
@@ -381,7 +408,7 @@ src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas, portas gigantes, plantas e blocos de decoração
-  item/                        armas, armadura, poções, pergaminhos, sementes, identificação e maldições
+  item/                        armas, armas de arremesso, armadura, poções, pergaminhos, sementes, identificação e maldições
   entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o míssil mágico, as nuvens de gás...
   efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
   combate/
