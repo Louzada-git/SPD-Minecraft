@@ -138,6 +138,11 @@ jobs:
           if ! grep -q "Teste da faca cravada: cravadas = 1, caiu quando o rato morreu = true" servidor.log; then echo "A faca cravada não caiu"; exit 1; fi
           if ! grep -q "Teste do arremesso: ficaram 2 pedras na mão" servidor.log; then echo "A pedra não foi arremessada"; exit 1; fi
           if ! grep -q "Teste do arremesso: acertou o rato = true, a pedra caiu no chão = true" servidor.log; then echo "A pedra arremessada não acertou o rato"; exit 1; fi
+          if ! grep -q "Teste das varinhas: 10 varinhas, míssil mágico com 3 cargas, relâmpago 5-10 no +0 e 6-15 no +1" servidor.log; then echo "As varinhas não estão certas"; exit 1; fi
+          if ! grep -q "Teste do saque de varinha: identificada = false, disparos pra identificar = 10" servidor.log; then echo "As varinhas do chão não estão certas"; exit 1; fi
+          if ! grep -q "Teste da varinha do relâmpago: acertou o rato = true, cargas 1/2, identificou = true" servidor.log; then echo "A varinha do relâmpago não funcionou"; exit 1; fi
+          if ! grep -q "Teste da recarga nas varinhas: cargas 2/2" servidor.log; then echo "O pergaminho de recarga não encheu a varinha"; exit 1; fi
+          if ! grep -q "Teste do cajado: varinha = relampago, nível 2, cargas 5/5, devolveu a de míssil mágico = true, gastou a nova = true" servidor.log; then echo "O cajado não recebeu a varinha"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
 
       # Liga o jogo de verdade (sem monitor, no Xvfb), entra no mundo do teste do servidor

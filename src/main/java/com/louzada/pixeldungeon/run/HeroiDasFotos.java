@@ -50,6 +50,7 @@ public class HeroiDasFotos {
         jogador.getInventory().add(NivelDoItem.sortearDoChao(new ItemStack(ModItens.ESPADA.get()), sorteio, true));
         jogador.getInventory().add(new ItemStack(ModItens.KATANA.get()));
         jogador.getInventory().add(NivelDoItem.sortearDoChao(new ItemStack(ModItens.ARMADURA_DE_ESCAMAS.get()), sorteio, true));
+        jogador.getInventory().add(SaqueDoAndar.varinhaAleatoria(sorteio));
         Ouro.pegar(jogador, 87);
         RegrasDoHeroi.ganharXp(jogador, 13);
         jogador.addEffect(new MobEffectInstance(ModEfeitos.ABENCOADO, 20 * 60));
