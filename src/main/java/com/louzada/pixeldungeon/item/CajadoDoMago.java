@@ -5,6 +5,7 @@ import java.util.List;
 import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.heroi.Furtividade;
 import com.louzada.pixeldungeon.heroi.Talentos;
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -77,10 +78,17 @@ public class CajadoDoMago extends ArmaDoShattered {
             return InteractionResultHolder.fail(pilha);
         }
 
+        // Bateria de escudo: agachado, as cargas viram escudo
+        if (TalentosDoTier2.bateriaDeEscudo(heroi, pilha, cargas)) {
+            heroi.getCooldowns().addCooldown(this, Turno.TICKS);
+            return InteractionResultHolder.success(pilha);
+        }
+
         // Talentos do Mago (magia prolongada, barreira de apoio) e a invisibilidade acaba
         Talentos.aoUsarVarinha(heroi, cargas);
         Furtividade.revelar(heroi);
-        VARINHA.lancar(heroi, NivelDoItem.nivel(pilha));
+        // Poder inscrito: depois de ler um pergaminho, alguns disparos saem com +2 níveis
+        VARINHA.lancar(heroi, NivelDoItem.nivel(pilha) + TalentosDoTier2.niveisInscritos(heroi));
         Cargas.gastar(pilha, agora, cargasMaximas(pilha), 1);
         // Lançar gasta um turno
         heroi.getCooldowns().addCooldown(this, Turno.TICKS);

@@ -37,6 +37,11 @@ public class LuzGuia extends MisselMagico {
     }
 
     @Override
+    protected boolean ehVarinha() {
+        return false;
+    }
+
+    @Override
     protected void aoAtingir(LivingEntity alvo) {
         alvo.addEffect(new MobEffectInstance(ModEfeitos.ILUMINADO, DURACAO_DA_LUZ));
     }

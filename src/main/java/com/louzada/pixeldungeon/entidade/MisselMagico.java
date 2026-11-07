@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.entidade;
 
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.heroi.Talentos;
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.VarinhaDeMisselMagico;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 
@@ -64,6 +65,11 @@ public class MisselMagico extends ThrowableProjectile {
     protected void aoAtingir(LivingEntity alvo) {
     }
 
+    // Disparo de varinha? (a luz guia e o raio solar são magias do Clérigo, não varinhas)
+    protected boolean ehVarinha() {
+        return true;
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder construtor) {
     }
@@ -121,6 +127,10 @@ public class MisselMagico extends ThrowableProjectile {
         alvo.hurt(damageSources().indirectMagic(this, getOwner()), dano);
         if (alvo instanceof LivingEntity criatura && criatura.isAlive()) {
             aoAtingir(criatura);
+            // Visão arcana do Mago
+            if (ehVarinha() && getOwner() instanceof ServerPlayer jogador) {
+                TalentosDoTier2.aoAcertarComVarinha(jogador, criatura);
+            }
         }
     }
 
