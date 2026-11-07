@@ -15,6 +15,7 @@ import com.louzada.pixeldungeon.entidade.MisselMagico;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.entidade.NuvemDeGas;
 import com.louzada.pixeldungeon.entidade.PocaoArremessada;
+import com.louzada.pixeldungeon.entidade.RaioSolar;
 import com.louzada.pixeldungeon.entidade.RatoAlbino;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
 import com.louzada.pixeldungeon.entidade.SementeArremessada;
@@ -74,6 +75,11 @@ public class ModEntidades {
     public static final DeferredHolder<EntityType<?>, EntityType<LuzGuia>> LUZ_GUIA = ENTIDADES.register("luz_guia",
             () -> EntityType.Builder.<LuzGuia>of(LuzGuia::new, MobCategory.MISC).sized(0.25F, 0.25F)
                     .clientTrackingRange(4).updateInterval(10).build("luz_guia"));
+
+    // Raio solar do Clérigo
+    public static final DeferredHolder<EntityType<?>, EntityType<RaioSolar>> RAIO_SOLAR = ENTIDADES.register("raio_solar",
+            () -> EntityType.Builder.<RaioSolar>of(RaioSolar::new, MobCategory.MISC).sized(0.25F, 0.25F)
+                    .clientTrackingRange(4).updateInterval(10).build("raio_solar"));
 
     // Flecha do arco espiritual da Caçadora
     public static final DeferredHolder<EntityType<?>, EntityType<FlechaEspiritual>> FLECHA_ESPIRITUAL = ENTIDADES.register("flecha_espiritual",

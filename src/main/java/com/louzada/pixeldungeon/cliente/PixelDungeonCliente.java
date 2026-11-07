@@ -52,6 +52,7 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.MISSEL_MAGICO.get(), NoopRenderer::new);
         // Luz guia do Clérigo: igual ao míssil, só o rastro de luz
         evento.registerEntityRenderer(ModEntidades.LUZ_GUIA.get(), NoopRenderer::new);
+        evento.registerEntityRenderer(ModEntidades.RAIO_SOLAR.get(), NoopRenderer::new);
         // Flecha espiritual: o desenho da flecha do Shattered, brilhando
         evento.registerEntityRenderer(ModEntidades.FLECHA_ESPIRITUAL.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, true));
         // Gota de orvalho: o desenho da gota do Shattered, brilhando
