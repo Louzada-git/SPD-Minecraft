@@ -17,6 +17,7 @@ import com.louzada.pixeldungeon.item.Baga;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
 import com.louzada.pixeldungeon.item.Cargas;
+import com.louzada.pixeldungeon.item.ItemVarinha;
 import com.louzada.pixeldungeon.item.RacaoDeSuprimentos;
 import com.louzada.pixeldungeon.item.TipoDePergaminho;
 import com.louzada.pixeldungeon.item.TipoDePocao;
@@ -249,15 +250,15 @@ public class TalentosDoTier2 {
         }
     }
 
-    // Bateria de escudo (Mago): agachado, o cajado mira no próprio Mago e vira escudo (4%/6% da vida máxima por carga)
-    public static boolean bateriaDeEscudo(ServerPlayer jogador, ItemStack cajado, int cargas) {
+    // Bateria de escudo (Mago): agachado, a varinha (ou o cajado) mira no próprio Mago e vira escudo (4%/6% da vida máxima por carga)
+    public static boolean bateriaDeEscudo(ServerPlayer jogador, ItemStack varinha, int cargas, int maximo) {
         int pontos = RegrasDoHeroi.dados(jogador).pontos(Talento.BATERIA_DE_ESCUDO);
         if (pontos <= 0 || !jogador.isShiftKeyDown() || cargas <= 0) {
             return false;
         }
         long agora = jogador.level().getGameTime();
         Escudos.darBarreira(jogador, Math.max(1, Math.round(jogador.getMaxHealth() * (0.02F + 0.02F * pontos) * cargas)));
-        Cargas.gastar(cajado, agora, CajadoDoMago.cargasMaximas(cajado), cargas);
+        Cargas.gastar(varinha, agora, maximo, cargas);
         jogador.level().playSound(null, jogador.blockPosition(), SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 0.8F, 1.6F);
         return true;
     }
@@ -328,11 +329,13 @@ public class TalentosDoTier2 {
         long agora = jogador.level().getGameTime();
         boolean recarregando = jogador.hasEffect(ModEfeitos.RECARREGANDO);
         boolean recargaDeArtefato = jogador.hasEffect(ModEfeitos.RECARGA_DE_ARTEFATO);
-        // Recarregando: o cajado ganha 1/4 de carga por turno
+        // Recarregando: o cajado e as varinhas ganham 1/4 de carga por turno
         if (recarregando) {
             for (ItemStack pilha : jogador.getInventory().items) {
                 if (pilha.getItem() instanceof CajadoDoMago) {
                     Cargas.adiantar(pilha, agora, CajadoDoMago.cargasMaximas(pilha), Varinha::ticksParaCarregar, 0.25F);
+                } else if (pilha.getItem() instanceof ItemVarinha) {
+                    Cargas.adiantar(pilha, agora, ItemVarinha.cargasMaximas(pilha), Varinha::ticksParaCarregar, 0.25F);
                 }
             }
         }

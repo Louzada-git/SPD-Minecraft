@@ -31,7 +31,8 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 //   - o pergaminho de melhoria dá +1 de nível (mais dano ou mais defesa, e precisa de menos força)
 //   - o que é achado na dungeon vem sem identificar: não dá pra saber o nível nem se tem maldição
 //   - se identifica sozinho com o uso: a arma depois de 20 golpes, a armadura depois de 20 golpes recebidos,
-//     as armas de arremesso depois de 10 acertos (as intuições do Guerreiro, da Duelista e da Caçadora aceleram)
+//     as armas de arremesso depois de 10 acertos e as varinhas depois de 10 disparos
+//     (as intuições do Guerreiro, da Duelista, da Caçadora e do Mago aceleram)
 //   - segurar a arma (ou vestir a armadura) revela se ela é amaldiçoada; a armadura amaldiçoada gruda no corpo
 //   - 30% do que é achado vem com uma maldição (de arma ou de armadura)
 public class NivelDoItem {
@@ -48,9 +49,15 @@ public class NivelDoItem {
         return pilha.getItem() instanceof Equipamento;
     }
 
-    // Quantos usos o item leva pra se identificar sozinho (as armas de arremesso, metade)
+    // Quantos usos o item leva pra se identificar sozinho (as armas de arremesso e as varinhas, metade)
     public static float usosParaIdentificar(ItemStack pilha) {
-        return pilha.getItem() instanceof ArmaDeArremesso ? ArmaDeArremesso.USOS_PARA_IDENTIFICAR : USOS_PARA_IDENTIFICAR;
+        if (pilha.getItem() instanceof ArmaDeArremesso) {
+            return ArmaDeArremesso.USOS_PARA_IDENTIFICAR;
+        }
+        if (pilha.getItem() instanceof ItemVarinha) {
+            return ItemVarinha.USOS_PARA_IDENTIFICAR;
+        }
+        return USOS_PARA_IDENTIFICAR;
     }
 
     public static boolean ehArmadura(ItemStack pilha) {
@@ -127,7 +134,8 @@ public class NivelDoItem {
         pilha.remove(ModComponentes.MALDICAO_CONHECIDA.get());
         pilha.remove(ModComponentes.USOS_PARA_IDENTIFICAR.get());
         if (jogador != null) {
-            String chave = ehArmadura(pilha) ? "mensagem.pixeldungeon.armadura_identificada" : "mensagem.pixeldungeon.arma_identificada";
+            String chave = ehArmadura(pilha) ? "mensagem.pixeldungeon.armadura_identificada"
+                    : pilha.getItem() instanceof ItemVarinha ? "mensagem.pixeldungeon.varinha_identificada" : "mensagem.pixeldungeon.arma_identificada";
             jogador.displayClientMessage(Component.translatable(chave, pilha.getHoverName()).withStyle(ChatFormatting.AQUA), false);
             jogador.level().playSound(null, jogador.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 0.8F, 1.4F);
             if (ehArmadura(pilha)) {
@@ -138,9 +146,9 @@ public class NivelDoItem {
 
     // Segurou a arma ou vestiu a armadura: descobre se é amaldiçoada.
     // As intuições +2 identificam na hora: a de aventureiro (Duelista) as armas, a de veterano (Guerreiro) as armaduras.
-    // (As armas de arremesso não são equipadas: a maldição delas aparece quando acertam alguém.)
+    // (As armas de arremesso e as varinhas não são equipadas: a maldição delas aparece quando acertam alguém ou são lançadas.)
     public static void aoEquipar(ServerPlayer jogador, ItemStack pilha) {
-        if (!podeIdentificar(pilha) || pilha.getItem() instanceof ArmaDeArremesso) {
+        if (!(pilha.getItem() instanceof ArmaDoShattered) && !ehArmadura(pilha)) {
             return;
         }
         if (!identificado(pilha)) {
@@ -180,9 +188,13 @@ public class NivelDoItem {
     // Intuição de veterano (Guerreiro): armas 1,75x / 2,5x, armaduras 2,5x / na hora.
     // Intuição de aventureiro (Duelista): armas 2,5x / na hora, armaduras 1,75x / 2,5x.
     // Intuição de sobrevivente (Caçadora): armas de arremesso 3x / ao acertar (ver ArmaArremessada).
+    // Intuição do estudioso (Mago): varinhas 3x / ao lançar (ver ItemVarinha).
     public static float fatorDosTalentos(DadosDoHeroi dados, ItemStack pilha) {
         if (pilha.getItem() instanceof ArmaDeArremesso) {
             return 1 + 2.0F * dados.pontos(Talento.INTUICAO_DE_SOBREVIVENTE);
+        }
+        if (pilha.getItem() instanceof ItemVarinha) {
+            return 1 + 2.0F * dados.pontos(Talento.INTUICAO_DO_ESTUDIOSO);
         }
         int aventureiro = dados.pontos(Talento.INTUICAO_DE_AVENTUREIRO);
         int veterano = dados.pontos(Talento.INTUICAO_DE_VETERANO);
@@ -222,10 +234,14 @@ public class NivelDoItem {
     // ---- Melhorar e tirar maldição ----
 
     // +1 de nível. Igual ao Shattered, melhorar um item amaldiçoado tem 1 chance em 3 de tirar a maldição.
-    // Nas armas de arremesso, o conjunto também volta a ficar inteiro, igual ao Shattered.
+    // Nas armas de arremesso, o conjunto também volta a ficar inteiro; a varinha ganha uma carga.
     public static void melhorar(@Nullable ServerPlayer jogador, ItemStack pilha, RandomSource sorteio) {
         definirNivel(pilha, nivel(pilha) + 1);
         ArmaDeArremesso.definirDurabilidade(pilha, ArmaDeArremesso.DURABILIDADE_MAXIMA);
+        // Igual ao Shattered, a varinha melhorada ganha uma carga
+        if (pilha.getItem() instanceof ItemVarinha) {
+            Cargas.somar(pilha, ItemVarinha.cargasMaximas(pilha), 1);
+        }
         if (amaldicoado(pilha) && sorteio.nextInt(3) == 0) {
             pilha.remove(ModComponentes.MALDICAO.get());
             soltar(pilha);

@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 // Cada talento vai até +2. O tier 1 tem 4 talentos e 5 pontos (níveis 2 a 6);
 // o tier 2 tem 5 talentos e 6 pontos (níveis 7 a 12).
 //
-// Alguns talentos dependem de coisas que o mod ainda não tem (varinhas no chão, anéis,
+// Alguns talentos dependem de coisas que o mod ainda não tem (anéis,
 // glifos, a busca e as salas secretas). Eles podem ser escolhidos, mas a dica avisa que ainda não fazem nada ("pendente").
 public enum Talento {
     // Guerreiro
@@ -24,12 +24,12 @@ public enum Talento {
     PROJETEIS_IMPROVISADOS("projeteis_improvisados", ClasseDoHeroi.GUERREIRO, 2, null),
     // Mago
     REFEICAO_EMPODERADORA("refeicao_empoderadora", ClasseDoHeroi.MAGO, 1, null),
-    INTUICAO_DO_ESTUDIOSO("intuicao_do_estudioso", ClasseDoHeroi.MAGO, 1, "varinhas"),
+    INTUICAO_DO_ESTUDIOSO("intuicao_do_estudioso", ClasseDoHeroi.MAGO, 1, null),
     MAGIA_PROLONGADA("magia_prolongada", ClasseDoHeroi.MAGO, 1, null),
     BARREIRA_DE_APOIO("barreira_de_apoio", ClasseDoHeroi.MAGO, 1, null),
     REFEICAO_ENERGETICA("refeicao_energetica", ClasseDoHeroi.MAGO, 2, null),
     PODER_INSCRITO("poder_inscrito", ClasseDoHeroi.MAGO, 2, null),
-    PRESERVACAO_DE_VARINHA("preservacao_de_varinha", ClasseDoHeroi.MAGO, 2, "imbuir"),
+    PRESERVACAO_DE_VARINHA("preservacao_de_varinha", ClasseDoHeroi.MAGO, 2, null),
     VISAO_ARCANA("visao_arcana", ClasseDoHeroi.MAGO, 2, null),
     BATERIA_DE_ESCUDO("bateria_de_escudo", ClasseDoHeroi.MAGO, 2, null),
     // Ladino

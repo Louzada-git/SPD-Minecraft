@@ -153,14 +153,14 @@ public class Talentos {
     // ---- Varinha (cajado do Mago) ----
 
     // Chamado antes de disparar: magia prolongada e barreira de apoio
-    public static void aoUsarVarinha(ServerPlayer jogador, int cargasAntes) {
+    public static void aoUsarVarinha(ServerPlayer jogador, int cargasAntes, int cargasUsadas, boolean doCajado) {
         DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
         if (dados.pontos(Talento.MAGIA_PROLONGADA) > 0) {
             dados.ativarPor(MAGIA, jogador.level().getGameTime(), Turno.ticks(5));
         }
-        // Barreira de apoio: gastou a última carga, ganha 3/5 de blindagem
+        // Barreira de apoio: gastou a última carga do cajado, ganha 3/5 de blindagem
         int pontos = dados.pontos(Talento.BARREIRA_DE_APOIO);
-        if (pontos > 0 && cargasAntes == 1) {
+        if (pontos > 0 && doCajado && cargasAntes - cargasUsadas <= 0) {
             Escudos.darBarreira(jogador, 1 + 2 * pontos);
         }
     }
