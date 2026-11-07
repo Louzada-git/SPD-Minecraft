@@ -31,6 +31,7 @@ public class ModRede {
         PayloadRegistrar registrador = evento.registrar("1");
         registrador.playToClient(PacoteAbrirMenu.TIPO, PacoteAbrirMenu.CODEC, ModRede::aoReceberAbrirMenu);
         registrador.playToClient(PacoteEstadoDoHeroi.TIPO, PacoteEstadoDoHeroi.CODEC, ModRede::aoReceberEstado);
+        registrador.playToClient(PacoteAtaquePronto.TIPO, PacoteAtaquePronto.CODEC, ModRede::aoReceberAtaquePronto);
         registrador.playToServer(PacoteEscolherClasse.TIPO, PacoteEscolherClasse.CODEC, ModRede::aoReceberEscolherClasse);
         registrador.playToServer(PacoteAprimorarTalento.TIPO, PacoteAprimorarTalento.CODEC, ModRede::aoReceberAprimorarTalento);
         registrador.playToServer(PacoteUsarHabilidade.TIPO, PacoteUsarHabilidade.CODEC, ModRede::aoReceberUsarHabilidade);
@@ -52,6 +53,10 @@ public class ModRede {
 
     private static void aoReceberEstado(PacoteEstadoDoHeroi pacote, IPayloadContext contexto) {
         ClienteDoMod.receberEstado(pacote);
+    }
+
+    private static void aoReceberAtaquePronto(PacoteAtaquePronto pacote, IPayloadContext contexto) {
+        ClienteDoMod.ataquePronto();
     }
 
     private static void aoReceberConhecimento(PacoteConhecimento pacote, IPayloadContext contexto) {

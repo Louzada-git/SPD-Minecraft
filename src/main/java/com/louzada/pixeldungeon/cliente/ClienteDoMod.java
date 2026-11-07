@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.cliente;
 
 import java.util.List;
 
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.rede.PacoteEstadoDoHeroi;
 
 import net.minecraft.client.Minecraft;
@@ -16,6 +17,13 @@ public class ClienteDoMod {
 
     public static void abrirTomo() {
         Minecraft.getInstance().setScreen(new TelaDoTomo());
+    }
+
+    // O próximo golpe já está carregado (a barrinha de recarga do ataque enche na hora)
+    public static void ataquePronto() {
+        if (Minecraft.getInstance().player != null) {
+            Minecraft.getInstance().player.attackStrengthTicker = TalentosDoTier2.ATAQUE_CARREGADO;
+        }
     }
 
     public static void receberEstado(PacoteEstadoDoHeroi pacote) {
