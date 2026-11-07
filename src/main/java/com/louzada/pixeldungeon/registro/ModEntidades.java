@@ -1,6 +1,7 @@
 package com.louzada.pixeldungeon.registro;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.entidade.ArmaArremessada;
 import com.louzada.pixeldungeon.entidade.CaranguejoDeEsgoto;
 import com.louzada.pixeldungeon.entidade.CobraDeEsgoto;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
@@ -96,6 +97,11 @@ public class ModEntidades {
     // ---- Poções, sementes e pergaminhos ----
 
     // Poção arremessada (quebra onde bater)
+    // Arma de arremesso voando (pedra, faca, shuriken...)
+    public static final DeferredHolder<EntityType<?>, EntityType<ArmaArremessada>> ARMA_ARREMESSADA = ENTIDADES.register("arma_arremessada",
+            () -> EntityType.Builder.<ArmaArremessada>of(ArmaArremessada::new, MobCategory.MISC).sized(0.25F, 0.25F)
+                    .clientTrackingRange(4).updateInterval(5).build("arma_arremessada"));
+
     public static final DeferredHolder<EntityType<?>, EntityType<PocaoArremessada>> POCAO_ARREMESSADA = ENTIDADES.register("pocao_arremessada",
             () -> EntityType.Builder.<PocaoArremessada>of(PocaoArremessada::new, MobCategory.MISC).sized(0.25F, 0.25F)
                     .clientTrackingRange(4).updateInterval(10).build("pocao_arremessada"));

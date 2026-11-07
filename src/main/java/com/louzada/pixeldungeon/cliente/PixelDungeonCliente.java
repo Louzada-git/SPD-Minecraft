@@ -59,6 +59,7 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.GOTA_DE_ORVALHO.get(), contexto -> new ThrownItemRenderer<>(contexto, 0.8F, true));
         // Poção e semente arremessadas: o desenho delas voando
         evento.registerEntityRenderer(ModEntidades.POCAO_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, false));
+        evento.registerEntityRenderer(ModEntidades.ARMA_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, false));
         evento.registerEntityRenderer(ModEntidades.SEMENTE_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 0.8F, false));
         // Nuvem de gás: só a fumaça (as partículas saem dela mesma)
         evento.registerEntityRenderer(ModEntidades.NUVEM_DE_GAS.get(), NoopRenderer::new);
