@@ -120,7 +120,7 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 | Martelo de guerra | 5 | 5-24 | 18 | +20% de precisão |
 
 - Igual ao Shattered, cada ponto de força que falta deixa a arma bem menos precisa, e a Duelista não consegue usar a habilidade. Os heróis começam com 10 de força; cada **poção de força** dá +1 (caem 2 no esgoto).
-- **Nível:** o pergaminho de melhoria dá +1 de nível: +1 no dano mínimo, +(tier + 1) no máximo (as armas rápidas ganham metade) e um pouco menos de força necessária. Na armadura, +1 de defesa mínima e +tier na máxima. No cajado do Mago, +1 carga (até 10) e um míssil mais forte.
+- **Nível:** o pergaminho de melhoria dá +1 de nível: +1 no dano mínimo, +(tier + 1) no máximo (as armas rápidas ganham metade) e um pouco menos de força necessária. Na armadura, +1 de defesa mínima e +tier na máxima. No cajado do Mago e nas varinhas, +1 carga (até 10) e uma magia mais forte.
 - **Identificação:** as armas achadas na dungeon vêm sem identificar: o nome não mostra o nível, e a dica mostra os números "típicos" (+0). Elas vêm +0 (75%), +1 (20%) ou +2 (5%). A arma se identifica sozinha depois de 20 golpes; a intuição de veterano (Guerreiro) acelera pra 1,75x / 2,5x, e a intuição de aventureiro (Duelista) pra 2,5x / na hora de segurar.
 - **Maldições:** 30% das armas achadas são amaldiçoadas. Segurar a arma revela se ela tem maldição. A intuição divina do Clérigo também revela. O pergaminho de remover maldição tira, e o de melhoria tira 1 vez em 3.
 
@@ -159,6 +159,28 @@ As 15 armas de arremesso do Shattered, com os mesmos números. Clique direito ar
 - **Durabilidade:** o conjunto se desgasta a cada acerto; depois dos usos da tabela, uma delas quebra. A barrinha embaixo do ícone mostra quanto falta. Cada nível multiplica os usos por 1,5, e com 100 usos ou mais o conjunto dura pra sempre. As que voltam pra mochila se juntam de novo ao conjunto.
 - A maioria fica cravada no inimigo e cai no chão quando ele morre; as que não grudam (e as que erram) caem no chão ali.
 - Vêm sem identificar e podem ser amaldiçoadas, igual às armas, mas se identificam com 10 acertos. A maldição só aparece quando uma delas acerta alguém.
+
+### Varinhas
+
+10 das 13 varinhas do Shattered, com os mesmos números (faltam a de terra viva, a de proteção e a de corrupção). Clique direito lança (gasta 1 turno). Elas aparecem pelos andares; todos os tipos têm a mesma chance.
+
+| Varinha | Cargas | O que faz |
+|---|---|---|
+| Míssil mágico | 3 | 2-8 de dano (+1/+2 por nível) |
+| Relâmpago | 2 | 5-10 (+1/+5), que pula pros inimigos a 1 quadradinho (2 na água); o dano se divide entre eles |
+| Desintegração | 2 | 2-8 (+1/+4), atravessa inimigos e paredes por 6 + 2 x nível quadradinhos; mais forte pra cada inimigo e parede no caminho |
+| Rajada de fogo | 2 | cone de fogo que gasta 1 a 3 cargas: quanto mais, maior e mais forte (com 2 aleija, com 3 paralisa) |
+| Corrosão | 2 | nuvem de gás corrosivo: o dano começa em 2 + nível e cresce a cada turno |
+| Onda de choque | 2 | 1-3 (+1/+3) em volta de onde explode, e os inimigos voam pra longe (batendo na parede, se machucam e ficam paralisados) |
+| Geada | 2 | 2-8 (+1/+5) e deixa o alvo resfriado (mais devagar); mais forte na água |
+| Luz prismática | 2 | 1-5 (+1/+3) e pode cegar |
+| Transfusão | 2 | num aliado, gasta 5% da sua vida pra curá-lo; num inimigo, encanta por 5 turnos (não ataca) e dá blindagem |
+| Maturação | 2 | cone de grama alta que enraíza; gasta 1 a 3 cargas |
+
+- **Cargas:** as do tipo + 1 por nível, até 10. Voltam sozinhas, mais rápido quanto mais vazia. O pergaminho de recarga enche todas.
+- **Identificação:** vêm +0 (2/3), +1 (4/15) ou +2 (1/15), sem identificar: o nível e as cargas ficam escondidos. Se identificam depois de 10 disparos.
+- **Amaldiçoadas:** 30% vêm amaldiçoadas ("caóticas"): a magia sai aleatória (fogo, gelo, gás, grama, teletransporte ou nada). Descobre na primeira vez que lançar.
+- **Cajado do Mago:** agachado, com a varinha na mão e o cajado na outra, clique direito (duas vezes, pra confirmar) põe a varinha dentro do cajado. O cajado dá 1 carga a mais, fica com o maior nível dos dois (+1 se a varinha for melhor e o cajado já tiver nível), e a varinha antiga se perde.
 
 ### Armaduras
 
@@ -225,7 +247,7 @@ As 15 armas de arremesso do Shattered, com os mesmos números. Clique direito ar
 | Identificação | escolhe um item: revela tudo dele |
 | Remover maldição | escolhe uma arma: tira a maldição |
 | Imagem espelhada | 2 cópias do herói lutam do lado dele (somem com qualquer golpe) |
-| Recarga | enche as cargas do cajado do Mago e dá 30 turnos de recarga (o cajado continua carregando mais rápido) |
+| Recarga | enche as cargas do cajado do Mago e das varinhas e dá 30 turnos de recarga (eles continuam carregando mais rápido) |
 | Teletransportação | leva pra outro lugar do andar, longe de onde estava |
 | Acalento | os inimigos visíveis (e quem leu) dormem depois de 5 turnos; o herói dormindo cura 1 por turno |
 | Mapeamento mágico | diz pra que lado e a quantos quadradinhos fica a saída, e colunas de luz marcam a saída e a entrada |
@@ -258,7 +280,7 @@ As 15 armas de arremesso do Shattered, com os mesmos números. Clique direito ar
 | Classe | Talentos |
 |---|---|
 | Guerreiro | refeição saudável, intuição de veterano (identifica armas mais rápido), raiva provocada, determinação de ferro |
-| Mago | refeição empoderadora, intuição do estudioso*, magia prolongada, barreira de apoio |
+| Mago | refeição empoderadora, intuição do estudioso (identifica varinhas 3x mais rápido, e no primeiro disparo com +2), magia prolongada, barreira de apoio |
 | Ladino | rações guardadas (baús com rações de suprimentos), intuição do ladrão*, golpe surpresa, sombras protetoras |
 | Caçadora | recompensa da natureza (bagas na grama alta), intuição de sobrevivente (identifica armas de arremesso 3x mais rápido, e ao acertar com +2), ataque consecutivo, auxílio da natureza (pele de árvore quando uma planta é ativada perto dela) |
 | Duelista | refeição fortalecedora, intuição de aventureiro (identifica armas mais rápido, e na hora com +2), golpe paciente (ficar parado 1 turno antes de bater), barreira agressiva |
@@ -269,13 +291,13 @@ As 15 armas de arremesso do Shattered, com os mesmos números. Clique direito ar
 | Classe | Talentos |
 |---|---|
 | Guerreiro | estômago de ferro (comer leva 1 turno e protege do dano), tenacidade líquida (blindagem ao usar poção), transferência rúnica*, ímpeto letal (golpe mortal deixa o próximo ataque pronto), projéteis improvisados (poção ou semente arremessada cega) |
-| Mago | refeição energética (recarga do cajado), poder inscrito (pergaminho dá +2 níveis nos próximos disparos), preservação de varinha*, visão arcana (quem leva o disparo brilha através das paredes), bateria de escudo (usar o cajado agachado troca as cargas por blindagem) |
+| Mago | refeição energética (recarga do cajado), poder inscrito (pergaminho dá +2 níveis nos próximos disparos), preservação de varinha (a varinha antiga do cajado volta em +0: uma vez com +1, e de novo a cada nível com +2), visão arcana (quem leva o disparo brilha através das paredes), bateria de escudo (usar o cajado ou uma varinha agachado troca as cargas por blindagem) |
 | Ladino | refeição mística (recarga da capa e do tomo; rações de suprimentos na hora), furtividade inscrita (pergaminho deixa invisível), grande busca*, passos silenciosos, previsão do ladino* |
 | Caçadora | refeição revigorante (pressa; bagas na hora), natureza líquida (poção faz grama alta e enraíza os inimigos perto), passos rejuvenescedores (grama alta onde pisa), sentidos apurados (vê através das paredes perto dela), projéteis duráveis (armas de arremesso duram +50%/+75%) |
 | Duelista | refeição focada (carga de arma), agilidade líquida (poção dá esquiva e precisão), recarga de arma, pressa letal (golpe mortal com habilidade dá pressa forte), empunhar ágil (trocar de arma não perde o ataque carregado) |
 | Clérigo | refeição iluminada (carga do tomo), recuperar inscrição, raio solar, sentido divino, bênção (as 4 últimas são magias novas do tomo) |
 
-\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: varinhas (estudioso e preservação), anéis (ladrão), glifos (transferência rúnica), a ação de procurar (grande busca) e salas secretas (previsão do ladino). A tela de talentos avisa isso.
+\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: anéis (ladrão), glifos (transferência rúnica), a ação de procurar (grande busca) e salas secretas (previsão do ladino). A tela de talentos avisa isso.
 - "Visão mental" (ver através das paredes) faz os inimigos brilharem com o contorno do Minecraft.
 
 ### Combate e inimigos
@@ -396,7 +418,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 ## O que vem depois
 
 1. **Texturas próprias** dos blocos.
-2. **Mais itens:** varinhas e anéis (pras intuições que faltam), glifos, poções e pergaminhos exóticos, alquimia e encantamentos.
+2. **Mais itens:** anéis (pra intuição do ladrão), glifos, as varinhas de terra viva, proteção e corrupção, poções e pergaminhos exóticos, alquimia e encantamentos.
 3. **O resto do esgoto do Shattered:** portas escondidas (que precisam ser procuradas), armadilhas e as salas que precisam de abismo.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
@@ -408,7 +430,7 @@ src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas, portas gigantes, plantas e blocos de decoração
-  item/                        armas, armas de arremesso, armadura, poções, pergaminhos, sementes, identificação e maldições
+  item/                        armas, armas de arremesso, varinhas, armadura, poções, pergaminhos, sementes, identificação e maldições
   entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o míssil mágico, as nuvens de gás...
   efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
   combate/
