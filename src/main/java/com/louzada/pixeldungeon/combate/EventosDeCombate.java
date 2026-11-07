@@ -11,6 +11,7 @@ import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.Furtividade;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 
 import net.minecraft.network.chat.Component;
@@ -151,6 +152,10 @@ public class EventosDeCombate {
             }
             if (dados.classe() == ClasseDoHeroi.DUELISTA) {
                 HabilidadesDaDuelista.aoMatar(dados, matador.level().getGameTime());
+            }
+            // Ímpeto letal e pressa letal
+            if (evento.getSource().getEntity() == matador) {
+                TalentosDoTier2.aoMatar(matador, evento.getSource(), HabilidadesDaDuelista.golpeDeHabilidade());
             }
         }
     }

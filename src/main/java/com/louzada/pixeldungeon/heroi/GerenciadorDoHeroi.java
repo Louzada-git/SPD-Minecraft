@@ -36,6 +36,10 @@ public class GerenciadorDoHeroi {
         boolean umTurno = Turno.virou(jogador);
         Escudos.aoTick(jogador, dados, umTurno);
         Talentos.aoTick(jogador, dados);
+        TalentosDoTier2.aoTick(jogador, dados);
+        if (umTurno) {
+            TalentosDoTier2.aoTurno(jogador, dados);
+        }
         CapaDasSombras.aoTickDoHeroi(jogador, dados, umTurno);
         if (umTurno && dados.classe() == ClasseDoHeroi.DUELISTA) {
             HabilidadesDaDuelista.recarregar(dados);

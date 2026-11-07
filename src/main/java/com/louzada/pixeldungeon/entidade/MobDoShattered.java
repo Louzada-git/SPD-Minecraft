@@ -9,6 +9,7 @@ import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.combate.Sorteio;
 import com.louzada.pixeldungeon.heroi.Furtividade;
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.ChatFormatting;
@@ -255,7 +256,7 @@ public abstract class MobDoShattered extends Monster implements Combatente {
                     continue;
                 }
                 double distanciaEmQuadradinhos = distanceTo(jogador) / 4.0;
-                if (distanciaEmQuadradinhos > 8) {
+                if (distanciaEmQuadradinhos > 8 || TalentosDoTier2.passosSilenciosos(jogador, distanciaEmQuadradinhos)) {
                     continue;
                 }
                 if (getRandom().nextDouble() * Math.max(1.0, distanciaEmQuadradinhos) < 1.0) {

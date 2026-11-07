@@ -12,6 +12,7 @@ import com.louzada.pixeldungeon.heroi.MagiasDoClerigo;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.Talento;
 import com.louzada.pixeldungeon.heroi.Talentos;
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.Arma;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.Maldicao;
@@ -66,7 +67,9 @@ public class HeroiEmCombate implements Combatente {
         if (arma != null) {
             precisao *= arma.precisao(golpe.arma(), dados);
         }
-        return precisao * Maldicao.multiplicadorDePrecisao(jogador, golpe.arma());
+        precisao *= Maldicao.multiplicadorDePrecisao(jogador, golpe.arma());
+        // Agilidade líquida: o próximo golpe de perto depois de usar uma poção
+        return golpe.deLonge() ? precisao : TalentosDoTier2.precisaoDePerto(jogador, dados, precisao);
     }
 
     @Override
@@ -75,7 +78,7 @@ public class HeroiEmCombate implements Combatente {
         if (armadura().getItem() instanceof ArmaduraDoShattered armadura) {
             esquiva *= armadura.fatorDeEsquiva(armadura(), dados.forca());
         }
-        return esquiva;
+        return TalentosDoTier2.esquiva(jogador, esquiva);
     }
 
     @Override
@@ -173,5 +176,8 @@ public class HeroiEmCombate implements Combatente {
     @Override
     public void depoisDeAtacar(Golpe golpe, boolean acertou) {
         Furtividade.revelar(jogador);
+        if (!golpe.deLonge()) {
+            TalentosDoTier2.depoisDoGolpeDePerto(dados);
+        }
     }
 }
