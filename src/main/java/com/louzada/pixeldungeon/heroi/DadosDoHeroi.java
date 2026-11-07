@@ -142,16 +142,29 @@ public class DadosDoHeroi {
         talentos.put(talento.id(), pontos);
     }
 
-    public int pontosGastos() {
+    public int pontosGastos(int tier) {
         int total = 0;
-        for (int pontos : talentos.values()) {
-            total += pontos;
+        for (Map.Entry<String, Integer> talento : talentos.entrySet()) {
+            Talento qual = Talento.peloId(talento.getKey());
+            if (qual != null && qual.tier() == tier) {
+                total += talento.getValue();
+            }
         }
         return total;
     }
 
+    // Os pontos do tier que ainda dá pra gastar
+    public int pontosLivres(int tier) {
+        return Math.max(0, Talento.pontosGanhos(tier, nivel) - pontosGastos(tier));
+    }
+
+    // Os pontos livres de todos os tiers
     public int pontosLivres() {
-        return Math.max(0, Talento.pontosGanhos(nivel) - pontosGastos());
+        int total = 0;
+        for (int tier = 1; tier <= Talento.TIERS; tier++) {
+            total += pontosLivres(tier);
+        }
+        return total;
     }
 
     // ---- Estado (efeitos que duram um tempo) ----

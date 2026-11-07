@@ -51,7 +51,7 @@ public class Talentos {
     // O jogador apertou "aprimorar" na tela de talentos
     public static void aprimorar(ServerPlayer jogador, Talento talento) {
         DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
-        if (talento.classe() != dados.classe() || dados.pontosLivres() <= 0 || dados.pontos(talento) >= Talento.PONTOS_MAXIMOS) {
+        if (talento.classe() != dados.classe() || dados.pontosLivres(talento.tier()) <= 0 || dados.pontos(talento) >= Talento.PONTOS_MAXIMOS) {
             return;
         }
         int pontos = dados.pontos(talento) + 1;

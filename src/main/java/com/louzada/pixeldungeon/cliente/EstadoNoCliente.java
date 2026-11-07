@@ -47,6 +47,18 @@ public class EstadoNoCliente {
         return estado.numero(1);
     }
 
+    // Os pontos livres de um tier (pelo nível e pelos pontos já gastos nos talentos dele)
+    public static int pontosLivres(int tier) {
+        int gastos = 0;
+        for (Map.Entry<String, Integer> talento : talentos.entrySet()) {
+            Talento qual = Talento.peloId(talento.getKey());
+            if (qual != null && qual.tier() == tier) {
+                gastos += talento.getValue();
+            }
+        }
+        return Math.max(0, Talento.pontosGanhos(tier, nivel()) - gastos);
+    }
+
     public static int cargasDaHabilidade() {
         return estado.numero(2);
     }
