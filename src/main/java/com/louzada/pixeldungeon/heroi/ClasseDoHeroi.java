@@ -59,10 +59,18 @@ public enum ClasseDoHeroi {
         // Igual ao Shattered: todo herói também leva um odre (vazio)
         List<ItemStack> kit = new ArrayList<>(List.of(new ItemStack(armaInicial.get()), armadura, new ItemStack(ModItens.RACAO.get()),
                 new ItemStack(ModItens.ODRE.get())));
+        // Igual ao Shattered: o Guerreiro leva 3 pedras de arremesso, o Ladino 3 facas e a Duelista 2 agulhas
         switch (this) {
-            case GUERREIRO -> armadura.set(ModComponentes.SELO.get(), true);
-            case LADINO -> kit.add(new ItemStack(ModItens.CAPA_DAS_SOMBRAS.get()));
+            case GUERREIRO -> {
+                armadura.set(ModComponentes.SELO.get(), true);
+                kit.add(new ItemStack(ModItens.PEDRA_DE_ARREMESSO.get(), 3));
+            }
+            case LADINO -> {
+                kit.add(new ItemStack(ModItens.CAPA_DAS_SOMBRAS.get()));
+                kit.add(new ItemStack(ModItens.FACA_DE_ARREMESSO.get(), 3));
+            }
             case CACADORA -> kit.add(new ItemStack(ModItens.ARCO_ESPIRITUAL.get()));
+            case DUELISTA -> kit.add(new ItemStack(ModItens.AGULHA_DE_ARREMESSO.get(), 2));
             case CLERIGO -> kit.add(new ItemStack(ModItens.TOMO_SAGRADO.get()));
             default -> {
             }

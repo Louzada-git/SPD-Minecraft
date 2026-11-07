@@ -165,12 +165,13 @@ public class EfeitosDePergaminho {
 
     // ---- Transmutação ----
 
-    // Armas viram outra arma do mesmo tier (com o mesmo nível e maldição), sementes viram outra semente,
+    // Armas viram outra arma do mesmo tier (com o mesmo nível e maldição), armas de arremesso viram outras de arremesso
+    // do mesmo tier, sementes viram outra semente,
     // poções e pergaminhos viram outro tipo. Força e melhoria não podem ser transmutadas.
     // (No Shattered, poções e pergaminhos viram as versões "exóticas", que o mod ainda não tem.)
     public static boolean podeTransmutar(ServerPlayer jogador, ItemStack pilha) {
         long semente = Identificacao.sementeDaRun(jogador);
-        if (pilha.getItem() instanceof ArmaDoShattered && !(pilha.getItem() instanceof CajadoDoMago)) {
+        if ((pilha.getItem() instanceof ArmaDoShattered && !(pilha.getItem() instanceof CajadoDoMago)) || pilha.getItem() instanceof ArmaDeArremesso) {
             return true;
         }
         if (pilha.getItem() instanceof ItemSemente) {
@@ -195,6 +196,14 @@ public class EfeitosDePergaminho {
                 }
             }
             // Fica com o nível, a maldição e o que já se sabe dela
+            return opcoes.isEmpty() ? ItemStack.EMPTY : pilha.transmuteCopy(opcoes.get(sorteio.nextInt(opcoes.size())), pilha.getCount());
+        }
+        if (pilha.getItem() instanceof ArmaDeArremesso arremesso) {
+            for (var registrado : ModItens.ITENS.getEntries()) {
+                if (registrado.get() instanceof ArmaDeArremesso outra && outra.tier() == arremesso.tier() && outra != arremesso) {
+                    opcoes.add(outra);
+                }
+            }
             return opcoes.isEmpty() ? ItemStack.EMPTY : pilha.transmuteCopy(opcoes.get(sorteio.nextInt(opcoes.size())), pilha.getCount());
         }
         if (pilha.getItem() instanceof ItemSemente atual) {

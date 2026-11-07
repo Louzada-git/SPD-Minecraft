@@ -7,6 +7,7 @@ import java.util.Random;
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Premio;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.PremioNoChao;
+import com.louzada.pixeldungeon.item.ArmaDeArremesso;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
@@ -238,15 +239,17 @@ public class SaqueDoAndar {
         return sorteio.nextInt(5 - andarNaRegiao) < faltamNaRegiao;
     }
 
-    // Ouro (10), poção (8), pergaminho (8), arma (2), armadura (2) ou semente (1), igual ao peso deles no Shattered
+    // Ouro (10), poção (8), pergaminho (8), arma (2), armadura (2), semente (1) ou arma de arremesso (1),
+    // igual ao peso deles no Shattered
     public static ItemStack itemAleatorio(Random sorteio, int andar, long semente) {
-        return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 2, 1 })) {
+        return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 2, 1, 1 })) {
             case 0 -> Ouro.sortear(sorteio, andar);
             case 1 -> pocaoAleatoria(sorteio, semente);
             case 2 -> pergaminhoAleatorio(sorteio, semente);
             case 3 -> armaAleatoria(sorteio, andar);
             case 4 -> armaduraAleatoria(sorteio, andar);
-            default -> sementeAleatoria(sorteio);
+            case 5 -> sementeAleatoria(sorteio);
+            default -> arremessoAleatorio(sorteio, andar);
         };
     }
 
@@ -278,11 +281,12 @@ public class SaqueDoAndar {
         return new ItemStack(ItemSemente.daPlanta(tipos[sortearPeso(sorteio, pesos)]));
     }
 
-    // O prêmio extra do mímico. No Shattered é ouro, arma, armadura, arma de arremesso ou anel; aqui, ouro, arma ou armadura.
+    // O prêmio extra do mímico. No Shattered é ouro, arma, armadura, arma de arremesso ou anel; aqui, sem o anel.
     public static ItemStack premioDoMimico(Random sorteio, int andar) {
-        return switch (sorteio.nextInt(3)) {
+        return switch (sorteio.nextInt(4)) {
             case 0 -> Ouro.sortear(sorteio, andar);
             case 1 -> armaAleatoria(sorteio, andar);
+            case 2 -> arremessoAleatorio(sorteio, andar);
             default -> armaduraAleatoria(sorteio, andar);
         };
     }
@@ -304,6 +308,24 @@ public class SaqueDoAndar {
             }
         }
         return Ouro.sortear(sorteio, andar);
+    }
+
+    // Um conjunto de 3 armas de arremesso do tier sorteado pela região do andar (igual às armas),
+    // com nível e talvez maldição, sem identificar
+    public static ItemStack arremessoAleatorio(Random sorteio, int andar) {
+        int regiao = Math.min(CHANCES_DOS_TIERS.length - 1, (andar - 1) / 5);
+        int tier = 1 + sortearPeso(sorteio, CHANCES_DOS_TIERS[regiao]);
+        List<Item> armas = new ArrayList<>();
+        for (var registrado : ModItens.ITENS.getEntries()) {
+            if (registrado.get() instanceof ArmaDeArremesso arma && arma.tier() == tier) {
+                armas.add(arma);
+            }
+        }
+        if (armas.isEmpty()) {
+            return Ouro.sortear(sorteio, andar);
+        }
+        ItemStack conjunto = new ItemStack(armas.get(sorteio.nextInt(armas.size())), ArmaDeArremesso.QUANTIDADE_PADRAO);
+        return NivelDoItem.sortearDoChao(conjunto, sorteio, true);
     }
 
     // Qualquer arma do tier (menos o cajado do Mago, que só o Mago tem)
