@@ -36,6 +36,7 @@ import net.minecraft.world.item.ItemStack;
 // ("espada irritante", "armadura de malha de fedor") e só aparece depois que a maldição é descoberta.
 //   maldições de arma: agem quando o herói acerta um golpe (aoGolpear)
 //   maldições de armadura: agem quando o herói é acertado (aoSerAtingido), antes da armadura segurar o dano
+//   varinhas amaldiçoadas: a magia sai aleatória
 public enum Maldicao {
 
     // ---- Armas ----
@@ -194,11 +195,16 @@ public enum Maldicao {
             }
             return dano;
         }
-    };
+    },
+
+    // ---- Varinhas ----
+
+    // A magia sai aleatória e quase sempre ruim (ver EfeitosDeVarinha.lancarAmaldicoada)
+    CAOTICA("caotica", Alvo.VARINHA);
 
     // Em que tipo de item a maldição aparece
     public enum Alvo {
-        ARMA, ARMADURA
+        ARMA, ARMADURA, VARINHA
     }
 
     private static final double ALCANCE_DA_VISAO = 32;
