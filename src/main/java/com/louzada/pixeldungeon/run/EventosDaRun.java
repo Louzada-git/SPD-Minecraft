@@ -102,6 +102,7 @@ public class EventosDaRun {
             testarSaque(servidor);
             TestesDosItens.testar(servidor);
             TestesDoTier2.testar(servidor);
+            TestesDasArmasDeArremesso.testar(servidor);
         }
     }
 
@@ -424,6 +425,7 @@ public class EventosDaRun {
             portaDoTeste = null;
             trancadaDoTeste = null;
         }
+        TestesDasArmasDeArremesso.verificar(evento.getServer());
         PixelDungeon.LOGGER.info("Teste do Goo: tinha {} de vida, depois de 5 s na água ficou com {} (na água: {})",
                 vidaDoGooNoTeste, Math.round(gooDoTeste.getHealth()), gooDoTeste.isInWater());
         evento.getServer().overworld().setChunkForced(gooDoTeste.chunkPosition().x, gooDoTeste.chunkPosition().z, false);

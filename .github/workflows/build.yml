@@ -131,6 +131,13 @@ jobs:
           if ! grep -q "Teste da Duelista no tier 2: cargas depois de comer = 1, evasão 10 -> 30.0" servidor.log; then echo "A refeição focada ou a agilidade líquida não funcionaram"; exit 1; fi
           if ! grep -q "Teste da recuperar inscrição: conhece as 7 magias = true, repetiu a recarga = true, cargas do tomo = 0, ainda lembra = false" servidor.log; then echo "A recuperar inscrição não funcionou"; exit 1; fi
           if ! grep -q "Teste da bênção: sentido divino = true, abençoado = true, blindagem +10.0, cargas do tomo = 0" servidor.log; then echo "A bênção ou o sentido divino não funcionaram"; exit 1; fi
+          if ! grep -q "Teste das armas de arremesso: 15 armas, por tier 3/3/3/3/3, pedra 2-5 com força 9" servidor.log; then echo "As armas de arremesso não estão certas"; exit 1; fi
+          if ! grep -q "Teste da durabilidade: o Guerreiro começa com 3 pedras, a pedra gasta 20.0 por acerto, com projéteis duráveis +2 gasta 11.1" servidor.log; then echo "A durabilidade das armas de arremesso não está certa"; exit 1; fi
+          if ! grep -q "Teste de juntar: 2 inteiras + 1 com 80 = 3 com 80, 1 com 30 + 1 com 50 = 1 com 80" servidor.log; then echo "As armas de arremesso não se juntaram direito"; exit 1; fi
+          if ! grep -q "Teste do saque de arremesso: quantidade 3, identificada = false, acertos pra identificar = 10" servidor.log; then echo "As armas de arremesso do chão não estão certas"; exit 1; fi
+          if ! grep -q "Teste da faca cravada: cravadas = 1, caiu quando o rato morreu = true" servidor.log; then echo "A faca cravada não caiu"; exit 1; fi
+          if ! grep -q "Teste do arremesso: ficaram 2 pedras na mão" servidor.log; then echo "A pedra não foi arremessada"; exit 1; fi
+          if ! grep -q "Teste do arremesso: acertou o rato = true, a pedra caiu no chão = true" servidor.log; then echo "A pedra arremessada não acertou o rato"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
 
       # Liga o jogo de verdade (sem monitor, no Xvfb), entra no mundo do teste do servidor
