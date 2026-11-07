@@ -55,6 +55,10 @@ public class ModComponentes {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> MALDICAO_CONHECIDA = COMPONENTES.registerComponentType(
             "maldicao_conhecida", construtor -> construtor.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 
+    // A varinha que está dentro do cajado do Mago (sem esse dado, a de míssil mágico)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> VARINHA_DO_CAJADO = COMPONENTES.registerComponentType(
+            "varinha_do_cajado", construtor -> construtor.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+
     // Desgaste de um conjunto de armas de arremesso: quanto ainda falta (de 100) pra próxima quebrar (sem esse dado, 100)
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> DURABILIDADE = COMPONENTES.registerComponentType(
             "durabilidade", construtor -> construtor.persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT));
