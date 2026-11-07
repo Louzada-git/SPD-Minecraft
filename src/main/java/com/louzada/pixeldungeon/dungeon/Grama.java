@@ -14,6 +14,7 @@ import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.louzada.pixeldungeon.registro.ModItens;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -89,6 +90,34 @@ public class Grama {
         if (!jaTrilhado) {
             soltarCoisas(mundo, criatura, inicioX + 2.0, baixo + 0.5, inicioZ + 2.0);
         }
+    }
+
+    // Faz crescer grama alta num quadradinho (natureza líquida e passos rejuvenescedores da Caçadora).
+    // "baixo" é a altura dos pés (um acima do chão). Só cresce onde tem chão firme e espaço livre (ou musgo).
+    // Devolve true se cresceu alguma coisa.
+    public static boolean crescer(ServerLevel mundo, int inicioX, int baixo, int inicioZ) {
+        BlockState capim = ModBlocos.CAPIM_ALTO.get().defaultBlockState();
+        int flags = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
+        boolean cresceu = false;
+        for (int dx = 0; dx < T; dx++) {
+            for (int dz = 0; dz < T; dz++) {
+                BlockPos aqui = new BlockPos(inicioX + dx, baixo, inicioZ + dz);
+                BlockState agora = mundo.getBlockState(aqui);
+                boolean livre = agora.isAir() || agora.is(ModBlocos.MUSGO_ESGOTO.get());
+                if (!livre || !mundo.getBlockState(aqui.above()).isAir()
+                        || !mundo.getBlockState(aqui.below()).isFaceSturdy(mundo, aqui.below(), Direction.UP)) {
+                    continue;
+                }
+                mundo.setBlock(aqui, capim.setValue(CapimAlto.HALF, DoubleBlockHalf.LOWER), flags);
+                mundo.setBlock(aqui.above(), capim.setValue(CapimAlto.HALF, DoubleBlockHalf.UPPER), flags);
+                cresceu = true;
+            }
+        }
+        if (cresceu) {
+            mundo.playSound(null, inicioX + 2, baixo, inicioZ + 2, SoundEvents.GRASS_PLACE, SoundSource.BLOCKS, 0.8F, 1.0F);
+            mundo.sendParticles(ParticleTypes.HAPPY_VILLAGER, inicioX + 2.0, baixo + 1.0, inicioZ + 2.0, 8, 1.2, 0.5, 1.2, 0.0);
+        }
+        return cresceu;
     }
 
     private static void soltarCoisas(ServerLevel mundo, LivingEntity quemPisou, double x, double y, double z) {

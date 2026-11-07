@@ -77,6 +77,13 @@ public class HabilidadesDaDuelista {
         return arma instanceof ArmaDoShattered armaDoShattered ? armaDoShattered.habilidade() : null;
     }
 
+    // Enquanto um golpe de habilidade está sendo aplicado (a pressa letal precisa saber se a morte veio de uma habilidade)
+    private static boolean golpeDeHabilidade = false;
+
+    public static boolean golpeDeHabilidade() {
+        return golpeDeHabilidade;
+    }
+
     // ---- Cargas ----
 
     public static int cargasMaximas(DadosDoHeroi dados) {
@@ -95,6 +102,22 @@ public class HabilidadesDaDuelista {
         if (parcial >= 1.0F) {
             cargas++;
             parcial -= 1.0F;
+        }
+        dados.definir(CARGAS, cargas);
+        dados.definir(PARCIAL, parcial);
+    }
+
+    // Ganha carga na hora (refeição focada, recarga de arma); o que sobrar de uma carga fica guardado
+    public static void somarCarga(DadosDoHeroi dados, float quanto) {
+        int cargas = dados.inteiro(CARGAS);
+        int maximo = cargasMaximas(dados);
+        float parcial = dados.decimal(PARCIAL) + quanto;
+        while (parcial >= 1.0F && cargas < maximo) {
+            cargas++;
+            parcial -= 1.0F;
+        }
+        if (cargas >= maximo) {
+            parcial = 0.0F;
         }
         dados.definir(CARGAS, cargas);
         dados.definir(PARCIAL, parcial);
@@ -174,7 +197,12 @@ public class HabilidadesDaDuelista {
         Golpe golpe = Golpe.de(Combatente.de(jogador), Combatente.de(alvo)).arma(jogador.getMainHandItem()).bonus(bonus).acertoGarantido();
         float dano = Combate.resolver(golpe);
         jogador.swing(InteractionHand.MAIN_HAND, true);
-        Combate.aplicar(alvo, dano, jogador.damageSources().playerAttack(jogador));
+        golpeDeHabilidade = true;
+        try {
+            Combate.aplicar(alvo, dano, jogador.damageSources().playerAttack(jogador));
+        } finally {
+            golpeDeHabilidade = false;
+        }
         jogador.level().playSound(null, alvo.blockPosition(), SoundEvents.PLAYER_ATTACK_STRONG, SoundSource.PLAYERS, 1.0F, 0.9F);
         if (jogador.level() instanceof ServerLevel mundo) {
             mundo.sendParticles(ParticleTypes.SWEEP_ATTACK, alvo.getX(), alvo.getY(0.5), alvo.getZ(), 1, 0.0, 0.0, 0.0, 0.0);

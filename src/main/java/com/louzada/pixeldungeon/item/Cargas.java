@@ -58,6 +58,25 @@ public class Cargas {
         pilha.set(ModComponentes.CARGAS.get(), Math.max(0, cargas - quantas));
     }
 
+    // Adianta a recarga em "fracao" de uma carga (efeitos de recarga, refeições dos talentos).
+    // Se a recarga estiver pausada (a capa ligada), adianta o que já tinha enchido.
+    public static void adiantar(ItemStack pilha, long agora, int maximo, TempoDeRecarga tempo, float fracao) {
+        recarregar(pilha, agora, maximo, tempo);
+        int cargas = cargas(pilha, maximo);
+        if (cargas >= maximo) {
+            return;
+        }
+        long ticks = (long) (tempo.ticks(maximo - cargas) * fracao);
+        Long pausada = pilha.get(ModComponentes.RECARGA_PAUSADA.get());
+        if (pausada != null) {
+            pilha.set(ModComponentes.RECARGA_PAUSADA.get(), pausada + ticks);
+            return;
+        }
+        Long inicio = pilha.get(ModComponentes.INICIO_DA_RECARGA.get());
+        pilha.set(ModComponentes.INICIO_DA_RECARGA.get(), (inicio == null ? agora : inicio) - ticks);
+        recarregar(pilha, agora, maximo, tempo);
+    }
+
     // Ganha cargas na hora (ração de suprimentos na capa, por exemplo)
     public static void somar(ItemStack pilha, int maximo, int quantas) {
         int novas = Math.min(maximo, cargas(pilha, maximo) + quantas);
