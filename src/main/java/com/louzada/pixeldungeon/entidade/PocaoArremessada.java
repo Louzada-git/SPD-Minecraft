@@ -1,5 +1,6 @@
 package com.louzada.pixeldungeon.entidade;
 
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.EfeitosDePocao;
 import com.louzada.pixeldungeon.item.IdentidadesDaRun;
 import com.louzada.pixeldungeon.item.Identificacao;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -46,6 +48,10 @@ public class PocaoArremessada extends ThrowableItemProjectile {
         super.onHit(resultado);
         if (level().isClientSide() || isRemoved() || !(level() instanceof ServerLevel mundo)) {
             return;
+        }
+        // Projéteis improvisados (Guerreiro): acertou um inimigo em cheio
+        if (resultado instanceof EntityHitResult acerto && acerto.getEntity() instanceof LivingEntity alvo && getOwner() instanceof ServerPlayer dono) {
+            TalentosDoTier2.aoAcertarArremesso(dono, alvo);
         }
         if (getItem().getItem() instanceof ItemPocao pocao) {
             TipoDePocao tipo = IdentidadesDaRun.tipoDaCor(Identificacao.sementeDaRun(mundo), pocao.cor());

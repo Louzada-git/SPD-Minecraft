@@ -1,11 +1,13 @@
 package com.louzada.pixeldungeon.entidade;
 
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.ItemSemente;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -44,6 +46,10 @@ public class SementeArremessada extends ThrowableItemProjectile {
             lugar = bloco.getBlockPos().relative(bloco.getDirection());
         } else if (resultado instanceof EntityHitResult entidade) {
             lugar = entidade.getEntity().blockPosition();
+            // Projéteis improvisados (Guerreiro): acertou um inimigo em cheio
+            if (entidade.getEntity() instanceof LivingEntity alvo && getOwner() instanceof ServerPlayer dono) {
+                TalentosDoTier2.aoAcertarArremesso(dono, alvo);
+            }
         }
         // Desce até achar chão (até 3 blocos)
         for (int i = 0; i < 3 && !level().getBlockState(lugar.below()).isFaceSturdy(level(), lugar.below(), Direction.UP); i++) {

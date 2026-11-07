@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.entidade.PocaoArremessada;
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.registro.ModItens;
 
 import net.minecraft.ChatFormatting;
@@ -82,6 +83,10 @@ public class ItemPocao extends Item {
             pocao.setItem(pilha.copyWithCount(1));
             pocao.shootFromRotation(jogador, jogador.getXRot(), jogador.getYRot(), -10.0F, 0.9F, 1.0F);
             mundo.addFreshEntity(pocao);
+            // Arremessar também conta pros talentos de poção (natureza líquida, tenacidade líquida, agilidade líquida)
+            if (jogador instanceof ServerPlayer heroi) {
+                TalentosDoTier2.aoUsarPocao(heroi, Identificacao.tipoDa(heroi, cor));
+            }
         }
         mundo.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.SPLASH_POTION_THROW, SoundSource.PLAYERS, 0.5F, 0.5F);
         jogador.getCooldowns().addCooldown(this, Turno.TICKS);
@@ -97,6 +102,7 @@ public class ItemPocao extends Item {
             TipoDePocao tipo = Identificacao.tipoDa(jogador, cor);
             Identificacao.identificar(jogador, cor);
             EfeitosDePocao.beber(jogador, tipo, cor);
+            TalentosDoTier2.aoUsarPocao(jogador, tipo);
             mundo.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 0.6F, 1.2F);
             if (!jogador.getAbilities().instabuild) {
                 pilha.shrink(1);
