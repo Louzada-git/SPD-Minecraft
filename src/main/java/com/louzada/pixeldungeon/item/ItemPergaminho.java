@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.heroi.Furtividade;
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.registro.ModItens;
 
 import net.minecraft.ChatFormatting;
@@ -73,6 +74,7 @@ public class ItemPergaminho extends Item {
             }
         } else {
             EfeitosDePergaminho.ler(leitor, tipo);
+            TalentosDoTier2.aoLerPergaminho(leitor, tipo, false);
         }
         if (!jogador.getAbilities().instabuild) {
             pilha.shrink(1);

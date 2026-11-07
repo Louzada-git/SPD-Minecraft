@@ -50,12 +50,14 @@ public class EfeitosDePergaminho {
                 avisar(jogador, criadas > 0 ? "efeito.pixeldungeon.imagem_espelhada" : "efeito.pixeldungeon.imagem_espelhada.nenhuma");
             }
             case RECARGA -> {
-                // Enche o cajado na hora (no Shattered, as varinhas recarregam rápido por 30 turnos)
+                // Enche o cajado na hora
                 for (ItemStack pilha : todosOsItens(jogador)) {
                     if (pilha.getItem() instanceof CajadoDoMago) {
                         CajadoDoMago.encher(pilha);
                     }
                 }
+                // E igual ao Shattered, 30 turnos de recarga (vale pra recarga de arma da Duelista)
+                jogador.addEffect(new MobEffectInstance(ModEfeitos.RECARREGANDO, 30 * Turno.TICKS));
                 Particulas.subindoEmVolta(jogador, ParticleTypes.ELECTRIC_SPARK, 20, 0.15);
                 mundo.playSound(null, jogador.blockPosition(), SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 1.0F, 1.4F);
                 avisar(jogador, "efeito.pixeldungeon.recarga");

@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.rede.PacoteEscolherItem;
 
 import net.minecraft.ChatFormatting;
@@ -20,7 +23,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 // O pergaminho só é gasto quando o item é escolhido. Igual ao Shattered, se o pergaminho era desconhecido
 // e o jogador desistir, ele se gasta mesmo assim.
 public class EscolhaDeItem {
-    private record Pendente(TipoDePergaminho tipo, RunaDePergaminho runa, boolean eraDesconhecido) {
+    // runa null: o pergaminho foi repetido pela magia "recuperar inscrição" do Clérigo (não tem pergaminho pra gastar)
+    private record Pendente(TipoDePergaminho tipo, @Nullable RunaDePergaminho runa, boolean eraDesconhecido) {
     }
 
     private static Map<UUID, Pendente> pendentes = new HashMap<>();
@@ -36,8 +40,19 @@ public class EscolhaDeItem {
         return true;
     }
 
+    // Recuperar inscrição (Clérigo): repete um pergaminho que pede item, sem gastar pergaminho nenhum
+    public static boolean pedirSemPergaminho(ServerPlayer jogador, TipoDePergaminho tipo) {
+        List<Integer> espacos = elegiveis(jogador, tipo, null);
+        if (espacos.isEmpty()) {
+            return false;
+        }
+        pendentes.put(jogador.getUUID(), new Pendente(tipo, null, false));
+        PacketDistributor.sendToPlayer(jogador, new PacoteEscolherItem(tipo.id(), espacos));
+        return true;
+    }
+
     // Os espaços do inventário com itens que servem pra esse pergaminho
-    public static List<Integer> elegiveis(ServerPlayer jogador, TipoDePergaminho tipo, RunaDePergaminho runa) {
+    public static List<Integer> elegiveis(ServerPlayer jogador, TipoDePergaminho tipo, @Nullable RunaDePergaminho runa) {
         List<Integer> espacos = new ArrayList<>();
         Inventory inventario = jogador.getInventory();
         for (int i = 0; i < inventario.getContainerSize(); i++) {
@@ -69,16 +84,18 @@ public class EscolhaDeItem {
             return;
         }
         if (espaco < 0 || !elegiveis(jogador, pendente.tipo(), pendente.runa()).contains(espaco)) {
-            if (pendente.eraDesconhecido()) {
+            if (pendente.eraDesconhecido() && pendente.runa() != null) {
                 gastarPergaminho(jogador, pendente.runa());
                 jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.pergaminho_desperdicado").withStyle(ChatFormatting.GRAY), true);
             }
             return;
         }
-        if (!gastarPergaminho(jogador, pendente.runa())) {
+        boolean repetido = pendente.runa() == null;
+        if (!repetido && !gastarPergaminho(jogador, pendente.runa())) {
             return;
         }
         EfeitosDePergaminho.aplicarNoItem(jogador, pendente.tipo(), espaco);
+        TalentosDoTier2.aoLerPergaminho(jogador, pendente.tipo(), repetido);
     }
 
     // Tira um pergaminho dessa runa do inventário
