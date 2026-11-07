@@ -105,6 +105,22 @@ public class ModEfeitos {
     // Pressa (poção de pressa): anda 3x mais rápido
     public static final DeferredHolder<MobEffect, EfeitoSimples> PRESSA = EFEITOS.register("pressa",
             () -> EfeitoSimples.queMudaAVelocidade(MobEffectCategory.BENEFICIAL, 0xFFCC44, "pressa", 2.0));
+    // Enraizado (natureza líquida da Caçadora): não sai do lugar, mas ainda ataca
+    public static final DeferredHolder<MobEffect, EfeitoSimples> ENRAIZADO = EFEITOS.register("enraizado",
+            () -> EfeitoSimples.quePrende(MobEffectCategory.HARMFUL, 0x5A8A2A, "enraizado"));
+    // Recarregando (pergaminho de recarga, refeição energética do Mago): o cajado ganha 1/4 de carga por turno
+    public static final DeferredHolder<MobEffect, EfeitoSimples> RECARREGANDO = EFEITOS.register("recarregando",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xFFFFFF));
+    // Recarga de artefato (refeição mística do Ladino): a capa e o tomo ganham 1/4 de carga por turno
+    public static final DeferredHolder<MobEffect, EfeitoSimples> RECARGA_DE_ARTEFATO = EFEITOS.register("recarga_de_artefato",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x88FF88));
+    // Agilidade líquida (Duelista): esquiva 3x maior (infinita no +2) e o próximo golpe de perto 3x mais preciso (certeiro no +2)
+    public static final DeferredHolder<MobEffect, EfeitoSimples> AGILIDADE_LIQUIDA = EFEITOS.register("agilidade_liquida",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xB070FF));
+    // Sentido divino (magia do Clérigo): os inimigos perto brilham através das paredes
+    public static final DeferredHolder<MobEffect, EfeitoSimples> SENTIDO_DIVINO = EFEITOS.register("sentido_divino",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xFFE65A));
+
     // Visão mental (poção): vê todos os inimigos do andar através das paredes
     public static final DeferredHolder<MobEffect, EfeitoSimples> VISAO_MENTAL = EFEITOS.register("visao_mental",
             () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x44CCFF));
