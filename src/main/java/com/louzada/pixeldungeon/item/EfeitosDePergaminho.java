@@ -50,10 +50,12 @@ public class EfeitosDePergaminho {
                 avisar(jogador, criadas > 0 ? "efeito.pixeldungeon.imagem_espelhada" : "efeito.pixeldungeon.imagem_espelhada.nenhuma");
             }
             case RECARGA -> {
-                // Enche o cajado na hora
+                // Enche o cajado e as varinhas na hora
                 for (ItemStack pilha : todosOsItens(jogador)) {
                     if (pilha.getItem() instanceof CajadoDoMago) {
                         CajadoDoMago.encher(pilha);
+                    } else if (pilha.getItem() instanceof ItemVarinha) {
+                        ItemVarinha.encher(pilha);
                     }
                 }
                 // E igual ao Shattered, 30 turnos de recarga (vale pra recarga de arma da Duelista)
@@ -166,12 +168,13 @@ public class EfeitosDePergaminho {
     // ---- Transmutação ----
 
     // Armas viram outra arma do mesmo tier (com o mesmo nível e maldição), armas de arremesso viram outras de arremesso
-    // do mesmo tier, sementes viram outra semente,
+    // do mesmo tier, varinhas viram outra varinha (com o mesmo nível), sementes viram outra semente,
     // poções e pergaminhos viram outro tipo. Força e melhoria não podem ser transmutadas.
     // (No Shattered, poções e pergaminhos viram as versões "exóticas", que o mod ainda não tem.)
     public static boolean podeTransmutar(ServerPlayer jogador, ItemStack pilha) {
         long semente = Identificacao.sementeDaRun(jogador);
-        if ((pilha.getItem() instanceof ArmaDoShattered && !(pilha.getItem() instanceof CajadoDoMago)) || pilha.getItem() instanceof ArmaDeArremesso) {
+        if ((pilha.getItem() instanceof ArmaDoShattered && !(pilha.getItem() instanceof CajadoDoMago)) || pilha.getItem() instanceof ArmaDeArremesso
+                || pilha.getItem() instanceof ItemVarinha) {
             return true;
         }
         if (pilha.getItem() instanceof ItemSemente) {
@@ -197,6 +200,14 @@ public class EfeitosDePergaminho {
             }
             // Fica com o nível, a maldição e o que já se sabe dela
             return opcoes.isEmpty() ? ItemStack.EMPTY : pilha.transmuteCopy(opcoes.get(sorteio.nextInt(opcoes.size())), pilha.getCount());
+        }
+        if (pilha.getItem() instanceof ItemVarinha varinha) {
+            for (var registrada : ModItens.VARINHAS) {
+                if (registrada.get() != varinha) {
+                    opcoes.add(registrada.get());
+                }
+            }
+            return pilha.transmuteCopy(opcoes.get(sorteio.nextInt(opcoes.size())), 1);
         }
         if (pilha.getItem() instanceof ArmaDeArremesso arremesso) {
             for (var registrado : ModItens.ITENS.getEntries()) {

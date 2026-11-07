@@ -15,12 +15,14 @@ import com.louzada.pixeldungeon.item.ChaveDeFerro;
 import com.louzada.pixeldungeon.item.Equipamento;
 import com.louzada.pixeldungeon.item.Identificacao;
 import com.louzada.pixeldungeon.item.ItemSemente;
+import com.louzada.pixeldungeon.item.ItemVarinha;
 import com.louzada.pixeldungeon.item.Maldicao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.item.TipoDePergaminho;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 import com.louzada.pixeldungeon.item.TipoDePocao;
+import com.louzada.pixeldungeon.item.TipoDeVarinha;
 import com.louzada.pixeldungeon.registro.ModComponentes;
 import com.louzada.pixeldungeon.registro.ModItens;
 import com.louzada.pixeldungeon.run.DadosDaRun;
@@ -239,18 +241,25 @@ public class SaqueDoAndar {
         return sorteio.nextInt(5 - andarNaRegiao) < faltamNaRegiao;
     }
 
-    // Ouro (10), poção (8), pergaminho (8), arma (2), armadura (2), semente (1) ou arma de arremesso (1),
+    // Ouro (10), poção (8), pergaminho (8), arma (2), armadura (2), semente (1), arma de arremesso (1) ou varinha (1),
     // igual ao peso deles no Shattered
     public static ItemStack itemAleatorio(Random sorteio, int andar, long semente) {
-        return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 2, 1, 1 })) {
+        return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 2, 1, 1, 1 })) {
             case 0 -> Ouro.sortear(sorteio, andar);
             case 1 -> pocaoAleatoria(sorteio, semente);
             case 2 -> pergaminhoAleatorio(sorteio, semente);
             case 3 -> armaAleatoria(sorteio, andar);
             case 4 -> armaduraAleatoria(sorteio, andar);
             case 5 -> sementeAleatoria(sorteio);
-            default -> arremessoAleatorio(sorteio, andar);
+            case 6 -> arremessoAleatorio(sorteio, andar);
+            default -> varinhaAleatoria(sorteio);
         };
+    }
+
+    // Uma varinha qualquer (todas têm a mesma chance), com nível e talvez amaldiçoada, sem identificar
+    public static ItemStack varinhaAleatoria(Random sorteio) {
+        TipoDeVarinha[] tipos = TipoDeVarinha.values();
+        return ItemVarinha.sortearDoChao(new ItemStack(ModItens.varinha(tipos[sorteio.nextInt(tipos.length)])), sorteio);
     }
 
     // Uma poção pelo peso de cada tipo (a de força tem peso 0: só cai de propósito)
