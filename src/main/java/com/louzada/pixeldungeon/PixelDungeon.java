@@ -10,6 +10,7 @@ import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.heroi.Escudos;
 import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.Comida;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.rede.ModRede;
@@ -61,6 +62,7 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(EventosDaRun::aoTickDoServidor);
         NeoForge.EVENT_BUS.addListener(ComandosDaDungeon::aoRegistrarComandos);
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoReceberDano);
+        NeoForge.EVENT_BUS.addListener(TalentosDoTier2::aoReceberDano);
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoMorrerAlguem);
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoTomarDano);
         // O selo do Guerreiro olha o dano depois que o combate calculou (por isso prioridade baixa)

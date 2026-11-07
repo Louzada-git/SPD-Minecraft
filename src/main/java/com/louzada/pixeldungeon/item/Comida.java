@@ -4,6 +4,7 @@ import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.Talentos;
+import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.core.component.DataComponents;
@@ -45,13 +46,18 @@ public class Comida {
     }
 
     private static void comer(ServerPlayer jogador, ItemStack pilha, PlayerInteractEvent.RightClickItem evento) {
-        int turnos = turnosPraComer(pilha);
+        boolean emJogo = GerenciadorDoHeroi.emJogo(jogador);
+        // Os talentos de refeição do tier 2 fazem comer mais rápido
+        int turnos = emJogo ? TalentosDoTier2.turnosPraComer(jogador, pilha, turnosPraComer(pilha)) : turnosPraComer(pilha);
         // O que o item faz quando termina de ser comido (a fome, a cura da ração de suprimentos, o azar da carne...)
         ItemStack resto = pilha.finishUsingItem(jogador.level(), jogador);
         jogador.setItemInHand(evento.getHand(), resto);
-        if (GerenciadorDoHeroi.emJogo(jogador)) {
+        if (emJogo) {
             Talentos.aoComer(jogador, RegrasDoHeroi.dados(jogador));
+            TalentosDoTier2.aoComer(jogador, RegrasDoHeroi.dados(jogador));
         }
-        jogador.addEffect(new MobEffectInstance(ModEfeitos.COMENDO, Turno.ticks(turnos), 0, false, false, true));
+        if (turnos > 0) {
+            jogador.addEffect(new MobEffectInstance(ModEfeitos.COMENDO, Turno.ticks(turnos), 0, false, false, true));
+        }
     }
 }
