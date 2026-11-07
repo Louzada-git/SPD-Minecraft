@@ -71,6 +71,12 @@ public class ModEfeitos {
     // Aleijado (erva-cega): anda pela metade
     public static final DeferredHolder<MobEffect, EfeitoSimples> ALEIJADO = EFEITOS.register("aleijado",
             () -> EfeitoSimples.queMudaAVelocidade(MobEffectCategory.HARMFUL, 0x996633, "aleijado", -0.5));
+    // Resfriado (varinha da geada): anda mais devagar
+    public static final DeferredHolder<MobEffect, EfeitoSimples> RESFRIADO = EFEITOS.register("resfriado",
+            () -> EfeitoSimples.queMudaAVelocidade(MobEffectCategory.HARMFUL, 0x88CCFF, "resfriado", -0.33));
+    // Encantado (varinha da transfusão): não ataca
+    public static final DeferredHolder<MobEffect, EfeitoSimples> ENCANTADO = EFEITOS.register("encantado",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xFF66CC));
     // Cego (erva-cega, retribuição, maldição ofuscante): inimigos cegos perdem o alvo
     public static final DeferredHolder<MobEffect, EfeitoSimples> CEGO = EFEITOS.register("cego",
             () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0x222222));

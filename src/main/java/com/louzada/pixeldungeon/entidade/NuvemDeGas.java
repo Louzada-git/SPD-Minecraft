@@ -24,12 +24,14 @@ import net.minecraft.world.phys.Vec3;
 //   tóxico: 1 + andar / 5 de dano por turno
 //   paralisante: paralisa por 10 turnos
 //   confusão (poção de levitação arremessada): vertigem por 2 turnos
+//   corrosivo (varinha da corrosão): dano que começa na força da nuvem e cresce 1 a cada turno
 // Quem bebeu a poção de pureza não é afetado, e a pureza arremessada desfaz as nuvens.
 public class NuvemDeGas extends Entity {
     public enum Tipo {
         TOXICO(0x8CC63F),
         PARALISANTE(0xFFE97F),
-        CONFUSAO(0xC98BFF);
+        CONFUSAO(0xC98BFF),
+        CORROSIVO(0xDD8833);
 
         private int cor;
 
@@ -47,6 +49,8 @@ public class NuvemDeGas extends Entity {
     private static final double ALTURA = 3.0;
 
     private int ticksRestantes = 10 * Turno.TICKS;
+    // Gás corrosivo: o dano do primeiro turno
+    private int forca = 2;
 
     public NuvemDeGas(EntityType<? extends NuvemDeGas> tipo, Level mundo) {
         super(tipo, mundo);
@@ -61,6 +65,10 @@ public class NuvemDeGas extends Entity {
         nuvem.ticksRestantes = turnos * Turno.TICKS;
         mundo.addFreshEntity(nuvem);
         return nuvem;
+    }
+
+    public void definirForca(int valor) {
+        forca = valor;
     }
 
     public Tipo tipo() {
@@ -116,6 +124,10 @@ public class NuvemDeGas extends Entity {
                     }
                 }
                 case CONFUSAO -> EfeitosNoTick.tontear(criatura, 2 * Turno.TICKS);
+                case CORROSIVO -> {
+                    criatura.invulnerableTime = 0;
+                    criatura.hurt(damageSources().magic(), forca + tickCount / Turno.TICKS);
+                }
             }
         }
     }
@@ -125,6 +137,7 @@ public class NuvemDeGas extends Entity {
         entityData.set(TIPO, tag.getInt("tipo"));
         entityData.set(RAIO, tag.getFloat("raio"));
         ticksRestantes = tag.getInt("ticks_restantes");
+        forca = tag.contains("forca") ? tag.getInt("forca") : 2;
     }
 
     @Override
@@ -132,6 +145,7 @@ public class NuvemDeGas extends Entity {
         tag.putInt("tipo", entityData.get(TIPO));
         tag.putFloat("raio", entityData.get(RAIO));
         tag.putInt("ticks_restantes", ticksRestantes);
+        tag.putInt("forca", forca);
     }
 
     @Override

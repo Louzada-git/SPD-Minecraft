@@ -305,11 +305,11 @@ public class EfeitosNoTick {
         return new BlockPos(Math.floorDiv(entidade.getBlockX(), 4), 0, Math.floorDiv(entidade.getBlockZ(), 4)).asLong();
     }
 
-    // Quem não consegue agir (paralisado, congelado, dormindo, aterrorizado) não ataca
+    // Quem não consegue agir (paralisado, congelado, dormindo, aterrorizado, encantado) não ataca
     public static boolean impedidoDeAtacar(@Nullable Entity atacante) {
         return atacante instanceof LivingEntity criatura && (criatura.hasEffect(ModEfeitos.PARALISADO) || criatura.hasEffect(ModEfeitos.CONGELADO)
                 || criatura.hasEffect(ModEfeitos.SONO_MAGICO) || criatura.hasEffect(ModEfeitos.ATERRORIZADO)
-                || criatura.hasEffect(ModEfeitos.COMENDO));
+                || criatura.hasEffect(ModEfeitos.COMENDO) || criatura.hasEffect(ModEfeitos.ENCANTADO));
     }
 
     // Quem está preso (paralisado, congelado, dormindo) não consegue desviar
