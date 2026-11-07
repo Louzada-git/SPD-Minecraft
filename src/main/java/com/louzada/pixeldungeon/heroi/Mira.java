@@ -2,6 +2,8 @@ package com.louzada.pixeldungeon.heroi;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.entidade.ImagemEspelhada;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -28,6 +30,23 @@ public class Mira {
         AABB caixa = jogador.getBoundingBox().expandTowards(olhar.scale(alcance)).inflate(1.0);
         EntityHitResult resultado = ProjectileUtil.getEntityHitResult(jogador, olho, fim, caixa,
                 entidade -> entidade instanceof LivingEntity && entidade.isAlive() && !entidade.isSpectator() && !(entidade instanceof Player),
+                olho.distanceToSqr(fim));
+        return resultado != null && resultado.getEntity() instanceof LivingEntity alvo ? alvo : null;
+    }
+
+    // O aliado na mira (outro jogador vivo ou uma imagem espelhada), até essa distância
+    @Nullable
+    public static LivingEntity aliado(ServerPlayer jogador, double alcance) {
+        Vec3 olho = jogador.getEyePosition();
+        Vec3 olhar = jogador.getViewVector(1.0F);
+        Vec3 fim = olho.add(olhar.scale(alcance));
+        HitResult bloco = jogador.level().clip(new ClipContext(olho, fim, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, jogador));
+        if (bloco.getType() != HitResult.Type.MISS) {
+            fim = bloco.getLocation();
+        }
+        AABB caixa = jogador.getBoundingBox().expandTowards(olhar.scale(alcance)).inflate(1.0);
+        EntityHitResult resultado = ProjectileUtil.getEntityHitResult(jogador, olho, fim, caixa,
+                entidade -> entidade.isAlive() && !entidade.isSpectator() && (entidade instanceof Player || entidade instanceof ImagemEspelhada),
                 olho.distanceToSqr(fim));
         return resultado != null && resultado.getEntity() instanceof LivingEntity alvo ? alvo : null;
     }
