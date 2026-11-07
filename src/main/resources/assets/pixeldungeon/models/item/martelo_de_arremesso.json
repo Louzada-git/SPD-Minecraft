@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "pixeldungeon:item/martelo_de_arremesso"
+  }
+}

@@ -6,6 +6,8 @@ import java.util.List;
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista.Habilidade;
 import com.louzada.pixeldungeon.item.ArcoEspiritual;
+import com.louzada.pixeldungeon.item.ArmaDeArremesso;
+import com.louzada.pixeldungeon.item.ArmaDeArremesso.Especial;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaDoShattered.Numeros;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
@@ -81,6 +83,43 @@ public class ModItens {
     public static final DeferredItem<ArmaDoShattered> ESPADA_LARGA = arma("espada_larga", Numeros.doTier(5).habilidade(Habilidade.CORTAR, 7));
     public static final DeferredItem<ArmaDoShattered> MARTELO_DE_GUERRA = arma("martelo_de_guerra",
             Numeros.doTier(5).dano(5, 24).precisao(1.2f).habilidade(Habilidade.GOLPE_PESADO, 6));
+
+    // ---- Armas de arremesso (números do Shattered: dano de 2 x tier a 5 x tier, 1 de força a menos) ----
+    // Usos: quantos acertos o conjunto aguenta antes de uma quebrar. As que não grudam caem no chão depois do acerto.
+
+    // Tier 1: as das classes (Guerreiro, Ladino e Duelista começam com elas)
+    public static final DeferredItem<ArmaDeArremesso> PEDRA_DE_ARREMESSO = arremesso("pedra_de_arremesso",
+            ArmaDeArremesso.Numeros.doTier(1).usos(5).naoGruda());
+    public static final DeferredItem<ArmaDeArremesso> FACA_DE_ARREMESSO = arremesso("faca_de_arremesso",
+            ArmaDeArremesso.Numeros.doTier(1).dano(2, 6).crescimento(1, 2).usos(5).surpresa(0.75f));
+    public static final DeferredItem<ArmaDeArremesso> AGULHA_DE_ARREMESSO = arremesso("agulha_de_arremesso", ArmaDeArremesso.Numeros.doTier(1).usos(12));
+
+    // Tier 2
+    public static final DeferredItem<ArmaDeArremesso> LANCA_DE_PESCA = arremesso("lanca_de_pesca", ArmaDeArremesso.Numeros.doTier(2));
+    public static final DeferredItem<ArmaDeArremesso> BASTAO_DE_ARREMESSO = arremesso("bastao_de_arremesso",
+            ArmaDeArremesso.Numeros.doTier(2).dano(4, 8).usos(12).naoGruda());
+    public static final DeferredItem<ArmaDeArremesso> SHURIKEN = arremesso("shuriken",
+            ArmaDeArremesso.Numeros.doTier(2).dano(4, 8).usos(5).especial(Especial.INSTANTANEA));
+
+    // Tier 3
+    public static final DeferredItem<ArmaDeArremesso> LANCA_DE_ARREMESSO = arremesso("lanca_de_arremesso", ArmaDeArremesso.Numeros.doTier(3));
+    public static final DeferredItem<ArmaDeArremesso> KUNAI = arremesso("kunai", ArmaDeArremesso.Numeros.doTier(3).dano(6, 12).surpresa(0.6f));
+    public static final DeferredItem<ArmaDeArremesso> BOLEADEIRAS = arremesso("boleadeiras",
+            ArmaDeArremesso.Numeros.doTier(3).dano(4, 9).crescimento(0, 2).usos(5).especial(Especial.ALEIJA));
+
+    // Tier 4
+    public static final DeferredItem<ArmaDeArremesso> JAVELIN = arremesso("javelin", ArmaDeArremesso.Numeros.doTier(4));
+    public static final DeferredItem<ArmaDeArremesso> TOMAHAWK = arremesso("tomahawk",
+            ArmaDeArremesso.Numeros.doTier(4).dano(6, 16).crescimento(1, 3).usos(5).especial(Especial.SANGRA));
+    public static final DeferredItem<ArmaDeArremesso> BUMERANGUE_PESADO = arremesso("bumerangue_pesado",
+            ArmaDeArremesso.Numeros.doTier(4).dano(8, 16).crescimento(1, 3).usos(5).naoGruda().especial(Especial.VOLTA));
+
+    // Tier 5
+    public static final DeferredItem<ArmaDeArremesso> TRIDENTE = arremesso("tridente", ArmaDeArremesso.Numeros.doTier(5));
+    public static final DeferredItem<ArmaDeArremesso> MARTELO_DE_ARREMESSO = arremesso("martelo_de_arremesso",
+            ArmaDeArremesso.Numeros.doTier(5).dano(10, 20).usos(12).naoGruda());
+    public static final DeferredItem<ArmaDeArremesso> CUBO_DE_FORCA = arremesso("cubo_de_forca",
+            ArmaDeArremesso.Numeros.doTier(5).dano(10, 30).usos(5).naoGruda().especial(Especial.EM_AREA));
 
     // ---- Itens únicos das classes ----
 
@@ -188,6 +227,10 @@ public class ModItens {
 
     private static DeferredItem<ArmaDoShattered> arma(String nome, Numeros numeros) {
         return ITENS.registerItem(nome, propriedades -> new ArmaDoShattered(propriedades, nome, numeros));
+    }
+
+    private static DeferredItem<ArmaDeArremesso> arremesso(String nome, ArmaDeArremesso.Numeros numeros) {
+        return ITENS.registerItem(nome, propriedades -> new ArmaDeArremesso(propriedades, nome, numeros));
     }
 
     private static DeferredItem<ArmaduraDoShattered> armadura(String nome, Holder<ArmorMaterial> material, int tier) {
