@@ -22,11 +22,13 @@ import com.louzada.pixeldungeon.item.ItemAnkh;
 import com.louzada.pixeldungeon.item.ItemPergaminho;
 import com.louzada.pixeldungeon.item.ItemPocao;
 import com.louzada.pixeldungeon.item.ItemSemente;
+import com.louzada.pixeldungeon.item.ItemVarinha;
 import com.louzada.pixeldungeon.item.Odre;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.item.RacaoDeSuprimentos;
 import com.louzada.pixeldungeon.item.RunaDePergaminho;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
+import com.louzada.pixeldungeon.item.TipoDeVarinha;
 import com.louzada.pixeldungeon.item.TomoSagrado;
 
 import net.minecraft.core.Holder;
@@ -120,6 +122,10 @@ public class ModItens {
             ArmaDeArremesso.Numeros.doTier(5).dano(10, 20).usos(12).naoGruda());
     public static final DeferredItem<ArmaDeArremesso> CUBO_DE_FORCA = arremesso("cubo_de_forca",
             ArmaDeArremesso.Numeros.doTier(5).dano(10, 30).usos(5).naoGruda().especial(Especial.EM_AREA));
+
+    // ---- Varinhas (uma pra cada tipo, na ordem do enum) ----
+
+    public static final List<DeferredItem<ItemVarinha>> VARINHAS = registrarVarinhas();
 
     // ---- Itens únicos das classes ----
 
@@ -235,6 +241,19 @@ public class ModItens {
 
     private static DeferredItem<ArmaduraDoShattered> armadura(String nome, Holder<ArmorMaterial> material, int tier) {
         return ITENS.registerItem(nome, propriedades -> new ArmaduraDoShattered(material, propriedades, nome, tier));
+    }
+
+    private static List<DeferredItem<ItemVarinha>> registrarVarinhas() {
+        List<DeferredItem<ItemVarinha>> lista = new ArrayList<>();
+        for (TipoDeVarinha tipo : TipoDeVarinha.values()) {
+            lista.add(ITENS.registerItem("varinha_" + tipo.id(), propriedades -> new ItemVarinha(propriedades, tipo)));
+        }
+        return lista;
+    }
+
+    // O item da varinha desse tipo
+    public static ItemVarinha varinha(TipoDeVarinha tipo) {
+        return VARINHAS.get(tipo.ordinal()).get();
     }
 
     private static List<DeferredItem<ItemPocao>> registrarPocoes() {

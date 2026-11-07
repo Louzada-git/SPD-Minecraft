@@ -4,7 +4,7 @@ import com.louzada.pixeldungeon.registro.ModComponentes;
 
 import net.minecraft.world.item.ItemStack;
 
-// Cargas guardadas dentro de um item (cajado do Mago, capa das sombras, tomo sagrado).
+// Cargas guardadas dentro de um item (varinhas, cajado do Mago, capa das sombras, tomo sagrado).
 // As cargas voltam sozinhas com o tempo. Pra não ficar mexendo no item toda hora, ele só guarda
 // quando a próxima carga começou a encher; as que já encheram são contadas na hora de usar.
 public class Cargas {
@@ -83,6 +83,17 @@ public class Cargas {
         pilha.set(ModComponentes.CARGAS.get(), novas);
         if (novas >= maximo) {
             pilha.remove(ModComponentes.INICIO_DA_RECARGA.get());
+        }
+    }
+
+    // Fica com exatamente essas cargas (a próxima começa a encher agora)
+    public static void definir(ItemStack pilha, long agora, int maximo, int quantas) {
+        int novas = Math.max(0, Math.min(maximo, quantas));
+        pilha.set(ModComponentes.CARGAS.get(), novas);
+        if (novas >= maximo) {
+            pilha.remove(ModComponentes.INICIO_DA_RECARGA.get());
+        } else {
+            pilha.set(ModComponentes.INICIO_DA_RECARGA.get(), agora);
         }
     }
 
