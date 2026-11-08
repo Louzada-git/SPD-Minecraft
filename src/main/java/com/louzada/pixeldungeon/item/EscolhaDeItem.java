@@ -2,8 +2,10 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -22,12 +24,15 @@ import net.neoforged.neoforge.network.PacketDistributor;
 // o servidor manda a lista de itens que servem, a tela do jogador mostra, e ele escolhe um.
 // O pergaminho só é gasto quando o item é escolhido. Igual ao Shattered, se o pergaminho era desconhecido
 // e o jogador desistir, ele se gasta mesmo assim.
+// A mesma tela serve pro selo quebrado do Guerreiro escolher a armadura em que vai ser afixado.
 public class EscolhaDeItem {
     // runa null: o pergaminho foi repetido pela magia "recuperar inscrição" do Clérigo (não tem pergaminho pra gastar)
     private record Pendente(TipoDePergaminho tipo, @Nullable RunaDePergaminho runa, boolean eraDesconhecido) {
     }
 
     private static Map<UUID, Pendente> pendentes = new HashMap<>();
+    // Quem está escolhendo a armadura pro selo quebrado
+    private static Set<UUID> selos = new HashSet<>();
 
     // Abre a tela. Devolve false se não tem nenhum item que sirva.
     public static boolean pedir(ServerPlayer jogador, TipoDePergaminho tipo, RunaDePergaminho runa, boolean eraDesconhecido) {
@@ -35,9 +40,44 @@ public class EscolhaDeItem {
         if (espacos.isEmpty()) {
             return false;
         }
+        selos.remove(jogador.getUUID());
         pendentes.put(jogador.getUUID(), new Pendente(tipo, runa, eraDesconhecido));
         PacketDistributor.sendToPlayer(jogador, new PacoteEscolherItem(tipo.id(), espacos));
         return true;
+    }
+
+    // Selo quebrado: escolher a armadura (as que não têm o selo). Devolve false se não tem nenhuma.
+    public static boolean pedirArmaduraProSelo(ServerPlayer jogador) {
+        List<Integer> espacos = armadurasProSelo(jogador);
+        if (espacos.isEmpty()) {
+            return false;
+        }
+        pendentes.remove(jogador.getUUID());
+        selos.add(jogador.getUUID());
+        PacketDistributor.sendToPlayer(jogador, new PacoteEscolherItem("selo", espacos));
+        return true;
+    }
+
+    private static List<Integer> armadurasProSelo(ServerPlayer jogador) {
+        List<Integer> espacos = new ArrayList<>();
+        Inventory inventario = jogador.getInventory();
+        for (int i = 0; i < inventario.getContainerSize(); i++) {
+            ItemStack pilha = inventario.getItem(i);
+            if (pilha.getItem() instanceof ArmaduraDoShattered && !SeloQuebrado.temSelo(pilha)) {
+                espacos.add(i);
+            }
+        }
+        return espacos;
+    }
+
+    private static int seloNaMochila(ServerPlayer jogador) {
+        Inventory inventario = jogador.getInventory();
+        for (int i = 0; i < inventario.getContainerSize(); i++) {
+            if (inventario.getItem(i).getItem() instanceof SeloQuebrado) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     // Recuperar inscrição (Clérigo): repete um pergaminho que pede item, sem gastar pergaminho nenhum
@@ -46,6 +86,7 @@ public class EscolhaDeItem {
         if (espacos.isEmpty()) {
             return false;
         }
+        selos.remove(jogador.getUUID());
         pendentes.put(jogador.getUUID(), new Pendente(tipo, null, false));
         PacketDistributor.sendToPlayer(jogador, new PacoteEscolherItem(tipo.id(), espacos));
         return true;
@@ -79,6 +120,13 @@ public class EscolhaDeItem {
 
     // O jogador escolheu (ou desistiu, com espaço -1)
     public static void escolheu(ServerPlayer jogador, int espaco) {
+        if (selos.remove(jogador.getUUID())) {
+            int origem = seloNaMochila(jogador);
+            if (espaco >= 0 && origem >= 0 && armadurasProSelo(jogador).contains(espaco)) {
+                SeloQuebrado.levar(jogador, origem, espaco);
+            }
+            return;
+        }
         Pendente pendente = pendentes.remove(jogador.getUUID());
         if (pendente == null) {
             return;

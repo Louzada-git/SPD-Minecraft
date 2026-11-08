@@ -8,11 +8,16 @@ import com.louzada.pixeldungeon.registro.ModComponentes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 // Armadura do Shattered. Igual ao Shattered, o herói só veste uma (vai no peito) e ela reduz o dano de cada golpe:
 //   defesa: sorteada de nível até tier x (2 + nível) a cada golpe (pano +0 = 0-2, placas +0 = 0-10)
@@ -59,6 +64,25 @@ public class ArmaduraDoShattered extends ArmorItem implements Equipamento {
         return Equipamento.divisaoPelaForca(forcaFaltando(pilha, forcaDoHeroi));
     }
 
+    // Agachado, clique direito com a armadura na mão: solta o selo do Guerreiro (ver SeloQuebrado)
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level mundo, Player jogador, InteractionHand mao) {
+        ItemStack pilha = jogador.getItemInHand(mao);
+        if (jogador.isShiftKeyDown() && SeloQuebrado.temSelo(pilha)) {
+            if (jogador instanceof ServerPlayer heroi) {
+                SeloQuebrado.soltarDaMao(heroi, pilha);
+            }
+            return InteractionResultHolder.sidedSuccess(pilha, mundo.isClientSide());
+        }
+        return super.use(mundo, jogador, mao);
+    }
+
+    // Brilha com glifo
+    @Override
+    public boolean isFoil(ItemStack pilha) {
+        return NivelDoItem.glifo(pilha) != null || super.isFoil(pilha);
+    }
+
     // "Armadura de pano +1", "Armadura de malha de fedor"... só o que já foi descoberto
     @Override
     public Component getName(ItemStack pilha) {
@@ -79,6 +103,8 @@ public class ArmaduraDoShattered extends ArmorItem implements Equipamento {
         // Selo quebrado do Guerreiro: escudo de 3 + 2 x tier quando a vida cai pela metade
         if (pilha.getOrDefault(ModComponentes.SELO.get(), false)) {
             linhas.add(Component.translatable("dica.pixeldungeon.selo", 3 + 2 * tier).withStyle(ChatFormatting.GOLD));
+            SeloQuebrado.dicaDoSelo(pilha, linhas);
+            linhas.add(Component.translatable("dica.pixeldungeon.selo_soltar").withStyle(ChatFormatting.DARK_GRAY));
         }
         Textos.adicionarQuebrado(linhas, chaveDaDescricao, ChatFormatting.DARK_GRAY);
     }

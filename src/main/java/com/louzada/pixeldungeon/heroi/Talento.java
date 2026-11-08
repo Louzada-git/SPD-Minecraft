@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 // Cada talento vai até +2. O tier 1 tem 4 talentos e 5 pontos (níveis 2 a 6);
 // o tier 2 tem 5 talentos e 6 pontos (níveis 7 a 12).
 //
-// Alguns talentos dependem de coisas que o mod ainda não tem (glifos, a busca e as salas secretas).
+// Alguns talentos dependem de coisas que o mod ainda não tem (a busca e as salas secretas).
 // Eles podem ser escolhidos, mas a dica avisa que ainda não fazem nada ("pendente").
 public enum Talento {
     // Guerreiro
@@ -19,7 +19,7 @@ public enum Talento {
     DETERMINACAO_DE_FERRO("determinacao_de_ferro", ClasseDoHeroi.GUERREIRO, 1, null),
     ESTOMAGO_DE_FERRO("estomago_de_ferro", ClasseDoHeroi.GUERREIRO, 2, null),
     TENACIDADE_LIQUIDA("tenacidade_liquida", ClasseDoHeroi.GUERREIRO, 2, null),
-    TRANSFERENCIA_RUNICA("transferencia_runica", ClasseDoHeroi.GUERREIRO, 2, "glifos"),
+    TRANSFERENCIA_RUNICA("transferencia_runica", ClasseDoHeroi.GUERREIRO, 2, null),
     IMPETO_LETAL("impeto_letal", ClasseDoHeroi.GUERREIRO, 2, null),
     PROJETEIS_IMPROVISADOS("projeteis_improvisados", ClasseDoHeroi.GUERREIRO, 2, null),
     // Mago

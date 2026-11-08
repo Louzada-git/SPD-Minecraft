@@ -5,6 +5,7 @@ import com.louzada.pixeldungeon.item.ArmaDeArremesso;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
 import com.louzada.pixeldungeon.item.ItemAnel;
 import com.louzada.pixeldungeon.item.NivelDoItem;
+import com.louzada.pixeldungeon.item.SeloQuebrado;
 import com.louzada.pixeldungeon.rede.RedeDoHeroi;
 import com.louzada.pixeldungeon.run.GerenciadorDaRun;
 
@@ -38,11 +39,17 @@ public class GerenciadorDoHeroi {
             NivelDoItem.aoEquipar(jogador, jogador.getItemBySlot(Aneis.SEGUNDO));
             Aneis.atualizar(jogador, dados);
             PesoDoEquipamento.atualizar(jogador, dados);
+            GlifosDoHeroi.atualizarVelocidade(jogador);
+            // O Guerreiro vestiu outra armadura: oferece passar o selo
+            if (dados.classe() == ClasseDoHeroi.GUERREIRO) {
+                SeloQuebrado.talvezPerguntar(jogador, dados);
+            }
             // As armas de arremesso que voltaram pra mochila se juntam de novo ao conjunto delas
             ArmaDeArremesso.juntarPilhas(jogador);
         }
         boolean umTurno = Turno.virou(jogador);
         Escudos.aoTick(jogador, dados, umTurno);
+        GlifosDoHeroi.aoTick(jogador, dados, umTurno);
         Talentos.aoTick(jogador, dados);
         TalentosDoTier2.aoTick(jogador, dados);
         if (umTurno) {

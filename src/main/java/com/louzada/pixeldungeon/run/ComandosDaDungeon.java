@@ -1,7 +1,9 @@
 package com.louzada.pixeldungeon.run;
 
 import com.louzada.pixeldungeon.dungeon.Andares;
+import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
+import com.louzada.pixeldungeon.item.SeloQuebrado;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 
@@ -13,6 +15,8 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 // Comandos:
 //   /heroi                -> abre o menu de escolha de herói (pra quem ainda não está na run)
+//   /selo transferir      -> passa o selo do Guerreiro pra armadura vestida (o chat oferece ao trocar de armadura)
+//   /selo glifo armadura|selo -> qual glifo fica quando o selo e a armadura têm glifos diferentes (o chat oferece)
 // De teste (precisa de cheats ligados):
 //   /dungeon novarun      -> acaba a run atual e manda todo mundo pro menu
 //   /dungeon andar <n>    -> vai direto para o andar n
@@ -34,6 +38,19 @@ public class ComandosDaDungeon {
                     GerenciadorDaRun.esperarNoMenu(jogador);
                     return 1;
                 }));
+
+        despachante.register(Commands.literal("selo")
+                .then(Commands.literal("transferir")
+                        .executes(contexto -> {
+                            ServerPlayer jogador = contexto.getSource().getPlayerOrException();
+                            if (GerenciadorDoHeroi.emJogo(jogador)) {
+                                SeloQuebrado.transferir(jogador);
+                            }
+                            return 1;
+                        }))
+                .then(Commands.literal("glifo")
+                        .then(Commands.literal("armadura").executes(contexto -> escolherGlifo(contexto.getSource().getPlayerOrException(), false)))
+                        .then(Commands.literal("selo").executes(contexto -> escolherGlifo(contexto.getSource().getPlayerOrException(), true)))));
 
         despachante.register(Commands.literal("dungeon")
                 .requires(fonte -> fonte.hasPermission(2))
@@ -58,5 +75,12 @@ public class ComandosDaDungeon {
                                     RegrasDoHeroi.ganharXp(jogador, IntegerArgumentType.getInteger(contexto, "quantidade"));
                                     return 1;
                                 }))));
+    }
+
+    private static int escolherGlifo(ServerPlayer jogador, boolean ficaODoSelo) {
+        if (GerenciadorDoHeroi.emJogo(jogador)) {
+            SeloQuebrado.escolheuGlifo(jogador, ficaODoSelo);
+        }
+        return 1;
     }
 }

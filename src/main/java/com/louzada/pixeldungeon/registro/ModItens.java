@@ -29,6 +29,7 @@ import com.louzada.pixeldungeon.item.Odre;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.item.RacaoDeSuprimentos;
 import com.louzada.pixeldungeon.item.RunaDePergaminho;
+import com.louzada.pixeldungeon.item.SeloQuebrado;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 import com.louzada.pixeldungeon.item.TipoDeVarinha;
 import com.louzada.pixeldungeon.item.TomoSagrado;
@@ -141,6 +142,8 @@ public class ModItens {
     public static final DeferredItem<ArcoEspiritual> ARCO_ESPIRITUAL = ITENS.registerItem("arco_espiritual", ArcoEspiritual::new);
     // Clérigo: magias
     public static final DeferredItem<TomoSagrado> TOMO_SAGRADO = ITENS.registerItem("tomo_sagrado", TomoSagrado::new);
+    // Guerreiro: o selo quebrado, quando é solto da armadura
+    public static final DeferredItem<SeloQuebrado> SELO_QUEBRADO = ITENS.registerItem("selo_quebrado", SeloQuebrado::new);
     // A flecha que o arco solta (não dá pra pegar; só serve pra desenhar a flecha voando)
     public static final DeferredItem<Item> FLECHA_ESPIRITUAL = ITENS.registerSimpleItem("flecha_espiritual");
 
