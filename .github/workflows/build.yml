@@ -165,6 +165,11 @@ jobs:
           if ! grep -qE "Teste do projetante: alcance 3.0 -> 7.0" servidor.log; then echo "O projetante não funcionou"; exit 1; fi
           if ! grep -q "Teste da maldição amigável: o golpe não machucou = true, o rato ficou encantado = true" servidor.log; then echo "A maldição amigável não funcionou"; exit 1; fi
           if ! grep -q "Teste da maldição explosiva: explodiu e recomeçou = true" servidor.log; then echo "A maldição explosiva não funcionou"; exit 1; fi
+          if ! grep -qE "Teste das salas secretas: [0-9]+ salas secretas nos andares 2 a 4, pelo menos 2 = true; portas escondidas no andar 1 = 0, nos outros = [1-9]" servidor.log; then echo "As salas secretas não foram geradas como no Shattered"; exit 1; fi
+          if ! grep -qE "Teste da busca: achou [1-9][0-9]* porta\(s\) ao procurar do lado; antes era parede = true, virou porta = true, ficou salvo = true, procurar de novo logo em seguida achou 0" servidor.log; then echo "A busca não achou a porta escondida"; exit 1; fi
+          if ! grep -qE "Teste do mapeamento das portas: revelou [0-9]+ no andar [0-9], revelou alguma = true, sobrou escondida = 0" servidor.log; then echo "O mapeamento mágico não revelou as portas escondidas"; exit 1; fi
+          if ! grep -q "Teste da previsão do ladino: com +2 avisou = true, sem o talento avisou = false, no andar 1 avisou = false" servidor.log; then echo "A previsão do ladino não funcionou"; exit 1; fi
+          if ! grep -q "Teste do labirinto: 200 prêmios, amaldiçoados = 0, maldição desconhecida = 0, metade armaduras = true" servidor.log; then echo "O prêmio do labirinto não saiu como no Shattered"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
 
       # Liga o jogo de verdade (sem monitor, no Xvfb), entra no mundo do teste do servidor

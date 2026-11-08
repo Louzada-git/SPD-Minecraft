@@ -107,6 +107,7 @@ public class EventosDaRun {
             TestesDosGlifos.testar(servidor);
             TestesDosEncantamentos.testar(servidor);
             TestesDasArmasDeArremesso.testar(servidor);
+            TestesDaBusca.testar(servidor);
         }
     }
 
