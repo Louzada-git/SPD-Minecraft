@@ -9,6 +9,7 @@ import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.combate.Sorteio;
 import com.louzada.pixeldungeon.heroi.Furtividade;
+import com.louzada.pixeldungeon.heroi.GlifosDoHeroi;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
@@ -259,7 +260,8 @@ public abstract class MobDoShattered extends Monster implements Combatente {
                 if (distanciaEmQuadradinhos > 8 || TalentosDoTier2.passosSilenciosos(jogador, distanciaEmQuadradinhos)) {
                     continue;
                 }
-                if (getRandom().nextDouble() * Math.max(1.0, distanciaEmQuadradinhos) < 1.0) {
+                // Glifo do ofuscamento: o herói é mais difícil de notar
+                if (getRandom().nextDouble() * Math.max(1.0, distanciaEmQuadradinhos + GlifosDoHeroi.furtividade(jogador)) < 1.0) {
                     notar(jogador);
                     break;
                 }

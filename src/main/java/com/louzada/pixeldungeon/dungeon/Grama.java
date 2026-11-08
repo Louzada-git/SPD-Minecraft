@@ -8,6 +8,7 @@ import com.louzada.pixeldungeon.entidade.GotaDeOrvalho;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
+import com.louzada.pixeldungeon.heroi.GlifosDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.Talento;
 import com.louzada.pixeldungeon.registro.ModBlocos;
@@ -54,6 +55,10 @@ public class Grama {
         if (cacadora && jaTrilhado) {
             // A Caçadora anda pela grama trilhada sem mexer nela
             return;
+        }
+        // Glifo da camuflagem: pisotear a grama deixa invisível
+        if (criatura instanceof ServerPlayer jogador) {
+            GlifosDoHeroi.aoPisotearGrama(jogador);
         }
 
         // O quadradinho onde está este bloco (os quadradinhos começam em múltiplos de 4)

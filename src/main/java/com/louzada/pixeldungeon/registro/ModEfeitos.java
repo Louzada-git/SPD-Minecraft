@@ -130,4 +130,8 @@ public class ModEfeitos {
     // Visão mental (poção): vê todos os inimigos do andar através das paredes
     public static final DeferredHolder<MobEffect, EfeitoSimples> VISAO_MENTAL = EFEITOS.register("visao_mental",
             () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x44CCFF));
+
+    // Dano adiado (glifo da viscosidade): o dano guardado vem 10% por turno
+    public static final DeferredHolder<MobEffect, EfeitoSimples> DANO_ADIADO = EFEITOS.register("dano_adiado",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xA0A0A0));
 }
