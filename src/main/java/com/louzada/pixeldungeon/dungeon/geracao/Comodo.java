@@ -275,8 +275,8 @@ public abstract class Comodo extends Retangulo {
     // A porta de uma ligação. O tipo só sobe (uma sala pede porta comum, a outra pede trancada: fica trancada).
     public static class Porta extends Ponto {
         public enum Tipo {
-            // Nada (só chão), túnel, água, porta comum (vira destrancada), destrancada, trancada, parede
-            VAZIA, TUNEL, AGUA, COMUM, DESTRANCADA, TRANCADA, PAREDE
+            // Nada (só chão), túnel, água, porta comum (vira destrancada ou escondida), destrancada, escondida, trancada, parede
+            VAZIA, TUNEL, AGUA, COMUM, DESTRANCADA, ESCONDIDA, TRANCADA, PAREDE
         }
 
         public Tipo tipo = Tipo.VAZIA;

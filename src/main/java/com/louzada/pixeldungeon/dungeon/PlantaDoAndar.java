@@ -27,6 +27,8 @@ public class PlantaDoAndar {
     public static final byte ESTANTE = 9;
     // Os barris de armazenamento do esgoto (o "REGION_DECO" do Shattered): não dá pra passar
     public static final byte BARRIL = 10;
+    // Porta escondida (o "SECRET_DOOR" do Shattered): é construída como parede e vira porta comum quando alguém procura
+    public static final byte PORTA_ESCONDIDA = 11;
 
     // Grama por cima do chão (uma camada separada, o quadradinho continua sendo chão)
     public static final byte SEM_GRAMA = 0;
@@ -36,8 +38,10 @@ public class PlantaDoAndar {
     // O que as salas especiais pedem pra deixar no chão (quem sorteia o item de verdade é o SaqueDoAndar)
     public enum Premio {
         ARMA, ARMADURA, OURO, OURO_POUCO, PERGAMINHO, PERGAMINHO_DE_IDENTIFICAR_OU_REMOVER, ARMADURA_AMALDICOADA,
+        // Das salas secretas: a comida da despensa, o ouro miúdo do tesouro, o prêmio do labirinto e as armas de arremesso do arsenal
+        RACAO_DE_SUPRIMENTOS, OURO_DO_TESOURO, PREMIO_DO_LABIRINTO, ARREMESSO,
         // Plantas já plantadas (não são itens)
-        PLANTA_ALEATORIA, PLANTA_GRAMA_SOLAR
+        PLANTA_ALEATORIA, PLANTA_GRAMA_SOLAR, PLANTA_ESTRELA
     }
 
     // Um prêmio num quadradinho, no chão ou dentro de um baú
@@ -79,6 +83,8 @@ public class PlantaDoAndar {
     private List<PremioNoChao> premios = new ArrayList<>();
     // Quantas chaves de ferro o andar precisa (uma por porta trancada); elas ficam em salas comuns
     private int chavesDeFerro = 0;
+    // Quantas salas secretas o andar tem (a previsão do ladino avisa)
+    private int salasSecretas = 0;
 
     private int entradaX = -1;
     private int entradaY = -1;
@@ -166,6 +172,14 @@ public class PlantaDoAndar {
         return chavesDeFerro;
     }
 
+    public void contarSalaSecreta() {
+        salasSecretas++;
+    }
+
+    public int salasSecretas() {
+        return salasSecretas;
+    }
+
     // Lugar aberto que não pertence a nenhuma sala = corredor
     public boolean ehCorredor(int x, int y) {
         return aberto(x, y) && salaDoQuadradinho[y * largura + x] < 0;
@@ -207,15 +221,17 @@ public class PlantaDoAndar {
         }
     }
 
-    // Tem espaço aberto (chão e teto)? Tudo que não é parede: até as estátuas e estantes ficam dentro da sala
+    // Tem espaço aberto (chão e teto)? Tudo que não é parede: até as estátuas e estantes ficam dentro da sala.
+    // A porta escondida conta como parede até ser achada.
     public boolean aberto(int x, int y) {
-        return tipo(x, y) != PAREDE;
+        byte tipo = tipo(x, y);
+        return tipo != PAREDE && tipo != PORTA_ESCONDIDA;
     }
 
     // Dá pra andar em cima?
     public boolean passavel(int x, int y) {
         byte tipo = tipo(x, y);
-        return tipo != PAREDE && tipo != ESTATUA && tipo != ESTANTE && tipo != BARRIL;
+        return tipo != PAREDE && tipo != PORTA_ESCONDIDA && tipo != ESTATUA && tipo != ESTANTE && tipo != BARRIL;
     }
 
     // As portas gigantes (as comuns e as trancadas)
