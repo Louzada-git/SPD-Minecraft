@@ -9,12 +9,16 @@ import javax.annotation.Nullable;
 import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
+import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.dungeon.PlantasDoShattered;
+import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
 import com.louzada.pixeldungeon.dungeon.Teleporte;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.efeito.MucoCaustico;
 import com.louzada.pixeldungeon.entidade.Goo;
+import com.louzada.pixeldungeon.entidade.ImagemEspelhada;
+import com.louzada.pixeldungeon.entidade.Mimico;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.entidade.NuvemDeGas;
 import com.louzada.pixeldungeon.heroi.Furtividade;
@@ -29,6 +33,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -197,6 +202,18 @@ public enum Maldicao {
             return dano;
         }
     },
+    // 1 em 20 golpes recebidos: metade das vezes aparece uma imagem espelhada de quem veste; na outra metade, uma cópia de quem bateu
+    MULTIPLICIDADE("multiplicidade", Alvo.ARMADURA) {
+        @Override
+        protected float aoSerAtingido(ServerPlayer jogador, @Nullable LivingEntity atacante, float dano) {
+            if (jogador.getRandom().nextFloat() < 1 / 20F) {
+                multiplicar(jogador, atacante);
+            }
+            return dano;
+        }
+    },
+    // Passar pelas portas fica 3x mais lento (ver GlifosDoHeroi)
+    VOLUMOSA("volumosa", Alvo.ARMADURA),
 
     // ---- Varinhas ----
 
@@ -303,6 +320,36 @@ public enum Maldicao {
         for (MobDoShattered inimigo : jogador.level().getEntitiesOfClass(MobDoShattered.class, jogador.getBoundingBox().inflate(64, 8, 64))) {
             inimigo.notar(jogador);
         }
+    }
+
+    // Multiplicidade: uma imagem espelhada de quem veste, ou uma cópia de quem bateu (o Goo e o mímico não são copiados:
+    // no lugar deles vem um inimigo qualquer do andar)
+    private static void multiplicar(ServerPlayer jogador, @Nullable LivingEntity atacante) {
+        ServerLevel mundo = jogador.serverLevel();
+        if (jogador.getRandom().nextBoolean()) {
+            ImagemEspelhada.criar(mundo, jogador);
+            return;
+        }
+        EntityType<?> tipo;
+        if (atacante instanceof MobDoShattered inimigo && !(inimigo instanceof Goo) && !(inimigo instanceof Mimico)) {
+            tipo = inimigo.getType();
+        } else {
+            tipo = PopulacaoDoAndar.tipoAleatorio(Andares.andarPelaAltura(jogador.getBlockY()), new Random(jogador.getRandom().nextLong()));
+        }
+        if (!(tipo.create(mundo) instanceof MobDoShattered copia)) {
+            return;
+        }
+        double angulo = jogador.getRandom().nextDouble() * Math.PI * 2;
+        copia.moveTo(jogador.getX() + Math.cos(angulo) * QUADRADINHO, jogador.getY(), jogador.getZ() + Math.sin(angulo) * QUADRADINHO,
+                jogador.getRandom().nextFloat() * 360.0F, 0.0F);
+        if (!mundo.noCollision(copia)) {
+            copia.moveTo(jogador.getX(), jogador.getY(), jogador.getZ(), copia.getYRot(), 0.0F);
+        }
+        copia.ajustarVida(mundo, PopulacaoDoAndar.multiplicadorDeVida(mundo.getServer()));
+        copia.setPersistenceRequired();
+        mundo.addFreshEntity(copia);
+        copia.notar(jogador);
+        Particulas.explosao(mundo, ParticleTypes.PORTAL, copia.getX(), copia.getY(0.5), copia.getZ(), 20, 0.5, 0.1);
     }
 
     // Ofuscante: um clarão cega quem bateu (10 turnos) e quem estiver vendo (5 turnos)
