@@ -41,7 +41,7 @@ Igual à interface completa do Shattered. Durante a run, a barra de itens, os co
   - O rosto pisca em vermelho com pouca vida (menos de 1/3) e em amarelo por 10 segundos quando ganha um ponto de talento.
 - **Embaixo à direita, a barra de ferramentas:** os botões de procurar, esperar e mochila do Shattered e, à esquerda deles, as **9 casinhas** da barra de itens. A do item na mão fica mais clara, com borda amarela. O item da mão esquerda aparece numa casinha solta do lado. A Duelista ganha uma etiqueta em cima com as cargas da habilidade.
 - **Inventário (tecla E):** abre igual ao do Shattered: a barra de ferramentas sobe e embaixo dela aparece o painel do inventário. O jogo continua aparecendo atrás (sem escurecer) e fica **pausado** enquanto o inventário está aberto (no single player).
-  - Em cima, igual ao Shattered: a casinha da **armadura**, a da mão esquerda e o ouro; embaixo, as 27 casinhas da mochila. Os outros espaços de armadura do Minecraft (cabeça, pernas e pés) não existem na run.
+  - Em cima, igual ao Shattered: a casinha da **armadura**, a da mão esquerda, as 2 casinhas de **anel** e o ouro; embaixo, as 27 casinhas da mochila. O capacete do Minecraft não existe na run (as pernas e os pés viraram as casinhas de anel).
   - À esquerda, o painel do herói: a skin em 3D olhando pro mouse, a classe, o nível, a força e o andar.
   - As casinhas mudam de cor igual ao Shattered: cinza claro no que está equipado, avermelhado no que se sabe que é amaldiçoado e arroxeado no que ainda não foi identificado (armas, poções e pergaminhos).
   - Passar o mouse nos efeitos, na fome, nas barras, no ouro e nos botões mostra o que eles são. Clicar no herói (ou apertar **K**) abre os talentos; clicar na mochila fecha o inventário.
@@ -182,6 +182,29 @@ As 15 armas de arremesso do Shattered, com os mesmos números. Clique direito ar
 - **Amaldiçoadas:** 30% vêm amaldiçoadas ("caóticas"): a magia sai aleatória (fogo, gelo, gás, grama, teletransporte ou nada). Descobre na primeira vez que lançar.
 - **Cajado do Mago:** agachado, com a varinha na mão e o cajado na outra, clique direito (duas vezes, pra confirmar) põe a varinha dentro do cajado. O cajado dá 1 carga a mais, fica com o maior nível dos dois (+1 se a varinha for melhor e o cajado já tiver nível), e a varinha antiga se perde.
 
+### Anéis
+
+Os 12 anéis do Shattered, com os mesmos números. Igual às poções, cada gema esconde um tipo diferente em cada run ("anel de rubi" pode ser o da pressa). Clique direito põe o anel numa das 2 casinhas de anel do inventário; dá pra tirar pelo inventário.
+
+| Anel | Efeito por bônus |
+|---|---|
+| Precisão | acerta 1,3x |
+| Evasão | desvia 1,125x |
+| Fúria | ataca 1,09x mais rápido |
+| Pressa | anda 1,15x mais rápido |
+| Poder | +1 de força e +3,5% de vida máxima |
+| Força | soco de uma arma do tier da força do herói; com arma de perto, +1 de dano |
+| Tiro certeiro | armas de arremesso e o arco espiritual dão mais dano (+1 nível), e as de arremesso duram 1,2x |
+| Energia | varinhas, cajado e artefatos carregam 1,175x mais rápido |
+| Elementos | dano de fogo, gelo, raio, gás, veneno e magia cai pra 0,825x |
+| Tenacidade | quanto mais ferido, menos dano (até 0,85x com a vida quase no fim) |
+| Fortuna | a cada 0-20 inimigos, cai um prêmio a mais (a cada 5-10 prêmios, um equipamento) |
+| Arcano | deixa encantamentos e glifos mais fortes (o mod ainda não tem; por enquanto não faz nada) |
+
+- **Bônus:** o nível do anel + 1. Dois anéis iguais somam.
+- **Identificação:** vêm +0 (2/3), +1 (4/15) ou +2 (1/15), sem identificar. Usando, o anel se identifica (o tipo e o nível) depois de 1 nível de experiência.
+- **Amaldiçoados:** 30% vêm amaldiçoados: o bônus fica de 0 a -2 (o efeito ao contrário), e o anel gruda no dedo. Pôr revela a maldição.
+
 ### Armaduras
 
 5 armaduras do Shattered, com os mesmos números. Elas aparecem pelos andares com o mesmo sorteio de tier das armas, e vêm sem identificar (+0, +1 ou +2, e 30% amaldiçoadas).
@@ -214,7 +237,7 @@ As 15 armas de arremesso do Shattered, com os mesmos números. Clique direito ar
 - **Ouro:** uma pilha tem de 30 + 10 por andar até 60 + 20 por andar moedas. Encostou, as moedas vão direto pra bolsa (não ocupam o inventário), sobe um "+N" dourado e o total aparece no inventário, do lado do equipamento. Cada herói tem o seu ouro, pras lojas que vão vir.
 - De cada 20 itens, 4 ficam num **baú** (um baú comum do Minecraft, com o item no meio), 1 fica dentro de um **mímico** (a partir do andar 2) e o resto fica largado no chão. Onde tem item, a grama alta é aparada. Os itens nunca somem do chão.
 - Ninguém consegue quebrar um baú (só no criativo).
-- **Mímico:** por fora é igualzinho a um baú. Quem tenta abrir ou bate nele leva uma mordida que sempre acerta (2 + 2 por andar de dano), e ele vira um baú com dentes que persegue o herói, abrindo e fechando a tampa. Quando morre, solta o item que guardava e mais um prêmio (ouro ou uma arma). Herói invisível não leva a mordida.
+- **Mímico:** por fora é igualzinho a um baú. Quem tenta abrir ou bate nele leva uma mordida que sempre acerta (2 + 2 por andar de dano), e ele vira um baú com dentes que persegue o herói, abrindo e fechando a tampa. Quando morre, solta o item que guardava e mais um prêmio (ouro, uma arma, uma armadura, armas de arremesso ou um anel). Herói invisível não leva a mordida.
 
 | Inimigo | Vida | Precisão | Esquiva | Dano | Armadura | XP |
 |---|---|---|---|---|---|---|
@@ -281,7 +304,7 @@ As 15 armas de arremesso do Shattered, com os mesmos números. Clique direito ar
 |---|---|
 | Guerreiro | refeição saudável, intuição de veterano (identifica armas mais rápido), raiva provocada, determinação de ferro |
 | Mago | refeição empoderadora, intuição do estudioso (identifica varinhas 3x mais rápido, e no primeiro disparo com +2), magia prolongada, barreira de apoio |
-| Ladino | rações guardadas (baús com rações de suprimentos), intuição do ladrão*, golpe surpresa, sombras protetoras |
+| Ladino | rações guardadas (baús com rações de suprimentos), intuição do ladrão (identifica anéis 2x mais rápido e descobre o tipo ao pôr; com +2, identifica ao pôr e descobre o tipo ao pegar), golpe surpresa, sombras protetoras |
 | Caçadora | recompensa da natureza (bagas na grama alta), intuição de sobrevivente (identifica armas de arremesso 3x mais rápido, e ao acertar com +2), ataque consecutivo, auxílio da natureza (pele de árvore quando uma planta é ativada perto dela) |
 | Duelista | refeição fortalecedora, intuição de aventureiro (identifica armas mais rápido, e na hora com +2), golpe paciente (ficar parado 1 turno antes de bater), barreira agressiva |
 | Clérigo | magias saciadas, intuição divina, luz abrasadora, escudo de luz |
@@ -297,7 +320,7 @@ As 15 armas de arremesso do Shattered, com os mesmos números. Clique direito ar
 | Duelista | refeição focada (carga de arma), agilidade líquida (poção dá esquiva e precisão), recarga de arma, pressa letal (golpe mortal com habilidade dá pressa forte), empunhar ágil (trocar de arma não perde o ataque carregado) |
 | Clérigo | refeição iluminada (carga do tomo), recuperar inscrição, raio solar, sentido divino, bênção (as 4 últimas são magias novas do tomo) |
 
-\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: anéis (ladrão), glifos (transferência rúnica), a ação de procurar (grande busca) e salas secretas (previsão do ladino). A tela de talentos avisa isso.
+\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: glifos (transferência rúnica), a ação de procurar (grande busca) e salas secretas (previsão do ladino). A tela de talentos avisa isso.
 - "Visão mental" (ver através das paredes) faz os inimigos brilharem com o contorno do Minecraft.
 
 ### Combate e inimigos
@@ -418,7 +441,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 ## O que vem depois
 
 1. **Texturas próprias** dos blocos.
-2. **Mais itens:** anéis (pra intuição do ladrão), glifos, as varinhas de terra viva, proteção e corrupção, poções e pergaminhos exóticos, alquimia e encantamentos.
+2. **Mais itens:** glifos, as varinhas de terra viva, proteção e corrupção, poções e pergaminhos exóticos, alquimia e encantamentos.
 3. **O resto do esgoto do Shattered:** portas escondidas (que precisam ser procuradas), armadilhas e as salas que precisam de abismo.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
@@ -430,7 +453,7 @@ src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas, portas gigantes, plantas e blocos de decoração
-  item/                        armas, armas de arremesso, varinhas, armadura, poções, pergaminhos, sementes, identificação e maldições
+  item/                        armas, armas de arremesso, varinhas, anéis, armadura, poções, pergaminhos, sementes, identificação e maldições
   entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o míssil mágico, as nuvens de gás...
   efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
   combate/
@@ -448,6 +471,7 @@ src/main/java/com/louzada/pixeldungeon/
     Talento.java / Talentos.java    os talentos e o que os do tier 1 fazem
     TalentosDoTier2.java       o que os talentos do tier 2 fazem
     Escudos.java               blindagem e o selo do Guerreiro
+    Aneis.java                 o que os anéis que o herói está usando fazem
     HabilidadesDaDuelista.java      as habilidades das armas
     MagiasDoClerigo.java       as magias do tomo sagrado
   rede/                        pacotes do menu (servidor <-> jogador)
