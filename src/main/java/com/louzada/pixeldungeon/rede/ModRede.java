@@ -60,7 +60,7 @@ public class ModRede {
     }
 
     private static void aoReceberConhecimento(PacoteConhecimento pacote, IPayloadContext contexto) {
-        ConhecimentoDoCliente.atualizar(pacote.pocoes(), pacote.pergaminhos());
+        ConhecimentoDoCliente.atualizar(pacote.pocoes(), pacote.pergaminhos(), pacote.aneis());
     }
 
     private static void aoReceberEscolherItem(PacoteEscolherItem pacote, IPayloadContext contexto) {

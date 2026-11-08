@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 // Quem sabe o quê, igual ao Shattered:
-//   - cada cor de poção e cada runa de pergaminho esconde um tipo, sorteado pela run
+//   - cada cor de poção, cada runa de pergaminho e cada gema de anel esconde um tipo, sorteado pela run
 //   - beber, ler ou ver o efeito revela o tipo (pra sempre, nesta run)
 //   - o que um herói descobre vai também pra quem ele escolheu compartilhar (ver DadosDoHeroi)
 // A tela de cada jogador fica sabendo pelo PacoteConhecimento (é ela que mostra o nome certo).
@@ -41,6 +41,14 @@ public class Identificacao {
         return IdentidadesDaRun.tipoDaRuna(sementeDaRun(jogador), runa);
     }
 
+    public static TipoDeAnel tipoDa(ServerPlayer jogador, GemaDeAnel gema) {
+        return IdentidadesDaRun.tipoDaGema(sementeDaRun(jogador), gema);
+    }
+
+    public static boolean conhece(ServerPlayer jogador, GemaDeAnel gema) {
+        return RegrasDoHeroi.dados(jogador).conhece(tipoDa(jogador, gema).chaveDeConhecimento());
+    }
+
     public static boolean conhece(ServerPlayer jogador, CorDePocao cor) {
         return RegrasDoHeroi.dados(jogador).conhece(tipoDa(jogador, cor).chaveDeConhecimento());
     }
@@ -57,6 +65,9 @@ public class Identificacao {
         if (pilha.getItem() instanceof ItemPergaminho pergaminho) {
             return !conhece(jogador, pergaminho.runa());
         }
+        if (pilha.getItem() instanceof ItemAnel anel && !conhece(jogador, anel.gema())) {
+            return true;
+        }
         return NivelDoItem.podeIdentificar(pilha) && !NivelDoItem.identificado(pilha);
     }
 
@@ -67,6 +78,9 @@ public class Identificacao {
         } else if (pilha.getItem() instanceof ItemPergaminho pergaminho) {
             identificar(jogador, pergaminho.runa());
         } else if (NivelDoItem.podeIdentificar(pilha)) {
+            if (pilha.getItem() instanceof ItemAnel anel) {
+                identificar(jogador, anel.gema());
+            }
             NivelDoItem.identificar(jogador, pilha);
         }
     }
@@ -80,6 +94,12 @@ public class Identificacao {
     public static void identificar(ServerPlayer jogador, RunaDePergaminho runa) {
         TipoDePergaminho tipo = tipoDa(jogador, runa);
         aprender(jogador, tipo.chaveDeConhecimento(), Component.translatable("item.pixeldungeon." + runa.nomeDoItem()),
+                Component.translatable(tipo.chaveDoNome()));
+    }
+
+    public static void identificar(ServerPlayer jogador, GemaDeAnel gema) {
+        TipoDeAnel tipo = tipoDa(jogador, gema);
+        aprender(jogador, tipo.chaveDeConhecimento(), Component.translatable("item.pixeldungeon." + gema.nomeDoItem()),
                 Component.translatable(tipo.chaveDoNome()));
     }
 
@@ -130,7 +150,12 @@ public class Identificacao {
             TipoDePergaminho tipo = IdentidadesDaRun.tipoDaRuna(semente, runa);
             pergaminhos.add(naRun && dados.conhece(tipo.chaveDeConhecimento()) ? tipo.id() : "");
         }
-        PacketDistributor.sendToPlayer(jogador, new PacoteConhecimento(pocoes, pergaminhos));
+        List<String> aneis = new ArrayList<>();
+        for (GemaDeAnel gema : GemaDeAnel.values()) {
+            TipoDeAnel tipo = IdentidadesDaRun.tipoDaGema(semente, gema);
+            aneis.add(naRun && dados.conhece(tipo.chaveDeConhecimento()) ? tipo.id() : "");
+        }
+        PacketDistributor.sendToPlayer(jogador, new PacoteConhecimento(pocoes, pergaminhos, aneis));
     }
 
     // O item (poção ou pergaminho) de um tipo, pra colocar no chão ou dar de prêmio
@@ -140,6 +165,10 @@ public class Identificacao {
 
     public static ItemStack pergaminho(long semente, TipoDePergaminho tipo) {
         return new ItemStack(ItemPergaminho.daRuna(IdentidadesDaRun.runaDoTipo(semente, tipo)));
+    }
+
+    public static ItemStack anel(long semente, TipoDeAnel tipo) {
+        return new ItemStack(ItemAnel.daGema(IdentidadesDaRun.gemaDoTipo(semente, tipo)));
     }
 
     // O tipo de uma poção ou pergaminho do inventário (ou null)
