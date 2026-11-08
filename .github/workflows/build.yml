@@ -147,6 +147,15 @@ jobs:
           if ! grep -q "Teste do anel do poder: foi pra casinha = true, conhece o tipo = true, força 10 -> 12" servidor.log; then echo "O anel do poder não funcionou"; exit 1; fi
           if ! grep -q "Teste da identificação do anel: identificou = true" servidor.log; then echo "O anel não se identificou com a experiência"; exit 1; fi
           if ! grep -q "Teste do anel amaldiçoado: bônus -2, grudou = true" servidor.log; then echo "O anel amaldiçoado não funcionou"; exit 1; fi
+          if ! grep -qE "Teste dos glifos: [0-9]+ de 400 armaduras com glifo, perto de 15% = true, junto com maldição = false" servidor.log; then echo "Os glifos não aparecem nas armaduras como no Shattered"; exit 1; fi
+          if ! grep -qE "Teste do glifo de pedra: esquiva 0 = true, dano 10 -> [0-9.]+ \(menor = true\)" servidor.log; then echo "O glifo de pedra não funcionou"; exit 1; fi
+          if ! grep -q "Teste do glifo da viscosidade: 10 -> 8.0, adiado 2.0" servidor.log; then echo "O glifo da viscosidade não funcionou"; exit 1; fi
+          if ! grep -q "Teste do glifo de espinhos: o rato sangrou = true" servidor.log; then echo "O glifo de espinhos não funcionou"; exit 1; fi
+          if ! grep -q "Teste do glifo de enxofre: apagou o fogo = true" servidor.log; then echo "O glifo de enxofre não funcionou"; exit 1; fi
+          if ! grep -q "Teste do glifo de rapidez: mais rápido sem inimigos perto = true" servidor.log; then echo "O glifo de rapidez não funcionou"; exit 1; fi
+          if ! grep -q "Teste do glifo do potencial: carga da varinha 0 -> 1" servidor.log; then echo "O glifo do potencial não funcionou"; exit 1; fi
+          if ! grep -q "Teste do selo: a nova ficou com o selo = true, +1, glifo de pedra = true; a velha voltou pra +0, sem glifo = true" servidor.log; then echo "O selo não passou pra outra armadura"; exit 1; fi
+          if ! grep -q "Teste do selo solto: foi pra mochila com o aprimoramento e o glifo = true, afixado de novo +1 com glifo de pedra = true" servidor.log; then echo "O selo solto não funcionou"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
 
       # Liga o jogo de verdade (sem monitor, no Xvfb), entra no mundo do teste do servidor

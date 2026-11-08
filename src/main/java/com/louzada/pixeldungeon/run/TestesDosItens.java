@@ -175,6 +175,7 @@ public class TestesDosItens {
             quemBate.moveTo(lugar.getX() + 1.5, lugar.getY(), lugar.getZ() + 1.5);
             ItemStack malha = NivelDoItem.sortearDoChao(new ItemStack(ModItens.ARMADURA_DE_MALHA.get()), new Random(9), true);
             malha.remove(ModComponentes.MALDICAO.get());
+            malha.remove(ModComponentes.ENCANTO.get());
             heroi.setItemSlot(EquipmentSlot.CHEST, malha);
             boolean desconhecidaNoComeco = !NivelDoItem.identificado(heroi.getItemBySlot(EquipmentSlot.CHEST));
             Combatente comoCombatente = Combatente.de(heroi);
