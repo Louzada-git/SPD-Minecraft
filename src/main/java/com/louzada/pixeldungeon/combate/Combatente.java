@@ -45,6 +45,11 @@ public interface Combatente {
         return dano;
     }
 
+    // Depois da armadura segurar o dano (o glifo da viscosidade adia parte do que passou)
+    default float depoisDaArmadura(Golpe golpe, float dano) {
+        return dano;
+    }
+
     // Acertou: talentos, maldições da arma, efeitos especiais dos inimigos (devolve o dano)
     default float aoAcertar(Golpe golpe, float dano) {
         return dano;

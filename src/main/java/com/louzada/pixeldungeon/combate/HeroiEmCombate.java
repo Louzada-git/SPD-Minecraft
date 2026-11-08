@@ -8,6 +8,7 @@ import com.louzada.pixeldungeon.heroi.Aneis;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.Furtividade;
+import com.louzada.pixeldungeon.heroi.GlifosDoHeroi;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.MagiasDoClerigo;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
@@ -17,6 +18,7 @@ import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.Arma;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
+import com.louzada.pixeldungeon.item.Glifo;
 import com.louzada.pixeldungeon.item.Maldicao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.item.TipoDeAnel;
@@ -33,7 +35,7 @@ import net.minecraft.world.item.ItemStack;
 //   esquiva: 5 + nível - 1, que cai se faltar força pra armadura
 //   dano: o da arma (vezes a força do golpe do Minecraft); de mão vazia, 1 até força - 8
 //   armadura: a do peito, a defesa da arma (florete, katana), o escudo de luz e a armadura sagrada do Clérigo
-// E os talentos, as maldições e a identificação pelo uso entram nos golpes.
+// E os talentos, as maldições, os glifos e a identificação pelo uso entram nos golpes.
 public class HeroiEmCombate implements Combatente {
     private ServerPlayer jogador;
     private DadosDoHeroi dados;
@@ -77,8 +79,13 @@ public class HeroiEmCombate implements Combatente {
         return golpe.deLonge() ? precisao : TalentosDoTier2.precisaoDePerto(jogador, dados, precisao);
     }
 
+    // Glifo da pedra: não dá pra desviar (o dano cai no lugar, ver aoSerAtingido)
     @Override
     public float esquiva(Golpe golpe) {
+        return GlifosDoHeroi.nivel(jogador, Glifo.PEDRA) >= 0 ? 0 : esquivaSemPedra();
+    }
+
+    private float esquivaSemPedra() {
         // Anel da evasão: 1,125x por bônus
         float esquiva = RegrasDoHeroi.esquiva(dados.nivel()) * (float) Math.pow(1.125, dados.bonusDoAnel(TipoDeAnel.EVASAO));
         if (armadura().getItem() instanceof ArmaduraDoShattered armadura) {
@@ -149,15 +156,26 @@ public class HeroiEmCombate implements Combatente {
         return dano;
     }
 
-    // Apanhou: a maldição da armadura age, e a armadura vai se identificando
+    // Apanhou: a maldição ou o glifo da armadura agem, e a armadura vai se identificando
     @Override
     public float aoSerAtingido(Golpe golpe, float dano) {
         ItemStack armadura = armadura();
         if (armadura.getItem() instanceof ArmaduraDoShattered) {
             dano = Maldicao.aoSerAtingidoCom(jogador, golpe.atacante().entidade(), armadura, dano);
+            dano = Glifo.aoSerAtingidoCom(jogador, golpe.atacante().entidade(), armadura, dano, GlifosDoHeroi.poder(jogador));
+            if (NivelDoItem.glifo(armadura) == Glifo.PEDRA) {
+                dano = GlifosDoHeroi.pedra(golpe, esquivaSemPedra() * Combate.pelosEfeitos(jogador), dano);
+            }
             NivelDoItem.aoUsar(jogador, armadura);
         }
         return dano;
+    }
+
+    // Glifo da viscosidade: parte do dano que passou pela armadura vem aos poucos
+    @Override
+    public float depoisDaArmadura(Golpe golpe, float dano) {
+        int viscosidade = GlifosDoHeroi.nivel(jogador, Glifo.VISCOSIDADE);
+        return viscosidade >= 0 ? GlifosDoHeroi.adiarDano(jogador, dados, viscosidade, dano) : dano;
     }
 
     // Acertou: talentos, arma celestial, a maldição da arma e a identificação pelo uso

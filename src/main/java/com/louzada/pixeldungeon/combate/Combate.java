@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Player;
 //   1. acertou? Ataque surpresa, acerto garantido e alvo iluminado sempre acertam;
 //      senão, sorteia de 0 até a precisão de quem bate e de 0 até a esquiva de quem apanha ("desviou")
 //   2. dano sorteado de quem bate (vezes o multiplicador, mais o bônus) e o que vem antes da armadura
-//   3. quem apanha reage (maldições da armadura) e a armadura dele tira um pouco do dano
+//   3. quem apanha reage (maldições e glifos da armadura) e a armadura dele tira um pouco do dano
 //   4. quem bate reage (talentos, maldições da arma, efeitos especiais)
 // Os números de cada um vêm do Combatente (o herói, os inimigos, a imagem espelhada).
 public class Combate {
@@ -53,9 +53,10 @@ public class Combate {
         }
         dano = atacante.antesDaArmadura(golpe, dano);
 
-        // 3. Quem apanha
+        // 3. Quem apanha (o glifo da viscosidade age depois da armadura)
         dano = alvo.aoSerAtingido(golpe, dano);
         dano = Math.max(0, dano - armadura(golpe));
+        dano = alvo.depoisDaArmadura(golpe, dano);
 
         // 4. Quem bate
         dano = atacante.aoAcertar(golpe, dano);
@@ -65,16 +66,21 @@ public class Combate {
 
     // Precisão contra esquiva, com os efeitos dos dois lados
     public static boolean acertou(Golpe golpe) {
-        LivingEntity quemBate = golpe.atacante().entidade();
         LivingEntity quemApanha = golpe.alvo().entidade();
-        float precisao = golpe.atacante().precisao(golpe) * pelosEfeitos(quemBate);
-        // Igual ao Shattered: o que é arremessado ou atirado acerta 1,5x melhor de longe e pela metade colado no alvo
-        if (golpe.deLonge()) {
-            precisao *= quemBate.distanceTo(quemApanha) < DISTANCIA_COLADO ? 0.5F : 1.5F;
-        }
         // Paralisado, congelado ou dormindo não consegue desviar
         float esquiva = EfeitosNoTick.semDefesa(quemApanha) ? 0 : golpe.alvo().esquiva(golpe) * pelosEfeitos(quemApanha);
-        return acertou(quemBate.getRandom(), precisao, esquiva);
+        return acertou(golpe.atacante().entidade().getRandom(), precisaoDoGolpe(golpe), esquiva);
+    }
+
+    // A precisão de quem bate nesse golpe, com os efeitos.
+    // Igual ao Shattered: o que é arremessado ou atirado acerta 1,5x melhor de longe e pela metade colado no alvo.
+    public static float precisaoDoGolpe(Golpe golpe) {
+        LivingEntity quemBate = golpe.atacante().entidade();
+        float precisao = golpe.atacante().precisao(golpe) * pelosEfeitos(quemBate);
+        if (golpe.deLonge()) {
+            precisao *= quemBate.distanceTo(golpe.alvo().entidade()) < DISTANCIA_COLADO ? 0.5F : 1.5F;
+        }
+        return precisao;
     }
 
     // Regra de acerto do Shattered: sorteia de 0 até a precisão do atacante e de 0 até a esquiva do defensor;
@@ -84,7 +90,7 @@ public class Combate {
     }
 
     // Atordoado: metade. Abençoado (flor-estrela): +25%. Vale pra precisão e pra esquiva.
-    private static float pelosEfeitos(LivingEntity criatura) {
+    public static float pelosEfeitos(LivingEntity criatura) {
         float fator = 1.0F;
         if (criatura.hasEffect(ModEfeitos.ATORDOADO)) {
             fator *= 0.5F;
