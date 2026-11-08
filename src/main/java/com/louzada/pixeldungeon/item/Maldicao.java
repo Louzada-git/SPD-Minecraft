@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
+import com.louzada.pixeldungeon.combate.Sorteio;
 import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.dungeon.PlantasDoShattered;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
@@ -21,10 +22,14 @@ import com.louzada.pixeldungeon.entidade.ImagemEspelhada;
 import com.louzada.pixeldungeon.entidade.Mimico;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.entidade.NuvemDeGas;
+import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.Furtividade;
+import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
+import com.louzada.pixeldungeon.registro.ModComponentes;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -34,8 +39,11 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 // As maldições do Shattered, com as chances do Shattered. Cada uma tem um nome que vai junto com o nome do item
 // ("espada irritante", "armadura de malha de fedor") e só aparece depois que a maldição é descoberta.
@@ -96,6 +104,67 @@ public enum Maldicao {
                 if (sorteio.nextFloat() < sangue) {
                     EfeitosNoTick.sangrar(jogador, Math.max(1, Math.round(sangue)));
                 }
+            }
+            return dano;
+        }
+    },
+    // Cada golpe esquenta a arma (0 a 10 de 100); quando chega no limite, ela explode do lado do alvo (pega quem bate também)
+    EXPLOSIVA("explosiva", Alvo.ARMA) {
+        @Override
+        protected float aoGolpear(ServerPlayer jogador, LivingEntity alvo, ItemStack arma, float dano) {
+            int antes = arma.getOrDefault(ModComponentes.PRESSAO_EXPLOSIVA.get(), 100);
+            int depois = antes - jogador.getRandom().nextInt(11);
+            if (antes > 50 && depois <= 50) {
+                jogador.displayClientMessage(Component.translatable("maldicao.pixeldungeon.explosiva.morna").withStyle(ChatFormatting.GOLD), false);
+                Particulas.subindoEmVolta(jogador, ParticleTypes.SMOKE, 4, 0.02);
+            } else if (antes > 10 && depois <= 10) {
+                jogador.displayClientMessage(Component.translatable("maldicao.pixeldungeon.explosiva.quente").withStyle(ChatFormatting.RED), false);
+                Particulas.subindoEmVolta(jogador, ParticleTypes.LAVA, 5, 0.02);
+            } else if (depois <= 0) {
+                explodir(jogador, alvo);
+                depois += 100;
+            }
+            arma.set(ModComponentes.PRESSAO_EXPLOSIVA.get(), depois);
+            return dano;
+        }
+    },
+    // Encantado pelo alvo, o herói não consegue machucá-lo. 1 em 10 golpes: o herói fica encantado pelo alvo por 10 turnos,
+    // e o alvo fica encantado pelo herói por 5 (não ataca)
+    AMIGAVEL("amigavel", Alvo.ARMA) {
+        @Override
+        protected float aoGolpear(ServerPlayer jogador, LivingEntity alvo, float dano) {
+            DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
+            long agora = jogador.level().getGameTime();
+            if (dados.ativo(AMIGAVEL_ATE, agora) && alvo.getUUID().equals(dados.alvo(AMIGAVEL_ALVO))) {
+                dano = 0;
+            }
+            if (jogador.getRandom().nextFloat() < 1 / 10F) {
+                dados.definirAlvo(AMIGAVEL_ALVO, alvo.getUUID());
+                dados.ativarPor(AMIGAVEL_ATE, agora, Turno.ticks(10));
+                alvo.addEffect(new MobEffectInstance(ModEfeitos.ENCANTADO, Turno.ticks(5)));
+                Particulas.subindoEmVolta(jogador, ParticleTypes.HEART, 5, 0.05);
+                Particulas.subindoEmVolta(alvo, ParticleTypes.HEART, 5, 0.05);
+            }
+            return dano;
+        }
+    },
+    // 1 em 8 golpes: um gêiser no alvo joga tudo em volta 2 quadradinhos pra longe (quem bate também) e apaga o fogo
+    PRESSURIZANTE("pressurizante", Alvo.ARMA) {
+        @Override
+        protected float aoGolpear(ServerPlayer jogador, LivingEntity alvo, float dano) {
+            if (jogador.getRandom().nextFloat() < 1 / 8F) {
+                geiser(jogador, alvo);
+            }
+            return dano;
+        }
+    },
+    // 1 em 8 golpes: uma magia aleatória de varinha amaldiçoada sai na direção do alvo
+    MIRABOLANTE("mirabolante", Alvo.ARMA) {
+        @Override
+        protected float aoGolpear(ServerPlayer jogador, LivingEntity alvo, float dano) {
+            if (jogador.getRandom().nextFloat() < 1 / 8F) {
+                Particulas.subindoEmVolta(alvo, ParticleTypes.GLOW, 15, 0.1);
+                EfeitosDeVarinha.lancarAmaldicoada(jogador);
             }
             return dano;
         }
@@ -231,6 +300,9 @@ public enum Maldicao {
     }
 
     private static final double ALCANCE_DA_VISAO = 32;
+    // Maldição amigável: por quem o herói está encantado, e até quando
+    private static final String AMIGAVEL_ALVO = "amigavel_alvo";
+    private static final String AMIGAVEL_ATE = "amigavel_ate";
     // Um quadradinho do Shattered (o que fica "em volta")
     private static final double QUADRADINHO = 4;
 
@@ -263,6 +335,11 @@ public enum Maldicao {
         return dano;
     }
 
+    // A mesma coisa, pra quem precisa da arma (a explosiva guarda o quanto esquentou nela)
+    protected float aoGolpear(ServerPlayer jogador, LivingEntity alvo, ItemStack arma, float dano) {
+        return aoGolpear(jogador, alvo, dano);
+    }
+
     // O que a maldição faz quando o herói é acertado vestindo a armadura (devolve o dano)
     protected float aoSerAtingido(ServerPlayer jogador, @Nullable LivingEntity atacante, float dano) {
         return dano;
@@ -273,7 +350,7 @@ public enum Maldicao {
     // Chamado em cada golpe que a arma acerta
     public static float aoGolpearCom(ServerPlayer jogador, LivingEntity alvo, ItemStack arma, float dano) {
         Maldicao maldicao = NivelDoItem.maldicao(arma);
-        return maldicao == null || maldicao.alvo != Alvo.ARMA ? dano : maldicao.aoGolpear(jogador, alvo, dano);
+        return maldicao == null || maldicao.alvo != Alvo.ARMA ? dano : maldicao.aoGolpear(jogador, alvo, arma, dano);
     }
 
     // Chamado em cada golpe que acerta quem veste a armadura
@@ -350,6 +427,54 @@ public enum Maldicao {
         mundo.addFreshEntity(copia);
         copia.notar(jogador);
         Particulas.explosao(mundo, ParticleTypes.PORTAL, copia.getX(), copia.getY(0.5), copia.getZ(), 20, 0.5, 0.1);
+    }
+
+    // Explosiva: uma explosão do Shattered (3x3 quadradinhos) do lado do alvo, virada pra quem bate:
+    // 4 + andar até 12 + 3 x andar de dano, menos a armadura de cada um
+    private static void explodir(ServerPlayer jogador, LivingEntity alvo) {
+        ServerLevel mundo = jogador.serverLevel();
+        Vec3 paraQuemBate = jogador.position().subtract(alvo.position());
+        Vec3 centro = paraQuemBate.lengthSqr() < 1.0E-4 ? alvo.position()
+                : alvo.position().add(paraQuemBate.normalize().scale(Math.min(QUADRADINHO, paraQuemBate.length())));
+        int andar = Math.max(1, Andares.andarPelaAltura(alvo.getBlockY()));
+        Particulas.explosao(mundo, ParticleTypes.EXPLOSION_EMITTER, centro.x, centro.y + 1, centro.z, 1, 0.0, 0.0);
+        mundo.playSound(null, BlockPos.containing(centro), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
+        for (LivingEntity atingido : mundo.getEntitiesOfClass(LivingEntity.class, new AABB(centro, centro).inflate(QUADRADINHO * 1.5))) {
+            if (!atingido.isAlive() || atingido.isSpectator()) {
+                continue;
+            }
+            int dano = Sorteio.normal(jogador.getRandom(), 4 + andar, 12 + 3 * andar);
+            if (atingido instanceof MobDoShattered inimigo) {
+                dano -= inimigo.sortearArmadura();
+            } else if (atingido.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmaduraDoShattered armadura) {
+                dano -= armadura.sortearDefesa(atingido.getItemBySlot(EquipmentSlot.CHEST), jogador.getRandom(), 99);
+            }
+            if (dano > 0) {
+                atingido.invulnerableTime = 0;
+                atingido.hurt(mundo.damageSources().explosion(null, null), dano);
+            }
+        }
+    }
+
+    // Pressurizante: o gêiser joga quem estiver no quadradinho do alvo e em volta pra longe
+    private static void geiser(ServerPlayer jogador, LivingEntity alvo) {
+        ServerLevel mundo = jogador.serverLevel();
+        Vec3 centro = alvo.position();
+        Particulas.explosao(mundo, ParticleTypes.SPLASH, centro.x, centro.y + 0.5, centro.z, 80, 2.0, 0.3);
+        Particulas.explosao(mundo, ParticleTypes.BUBBLE_POP, centro.x, centro.y + 1, centro.z, 30, 1.0, 0.2);
+        mundo.playSound(null, alvo.blockPosition(), SoundEvents.GENERIC_SPLASH, SoundSource.PLAYERS, 1.2F, 0.75F);
+        for (LivingEntity perto : mundo.getEntitiesOfClass(LivingEntity.class, alvo.getBoundingBox().inflate(QUADRADINHO * 1.5))) {
+            if (!perto.isAlive() || perto.isSpectator()) {
+                continue;
+            }
+            perto.clearFire();
+            Vec3 direcao = perto == alvo ? alvo.position().subtract(jogador.position()) : perto.position().subtract(centro);
+            direcao = direcao.multiply(1, 0, 1);
+            if (direcao.lengthSqr() < 1.0E-4) {
+                continue;
+            }
+            EfeitosDeVarinha.empurrar(jogador, perto, direcao.normalize(), 2);
+        }
     }
 
     // Ofuscante: um clarão cega quem bateu (10 turnos) e quem estiver vendo (5 turnos)
