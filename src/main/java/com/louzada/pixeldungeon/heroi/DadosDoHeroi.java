@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.item.TipoDeAnel;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -45,6 +47,9 @@ public class DadosDoHeroi {
     private Set<String> conhecidos = new HashSet<>();
     private String modoDeCompartilhar = COMPARTILHAR_COM_TODOS;
     private Set<String> compartilharCom = new HashSet<>();
+    // O bônus somado dos anéis que ele está usando, por tipo (não é salvo)
+    private int[] bonusDosAneis = new int[0];
+    private boolean[] usandoAneis = new boolean[0];
 
     // Zera tudo e começa com a classe escolhida
     public void comecar(ClasseDoHeroi novaClasse, int numeroDaRun) {
@@ -96,8 +101,29 @@ public class DadosDoHeroi {
         return ClasseDoHeroi.peloId(classe);
     }
 
+    // A força de verdade, com o anel do poder
     public int forca() {
+        return forca + bonusDoAnel(TipoDeAnel.PODER);
+    }
+
+    // A força sem os anéis (a que a poção de força aumenta)
+    public int forcaBase() {
         return forca;
+    }
+
+    // ---- Anéis (recalculado a cada meio segundo, não é salvo; ver Aneis) ----
+
+    public void definirAneis(int[] bonus, boolean[] usando) {
+        bonusDosAneis = bonus;
+        usandoAneis = usando;
+    }
+
+    public int bonusDoAnel(TipoDeAnel tipo) {
+        return bonusDosAneis.length > tipo.ordinal() ? bonusDosAneis[tipo.ordinal()] : 0;
+    }
+
+    public boolean usaAnel(TipoDeAnel tipo) {
+        return usandoAneis.length > tipo.ordinal() && usandoAneis[tipo.ordinal()];
     }
 
     public void definirForca(int novaForca) {

@@ -50,7 +50,7 @@ public class EfeitosDePocao {
         DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
         switch (tipo) {
             case FORCA -> {
-                dados.definirForca(dados.forca() + 1);
+                dados.definirForca(dados.forcaBase() + 1);
                 NumerosFlutuantes.mostrarTraduzido(jogador, "efeito.pixeldungeon.forca.mostrar", NumerosFlutuantes.VERDE);
                 avisar(jogador, Component.translatable("efeito.pixeldungeon.forca", dados.forca()), ChatFormatting.GREEN);
                 Particulas.subindoEmVolta(jogador, ParticleTypes.HAPPY_VILLAGER, 12, 0.1);

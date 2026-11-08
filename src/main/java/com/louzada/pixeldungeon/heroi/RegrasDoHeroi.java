@@ -79,6 +79,8 @@ public class RegrasDoHeroi {
 
     public static void ganharXp(ServerPlayer jogador, int quantidade) {
         DadosDoHeroi dados = dados(jogador);
+        // Os anéis que ele está usando vão se identificando
+        Aneis.aoGanharXp(jogador, dados, quantidade);
         dados.definirXp(dados.xp() + quantidade);
 
         int niveisGanhos = 0;

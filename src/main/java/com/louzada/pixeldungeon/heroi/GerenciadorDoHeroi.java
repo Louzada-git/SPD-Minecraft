@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon.heroi;
 import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.item.ArmaDeArremesso;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
+import com.louzada.pixeldungeon.item.ItemAnel;
 import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.rede.RedeDoHeroi;
 import com.louzada.pixeldungeon.run.GerenciadorDaRun;
@@ -31,8 +32,12 @@ public class GerenciadorDoHeroi {
             // Segurar a arma (ou vestir a armadura) revela se ela é amaldiçoada
             NivelDoItem.aoEquipar(jogador, jogador.getMainHandItem());
             NivelDoItem.aoEquipar(jogador, jogador.getItemBySlot(EquipmentSlot.CHEST));
-            PesoDoEquipamento.atualizar(jogador, dados);
             tirarPecasQueOShatteredNaoTem(jogador);
+            // Os anéis: o que foi posto pelo inventário revela a maldição; e soma os bônus
+            NivelDoItem.aoEquipar(jogador, jogador.getItemBySlot(Aneis.PRIMEIRO));
+            NivelDoItem.aoEquipar(jogador, jogador.getItemBySlot(Aneis.SEGUNDO));
+            Aneis.atualizar(jogador, dados);
+            PesoDoEquipamento.atualizar(jogador, dados);
             // As armas de arremesso que voltaram pra mochila se juntam de novo ao conjunto delas
             ArmaDeArremesso.juntarPilhas(jogador);
         }
@@ -42,6 +47,7 @@ public class GerenciadorDoHeroi {
         TalentosDoTier2.aoTick(jogador, dados);
         if (umTurno) {
             TalentosDoTier2.aoTurno(jogador, dados);
+            Aneis.aoTurno(jogador, dados);
         }
         CapaDasSombras.aoTickDoHeroi(jogador, dados, umTurno);
         if (umTurno && dados.classe() == ClasseDoHeroi.DUELISTA) {
@@ -54,10 +60,11 @@ public class GerenciadorDoHeroi {
     }
 
     // Igual ao Shattered, o herói só veste uma armadura (no peito): capacete, calça e bota voltam pra mochila
+    // (a calça e a bota viraram as casinhas dos anéis)
     private static void tirarPecasQueOShatteredNaoTem(ServerPlayer jogador) {
         for (EquipmentSlot lugar : new EquipmentSlot[] { EquipmentSlot.HEAD, EquipmentSlot.LEGS, EquipmentSlot.FEET }) {
             ItemStack peca = jogador.getItemBySlot(lugar);
-            if (!peca.isEmpty()) {
+            if (!peca.isEmpty() && !(Aneis.casinhaDeAnel(lugar) && peca.getItem() instanceof ItemAnel)) {
                 jogador.setItemSlot(lugar, ItemStack.EMPTY);
                 if (!jogador.getInventory().add(peca)) {
                     jogador.drop(peca, false);
