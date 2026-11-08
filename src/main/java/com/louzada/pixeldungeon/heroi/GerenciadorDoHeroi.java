@@ -40,6 +40,7 @@ public class GerenciadorDoHeroi {
             Aneis.atualizar(jogador, dados);
             PesoDoEquipamento.atualizar(jogador, dados);
             GlifosDoHeroi.atualizarVelocidade(jogador);
+            EncantamentosDoHeroi.atualizar(jogador);
             // O Guerreiro vestiu outra armadura: oferece passar o selo
             if (dados.classe() == ClasseDoHeroi.GUERREIRO) {
                 SeloQuebrado.talvezPerguntar(jogador, dados);
@@ -55,6 +56,7 @@ public class GerenciadorDoHeroi {
         if (umTurno) {
             TalentosDoTier2.aoTurno(jogador, dados);
             Aneis.aoTurno(jogador, dados);
+            EncantamentosDoHeroi.aoTurno(jogador, dados);
         }
         CapaDasSombras.aoTickDoHeroi(jogador, dados, umTurno);
         if (umTurno && dados.classe() == ClasseDoHeroi.DUELISTA) {

@@ -10,6 +10,7 @@ import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.heroi.Aneis;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
+import com.louzada.pixeldungeon.heroi.EncantamentosDoHeroi;
 import com.louzada.pixeldungeon.heroi.Furtividade;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
@@ -134,10 +135,19 @@ public class EventosDeCombate {
         }
         // As armas de arremesso cravadas nele caem
         ArmaArremessada.soltarEspetados(inimigo);
+        // Aliado (corrompido) que morre não dá XP nem itens, igual ao Shattered
+        if (inimigo.aliado()) {
+            return;
+        }
+        // Encantamentos da sorte e de corrupção
+        EncantamentosDoHeroi.aoMorrer(inimigo);
         ServerPlayer matador = evento.getSource().getEntity() instanceof ServerPlayer quem ? quem : null;
-        // O que a imagem espelhada mata conta pro herói dela
+        // O que a imagem espelhada mata conta pro herói dela, e o que um aliado mata conta pra quem o corrompeu
         if (evento.getSource().getEntity() instanceof ImagemEspelhada imagem) {
             matador = imagem.jogadorDono();
+        } else if (evento.getSource().getEntity() instanceof MobDoShattered aliado && aliado.aliado() && aliado.donoDoAliado() != null
+                && inimigo.getServer() != null) {
+            matador = inimigo.getServer().getPlayerList().getPlayer(aliado.donoDoAliado());
         }
         boolean ganhaItens = matador == null || RegrasDoHeroi.dados(matador).nivel() <= inimigo.atributos().nivelMaximo() + 2;
         ItemStack saque = ganhaItens ? inimigo.sortearSaque() : ItemStack.EMPTY;

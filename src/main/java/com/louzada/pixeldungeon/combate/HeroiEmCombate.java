@@ -18,6 +18,7 @@ import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.Arma;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
+import com.louzada.pixeldungeon.item.Encantamento;
 import com.louzada.pixeldungeon.item.Glifo;
 import com.louzada.pixeldungeon.item.Maldicao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
@@ -178,7 +179,7 @@ public class HeroiEmCombate implements Combatente {
         return viscosidade >= 0 ? GlifosDoHeroi.adiarDano(jogador, dados, viscosidade, dano) : dano;
     }
 
-    // Acertou: talentos, arma celestial, a maldição da arma e a identificação pelo uso
+    // Acertou: talentos, arma celestial, a maldição ou o encantamento da arma e a identificação pelo uso
     @Override
     public float aoAcertar(Golpe golpe, float dano) {
         LivingEntity alvo = golpe.alvo().entidade();
@@ -190,6 +191,7 @@ public class HeroiEmCombate implements Combatente {
         }
         if (NivelDoItem.podeIdentificar(golpe.arma())) {
             dano = Maldicao.aoGolpearCom(jogador, alvo, golpe.arma(), dano);
+            dano = Encantamento.aoGolpearCom(jogador, alvo, golpe.arma(), dano, GlifosDoHeroi.poder(jogador));
             NivelDoItem.aoUsar(jogador, golpe.arma());
         }
         // A Duelista conta os golpes pra combinação das luvas

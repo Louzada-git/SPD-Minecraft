@@ -112,7 +112,7 @@ public class GlifosDoHeroi {
 
     private static boolean inimigoPerto(ServerPlayer jogador) {
         for (MobDoShattered inimigo : jogador.level().getEntitiesOfClass(MobDoShattered.class, jogador.getBoundingBox().inflate(PERTO))) {
-            if (inimigo.isAlive() && inimigo.distanceTo(jogador) <= PERTO && inimigo.hasLineOfSight(jogador)) {
+            if (inimigo.isAlive() && !inimigo.aliado() && inimigo.distanceTo(jogador) <= PERTO && inimigo.hasLineOfSight(jogador)) {
                 return true;
             }
         }
