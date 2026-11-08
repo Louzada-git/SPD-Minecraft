@@ -328,6 +328,12 @@ public class ArmaDeArremesso extends Item implements Arma, Equipamento {
 
     // ---- Aparência ----
 
+    // Brilha com encantamento
+    @Override
+    public boolean isFoil(ItemStack pilha) {
+        return NivelDoItem.encantamento(pilha) != null || super.isFoil(pilha);
+    }
+
     @Override
     public Component getName(ItemStack pilha) {
         return NivelDoItem.nome(pilha, super.getName(pilha));

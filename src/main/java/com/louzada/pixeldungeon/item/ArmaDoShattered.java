@@ -189,6 +189,12 @@ public class ArmaDoShattered extends Item implements Arma, Equipamento {
 
     // ---- Aparência ----
 
+    // Brilha com encantamento
+    @Override
+    public boolean isFoil(ItemStack pilha) {
+        return NivelDoItem.encantamento(pilha) != null || super.isFoil(pilha);
+    }
+
     // "Espada +1", "Espada irritante"... só o que já foi descoberto
     @Override
     public Component getName(ItemStack pilha) {
