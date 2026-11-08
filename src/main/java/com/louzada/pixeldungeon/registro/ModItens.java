@@ -16,8 +16,10 @@ import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
 import com.louzada.pixeldungeon.item.ChaveDeFerro;
 import com.louzada.pixeldungeon.item.CorDePocao;
+import com.louzada.pixeldungeon.item.GemaDeAnel;
 import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
 import com.louzada.pixeldungeon.item.ItemComDescricao;
+import com.louzada.pixeldungeon.item.ItemAnel;
 import com.louzada.pixeldungeon.item.ItemAnkh;
 import com.louzada.pixeldungeon.item.ItemPergaminho;
 import com.louzada.pixeldungeon.item.ItemPocao;
@@ -126,6 +128,10 @@ public class ModItens {
     // ---- Varinhas (uma pra cada tipo, na ordem do enum) ----
 
     public static final List<DeferredItem<ItemVarinha>> VARINHAS = registrarVarinhas();
+
+    // ---- Anéis (um pra cada gema; o tipo que cada gema esconde muda a cada run) ----
+
+    public static final List<DeferredItem<ItemAnel>> ANEIS = registrarAneis();
 
     // ---- Itens únicos das classes ----
 
@@ -241,6 +247,14 @@ public class ModItens {
 
     private static DeferredItem<ArmaduraDoShattered> armadura(String nome, Holder<ArmorMaterial> material, int tier) {
         return ITENS.registerItem(nome, propriedades -> new ArmaduraDoShattered(material, propriedades, nome, tier));
+    }
+
+    private static List<DeferredItem<ItemAnel>> registrarAneis() {
+        List<DeferredItem<ItemAnel>> lista = new ArrayList<>();
+        for (GemaDeAnel gema : GemaDeAnel.values()) {
+            lista.add(ITENS.registerItem(gema.nomeDoItem(), propriedades -> new ItemAnel(propriedades, gema)));
+        }
+        return lista;
     }
 
     private static List<DeferredItem<ItemVarinha>> registrarVarinhas() {
