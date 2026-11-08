@@ -23,6 +23,7 @@ public class DesenhoDoShattered {
     // Os desenhos das casinhas vazias de equipamento
     public static final Folha ESPACO_ARMADURA = new Folha("espaco_armadura", 16, 16);
     public static final Folha ESPACO_ARTEFATO = new Folha("espaco_artefato", 16, 16);
+    public static final Folha ESPACO_ANEL = new Folha("espaco_anel", 16, 16);
 
     // Cor dos títulos do Shattered (amarelo) e dos textos claros
     public static final int AMARELO = 0xFFFFFF44;

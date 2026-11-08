@@ -28,7 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 
 // O inventário igual ao da interface completa do Shattered. Quando abre, a parte de baixo da tela "cresce":
-//   - à direita, o painel do inventário: o equipamento (a armadura e a mão esquerda) e o ouro em cima,
+//   - à direita, o painel do inventário: o equipamento (a armadura, a mão esquerda e os 2 anéis) e o ouro em cima,
 //     e as 27 casinhas da mochila embaixo; a barra de ferramentas sobe e fica em cima dele
 //   - à esquerda, o painel do herói (a skin do jogador em 3D, a classe, o nível, a força e o andar)
 //     e a barra de status (rosto, vida, experiência e efeitos)
@@ -47,8 +47,11 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
     private static final int ESCONDIDA = -10000;
 
     // Os números das casinhas no inventário do Minecraft
-    // Igual ao Shattered, só uma armadura (a do peito); capacete, calça e bota ficam escondidos
+    // Igual ao Shattered, só uma armadura (a do peito); o capacete fica escondido,
+    // e a calça e a bota viraram as 2 casinhas de anel
     private static final int ARMADURA = 6;
+    private static final int PRIMEIRO_ANEL = 7;
+    private static final int SEGUNDO_ANEL = 8;
     private static final int PRIMEIRA_DA_MOCHILA = 9;
     private static final int PRIMEIRA_DO_ATALHO = 36;
     private static final int OUTRA_MAO = 45;
@@ -138,6 +141,9 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
         if (indice == OUTRA_MAO) {
             return xDaCelula(1) + 4;
         }
+        if (indice == PRIMEIRO_ANEL || indice == SEGUNDO_ANEL) {
+            return xDaCelula(2 + indice - PRIMEIRO_ANEL) + 4;
+        }
         if (indice >= PRIMEIRA_DA_MOCHILA && indice < PRIMEIRA_DO_ATALHO) {
             return xDaCelula((indice - PRIMEIRA_DA_MOCHILA) % COLUNAS) + 4;
         }
@@ -148,7 +154,7 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
     }
 
     private int yDaCasinha(int indice) {
-        if (indice == ARMADURA || indice == OUTRA_MAO) {
+        if (indice == ARMADURA || indice == OUTRA_MAO || indice == PRIMEIRO_ANEL || indice == SEGUNDO_ANEL) {
             return yDaCelula(0) + 4;
         }
         if (indice >= PRIMEIRA_DA_MOCHILA && indice < PRIMEIRA_DO_ATALHO) {
@@ -181,7 +187,8 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
     // As casinhas vazias de equipamento mostram o desenho do Shattered (já desenhado no fundo), não o do Minecraft
     @Override
     protected void renderSlot(GuiGraphics desenho, Slot casinha) {
-        if ((casinha.index == ARMADURA || casinha.index == OUTRA_MAO) && !casinha.hasItem()) {
+        if ((casinha.index == ARMADURA || casinha.index == OUTRA_MAO || casinha.index == PRIMEIRO_ANEL || casinha.index == SEGUNDO_ANEL)
+                && !casinha.hasItem()) {
             return;
         }
         super.renderSlot(desenho, casinha);
@@ -216,7 +223,7 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
     // O painel do inventário: o fundo escuro, as casinhas e o ouro
     private void desenharPainel(GuiGraphics desenho, int mouseX, int mouseY) {
         DesenhoDoShattered.painel(desenho, xDoPainel, yDoPainel, LARGURA_DO_PAINEL, ALTURA_DO_PAINEL);
-        // Equipamento: a armadura e a mão esquerda (vazias, com o desenho do Shattered)
+        // Equipamento: a armadura, a mão esquerda e os anéis (vazias, com o desenho do Shattered)
         ItemStack armadura = menu.slots.get(ARMADURA).getItem();
         desenharCelula(desenho, xDaCelula(0), yDaCelula(0), armadura, !armadura.isEmpty(), mouseX, mouseY);
         if (armadura.isEmpty()) {
@@ -227,6 +234,13 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
         if (outraMao.isEmpty()) {
             DesenhoDoShattered.ESPACO_ARTEFATO.desenhar(desenho, xDaCelula(1) + 4, yDaCelula(0) + 4);
         }
+        for (int anel = 0; anel < 2; anel++) {
+            ItemStack pilha = menu.slots.get(PRIMEIRO_ANEL + anel).getItem();
+            desenharCelula(desenho, xDaCelula(2 + anel), yDaCelula(0), pilha, !pilha.isEmpty(), mouseX, mouseY);
+            if (pilha.isEmpty()) {
+                DesenhoDoShattered.ESPACO_ANEL.desenhar(desenho, xDaCelula(2 + anel) + 4, yDaCelula(0) + 4);
+            }
+        }
         for (int i = 0; i < PRIMEIRA_DO_ATALHO - PRIMEIRA_DA_MOCHILA; i++) {
             ItemStack pilha = menu.slots.get(PRIMEIRA_DA_MOCHILA + i).getItem();
             desenharCelula(desenho, xDaCelula(i % COLUNAS), yDaCelula(1 + i / COLUNAS), pilha, false, mouseX, mouseY);
@@ -234,7 +248,7 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
 
         // Ouro, do lado do equipamento (igual ao Shattered: o número em amarelo e a moedinha)
         String ouro = String.valueOf(EstadoNoCliente.ouro());
-        int x = xDaCelula(2) + 2;
+        int x = xDaCelula(4) + 2;
         int y = yDaCelula(0) + 8;
         desenho.drawString(font, ouro, x, y, DesenhoDoShattered.AMARELO, false);
         DesenhoDoShattered.MOEDA.desenhar(desenho, x + font.width(ouro) + 2, y);
@@ -329,7 +343,7 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
         if (noPainelDoHeroi(mouseX, mouseY)) {
             return PainelDeStatus.dicaDoHeroi(jogador);
         }
-        if (DesenhoDoShattered.dentro(mouseX, mouseY, xDaCelula(2), yDaCelula(0), CASINHA * 4, CASINHA)) {
+        if (DesenhoDoShattered.dentro(mouseX, mouseY, xDaCelula(4), yDaCelula(0), CASINHA * 4, CASINHA)) {
             return List.of(Component.translatable("hud.pixeldungeon.ouro", EstadoNoCliente.ouro()).withStyle(ChatFormatting.YELLOW));
         }
         return PainelDeStatus.dica(jogador, 0, yDoStatus, mouseX, mouseY);
