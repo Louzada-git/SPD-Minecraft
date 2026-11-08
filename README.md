@@ -11,6 +11,13 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
   - A entrada, a saída, de 4 a 6 salas comuns (algumas grandes) e 1 ou 2 salas especiais. Metade dos andares é uma volta, a outra metade é um oito, com galhos e túneis entre as salas.
   - As salas do esgoto do Shattered: a dos canos (canais de água com uma calçada em volta), a do anel, a da ponte na água, a dos barris de armazenamento e a das plantas. Salas vizinhas às vezes viram uma só (a parede entre elas some).
   - **Salas especiais**, sempre trancadas: **arsenal** (uma arma e uma armadura), **tesouraria** (ouro no chão ou em baús, que a partir do andar 2 podem ser mímicos), **biblioteca** (estantes e pergaminhos; o primeiro é de identificação ou de remover maldição), **jardim** (grama alta e às vezes plantas) e **cripta** (uma armadura melhor que as do andar, +1, mas amaldiçoada).
+  - **Salas secretas**, com a porta escondida (parece parede): 2 ou 3 no esgoto, espalhadas pelos andares 2 a 4, igual ao Shattered. São 6 das 12 do Shattered:
+    - **jardim secreto** (grama alta, uma flor-estrela e mais 3 plantas), **biblioteca secreta** (estantes em volta de um oval e 2 ou 3 pergaminhos), **despensa** (uma planta no meio de uma poça e uma ração de suprimentos), **tesouro** (montes de ouro que somam umas 8 pilhas), **labirinto** (um baú no fim, com uma arma ou armadura da região seguinte, nunca amaldiçoada, e 1 em 3 com +1 a mais) e **arsenal secreto** (uma estátua e 2 conjuntos de armas de arremesso).
+    - As outras 6 precisam de coisas que o mod ainda não tem (alquimia, pedras rúnicas, poço mágico, bombas, abismo e armadilhas).
+  - A partir do andar 2, algumas portas comuns também ficam escondidas (o andar dividido por 20: 10% no andar 2, 20% no 4), mas só se der pra chegar nas salas por outro caminho.
+- **Procurar** (tecla **G** ou o botão de procurar da barra do inventário), igual ao Shattered: acha na hora as portas escondidas que estiverem perto e à vista, e leva 2 turnos. A porta escondida vira uma porta gigante comum, pra todo mundo.
+  - Perto quer dizer 1 quadradinho em volta (3x3). O Ladino procura 2 (5x5), e a grande busca soma mais 1 (+1: um círculo de 7x7, +2: um quadrado de 7x7).
+  - Andando, a cada quadradinho novo o herói tem uma chance de notar sozinho cada porta escondida perto (20% no andar 0, caindo 1% por andar). Quando acha, aparece "Você percebeu algo.".
   - Manchas de água (30%) e de grama (20%), igual ao esgoto do Shattered.
   - 1 quadradinho do Shattered = 4x4 blocos. As paredes têm 8 blocos de altura.
   - Paredes, chão e teto são inquebráveis.
@@ -324,7 +331,7 @@ Os 12 anéis do Shattered, com os mesmos números. Igual às poções, cada gema
 | Recarga | enche as cargas do cajado do Mago e das varinhas e dá 30 turnos de recarga (eles continuam carregando mais rápido) |
 | Teletransportação | leva pra outro lugar do andar, longe de onde estava |
 | Acalento | os inimigos visíveis (e quem leu) dormem depois de 5 turnos; o herói dormindo cura 1 por turno |
-| Mapeamento mágico | diz pra que lado e a quantos quadradinhos fica a saída, e colunas de luz marcam a saída e a entrada |
+| Mapeamento mágico | diz pra que lado e a quantos quadradinhos fica a saída, revela todas as portas escondidas do andar, e colunas de luz marcam a saída, a entrada e as portas que eram escondidas |
 | Fúria | todos os inimigos do andar vêm atrás de quem leu; os visíveis atacam qualquer um por 5 turnos |
 | Retribuição | dano nos inimigos visíveis (mais, quanto menos vida o leitor tiver); cega todo mundo |
 | Terror | os inimigos visíveis fogem por 20 turnos |
@@ -366,12 +373,11 @@ Os 12 anéis do Shattered, com os mesmos números. Igual às poções, cada gema
 |---|---|
 | Guerreiro | estômago de ferro (comer leva 1 turno e protege do dano), tenacidade líquida (blindagem ao usar poção), transferência rúnica (o selo leva o glifo pra outra armadura), ímpeto letal (golpe mortal deixa o próximo ataque pronto), projéteis improvisados (poção ou semente arremessada cega) |
 | Mago | refeição energética (recarga do cajado), poder inscrito (pergaminho dá +2 níveis nos próximos disparos), preservação de varinha (a varinha antiga do cajado volta em +0: uma vez com +1, e de novo a cada nível com +2), visão arcana (quem leva o disparo brilha através das paredes), bateria de escudo (usar o cajado ou uma varinha agachado troca as cargas por blindagem) |
-| Ladino | refeição mística (recarga da capa e do tomo; rações de suprimentos na hora), furtividade inscrita (pergaminho deixa invisível), grande busca*, passos silenciosos, previsão do ladino* |
+| Ladino | refeição mística (recarga da capa e do tomo; rações de suprimentos na hora), furtividade inscrita (pergaminho deixa invisível), grande busca (procura mais longe), passos silenciosos, previsão do ladino (ao chegar num andar com sala secreta, avisa que ela existe: 75% / sempre) |
 | Caçadora | refeição revigorante (pressa; bagas na hora), natureza líquida (poção faz grama alta e enraíza os inimigos perto), passos rejuvenescedores (grama alta onde pisa), sentidos apurados (vê através das paredes perto dela), projéteis duráveis (armas de arremesso duram +50%/+75%) |
 | Duelista | refeição focada (carga de arma), agilidade líquida (poção dá esquiva e precisão), recarga de arma, pressa letal (golpe mortal com habilidade dá pressa forte), empunhar ágil (trocar de arma não perde o ataque carregado) |
 | Clérigo | refeição iluminada (carga do tomo), recuperar inscrição, raio solar, sentido divino, bênção (as 4 últimas são magias novas do tomo) |
 
-\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: a ação de procurar (grande busca) e salas secretas (previsão do ladino). A tela de talentos avisa isso.
 - "Visão mental" (ver através das paredes) faz os inimigos brilharem com o contorno do Minecraft.
 
 ### Combate e inimigos
@@ -469,6 +475,7 @@ Comandos:
 | `/heroi` | Abre o menu de escolha de herói (se você fechou sem escolher) |
 | tecla `K` | Tela de talentos |
 | tecla `V` | Habilidade da arma (Duelista) |
+| tecla `G` | Procurar (portas escondidas) |
 | `/dungeon andar 3` | Vai direto pro andar 3 (de 1 a 5) |
 | `/dungeon xp 20` | Ganha 20 de XP do Shattered (pra testar os níveis) |
 | `/dungeon novarun` | Acaba a run atual e manda todo mundo de volta pro menu |
@@ -493,7 +500,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 
 1. **Texturas próprias** dos blocos.
 2. **Mais itens:** as varinhas de terra viva, proteção e corrupção, poções e pergaminhos exóticos e alquimia.
-3. **O resto do esgoto do Shattered:** portas escondidas (que precisam ser procuradas), armadilhas e as salas que precisam de abismo.
+3. **O resto do esgoto do Shattered:** armadilhas, as salas secretas que faltam e as salas que precisam de abismo.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
 
@@ -544,7 +551,8 @@ src/main/java/com/louzada/pixeldungeon/
     PlantaDoAndar.java         o mapa do andar em quadradinhos
     GeradorDeAndar.java        gera o mapa de cada andar (os comuns pela geração do Shattered, o do chefe é a arena)
     geracao/                   a geração do Shattered: os cômodos, o arquiteto (volta ou oito) e o pintor do esgoto
-    ConstrutorDeAndar.java     transforma o mapa em blocos (com as portas gigantes)
+    ConstrutorDeAndar.java     transforma o mapa em blocos (com as portas gigantes; e abre as portas escondidas achadas)
+    Busca.java                 procurar: acha as portas escondidas das salas secretas
     PopulacaoDoAndar.java      inimigos de cada andar e renascimento
     SaqueDoAndar.java          o que fica espalhado pelo andar
     Baus.java                  baús e mímicos disfarçados
