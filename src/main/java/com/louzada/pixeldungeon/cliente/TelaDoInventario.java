@@ -11,6 +11,7 @@ import com.louzada.pixeldungeon.item.ConhecimentoDoCliente;
 import com.louzada.pixeldungeon.item.ItemPergaminho;
 import com.louzada.pixeldungeon.item.ItemPocao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
+import com.louzada.pixeldungeon.rede.PacoteProcurar;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -26,6 +27,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 // O inventário igual ao da interface completa do Shattered. Quando abre, a parte de baixo da tela "cresce":
 //   - à direita, o painel do inventário: o equipamento (a armadura, a mão esquerda e os 2 anéis) e o ouro em cima,
@@ -336,7 +338,8 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
         BarraDeFerramentas.Botao botao = BarraDeFerramentas.botaoEm(width, topoDaBarra, mouseX, mouseY);
         if (botao != null) {
             String chave = "hud.pixeldungeon." + botao.name().toLowerCase();
-            Component tecla = minecraft.options.keyInventory.getTranslatedKeyMessage();
+            Component tecla = botao == BarraDeFerramentas.Botao.PROCURAR ? TeclasDoMod.PROCURAR.getTranslatedKeyMessage()
+                    : minecraft.options.keyInventory.getTranslatedKeyMessage();
             return List.of(Component.translatable(chave, tecla).withStyle(ChatFormatting.YELLOW),
                     Component.translatable(chave + ".descricao").withStyle(ChatFormatting.GRAY));
         }
@@ -355,9 +358,12 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
             BarraDeFerramentas.Botao clicado = BarraDeFerramentas.botaoEm(width, topoDaBarra, mouseX, mouseY);
             if (clicado != null) {
                 minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                // A mochila fecha o inventário; esperar e procurar só mostram a dica
+                // A mochila fecha o inventário; procurar fecha e procura; esperar só mostra a dica
                 if (clicado == BarraDeFerramentas.Botao.MOCHILA) {
                     onClose();
+                } else if (clicado == BarraDeFerramentas.Botao.PROCURAR) {
+                    onClose();
+                    PacketDistributor.sendToServer(new PacoteProcurar());
                 }
                 return true;
             }

@@ -5,8 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.louzada.pixeldungeon.cliente.ClienteDoMod;
+import com.louzada.pixeldungeon.dungeon.Busca;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
+import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.MagiasDoClerigo;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
@@ -36,6 +38,7 @@ public class ModRede {
         registrador.playToServer(PacoteAprimorarTalento.TIPO, PacoteAprimorarTalento.CODEC, ModRede::aoReceberAprimorarTalento);
         registrador.playToServer(PacoteUsarHabilidade.TIPO, PacoteUsarHabilidade.CODEC, ModRede::aoReceberUsarHabilidade);
         registrador.playToServer(PacoteLancarMagia.TIPO, PacoteLancarMagia.CODEC, ModRede::aoReceberLancarMagia);
+        registrador.playToServer(PacoteProcurar.TIPO, PacoteProcurar.CODEC, ModRede::aoReceberProcurar);
         // Identificação: o que o jogador já sabe, a tela de escolher item e a de compartilhar
         registrador.playToClient(PacoteConhecimento.TIPO, PacoteConhecimento.CODEC, ModRede::aoReceberConhecimento);
         registrador.playToClient(PacoteEscolherItem.TIPO, PacoteEscolherItem.CODEC, ModRede::aoReceberEscolherItem);
@@ -92,6 +95,12 @@ public class ModRede {
         if (contexto.player() instanceof ServerPlayer jogador) {
             HabilidadesDaDuelista.usar(jogador);
             RedeDoHeroi.enviarEstado(jogador, false);
+        }
+    }
+
+    private static void aoReceberProcurar(PacoteProcurar pacote, IPayloadContext contexto) {
+        if (contexto.player() instanceof ServerPlayer jogador && GerenciadorDoHeroi.emJogo(jogador)) {
+            Busca.procurar(jogador);
         }
     }
 
