@@ -13,7 +13,9 @@ import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.ChaveDeFerro;
 import com.louzada.pixeldungeon.item.Equipamento;
+import com.louzada.pixeldungeon.item.GemaDeAnel;
 import com.louzada.pixeldungeon.item.Identificacao;
+import com.louzada.pixeldungeon.item.ItemAnel;
 import com.louzada.pixeldungeon.item.ItemSemente;
 import com.louzada.pixeldungeon.item.ItemVarinha;
 import com.louzada.pixeldungeon.item.Maldicao;
@@ -241,10 +243,10 @@ public class SaqueDoAndar {
         return sorteio.nextInt(5 - andarNaRegiao) < faltamNaRegiao;
     }
 
-    // Ouro (10), poção (8), pergaminho (8), arma (2), armadura (2), semente (1), arma de arremesso (1) ou varinha (1),
+    // Ouro (10), poção (8), pergaminho (8), arma (2), armadura (2), semente (1), arma de arremesso (1), varinha (1) ou anel (1),
     // igual ao peso deles no Shattered
     public static ItemStack itemAleatorio(Random sorteio, int andar, long semente) {
-        return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 2, 1, 1, 1 })) {
+        return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 2, 1, 1, 1, 1 })) {
             case 0 -> Ouro.sortear(sorteio, andar);
             case 1 -> pocaoAleatoria(sorteio, semente);
             case 2 -> pergaminhoAleatorio(sorteio, semente);
@@ -252,8 +254,15 @@ public class SaqueDoAndar {
             case 4 -> armaduraAleatoria(sorteio, andar);
             case 5 -> sementeAleatoria(sorteio);
             case 6 -> arremessoAleatorio(sorteio, andar);
-            default -> varinhaAleatoria(sorteio);
+            case 7 -> varinhaAleatoria(sorteio);
+            default -> anelAleatorio(sorteio);
         };
+    }
+
+    // Um anel qualquer (todas as gemas têm a mesma chance), com nível e talvez amaldiçoado, sem identificar
+    public static ItemStack anelAleatorio(Random sorteio) {
+        GemaDeAnel[] gemas = GemaDeAnel.values();
+        return ItemAnel.sortearDoChao(new ItemStack(ItemAnel.daGema(gemas[sorteio.nextInt(gemas.length)])), sorteio);
     }
 
     // Uma varinha qualquer (todas têm a mesma chance), com nível e talvez amaldiçoada, sem identificar
@@ -290,12 +299,13 @@ public class SaqueDoAndar {
         return new ItemStack(ItemSemente.daPlanta(tipos[sortearPeso(sorteio, pesos)]));
     }
 
-    // O prêmio extra do mímico. No Shattered é ouro, arma, armadura, arma de arremesso ou anel; aqui, sem o anel.
+    // O prêmio extra do mímico, igual ao Shattered: ouro, arma, armadura, arma de arremesso ou anel
     public static ItemStack premioDoMimico(Random sorteio, int andar) {
-        return switch (sorteio.nextInt(4)) {
+        return switch (sorteio.nextInt(5)) {
             case 0 -> Ouro.sortear(sorteio, andar);
             case 1 -> armaAleatoria(sorteio, andar);
             case 2 -> arremessoAleatorio(sorteio, andar);
+            case 3 -> anelAleatorio(sorteio);
             default -> armaduraAleatoria(sorteio, andar);
         };
     }
