@@ -131,6 +131,14 @@ public class ModEfeitos {
     public static final DeferredHolder<MobEffect, EfeitoSimples> VISAO_MENTAL = EFEITOS.register("visao_mental",
             () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x44CCFF));
 
+    // Corrompido (encantamento e varinha de corrupção): o inimigo virou aliado dos heróis
+    public static final DeferredHolder<MobEffect, EfeitoSimples> CORROMPIDO = EFEITOS.register("corrompido",
+            () -> new EfeitoSimples(MobEffectCategory.NEUTRAL, 0x4B0F4B));
+
+    // Dano conservado (encantamento inercial): o dano que sobrou ao matar vai pro próximo golpe
+    public static final DeferredHolder<MobEffect, EfeitoSimples> DANO_CONSERVADO = EFEITOS.register("dano_conservado",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xFFAA33));
+
     // Dano adiado (glifo da viscosidade): o dano guardado vem 10% por turno
     public static final DeferredHolder<MobEffect, EfeitoSimples> DANO_ADIADO = EFEITOS.register("dano_adiado",
             () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xA0A0A0));

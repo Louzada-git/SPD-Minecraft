@@ -1,5 +1,9 @@
 package com.louzada.pixeldungeon.entidade;
 
+import java.util.EnumSet;
+import java.util.List;
+import java.util.UUID;
+
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.Turno;
@@ -20,6 +24,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -42,6 +47,8 @@ import net.minecraft.world.level.Level;
 //   - nasce dormindo quando o andar é criado ("z" em cima dele), e acorda quando nota um herói por perto ("!")
 //   - quem ataca um inimigo dormindo ou distraído faz um ataque surpresa (sempre acerta)
 //   - depois de apanhar, mostra uma barra de vida em cima da cabeça
+//   - corrompido (encantamento de corrupção, varinha de corrupção), vira aliado dos heróis: ataca os outros inimigos,
+//     segue o herói e, igual ao Shattered, perde 1% da vida máxima por turno
 public abstract class MobDoShattered extends Monster implements Combatente {
 
     // Os números de um inimigo, iguais aos do Shattered.
@@ -62,6 +69,10 @@ public abstract class MobDoShattered extends Monster implements Combatente {
     private boolean dormindo = false;
     // Talento golpe surpresa do Ladino: só vale no primeiro ataque surpresa em cada inimigo
     private boolean levouGolpeSurpresa = false;
+    // Corrompido: quem corrompeu (os inimigos que ele mata contam pra esse herói) e o dano da corrupção que ainda não virou 1 de vida
+    @Nullable
+    private UUID donoDoAliado;
+    private float corrupcaoAcumulada = 0;
 
     protected MobDoShattered(EntityType<? extends MobDoShattered> tipo, Level mundo, Atributos atributos, Sons sons) {
         super(tipo, mundo);
@@ -89,13 +100,22 @@ public abstract class MobDoShattered extends Monster implements Combatente {
         goalSelector.addGoal(5, passeio());
         goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        goalSelector.addGoal(4, new SeguirHeroi(this));
         targetSelector.addGoal(1, new HurtByTargetGoal(this));
         // Não enxerga nada quando está cego. Herói invisível ele ainda segue, mas não consegue atacar (AtaqueDoShattered).
         targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false,
-                alvo -> !hasEffect(ModEfeitos.CEGO) && !hasEffect(ModEfeitos.ATERRORIZADO)));
+                alvo -> !aliado() && enxerga()));
         // As imagens espelhadas distraem os inimigos (o mímico só se importa com quem mexeu nele)
         targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ImagemEspelhada.class, 10, true, false,
-                alvo -> !hasEffect(ModEfeitos.CEGO) && !hasEffect(ModEfeitos.ATERRORIZADO)));
+                alvo -> !aliado() && enxerga()));
+        // Os aliados (corrompidos) caçam os inimigos, e os inimigos caçam os aliados
+        targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, MobDoShattered.class, 10, true, false,
+                alvo -> enxerga() && alvo instanceof MobDoShattered outro && outro.aliado() != aliado() && !(outro instanceof Mimico)
+                        && !(this instanceof Mimico)));
+    }
+
+    private boolean enxerga() {
+        return !hasEffect(ModEfeitos.CEGO) && !hasEffect(ModEfeitos.ATERRORIZADO);
     }
 
     // Como o inimigo anda à toa quando não está caçando ninguém (o enxame sobrescreve pra voar)
@@ -244,6 +264,16 @@ public abstract class MobDoShattered extends Monster implements Combatente {
     @Override
     public void tick() {
         super.tick();
+        // Corrompido: perde 1% da vida máxima por turno
+        if (aliado() && !level().isClientSide() && Turno.virou(this)) {
+            corrupcaoAcumulada += getMaxHealth() / 100F;
+            if (corrupcaoAcumulada >= 1) {
+                int dano = (int) corrupcaoAcumulada;
+                corrupcaoAcumulada -= dano;
+                invulnerableTime = 0;
+                hurt(damageSources().magic(), dano);
+            }
+        }
         // Uma vez por turno, quem está dormindo pode notar um herói por perto.
         // Igual ao Shattered: a chance é maior quanto mais perto (1 quadradinho = 4 blocos).
         if (dormindo && !level().isClientSide() && Turno.virou(this)) {
@@ -266,6 +296,83 @@ public abstract class MobDoShattered extends Monster implements Combatente {
                     break;
                 }
             }
+        }
+    }
+
+    // ---- Aliado (corrompido) ----
+
+    public boolean aliado() {
+        return hasEffect(ModEfeitos.CORROMPIDO);
+    }
+
+    // Corrompe: vira aliado com a vida cheia e sem os efeitos ruins (igual ao Shattered)
+    public void corromper(@Nullable Player dono) {
+        acordar();
+        for (MobEffectInstance efeito : List.copyOf(getActiveEffects())) {
+            if (!efeito.getEffect().value().isBeneficial()) {
+                removeEffect(efeito.getEffect());
+            }
+        }
+        setHealth(getMaxHealth());
+        addEffect(new MobEffectInstance(ModEfeitos.CORROMPIDO, MobEffectInstance.INFINITE_DURATION, 0, false, true, true));
+        donoDoAliado = dono == null ? null : dono.getUUID();
+        setTarget(null);
+        setLastHurtByMob(null);
+        setPersistenceRequired();
+        Particulas.subindoEmVolta(this, Particulas.poeira(0x4B0F4B, 1.2F), 20, 0.0);
+    }
+
+    // O herói que corrompeu (pra contar o XP do que o aliado mata)
+    @Nullable
+    public UUID donoDoAliado() {
+        return donoDoAliado;
+    }
+
+    // Aliado não persegue herói (nem quando um herói bate nele sem querer)
+    @Override
+    public void setTarget(@Nullable LivingEntity alvo) {
+        if (aliado() && (alvo instanceof Player || alvo instanceof ImagemEspelhada)) {
+            return;
+        }
+        super.setTarget(alvo);
+    }
+
+    // Aliado sem ninguém pra caçar vai atrás do herói mais perto
+    private static class SeguirHeroi extends Goal {
+        private MobDoShattered aliado;
+        @Nullable
+        private Player heroi;
+
+        SeguirHeroi(MobDoShattered aliado) {
+            this.aliado = aliado;
+            setFlags(EnumSet.of(Goal.Flag.MOVE));
+        }
+
+        @Override
+        public boolean canUse() {
+            if (!aliado.aliado() || aliado.getTarget() != null) {
+                return false;
+            }
+            heroi = aliado.level().getNearestPlayer(aliado, 48);
+            return heroi != null && !heroi.isSpectator() && aliado.distanceTo(heroi) > 8;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return heroi != null && aliado.aliado() && aliado.getTarget() == null && aliado.distanceTo(heroi) > 5;
+        }
+
+        @Override
+        public void tick() {
+            if (heroi != null && aliado.tickCount % 10 == 0) {
+                aliado.getNavigation().moveTo(heroi, 1.1);
+            }
+        }
+
+        @Override
+        public void stop() {
+            heroi = null;
+            aliado.getNavigation().stop();
         }
     }
 
@@ -317,6 +424,10 @@ public abstract class MobDoShattered extends Monster implements Combatente {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("dormindo", dormindo);
         tag.putBoolean("levou_golpe_surpresa", levouGolpeSurpresa);
+        if (donoDoAliado != null) {
+            tag.putUUID("dono_do_aliado", donoDoAliado);
+        }
+        tag.putFloat("corrupcao_acumulada", corrupcaoAcumulada);
     }
 
     @Override
@@ -324,6 +435,8 @@ public abstract class MobDoShattered extends Monster implements Combatente {
         super.readAdditionalSaveData(tag);
         dormindo = tag.getBoolean("dormindo");
         levouGolpeSurpresa = tag.getBoolean("levou_golpe_surpresa");
+        donoDoAliado = tag.hasUUID("dono_do_aliado") ? tag.getUUID("dono_do_aliado") : null;
+        corrupcaoAcumulada = tag.getFloat("corrupcao_acumulada");
     }
 
     // Ajusta a vida pra quantidade de jogadores (mais gente = mais vida)
