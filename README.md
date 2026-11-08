@@ -135,6 +135,34 @@ Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas ap
 | Polarizante | metade dos golpes dá 50% a mais de dano; a outra metade não dá nada |
 | Sacrificante | 1 em 10 golpes: quem bate sangra (mais, quanto mais vida tiver) |
 | Inconstante | 1 em 4 golpes: a precisão cai pra um quinto por 10 turnos (acertar desfaz) |
+| De explosão | cada golpe esquenta a arma (0 a 10 de 100); no limite, ela explode do lado do alvo (4 + andar a 12 + 3 x andar em quem estiver perto, quem bate também) |
+| Amigável | 1 em 10 golpes: o herói fica encantado pelo alvo (10 turnos sem conseguir machucá-lo) e o alvo pelo herói (5 turnos sem atacar) |
+| Pressurizante | 1 em 8 golpes: um gêiser no alvo joga quem estiver em volta 2 quadradinhos pra longe (quem bate também) |
+| Mirabolante | 1 em 8 golpes: sai uma magia aleatória de varinha amaldiçoada |
+
+- **Encantamentos:** 10% das armas achadas (de perto e de arremesso) vêm com um dos 17 encantamentos do Shattered, com as chances de lá (comuns 50%, incomuns 40%, raros 10%). Igual ao Shattered, o encantamento aparece no nome mesmo sem identificar ("espada flamejante") e a arma brilha. O nível da arma deixa o encantamento mais forte, e o anel do arcano também. A partir do +4, melhorar pode apagar o encantamento (igual aos glifos).
+
+| Encantamento | O que faz |
+|---|---|
+| Flamejante | chance (nível + 1) / (nível + 3): põe fogo; se já estava pegando fogo, queima na hora |
+| Congelante | chance (nível + 1) / (nível + 4): resfria por 3 turnos (até 6) |
+| Inercial | o dano que sobra ao matar fica guardado pro próximo golpe (o guardado cai 2,5% por turno) |
+| Chocante | 1 em 3: um raio pula pros inimigos a até 2 quadradinhos com metade do dano do golpe |
+| Pestilente | 1 em 3: envenena (3 + nível / 2 turnos a mais) |
+| Bloqueante | chance (nível + 4) / (nível + 40): 2 + nível de blindagem |
+| Florescente | chance (nível + 1) / (nível + 3): grama alta em volta do alvo |
+| Eldritch | chance (nível + 1) / (nível + 4): os outros inimigos que veem o golpe ficam aterrorizados por 5 turnos |
+| De elasticidade | chance (nível + 1) / (nível + 5): joga o alvo 2 quadradinhos pra trás |
+| Da sorte | chance (nível + 4) / (nível + 40): se o golpe matar, cai um prêmio a mais (poção, pergaminho, semente ou ouro) |
+| Projetante | a arma de perto alcança 4 blocos a mais (1 quadradinho) |
+| Instável | cada golpe ativa um encantamento sorteado |
+| Vorpal | 1 em 4: o golpe vira sangramento (2 + metade do dano), a não ser que já mate |
+| De corrupção | chance (nível + 5) / (nível + 20): se o golpe matar, o inimigo volta como **aliado** |
+| De cristal | +33% de dano mágico; a arma se desgasta um tiquinho a cada golpe e se conserta com o tempo |
+| Mortal | quanto mais ferido o alvo ficar, mais chance (até 50% + 5% por nível) de executá-lo na hora |
+| Do vampirismo | chance 5% + 25% x (o quanto o herói está ferido): cura metade do dano do golpe |
+
+- **Aliados (corrompidos):** atacam os outros inimigos (e os inimigos atacam eles), seguem o herói quando não têm ninguém pra caçar e, igual ao Shattered, perdem 1% da vida máxima por turno. O que eles matam dá XP pra quem corrompeu; eles mesmos, quando morrem, não dão XP nem itens.
 
 ### Armas de arremesso
 
@@ -161,7 +189,7 @@ As 15 armas de arremesso do Shattered, com os mesmos números. Clique direito ar
 - Igual ao Shattered, acertam 1,5x melhor de longe e pela metade coladas no inimigo (o arco espiritual agora também ganha esse bônus de longe). Pedem 1 de força a menos que as armas do mesmo tier.
 - **Durabilidade:** o conjunto se desgasta a cada acerto; depois dos usos da tabela, uma delas quebra. A barrinha embaixo do ícone mostra quanto falta. Cada nível multiplica os usos por 1,5, e com 100 usos ou mais o conjunto dura pra sempre. As que voltam pra mochila se juntam de novo ao conjunto.
 - A maioria fica cravada no inimigo e cai no chão quando ele morre; as que não grudam (e as que erram) caem no chão ali.
-- Vêm sem identificar e podem ser amaldiçoadas, igual às armas, mas se identificam com 10 acertos. A maldição só aparece quando uma delas acerta alguém.
+- Vêm sem identificar e podem ser amaldiçoadas (30%) ou encantadas (10%), igual às armas, mas se identificam com 10 acertos. A maldição só aparece quando uma delas acerta alguém.
 
 ### Varinhas
 
@@ -202,7 +230,7 @@ Os 12 anéis do Shattered, com os mesmos números. Igual às poções, cada gema
 | Elementos | dano de fogo, gelo, raio, gás, veneno e magia cai pra 0,825x |
 | Tenacidade | quanto mais ferido, menos dano (até 0,85x com a vida quase no fim) |
 | Fortuna | a cada 0-20 inimigos, cai um prêmio a mais (a cada 5-10 prêmios, um equipamento) |
-| Arcano | glifos (e encantamentos) 1,175x mais fortes: mais chance de ativar e, com chance de 100%, efeito mais forte (os encantamentos de arma ainda não existem) |
+| Arcano | glifos e encantamentos 1,175x mais fortes: mais chance de ativar e, com chance de 100%, efeito mais forte |
 
 - **Bônus:** o nível do anel + 1. Dois anéis iguais somam.
 - **Identificação:** vêm +0 (2/3), +1 (4/15) ou +2 (1/15), sem identificar. Usando, o anel se identifica (o tipo e o nível) depois de 1 nível de experiência.
@@ -464,7 +492,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 ## O que vem depois
 
 1. **Texturas próprias** dos blocos.
-2. **Mais itens:** as varinhas de terra viva, proteção e corrupção, poções e pergaminhos exóticos, alquimia e encantamentos.
+2. **Mais itens:** as varinhas de terra viva, proteção e corrupção, poções e pergaminhos exóticos e alquimia.
 3. **O resto do esgoto do Shattered:** portas escondidas (que precisam ser procuradas), armadilhas e as salas que precisam de abismo.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
@@ -476,7 +504,7 @@ src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas, portas gigantes, plantas e blocos de decoração
-  item/                        armas, armas de arremesso, varinhas, anéis, armadura, glifos, o selo do Guerreiro, poções, pergaminhos, sementes, identificação e maldições
+  item/                        armas, armas de arremesso, varinhas, anéis, armadura, glifos, encantamentos, o selo do Guerreiro, poções, pergaminhos, sementes, identificação e maldições
   entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o míssil mágico, as nuvens de gás...
   efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
   combate/
@@ -496,6 +524,7 @@ src/main/java/com/louzada/pixeldungeon/
     Escudos.java               blindagem e o selo do Guerreiro
     Aneis.java                 o que os anéis que o herói está usando fazem
     GlifosDoHeroi.java         o que o glifo da armadura do herói faz o tempo todo (velocidade, fogo, magia, grama, dano adiado)
+    EncantamentosDoHeroi.java  o que os encantamentos fazem fora do golpe (alcance, dano guardado, sorte, corrupção)
     HabilidadesDaDuelista.java      as habilidades das armas
     MagiasDoClerigo.java       as magias do tomo sagrado
   rede/                        pacotes do menu (servidor <-> jogador)
