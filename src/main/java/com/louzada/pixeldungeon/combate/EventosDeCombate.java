@@ -7,6 +7,7 @@ import com.louzada.pixeldungeon.entidade.ArmaArremessada;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.ImagemEspelhada;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
+import com.louzada.pixeldungeon.heroi.Aneis;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.Furtividade;
@@ -155,6 +156,10 @@ public class EventosDeCombate {
             }
             if (dados.classe() == ClasseDoHeroi.DUELISTA) {
                 HabilidadesDaDuelista.aoMatar(dados, matador.level().getGameTime());
+            }
+            // Anel da fortuna: às vezes um prêmio a mais
+            if (ganhaItens) {
+                Aneis.aoMatar(matador, inimigo);
             }
             // Ímpeto letal e pressa letal
             if (evento.getSource().getEntity() == matador) {

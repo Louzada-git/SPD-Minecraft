@@ -41,9 +41,12 @@ public class ArcoEspiritual extends Item implements Arma {
         return 6 + (int) (nivelDoHeroi / 2.5F);
     }
 
+    // Anel do tiro certeiro: +1 no mínimo e +2 no máximo por bônus
     @Override
     public int sortearDano(ItemStack pilha, RandomSource sorteio, DadosDoHeroi heroi, boolean surpresa) {
-        int dano = Sorteio.normal(sorteio, danoMinimo(heroi.nivel()), danoMaximo(heroi.nivel()));
+        int tiroCerteiro = heroi.bonusDoAnel(TipoDeAnel.TIRO_CERTEIRO);
+        int minimo = Math.max(0, danoMinimo(heroi.nivel()) + tiroCerteiro);
+        int dano = Sorteio.normal(sorteio, minimo, Math.max(minimo, danoMaximo(heroi.nivel()) + 2 * tiroCerteiro));
         int forcaSobrando = heroi.forca() - FORCA_NECESSARIA;
         if (forcaSobrando > 0) {
             dano += Sorteio.normal(sorteio, 0, forcaSobrando);

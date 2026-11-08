@@ -171,11 +171,12 @@ public class ArmaDeArremesso extends Item implements Arma, Equipamento {
     // ---- Combate ----
 
     // Dano de um acerto. Cada ponto de força acima do necessário soma de 0 até ele.
+    // Anel do tiro certeiro: +1 nível de dano por bônus
     @Override
     public int sortearDano(ItemStack pilha, RandomSource sorteio, DadosDoHeroi heroi, boolean deSurpresa) {
         int nivel = NivelDoItem.nivel(pilha);
-        int minimo = danoMinimo(nivel);
-        int maximo = danoMaximo(nivel);
+        int minimo = Math.max(0, danoMinimo(nivel + heroi.bonusDoAnel(TipoDeAnel.TIRO_CERTEIRO)));
+        int maximo = Math.max(0, danoMaximo(nivel + heroi.bonusDoAnel(TipoDeAnel.TIRO_CERTEIRO)));
         if (deSurpresa && numeros.surpresa > 0) {
             minimo = minimo + Math.round((maximo - minimo) * numeros.surpresa);
         }
@@ -206,26 +207,31 @@ public class ArmaDeArremesso extends Item implements Arma, Equipamento {
         }
     }
 
-    // Quantos acertos o conjunto aguenta: os do tipo, x1,5 por nível; projéteis duráveis (Caçadora) +50%/+75%
-    public float usos(int nivel, int pontosDuraveis) {
+    // Quantos acertos o conjunto aguenta: os do tipo, x1,5 por nível; projéteis duráveis (Caçadora) +50%/+75%;
+    // anel do tiro certeiro, x1,2 por bônus
+    public float usos(int nivel, int pontosDuraveis, int tiroCerteiro) {
         float usos = numeros.usos * (float) Math.pow(1.5, nivel);
         if (pontosDuraveis > 0) {
             usos *= 1.25F + 0.25F * pontosDuraveis;
         }
-        return usos;
+        return usos * (float) Math.pow(1.2, tiroCerteiro);
     }
 
     // Quanto cada acerto gasta da durabilidade (0 = dura pra sempre, com 100 usos ou mais)
-    public float gastoPorUso(int nivel, int pontosDuraveis) {
-        float usos = usos(nivel, pontosDuraveis);
+    public float gastoPorUso(int nivel, int pontosDuraveis, int tiroCerteiro) {
+        float usos = usos(nivel, pontosDuraveis, tiroCerteiro);
         if (usos >= 100) {
             return 0;
         }
         return DURABILIDADE_MAXIMA / Math.round(usos) + 0.001F;
     }
 
+    public float gastoPorUso(int nivel, int pontosDuraveis) {
+        return gastoPorUso(nivel, pontosDuraveis, 0);
+    }
+
     public float gastoPorUso(ItemStack pilha, DadosDoHeroi dados) {
-        return gastoPorUso(NivelDoItem.nivel(pilha), dados.pontos(Talento.PROJETEIS_DURAVEIS));
+        return gastoPorUso(NivelDoItem.nivel(pilha), dados.pontos(Talento.PROJETEIS_DURAVEIS), dados.bonusDoAnel(TipoDeAnel.TIRO_CERTEIRO));
     }
 
     // ---- Arremessar ----

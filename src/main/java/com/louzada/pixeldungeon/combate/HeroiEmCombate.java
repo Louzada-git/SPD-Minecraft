@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.heroi.Aneis;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.Furtividade;
@@ -14,9 +15,11 @@ import com.louzada.pixeldungeon.heroi.Talento;
 import com.louzada.pixeldungeon.heroi.Talentos;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.Arma;
+import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.Maldicao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
+import com.louzada.pixeldungeon.item.TipoDeAnel;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.server.level.ServerPlayer;
@@ -68,13 +71,16 @@ public class HeroiEmCombate implements Combatente {
             precisao *= arma.precisao(golpe.arma(), dados);
         }
         precisao *= Maldicao.multiplicadorDePrecisao(jogador, golpe.arma());
+        // Anel da precisão: 1,3x por bônus
+        precisao *= (float) Math.pow(1.3, dados.bonusDoAnel(TipoDeAnel.PRECISAO));
         // Agilidade líquida: o próximo golpe de perto depois de usar uma poção
         return golpe.deLonge() ? precisao : TalentosDoTier2.precisaoDePerto(jogador, dados, precisao);
     }
 
     @Override
     public float esquiva(Golpe golpe) {
-        float esquiva = RegrasDoHeroi.esquiva(dados.nivel());
+        // Anel da evasão: 1,125x por bônus
+        float esquiva = RegrasDoHeroi.esquiva(dados.nivel()) * (float) Math.pow(1.125, dados.bonusDoAnel(TipoDeAnel.EVASAO));
         if (armadura().getItem() instanceof ArmaduraDoShattered armadura) {
             esquiva *= armadura.fatorDeEsquiva(armadura(), dados.forca());
         }
@@ -86,11 +92,18 @@ public class HeroiEmCombate implements Combatente {
         RandomSource sorteio = jogador.getRandom();
         Arma arma = armaDo(golpe);
         int dano = arma != null ? arma.sortearDano(golpe.arma(), sorteio, dados, golpe.surpresa()) : danoDeMaoVazia(sorteio);
+        // Anel da força: com uma arma de perto, +1 de dano por bônus
+        if (golpe.arma().getItem() instanceof ArmaDoShattered) {
+            dano += dados.bonusDoAnel(TipoDeAnel.FORCA);
+        }
         return dano * golpe.forca();
     }
 
-    // Igual ao Shattered: de mão vazia, 1 até (força - 8)
+    // Igual ao Shattered: de mão vazia, 1 até (força - 8); com o anel da força, o soco vira uma arma do tier da força
     private int danoDeMaoVazia(RandomSource sorteio) {
+        if (dados.usaAnel(TipoDeAnel.FORCA)) {
+            return Aneis.danoDoSoco(sorteio, dados.forca(), dados.bonusDoAnel(TipoDeAnel.FORCA));
+        }
         return Sorteio.normal(sorteio, 1, Math.max(1, dados.forca() - 8));
     }
 
