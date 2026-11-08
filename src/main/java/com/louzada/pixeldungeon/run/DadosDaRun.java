@@ -7,6 +7,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.dungeon.Andares;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -16,8 +18,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 
 // Tudo sobre a run atual que precisa continuar salvo quando o mundo fecha:
-// número da run, se ela está acontecendo, semente, andares já construídos, chefes já derrotados
-// e quantas vezes caíram os itens que são limitados por run (as armas do slime).
+// número da run, se ela está acontecendo, semente, andares já construídos, chefes já derrotados,
+// quantas vezes caíram os itens que são limitados por run (as armas do slime) e as portas escondidas já achadas.
 // (Em qual run cada jogador está fica salvo no próprio jogador, no DadosDoHeroi.)
 public class DadosDaRun extends SavedData {
     private static final String NOME_DO_ARQUIVO = "pixeldungeon_run";
@@ -35,6 +37,8 @@ public class DadosDaRun extends SavedData {
     private Set<Integer> chefesDerrotados = new HashSet<>();
     // Igual aos "LimitedDrops" do Shattered: quantas vezes cada item limitado já caiu nesta run
     private Map<String, Integer> quedas = new HashMap<>();
+    // As portas escondidas já achadas em cada andar (a planta do andar sai de novo da semente, então elas ficam salvas aqui)
+    private Map<Integer, Set<Integer>> portasAchadas = new HashMap<>();
 
     // Pega os dados salvos no mundo (ou cria do zero se ainda não existem)
     public static DadosDaRun pegar(MinecraftServer servidor) {
@@ -61,6 +65,7 @@ public class DadosDaRun extends SavedData {
         andares.clear();
         chefesDerrotados.clear();
         quedas.clear();
+        portasAchadas.clear();
         setDirty();
     }
 
@@ -97,6 +102,16 @@ public class DadosDaRun extends SavedData {
         setDirty();
     }
 
+    public boolean portaAchada(int andar, int qx, int qy) {
+        Set<Integer> achadas = portasAchadas.get(andar);
+        return achadas != null && achadas.contains(qy * Andares.TAMANHO_DA_PLANTA + qx);
+    }
+
+    public void acharPorta(int andar, int qx, int qy) {
+        portasAchadas.computeIfAbsent(andar, chave -> new HashSet<>()).add(qy * Andares.TAMANHO_DA_PLANTA + qx);
+        setDirty();
+    }
+
     // ---- Salvar e carregar ----
 
     @Override
@@ -122,6 +137,14 @@ public class DadosDaRun extends SavedData {
             quedasTag.putInt(item.getKey(), item.getValue());
         }
         tag.put("quedas", quedasTag);
+        ListTag listaDePortas = new ListTag();
+        for (Map.Entry<Integer, Set<Integer>> item : portasAchadas.entrySet()) {
+            CompoundTag portasTag = new CompoundTag();
+            portasTag.putInt("andar", item.getKey());
+            portasTag.putIntArray("portas", item.getValue().stream().mapToInt(Integer::intValue).toArray());
+            listaDePortas.add(portasTag);
+        }
+        tag.put("portas_achadas", listaDePortas);
         return tag;
     }
 
@@ -144,6 +167,15 @@ public class DadosDaRun extends SavedData {
         CompoundTag quedasTag = tag.getCompound("quedas");
         for (String item : quedasTag.getAllKeys()) {
             dados.quedas.put(item, quedasTag.getInt(item));
+        }
+        ListTag listaDePortas = tag.getList("portas_achadas", Tag.TAG_COMPOUND);
+        for (int i = 0; i < listaDePortas.size(); i++) {
+            CompoundTag portasTag = listaDePortas.getCompound(i);
+            Set<Integer> achadas = new HashSet<>();
+            for (int porta : portasTag.getIntArray("portas")) {
+                achadas.add(porta);
+            }
+            dados.portasAchadas.put(portasTag.getInt("andar"), achadas);
         }
         return dados;
     }

@@ -246,7 +246,8 @@ public class PopulacaoDoAndar {
         return planta.lugaresLivres(RAIO_LIVRE_EM_VOLTA_DA_ENTRADA);
     }
 
-    private static PlantaDoAndar planta(long semente, int andar) {
+    // A planta de um andar, guardada pra não gerar de novo (a busca também usa)
+    public static PlantaDoAndar planta(long semente, int andar) {
         return plantas.computeIfAbsent(semente + ":" + andar, chave -> GeradorDeAndar.gerar(semente, andar));
     }
 

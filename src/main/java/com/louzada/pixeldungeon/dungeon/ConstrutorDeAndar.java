@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.state.properties.Half;
 //
 // Os corredores são túneis mais baixos (6 blocos), com arcos no alto dos dois lados.
 // As portas gigantes ficam no meio da parede entre dois cômodos, com a altura dos corredores (4 de largura, 6 de altura).
+// As portas escondidas são construídas como parede; quando alguém acha uma, ela vira uma porta comum (revelarPorta).
 public class ConstrutorDeAndar {
     // Atualiza só os jogadores, sem avisar os blocos vizinhos (bem mais rápido)
     private static final int ATUALIZACAO = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
@@ -93,6 +94,64 @@ public class ConstrutorDeAndar {
             construirPilares(sala);
         }
         construirEscadas();
+    }
+
+    // Uma porta escondida foi achada: a parede vira uma porta comum. A planta já tem que estar com a PORTA no lugar.
+    public static void revelarPorta(ServerLevel nivel, PlantaDoAndar planta, BlockPos origem, int qx, int qy) {
+        ConstrutorDeAndar construtor = new ConstrutorDeAndar(nivel, planta, origem, 0);
+        construtor.abrirParede(qx, qy);
+    }
+
+    private void abrirParede(int qx, int qy) {
+        for (int dx = 0; dx < T; dx++) {
+            for (int dz = 0; dz < T; dz++) {
+                for (int dy = 1; dy <= ALTURA_DO_TETO; dy++) {
+                    colocar(qx, qy, dx, dy, dz, Blocks.AIR.defaultBlockState());
+                }
+            }
+        }
+        construirQuadradinhoAberto(qx, qy);
+        construirOQueTemEmCima(qx, qy);
+        // Nos dois lados da porta, os blocos encostados nela: a cornija muda (num corredor ela some) e um pilar
+        // de canto que estava encostado na "parede" sai do caminho
+        int[][] lados = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+        for (int[] lado : lados) {
+            int vx = qx + lado[0];
+            int vy = qy + lado[1];
+            if (!planta.aberto(vx, vy)) {
+                continue;
+            }
+            for (int i = 0; i < T; i++) {
+                int dx = lado[0] == 0 ? i : (lado[0] < 0 ? T - 1 : 0);
+                int dz = lado[1] == 0 ? i : (lado[1] < 0 ? T - 1 : 0);
+                ajustarBeiradaDoVizinho(vx, vy, dx, dz);
+            }
+        }
+    }
+
+    private void ajustarBeiradaDoVizinho(int qx, int qy, int dx, int dz) {
+        int altura = alturaLivre(qx, qy);
+        posicao.set(origem.getX() + qx * T + dx, origem.getY() + 1, origem.getZ() + qy * T + dz);
+        if (nivel.getBlockState(posicao).is(pilar.getBlock())) {
+            if (paredesEncostadas(qx, qy, dx, dz, 1).size() >= 2) {
+                return;
+            }
+            // O pilar não é mais de canto: some (na água, o pé dele volta a ser água)
+            if (planta.tipo(qx, qy) == PlantaDoAndar.AGUA) {
+                colocar(qx, qy, dx, 0, dz, agua);
+            }
+            for (int dy = 1; dy < altura; dy++) {
+                colocar(qx, qy, dx, dy, dz, Blocks.AIR.defaultBlockState());
+            }
+        }
+        List<Direction> paredes = paredesEncostadas(qx, qy, dx, dz, altura);
+        BlockState emCima = Blocks.AIR.defaultBlockState();
+        if (paredes.size() == 1) {
+            emCima = degrauDeCabecaPraBaixo(paredes.get(0));
+        } else if (paredes.size() >= 2) {
+            emCima = parede;
+        }
+        colocar(qx, qy, dx, altura, dz, emCima);
     }
 
     // ---- Paredes ----
