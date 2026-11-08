@@ -13,4 +13,9 @@ public class Sorteio {
         }
         return minimo + (int) ((sorteio.nextFloat() + sorteio.nextFloat()) * (maximo - minimo + 1) / 2f);
     }
+
+    // A mesma curva, com números quebrados (o "NormalFloat" do Shattered)
+    public static float normalDecimal(RandomSource sorteio, float minimo, float maximo) {
+        return minimo + (maximo - minimo) * (sorteio.nextFloat() + sorteio.nextFloat()) / 2.0F;
+    }
 }

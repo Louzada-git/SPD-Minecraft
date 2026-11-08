@@ -231,12 +231,7 @@ public class Aneis {
                 premio = SaqueDoAndar.premioDoMimico(sorteio, andar);
                 dados.definir(FORTUNA_PREMIOS, normal(sorteio, 5, 10));
             } else {
-                premio = switch (sorteio.nextInt(4)) {
-                    case 0 -> SaqueDoAndar.pocaoAleatoria(sorteio, semente);
-                    case 1 -> SaqueDoAndar.pergaminhoAleatorio(sorteio, semente);
-                    case 2 -> SaqueDoAndar.sementeAleatoria(sorteio);
-                    default -> Ouro.sortear(sorteio, andar);
-                };
+                premio = premioConsumivel(sorteio, andar, semente);
                 dados.definir(FORTUNA_PREMIOS, premios - 1);
             }
             ItemEntity noChao = inimigo.spawnAtLocation(premio);
@@ -246,6 +241,16 @@ public class Aneis {
             faltam += normal(sorteio, 0, 20);
         }
         dados.definir(FORTUNA_INIMIGOS, faltam);
+    }
+
+    // Um prêmio comum: poção, pergaminho, semente ou ouro (o anel da fortuna e o encantamento da sorte usam)
+    public static ItemStack premioConsumivel(Random sorteio, int andar, long semente) {
+        return switch (sorteio.nextInt(4)) {
+            case 0 -> SaqueDoAndar.pocaoAleatoria(sorteio, semente);
+            case 1 -> SaqueDoAndar.pergaminhoAleatorio(sorteio, semente);
+            case 2 -> SaqueDoAndar.sementeAleatoria(sorteio);
+            default -> Ouro.sortear(sorteio, andar);
+        };
     }
 
     private static int normal(Random sorteio, int minimo, int maximo) {

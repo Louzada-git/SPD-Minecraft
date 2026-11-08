@@ -79,6 +79,10 @@ public class ModComponentes {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> SELO_GLIFO = COMPONENTES.registerComponentType(
             "selo_glifo", construtor -> construtor.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
 
+    // Maldição explosiva: o quanto falta (de 100) pra arma explodir
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> PRESSAO_EXPLOSIVA = COMPONENTES.registerComponentType(
+            "pressao_explosiva", construtor -> construtor.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
     // O glifo da armadura ou o encantamento da arma (o id), se tiver
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> ENCANTO = COMPONENTES.registerComponentType("encanto",
             construtor -> construtor.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
