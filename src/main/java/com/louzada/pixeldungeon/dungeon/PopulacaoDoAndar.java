@@ -73,6 +73,12 @@ public class PopulacaoDoAndar {
         };
     }
 
+    // Um inimigo qualquer do andar (a maldição da multiplicidade usa quando não dá pra copiar quem bateu)
+    public static EntityType<? extends MobDoShattered> tipoAleatorio(int andar, Random sorteio) {
+        List<EntityType<? extends MobDoShattered>> tipos = rotacao(Math.max(1, andar));
+        return talvezRaro(tipos.get(sorteio.nextInt(tipos.size())), sorteio);
+    }
+
     // Igual ao Shattered: 1 em cada 50 ratos é um rato albino
     private static EntityType<? extends MobDoShattered> talvezRaro(EntityType<? extends MobDoShattered> tipo, Random sorteio) {
         if (tipo == ModEntidades.RATO_MARSUPIAL.get() && sorteio.nextInt(50) == 0) {

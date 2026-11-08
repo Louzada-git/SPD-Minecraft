@@ -206,7 +206,7 @@ public class EfeitosDeVarinha {
     }
 
     // Empurra uns quadradinhos pra uma direção, parando antes de uma parede (e aí leva dano e fica paralisado)
-    private static void empurrar(ServerPlayer jogador, LivingEntity criatura, Vec3 direcao, int quadradinhos) {
+    public static void empurrar(ServerPlayer jogador, LivingEntity criatura, Vec3 direcao, int quadradinhos) {
         if (criatura.hasEffect(ModEfeitos.ENRAIZADO) || quadradinhos <= 0) {
             return;
         }

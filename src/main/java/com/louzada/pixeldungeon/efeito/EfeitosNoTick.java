@@ -88,8 +88,15 @@ public class EfeitosNoTick {
 
     // Raiz-da-terra: segura até (andar + 5) / 2 de cada golpe, até um total igual à vida máxima, enquanto não sair do lugar
     public static void raizDaTerra(LivingEntity alvo) {
+        raizDaTerra(alvo, alvo.getMaxHealth());
+    }
+
+    // A mesma armadura de raízes, segurando no total até "reserva" (o glifo do emaranhamento usa 5 + 2 x nível).
+    // Se já tinha uma com mais reserva no mesmo lugar, fica a maior.
+    public static void raizDaTerra(LivingEntity alvo, float reserva) {
         CompoundTag dados = alvo.getPersistentData();
-        dados.putFloat(RAIZ_RESTANTE, alvo.getMaxHealth());
+        boolean mesmaRaiz = alvo.hasEffect(ModEfeitos.RAIZ_DA_TERRA) && dados.getLong(RAIZ_LUGAR) == quadradinho(alvo);
+        dados.putFloat(RAIZ_RESTANTE, mesmaRaiz ? Math.max(reserva, dados.getFloat(RAIZ_RESTANTE)) : reserva);
         dados.putLong(RAIZ_LUGAR, quadradinho(alvo));
         alvo.addEffect(new MobEffectInstance(ModEfeitos.RAIZ_DA_TERRA, PARA_SEMPRE));
     }
