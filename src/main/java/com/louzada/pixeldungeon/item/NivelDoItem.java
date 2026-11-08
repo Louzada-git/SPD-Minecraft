@@ -135,23 +135,30 @@ public class NivelDoItem {
         pilha.remove(ModComponentes.USOS_PARA_IDENTIFICAR.get());
         if (jogador != null) {
             String chave = ehArmadura(pilha) ? "mensagem.pixeldungeon.armadura_identificada"
-                    : pilha.getItem() instanceof ItemVarinha ? "mensagem.pixeldungeon.varinha_identificada" : "mensagem.pixeldungeon.arma_identificada";
+                    : pilha.getItem() instanceof ItemVarinha ? "mensagem.pixeldungeon.varinha_identificada"
+                    : pilha.getItem() instanceof ItemAnel ? "mensagem.pixeldungeon.anel_identificado" : "mensagem.pixeldungeon.arma_identificada";
             jogador.displayClientMessage(Component.translatable(chave, pilha.getHoverName()).withStyle(ChatFormatting.AQUA), false);
             jogador.level().playSound(null, jogador.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 0.8F, 1.4F);
-            if (ehArmadura(pilha)) {
+            if (gruda(pilha)) {
                 prenderSeAmaldicoada(jogador, pilha);
             }
         }
     }
 
+    // A armadura e os anéis amaldiçoados grudam no corpo
+    private static boolean gruda(ItemStack pilha) {
+        return ehArmadura(pilha) || pilha.getItem() instanceof ItemAnel;
+    }
+
     // Segurou a arma ou vestiu a armadura: descobre se é amaldiçoada.
     // As intuições +2 identificam na hora: a de aventureiro (Duelista) as armas, a de veterano (Guerreiro) as armaduras.
     // (As armas de arremesso e as varinhas não são equipadas: a maldição delas aparece quando acertam alguém ou são lançadas.)
+    // Os anéis também: pôr revela a maldição (e o anel amaldiçoado gruda no dedo).
     public static void aoEquipar(ServerPlayer jogador, ItemStack pilha) {
-        if (!(pilha.getItem() instanceof ArmaDoShattered) && !ehArmadura(pilha)) {
+        if (!(pilha.getItem() instanceof ArmaDoShattered) && !gruda(pilha)) {
             return;
         }
-        if (!identificado(pilha)) {
+        if (!identificado(pilha) && !(pilha.getItem() instanceof ItemAnel)) {
             Talento intuicao = ehArmadura(pilha) ? Talento.INTUICAO_DE_VETERANO : Talento.INTUICAO_DE_AVENTUREIRO;
             if (RegrasDoHeroi.dados(jogador).pontos(intuicao) >= 2) {
                 identificar(jogador, pilha);
@@ -161,12 +168,13 @@ public class NivelDoItem {
         if (!maldicaoConhecida(pilha)) {
             pilha.remove(ModComponentes.MALDICAO_CONHECIDA.get());
             if (amaldicoado(pilha)) {
-                String chave = ehArmadura(pilha) ? "mensagem.pixeldungeon.armadura_amaldicoada" : "mensagem.pixeldungeon.arma_amaldicoada";
+                String chave = ehArmadura(pilha) ? "mensagem.pixeldungeon.armadura_amaldicoada"
+                        : pilha.getItem() instanceof ItemAnel ? "mensagem.pixeldungeon.anel_amaldicoado" : "mensagem.pixeldungeon.arma_amaldicoada";
                 jogador.displayClientMessage(Component.translatable(chave).withStyle(ChatFormatting.DARK_PURPLE), false);
                 jogador.level().playSound(null, jogador.blockPosition(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1.0F, 0.5F);
             }
         }
-        if (ehArmadura(pilha)) {
+        if (gruda(pilha)) {
             prenderSeAmaldicoada(jogador, pilha);
         }
     }
@@ -206,7 +214,7 @@ public class NivelDoItem {
 
     // ---- Armadura amaldiçoada: não dá pra tirar ----
 
-    // Igual ao Shattered, a armadura amaldiçoada (que já se sabe que é) gruda no corpo.
+    // Igual ao Shattered, a armadura e o anel amaldiçoados (que já se sabe que são) grudam no corpo.
     // Usa a "maldição do ligamento" do Minecraft, escondida (sem brilho nem nome na dica).
     private static void prenderSeAmaldicoada(ServerPlayer jogador, ItemStack pilha) {
         // (todo item já vem com a lista de encantamentos vazia: o que importa é se já está grudada)
@@ -218,7 +226,8 @@ public class NivelDoItem {
         encantamentos.set(ligamento, 1);
         pilha.set(DataComponents.ENCHANTMENTS, encantamentos.toImmutable().withTooltip(false));
         pilha.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
-        jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.armadura_grudou").withStyle(ChatFormatting.DARK_PURPLE), false);
+        String chave = pilha.getItem() instanceof ItemAnel ? "mensagem.pixeldungeon.anel_grudou" : "mensagem.pixeldungeon.armadura_grudou";
+        jogador.displayClientMessage(Component.translatable(chave).withStyle(ChatFormatting.DARK_PURPLE), false);
     }
 
     public static boolean grudada(ItemStack pilha) {
