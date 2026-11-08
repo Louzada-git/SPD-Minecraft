@@ -37,6 +37,7 @@ import net.minecraft.world.item.ItemStack;
 //   maldições de arma: agem quando o herói acerta um golpe (aoGolpear)
 //   maldições de armadura: agem quando o herói é acertado (aoSerAtingido), antes da armadura segurar o dano
 //   varinhas amaldiçoadas: a magia sai aleatória
+//   anéis amaldiçoados: o efeito fica ao contrário e o anel gruda no dedo
 public enum Maldicao {
 
     // ---- Armas ----
@@ -200,11 +201,16 @@ public enum Maldicao {
     // ---- Varinhas ----
 
     // A magia sai aleatória e quase sempre ruim (ver EfeitosDeVarinha.lancarAmaldicoada)
-    CAOTICA("caotica", Alvo.VARINHA);
+    CAOTICA("caotica", Alvo.VARINHA),
+
+    // ---- Anéis ----
+
+    // O efeito do anel fica ao contrário (bônus de 0 a -2) e ele não sai do dedo (ver Aneis)
+    ANEL_AMALDICOADO("anel_amaldicoado", Alvo.ANEL);
 
     // Em que tipo de item a maldição aparece
     public enum Alvo {
-        ARMA, ARMADURA, VARINHA
+        ARMA, ARMADURA, VARINHA, ANEL
     }
 
     private static final double ALCANCE_DA_VISAO = 32;
