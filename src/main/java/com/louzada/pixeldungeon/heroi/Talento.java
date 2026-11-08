@@ -9,8 +9,8 @@ import javax.annotation.Nullable;
 // Cada talento vai até +2. O tier 1 tem 4 talentos e 5 pontos (níveis 2 a 6);
 // o tier 2 tem 5 talentos e 6 pontos (níveis 7 a 12).
 //
-// Alguns talentos dependem de coisas que o mod ainda não tem (a busca e as salas secretas).
-// Eles podem ser escolhidos, mas a dica avisa que ainda não fazem nada ("pendente").
+// Um talento que dependa de algo que o mod ainda não tem pode ser escolhido, mas a dica avisa que
+// ainda não faz nada ("pendente"). Hoje todos funcionam.
 public enum Talento {
     // Guerreiro
     REFEICAO_SAUDAVEL("refeicao_saudavel", ClasseDoHeroi.GUERREIRO, 1, null),
@@ -39,9 +39,9 @@ public enum Talento {
     SOMBRAS_PROTETORAS("sombras_protetoras", ClasseDoHeroi.LADINO, 1, null),
     REFEICAO_MISTICA("refeicao_mistica", ClasseDoHeroi.LADINO, 2, null),
     FURTIVIDADE_INSCRITA("furtividade_inscrita", ClasseDoHeroi.LADINO, 2, null),
-    GRANDE_BUSCA("grande_busca", ClasseDoHeroi.LADINO, 2, "procurar"),
+    GRANDE_BUSCA("grande_busca", ClasseDoHeroi.LADINO, 2, null),
     PASSOS_SILENCIOSOS("passos_silenciosos", ClasseDoHeroi.LADINO, 2, null),
-    PREVISAO_DO_LADINO("previsao_do_ladino", ClasseDoHeroi.LADINO, 2, "segredos"),
+    PREVISAO_DO_LADINO("previsao_do_ladino", ClasseDoHeroi.LADINO, 2, null),
     // Caçadora
     RECOMPENSA_DA_NATUREZA("recompensa_da_natureza", ClasseDoHeroi.CACADORA, 1, null),
     INTUICAO_DE_SOBREVIVENTE("intuicao_de_sobrevivente", ClasseDoHeroi.CACADORA, 1, null),

@@ -1,6 +1,7 @@
 package com.louzada.pixeldungeon.heroi;
 
 import com.louzada.pixeldungeon.Turno;
+import com.louzada.pixeldungeon.dungeon.Busca;
 import com.louzada.pixeldungeon.item.ArmaDeArremesso;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
 import com.louzada.pixeldungeon.item.ItemAnel;
@@ -15,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-// O que acontece com o herói sozinho, com o tempo: blindagem, talentos, capa, cargas da Duelista, armas de arremesso.
+// O que acontece com o herói sozinho, com o tempo: blindagem, talentos, capa, cargas da Duelista, armas de arremesso, busca.
 // (1 turno do Shattered = 2 segundos = 40 ticks, ver Turno)
 public class GerenciadorDoHeroi {
 
@@ -59,6 +60,8 @@ public class GerenciadorDoHeroi {
             EncantamentosDoHeroi.aoTurno(jogador, dados);
         }
         CapaDasSombras.aoTickDoHeroi(jogador, dados, umTurno);
+        // Andando pela dungeon, às vezes o herói nota uma porta escondida
+        Busca.aoTick(jogador);
         if (umTurno && dados.classe() == ClasseDoHeroi.DUELISTA) {
             HabilidadesDaDuelista.recarregar(dados);
         }

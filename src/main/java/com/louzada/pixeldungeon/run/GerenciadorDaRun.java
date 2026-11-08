@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.dungeon.Andares;
+import com.louzada.pixeldungeon.dungeon.Busca;
 import com.louzada.pixeldungeon.dungeon.ConstrutorDeAndar;
 import com.louzada.pixeldungeon.dungeon.GeradorDeAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
@@ -275,6 +276,8 @@ public class GerenciadorDaRun {
                 Component.translatable(Andares.regiaoDoAndar(andar))), true);
         // Primeira vez nesse andar: talentos que acontecem ao explorar (rações guardadas do Ladino)
         Talentos.aoChegarNoAndar(jogador, andar);
+        // Previsão do ladino: avisa se o andar tem uma sala secreta
+        Busca.aoChegarNoAndar(jogador, andar);
     }
 
     private static void teleportar(ServerPlayer jogador, BlockPos destino) {
