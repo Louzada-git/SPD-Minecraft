@@ -73,6 +73,9 @@ Igual à interface completa do Shattered. Durante a run, a barra de itens, os co
 ### Itens das classes
 
 - **Selo quebrado (Guerreiro):** vem afixado na armadura de pano. Quando um golpe vai deixar o Guerreiro com metade da vida ou menos, ele ganha 5 de blindagem na hora (os corações amarelos). Depois precisa de 150 turnos pra proteger de novo. A blindagem some se ficar 5 turnos sem inimigos por perto.
+  - **Mover o selo:** agachado, clique direito com a armadura na mão solta o selo (vira um item); clique direito no selo escolhe a armadura em que afixar. Vestir outra armadura faz o chat perguntar se é pra passar o selo pra ela. Não dá pra afixar em armadura amaldiçoada (nem com a maldição desconhecida).
+  - **Aprimoramento:** melhorar a armadura com o selo faz o selo guardar +1, que sai da armadura junto com o selo e vai pra próxima.
+  - **Glifo:** com a transferência rúnica, o selo leva junto o glifo da armadura (+1: comuns e incomuns; +2: todos). Diferente do Shattered (o mod não tem pedras de encantamento), o selo aprende o glifo da armadura em que é afixado. Se o selo e a armadura tiverem glifos diferentes, o chat pergunta qual fica.
 - **Cajado do Mago:** já vem com a varinha de míssil mágico dentro. Clique direito lança um raio de luz branca que sempre acerta e dá 2-8 de dano mágico (a armadura não segura). Tem 4 cargas, mostradas na barrinha roxa do ícone, que voltam sozinhas (de ~33 a ~45 turnos cada).
 - **Capa das sombras (Ladino):** clique direito liga e desliga a invisibilidade. Os inimigos perdem o Ladino de vista e não acordam. Ligar gasta 1 carga e depois mais 1 a cada 4 turnos. Atacar desliga a capa (e o ataque é surpresa). Começa com 3 cargas e fica mais forte com o uso (até o nível 10).
 - **Arco espiritual (Caçadora):** clique direito atira uma flecha mágica (flechas infinitas). Dano de 1-6 que cresce com o nível. É um ataque físico: sorteia acerto e a armadura segura. Colado no inimigo, acerta pior.
@@ -199,7 +202,7 @@ Os 12 anéis do Shattered, com os mesmos números. Igual às poções, cada gema
 | Elementos | dano de fogo, gelo, raio, gás, veneno e magia cai pra 0,825x |
 | Tenacidade | quanto mais ferido, menos dano (até 0,85x com a vida quase no fim) |
 | Fortuna | a cada 0-20 inimigos, cai um prêmio a mais (a cada 5-10 prêmios, um equipamento) |
-| Arcano | deixa encantamentos e glifos mais fortes (o mod ainda não tem; por enquanto não faz nada) |
+| Arcano | glifos (e encantamentos) 1,175x mais fortes: mais chance de ativar e, com chance de 100%, efeito mais forte (os encantamentos de arma ainda não existem) |
 
 - **Bônus:** o nível do anel + 1. Dois anéis iguais somam.
 - **Identificação:** vêm +0 (2/3), +1 (4/15) ou +2 (1/15), sem identificar. Usando, o anel se identifica (o tipo e o nível) depois de 1 nível de experiência.
@@ -207,7 +210,7 @@ Os 12 anéis do Shattered, com os mesmos números. Igual às poções, cada gema
 
 ### Armaduras
 
-5 armaduras do Shattered, com os mesmos números. Elas aparecem pelos andares com o mesmo sorteio de tier das armas, e vêm sem identificar (+0, +1 ou +2, e 30% amaldiçoadas).
+5 armaduras do Shattered, com os mesmos números. Elas aparecem pelos andares com o mesmo sorteio de tier das armas, e vêm sem identificar (+0, +1 ou +2, 30% amaldiçoadas e 15% com um glifo).
 
 | Armadura | Tier | Defesa | Força |
 |---|---|---|---|
@@ -220,7 +223,25 @@ Os 12 anéis do Shattered, com os mesmos números. Igual às poções, cada gema
 - Cada golpe recebido perde um valor sorteado de 0 até a defesa. Cada nível dá +1 na defesa mínima e +tier na máxima.
 - Igual ao Shattered, cada ponto de força que falta tira 2 de defesa, deixa a esquiva bem menor e o herói **anda mais devagar** (as armas pesadas demais atacam mais devagar).
 - A armadura se identifica sozinha depois de 20 golpes recebidos (a intuição de veterano do Guerreiro acelera, e com +2 identifica na hora de vestir).
-- **Armadura amaldiçoada:** vestir revela a maldição, e aí ela **gruda no corpo**: não dá pra tirar até remover a maldição.
+- **Glifos:** os 13 glifos do Shattered, com as chances de lá (comuns 50%, incomuns 40%, raros 10%). Igual ao Shattered, o glifo aparece no nome mesmo sem identificar ("armadura de couro de pedra") e a armadura brilha. Cada nível da armadura deixa o glifo mais forte, e o anel do arcano também. A partir do +4, melhorar a armadura pode apagar o glifo (10% no +4, 20% no +5, 40% no +6...).
+
+| Glifo | O que faz |
+|---|---|
+| Ofuscamento | os inimigos dormindo demoram mais pra notar quem veste (furtividade 1 + nível / 3) |
+| Rapidez | (1,2 + 0,04 x nível)x mais rápido sem inimigos a 3 quadradinhos |
+| Viscosidade | (nível + 1) / (nível + 6) do dano de cada golpe vira **dano adiado**, que vem 10% por turno |
+| Potencial | chance (nível + 1) / (nível + 6): uma carga em cada varinha e no cajado |
+| Enxofre | o fogo não machuca e se apaga |
+| Pedra | não dá pra desviar, mas o golpe perde dano conforme a esquiva que o herói teria |
+| Emaranhamento | 1 em 4: armadura de raízes que segura 5 + 2 x nível de dano enquanto não sair do lugar |
+| Repulsão | chance (nível + 1) / (nível + 5): joga quem bateu colado 2 quadradinhos pra trás |
+| Camuflagem | pisotear grama alta deixa invisível por 3 + nível / 2 turnos |
+| Fluxo | (2 + 0,5 x nível)x mais rápido na água |
+| Afeição | chance (nível + 3) / (nível + 20): quem bateu fica encantado por 10 turnos |
+| Antimagia | o dano mágico cai de nível até 3 + 1,5 x nível |
+| Espinhos | chance (nível + 2) / (nível + 12): quem bateu sangra (4 + nível) |
+
+- **Armadura amaldiçoada:** vestir revela a maldição, e aí ela **gruda no corpo**: não dá pra tirar até remover a maldição. A maldição toma o lugar do glifo.
 
 | Maldição | O que faz |
 |---|---|
@@ -230,10 +251,12 @@ Os 12 anéis do Shattered, com os mesmos números. Igual às poções, cada gema
 | Metabolizante | 1 em 6 golpes recebidos: troca fome por vida |
 | Supercrescimento | 1 em 20 golpes recebidos: uma planta qualquer nasce e é ativada em quem veste |
 | Fedor | 1 em 8 golpes recebidos: solta uma nuvem de gás tóxico em volta |
+| Da multiplicidade | 1 em 20 golpes recebidos: metade das vezes aparece uma imagem espelhada de quem veste; na outra metade, uma cópia de quem bateu |
+| Volumosa | passar pelas portas fica 3x mais lento |
 
 ### Ouro, baús e mímicos
 
-- Cada andar (menos o do chefe) tem de 3 a 5 itens espalhados (60% / 30% / 10%), mais uma ração. Cada item é **ouro** (10), **poção** (8), **pergaminho** (8), **arma** (2), **armadura** (2) ou **semente** (1), com os pesos do Shattered (varinhas e anéis ainda não existem). As salas especiais têm os prêmios delas, e cada porta trancada tem a sua chave de ferro. Em cada região também caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares.
+- Cada andar (menos o do chefe) tem de 3 a 5 itens espalhados (60% / 30% / 10%), mais uma ração. Cada item é **ouro** (10), **poção** (8), **pergaminho** (8), **arma** (2), **armadura** (2), **semente** (1), **arma de arremesso** (1), **varinha** (1) ou **anel** (1), com os pesos do Shattered. As salas especiais têm os prêmios delas, e cada porta trancada tem a sua chave de ferro. Em cada região também caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares.
 - **Ouro:** uma pilha tem de 30 + 10 por andar até 60 + 20 por andar moedas. Encostou, as moedas vão direto pra bolsa (não ocupam o inventário), sobe um "+N" dourado e o total aparece no inventário, do lado do equipamento. Cada herói tem o seu ouro, pras lojas que vão vir.
 - De cada 20 itens, 4 ficam num **baú** (um baú comum do Minecraft, com o item no meio), 1 fica dentro de um **mímico** (a partir do andar 2) e o resto fica largado no chão. Onde tem item, a grama alta é aparada. Os itens nunca somem do chão.
 - Ninguém consegue quebrar um baú (só no criativo).
@@ -313,14 +336,14 @@ Os 12 anéis do Shattered, com os mesmos números. Igual às poções, cada gema
 
 | Classe | Talentos |
 |---|---|
-| Guerreiro | estômago de ferro (comer leva 1 turno e protege do dano), tenacidade líquida (blindagem ao usar poção), transferência rúnica*, ímpeto letal (golpe mortal deixa o próximo ataque pronto), projéteis improvisados (poção ou semente arremessada cega) |
+| Guerreiro | estômago de ferro (comer leva 1 turno e protege do dano), tenacidade líquida (blindagem ao usar poção), transferência rúnica (o selo leva o glifo pra outra armadura), ímpeto letal (golpe mortal deixa o próximo ataque pronto), projéteis improvisados (poção ou semente arremessada cega) |
 | Mago | refeição energética (recarga do cajado), poder inscrito (pergaminho dá +2 níveis nos próximos disparos), preservação de varinha (a varinha antiga do cajado volta em +0: uma vez com +1, e de novo a cada nível com +2), visão arcana (quem leva o disparo brilha através das paredes), bateria de escudo (usar o cajado ou uma varinha agachado troca as cargas por blindagem) |
 | Ladino | refeição mística (recarga da capa e do tomo; rações de suprimentos na hora), furtividade inscrita (pergaminho deixa invisível), grande busca*, passos silenciosos, previsão do ladino* |
 | Caçadora | refeição revigorante (pressa; bagas na hora), natureza líquida (poção faz grama alta e enraíza os inimigos perto), passos rejuvenescedores (grama alta onde pisa), sentidos apurados (vê através das paredes perto dela), projéteis duráveis (armas de arremesso duram +50%/+75%) |
 | Duelista | refeição focada (carga de arma), agilidade líquida (poção dá esquiva e precisão), recarga de arma, pressa letal (golpe mortal com habilidade dá pressa forte), empunhar ágil (trocar de arma não perde o ataque carregado) |
 | Clérigo | refeição iluminada (carga do tomo), recuperar inscrição, raio solar, sentido divino, bênção (as 4 últimas são magias novas do tomo) |
 
-\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: glifos (transferência rúnica), a ação de procurar (grande busca) e salas secretas (previsão do ladino). A tela de talentos avisa isso.
+\* Esses ainda não fazem nada, porque dependem de coisas que o mod ainda não tem: a ação de procurar (grande busca) e salas secretas (previsão do ladino). A tela de talentos avisa isso.
 - "Visão mental" (ver através das paredes) faz os inimigos brilharem com o contorno do Minecraft.
 
 ### Combate e inimigos
@@ -441,7 +464,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 ## O que vem depois
 
 1. **Texturas próprias** dos blocos.
-2. **Mais itens:** glifos, as varinhas de terra viva, proteção e corrupção, poções e pergaminhos exóticos, alquimia e encantamentos.
+2. **Mais itens:** as varinhas de terra viva, proteção e corrupção, poções e pergaminhos exóticos, alquimia e encantamentos.
 3. **O resto do esgoto do Shattered:** portas escondidas (que precisam ser procuradas), armadilhas e as salas que precisam de abismo.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
@@ -453,7 +476,7 @@ src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas, portas gigantes, plantas e blocos de decoração
-  item/                        armas, armas de arremesso, varinhas, anéis, armadura, poções, pergaminhos, sementes, identificação e maldições
+  item/                        armas, armas de arremesso, varinhas, anéis, armadura, glifos, o selo do Guerreiro, poções, pergaminhos, sementes, identificação e maldições
   entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o míssil mágico, as nuvens de gás...
   efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
   combate/
@@ -472,6 +495,7 @@ src/main/java/com/louzada/pixeldungeon/
     TalentosDoTier2.java       o que os talentos do tier 2 fazem
     Escudos.java               blindagem e o selo do Guerreiro
     Aneis.java                 o que os anéis que o herói está usando fazem
+    GlifosDoHeroi.java         o que o glifo da armadura do herói faz o tempo todo (velocidade, fogo, magia, grama, dano adiado)
     HabilidadesDaDuelista.java      as habilidades das armas
     MagiasDoClerigo.java       as magias do tomo sagrado
   rede/                        pacotes do menu (servidor <-> jogador)
