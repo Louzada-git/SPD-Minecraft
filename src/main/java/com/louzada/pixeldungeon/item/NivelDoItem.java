@@ -34,7 +34,7 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 //     as armas de arremesso depois de 10 acertos e as varinhas depois de 10 disparos
 //     (as intuições do Guerreiro, da Duelista, da Caçadora e do Mago aceleram)
 //   - segurar a arma (ou vestir a armadura) revela se ela é amaldiçoada; a armadura amaldiçoada gruda no corpo
-//   - 30% do que é achado vem com uma maldição (de arma ou de armadura)
+//   - 30% do que é achado vem com uma maldição (de arma ou de armadura); 15% das armaduras vêm com um glifo (ver Glifo)
 public class NivelDoItem {
     public static final float USOS_PARA_IDENTIFICAR = 20;
 
@@ -94,6 +94,28 @@ public class NivelDoItem {
         return maldicao(pilha) != null;
     }
 
+    // O glifo da armadura, se tiver
+    @Nullable
+    public static Glifo glifo(ItemStack pilha) {
+        return ehArmadura(pilha) ? Glifo.peloId(pilha.get(ModComponentes.ENCANTO.get())) : null;
+    }
+
+    // Inscreve (ou tira, com null) o glifo. Igual ao Shattered, o selo do Guerreiro afixado na armadura guarda o glifo também.
+    public static void definirGlifo(ItemStack pilha, @Nullable Glifo glifo) {
+        if (glifo == null) {
+            pilha.remove(ModComponentes.ENCANTO.get());
+        } else {
+            pilha.set(ModComponentes.ENCANTO.get(), glifo.id());
+        }
+        if (pilha.getOrDefault(ModComponentes.SELO.get(), false)) {
+            if (glifo == null) {
+                pilha.remove(ModComponentes.SELO_GLIFO.get());
+            } else {
+                pilha.set(ModComponentes.SELO_GLIFO.get(), glifo.id());
+            }
+        }
+    }
+
     // Força que a arma ou armadura pede no nível dela: cada melhoria vai tirando um pouco, igual ao Shattered
     public static int forcaNecessaria(int tier, int nivel) {
         return 8 + 2 * tier - (int) (Math.sqrt(8 * Math.max(0, nivel) + 1) - 1) / 2;
@@ -101,7 +123,7 @@ public class NivelDoItem {
 
     // ---- Achados na dungeon ----
 
-    // Igual ao Shattered: +0 (75%), +1 (20%), +2 (5%); 30% amaldiçoados. E vem sem identificar.
+    // Igual ao Shattered: +0 (75%), +1 (20%), +2 (5%); 30% amaldiçoados; 15% das armaduras com um glifo. E vem sem identificar.
     public static ItemStack sortearDoChao(ItemStack pilha, Random sorteio, boolean sortearNivel) {
         if (!(pilha.getItem() instanceof Equipamento equipamento)) {
             return pilha;
@@ -114,9 +136,12 @@ public class NivelDoItem {
             }
         }
         definirNivel(pilha, nivel);
-        if (sorteio.nextFloat() < 0.3F) {
+        float efeito = sorteio.nextFloat();
+        if (efeito < 0.3F) {
             List<Maldicao> possiveis = Maldicao.doAlvo(equipamento.alvoDasMaldicoes());
             pilha.set(ModComponentes.MALDICAO.get(), possiveis.get(sorteio.nextInt(possiveis.size())).id());
+        } else if (efeito >= 0.85F && ehArmadura(pilha)) {
+            definirGlifo(pilha, Glifo.sortear(sorteio));
         }
         pilha.set(ModComponentes.IDENTIFICADO.get(), false);
         pilha.set(ModComponentes.MALDICAO_CONHECIDA.get(), false);
@@ -244,8 +269,20 @@ public class NivelDoItem {
 
     // +1 de nível. Igual ao Shattered, melhorar um item amaldiçoado tem 1 chance em 3 de tirar a maldição.
     // Nas armas de arremesso, o conjunto também volta a ficar inteiro; a varinha ganha uma carga.
+    // O glifo pode se perder a partir do +4: 10% no +4, 20% no +5, 40% no +6, 80% no +7, sempre no +8.
+    // O selo do Guerreiro afixado na armadura guarda um aprimoramento (pra levar pra próxima armadura).
     public static void melhorar(@Nullable ServerPlayer jogador, ItemStack pilha, RandomSource sorteio) {
-        definirNivel(pilha, nivel(pilha) + 1);
+        int antes = nivel(pilha);
+        if (glifo(pilha) != null && antes >= 4 && sorteio.nextFloat() * 10 < Math.pow(2, antes - 4)) {
+            definirGlifo(pilha, null);
+            if (jogador != null) {
+                jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.glifo_sumiu").withStyle(ChatFormatting.GRAY), false);
+            }
+        }
+        if (pilha.getOrDefault(ModComponentes.SELO.get(), false)) {
+            pilha.set(ModComponentes.SELO_MELHORIA.get(), true);
+        }
+        definirNivel(pilha, antes + 1);
         ArmaDeArremesso.definirDurabilidade(pilha, ArmaDeArremesso.DURABILIDADE_MAXIMA);
         // Igual ao Shattered, a varinha melhorada ganha uma carga
         if (pilha.getItem() instanceof ItemVarinha) {
@@ -270,12 +307,16 @@ public class NivelDoItem {
 
     // ---- Nome e dica ----
 
-    // "Espada +1", "Espada irritante +2", "Armadura de malha de fedor"... (o que ainda não se sabe não aparece)
+    // "Espada +1", "Espada irritante +2", "Armadura de malha de fedor", "Armadura de couro de pedra"...
+    // (o que ainda não se sabe não aparece; igual ao Shattered, o glifo aparece mesmo sem identificar)
     public static Component nome(ItemStack pilha, Component nomeDoItem) {
         MutableComponent nome = nomeDoItem.copy();
         Maldicao maldicao = maldicao(pilha);
+        Glifo glifo = glifo(pilha);
         if (maldicao != null && maldicaoConhecida(pilha)) {
             nome = Component.translatable(maldicao.chaveDoNome(), nomeDoItem);
+        } else if (glifo != null) {
+            nome = Component.translatable(glifo.chaveDoNome(), nomeDoItem);
         }
         int nivel = nivel(pilha);
         if (identificado(pilha) && nivel > 0) {
@@ -284,10 +325,16 @@ public class NivelDoItem {
         return nome;
     }
 
-    // As linhas da dica sobre identificação e maldição (iguais pra armas e armaduras)
+    // As linhas da dica sobre identificação, glifo e maldição (iguais pra armas e armaduras)
     public static void dicaDeIdentificacao(ItemStack pilha, List<Component> linhas) {
         boolean conhecido = identificado(pilha);
         boolean armadura = ehArmadura(pilha);
+        Glifo glifo = glifo(pilha);
+        if (glifo != null) {
+            linhas.add(Component.translatable("dica.pixeldungeon.glifo", Component.translatable(glifo.chaveDoNome(), Component.translatable("dica.pixeldungeon.glifo_palavra")))
+                    .withStyle(ChatFormatting.AQUA));
+            Textos.adicionarQuebrado(linhas, glifo.chaveDaDescricao(), ChatFormatting.DARK_AQUA);
+        }
         if (!conhecido) {
             linhas.add(Component.translatable(armadura ? "dica.pixeldungeon.armadura_nao_identificada" : "dica.pixeldungeon.nao_identificada")
                     .withStyle(ChatFormatting.YELLOW));

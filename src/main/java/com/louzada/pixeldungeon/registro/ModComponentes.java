@@ -72,4 +72,14 @@ public class ModComponentes {
     // Selo quebrado do Guerreiro afixado na armadura
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> SELO = COMPONENTES.registerComponentType("selo",
             construtor -> construtor.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+    // O selo guarda um aprimoramento (ganha quando a armadura dele é melhorada) e leva pra próxima armadura
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> SELO_MELHORIA = COMPONENTES.registerComponentType(
+            "selo_melhoria", construtor -> construtor.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+    // O glifo que o selo carrega (o da armadura em que ele estava; a transferência rúnica leva pra próxima)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> SELO_GLIFO = COMPONENTES.registerComponentType(
+            "selo_glifo", construtor -> construtor.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+
+    // O glifo da armadura ou o encantamento da arma (o id), se tiver
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> ENCANTO = COMPONENTES.registerComponentType("encanto",
+            construtor -> construtor.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
 }

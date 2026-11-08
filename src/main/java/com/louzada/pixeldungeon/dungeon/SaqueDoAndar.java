@@ -176,6 +176,8 @@ public class SaqueDoAndar {
             NivelDoItem.definirNivel(armadura, NivelDoItem.nivel(armadura) + 1);
             List<Maldicao> possiveis = Maldicao.doAlvo(equipamento.alvoDasMaldicoes());
             armadura.set(ModComponentes.MALDICAO.get(), possiveis.get(sorteio.nextInt(possiveis.size())).id());
+            // A maldição toma o lugar do glifo
+            NivelDoItem.definirGlifo(armadura, null);
         }
         armadura.remove(ModComponentes.MALDICAO_CONHECIDA.get());
         return armadura;
