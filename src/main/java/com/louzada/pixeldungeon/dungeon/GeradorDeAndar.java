@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
 import com.louzada.pixeldungeon.dungeon.geracao.ComodoEspecial;
+import com.louzada.pixeldungeon.dungeon.geracao.ComodoSecreto;
 import com.louzada.pixeldungeon.dungeon.geracao.GeracaoDoShattered;
 
 // Gera a planta de um andar. Os andares comuns são gerados igual ao Shattered (ver o pacote "geracao");
@@ -17,9 +18,10 @@ public class GeradorDeAndar {
         }
         Random sorteio = new Random(semente * 1000003L + andar);
         List<ComodoEspecial.Tipo> especiais = ComodoEspecial.doAndar(semente, andar);
+        List<ComodoSecreto.Tipo> secretas = ComodoSecreto.secretasDoAndar(semente, andar);
         // Às vezes o andar sai grande demais; aí gera de novo
         for (int tentativa = 0; tentativa < 50; tentativa++) {
-            PlantaDoAndar planta = GeracaoDoShattered.gerar(sorteio, andar, especiais, Andares.TAMANHO_DA_PLANTA);
+            PlantaDoAndar planta = GeracaoDoShattered.gerar(sorteio, andar, especiais, secretas, Andares.TAMANHO_DA_PLANTA);
             if (planta != null) {
                 return planta;
             }

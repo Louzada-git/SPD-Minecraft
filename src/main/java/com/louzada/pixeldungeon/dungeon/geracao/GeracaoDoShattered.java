@@ -10,7 +10,7 @@ import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.geracao.ComodoComum.Escada;
 
 // Gera um andar comum do esgoto igual ao Shattered (o "RegularLevel" + "SewerLevel"):
-//   - a entrada, a saída, de 4 a 6 salas comuns (as grandes valem por 2 ou 3) e 1 ou 2 salas especiais
+//   - a entrada, a saída, de 4 a 6 salas comuns (as grandes valem por 2 ou 3), 1 ou 2 salas especiais e as secretas
 //   - metade das vezes o andar é uma volta, metade é um oito
 //   - o arquiteto posiciona tudo (tenta de novo até dar certo) e o pintor desenha
 public final class GeracaoDoShattered {
@@ -19,14 +19,15 @@ public final class GeracaoDoShattered {
 
     // null se não coube no tamanho máximo (aí quem chamou tenta de novo)
     @Nullable
-    public static PlantaDoAndar gerar(Random sorteio, int andar, List<ComodoEspecial.Tipo> especiais, int tamanhoMaximo) {
+    public static PlantaDoAndar gerar(Random sorteio, int andar, List<ComodoEspecial.Tipo> especiais, List<ComodoSecreto.Tipo> secretas,
+            int tamanhoMaximo) {
         Random anterior = Dado.atual();
         Dado.usar(sorteio);
         try {
             Arquiteto arquiteto = Dado.ate(2) == 0
                     ? new ArquitetoEmLaco().formaDaVolta(2, Dado.decimal(0f, 0.65f), Dado.decimal(0f, 0.50f))
                     : new ArquitetoEmOito().formaDaVolta(2, Dado.decimal(0.3f, 0.8f), 0f);
-            List<Comodo> iniciais = comodosIniciais(andar, especiais);
+            List<Comodo> iniciais = comodosIniciais(andar, especiais, secretas);
             Dado.embaralhar(iniciais);
 
             List<Comodo> comodos = null;
@@ -40,7 +41,7 @@ public final class GeracaoDoShattered {
             if (comodos == null) {
                 return null;
             }
-            PlantaDoAndar planta = PintorDoEsgoto.pintar(comodos, tamanhoMaximo);
+            PlantaDoAndar planta = PintorDoEsgoto.pintar(comodos, tamanhoMaximo, andar);
             if (planta == null || planta.entradaX() < 0 || !planta.temSaida()) {
                 return null;
             }
@@ -50,7 +51,7 @@ public final class GeracaoDoShattered {
         }
     }
 
-    private static List<Comodo> comodosIniciais(int andar, List<ComodoEspecial.Tipo> especiais) {
+    private static List<Comodo> comodosIniciais(int andar, List<ComodoEspecial.Tipo> especiais, List<ComodoSecreto.Tipo> secretas) {
         List<Comodo> comodos = new ArrayList<>();
         comodos.add(ComodoComum.sortearComEscada(Escada.ENTRADA, andar));
         comodos.add(ComodoComum.sortearComEscada(Escada.SAIDA, andar));
@@ -67,6 +68,9 @@ public final class GeracaoDoShattered {
         }
 
         for (ComodoEspecial.Tipo tipo : especiais) {
+            comodos.add(tipo.criar());
+        }
+        for (ComodoSecreto.Tipo tipo : secretas) {
             comodos.add(tipo.criar());
         }
         return comodos;

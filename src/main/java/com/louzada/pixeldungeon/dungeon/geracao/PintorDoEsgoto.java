@@ -1,10 +1,14 @@
 package com.louzada.pixeldungeon.dungeon.geracao;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
@@ -13,9 +17,10 @@ import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
 //   1. a planta fica do tamanho dos cômodos, com 1 quadradinho de parede em volta
 //   2. cada ligação ganha uma porta num ponto sorteado da parede em comum, e cada cômodo se desenha
 //   3. salas comuns vizinhas com uma parede comprida entre elas às vezes viram uma sala só (a parede some)
-//   4. as portas: comum vira porta gigante, trancada vira porta trancada, túnel e água viram chão e água
+//   4. as portas: comum vira porta gigante, trancada vira porta trancada, túnel e água viram chão e água.
+//      Igual ao Shattered, as das salas secretas ficam escondidas, e as comuns também podem ficar (andar / 20 de chance,
+//      a partir do andar 2), desde que dê pra chegar nas duas salas sem passar por porta escondida.
 //   5. manchas de água (30%) e de grama (20%), igual ao esgoto
-// (As portas escondidas do Shattered, que precisam ser procuradas, ainda não existem no mod.)
 public class PintorDoEsgoto {
     private static final float AGUA = 0.30f;
     private static final int AGRUPAMENTO_DA_AGUA = 5;
@@ -23,7 +28,7 @@ public class PintorDoEsgoto {
     private static final int AGRUPAMENTO_DA_GRAMA = 4;
 
     // Devolve a planta pronta, ou null se ela passar do tamanho máximo (aí o andar é gerado de novo)
-    public static PlantaDoAndar pintar(List<Comodo> comodos, int tamanhoMaximo) {
+    public static PlantaDoAndar pintar(List<Comodo> comodos, int tamanhoMaximo, int andar) {
         // 1. Tamanho
         int esquerda = Integer.MAX_VALUE;
         int cima = Integer.MAX_VALUE;
@@ -68,7 +73,7 @@ public class PintorDoEsgoto {
         }
 
         // 3 e 4. Juntar salas e desenhar as portas
-        pintarPortas(planta, embaralhados);
+        pintarPortas(planta, embaralhados, andar);
 
         // 5. Água e grama (com um sorteador separado, igual ao Shattered)
         Random sorteioDaGeracao = Dado.atual();
@@ -101,7 +106,9 @@ public class PintorDoEsgoto {
         }
     }
 
-    private static void pintarPortas(PlantaDoAndar planta, List<Comodo> comodos) {
+    private static void pintarPortas(PlantaDoAndar planta, List<Comodo> comodos, int andar) {
+        // A chance de uma porta comum ficar escondida: 2/20 no andar 2 até 20/20 no andar 20
+        float chanceEscondida = andar > 1 ? Math.min(1f, andar / 20f) : 0f;
         Map<Comodo, Comodo> juntados = new HashMap<>();
         for (Comodo comodo : comodos) {
             for (Comodo outro : comodo.ligados.keySet()) {
@@ -123,17 +130,50 @@ public class PintorDoEsgoto {
                 }
                 if (porta.tipo == Comodo.Porta.Tipo.COMUM) {
                     porta.tipo = Comodo.Porta.Tipo.DESTRANCADA;
+                    // (o sorteio só acontece quando pode dar certo, pra não mudar os andares sem portas escondidas)
+                    if (chanceEscondida > 0 && Dado.decimal() < chanceEscondida) {
+                        porta.tipo = Comodo.Porta.Tipo.ESCONDIDA;
+                        if (!alcanca(comodos, comodo, outro)) {
+                            porta.tipo = Comodo.Porta.Tipo.DESTRANCADA;
+                        }
+                    }
                 }
                 byte tipo = switch (porta.tipo) {
                     case VAZIA, TUNEL -> PlantaDoAndar.CHAO;
                     case AGUA -> PlantaDoAndar.AGUA;
                     case COMUM, DESTRANCADA -> PlantaDoAndar.PORTA;
+                    case ESCONDIDA -> PlantaDoAndar.PORTA_ESCONDIDA;
                     case TRANCADA -> PlantaDoAndar.PORTA_TRANCADA;
                     case PAREDE -> PlantaDoAndar.PAREDE;
                 };
                 planta.definir(porta.x, porta.y, tipo);
             }
         }
+    }
+
+    // Dá pra ir de um cômodo a outro sem passar por porta escondida, trancada ou parede? (o "Graph" do Shattered,
+    // que só anda por portas abertas, túneis e portas comuns)
+    private static boolean alcanca(List<Comodo> comodos, Comodo de, Comodo ate) {
+        Set<Comodo> vistos = new HashSet<>();
+        Deque<Comodo> fila = new ArrayDeque<>();
+        fila.add(de);
+        vistos.add(de);
+        while (!fila.isEmpty()) {
+            Comodo aqui = fila.poll();
+            if (aqui == ate) {
+                return true;
+            }
+            for (Map.Entry<Comodo, Comodo.Porta> ligacao : aqui.ligados.entrySet()) {
+                Comodo.Porta porta = ligacao.getValue();
+                Comodo.Porta.Tipo tipo = porta == null ? Comodo.Porta.Tipo.COMUM : porta.tipo;
+                boolean passa = tipo == Comodo.Porta.Tipo.VAZIA || tipo == Comodo.Porta.Tipo.TUNEL || tipo == Comodo.Porta.Tipo.DESTRANCADA
+                        || tipo == Comodo.Porta.Tipo.COMUM;
+                if (passa && vistos.add(ligacao.getKey())) {
+                    fila.add(ligacao.getKey());
+                }
+            }
+        }
+        return false;
     }
 
     // Derruba a parede entre duas salas comuns, a partir da porta, até onde as duas deixarem (pelo menos 3 quadradinhos)
