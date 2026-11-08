@@ -143,6 +143,10 @@ jobs:
           if ! grep -q "Teste da varinha do relâmpago: acertou o rato = true, cargas 1/2, identificou = true" servidor.log; then echo "A varinha do relâmpago não funcionou"; exit 1; fi
           if ! grep -q "Teste da recarga nas varinhas: cargas 2/2" servidor.log; then echo "O pergaminho de recarga não encheu a varinha"; exit 1; fi
           if ! grep -q "Teste do cajado: varinha = relampago, nível 2, cargas 5/5, devolveu a de míssil mágico = true, gastou a nova = true" servidor.log; then echo "O cajado não recebeu a varinha"; exit 1; fi
+          if ! grep -q "Teste dos anéis: 12 anéis, cada gema esconde um tipo diferente = true, o achado vem sem identificar = true" servidor.log; then echo "Os anéis não estão certos"; exit 1; fi
+          if ! grep -q "Teste do anel do poder: foi pra casinha = true, conhece o tipo = true, força 10 -> 12" servidor.log; then echo "O anel do poder não funcionou"; exit 1; fi
+          if ! grep -q "Teste da identificação do anel: identificou = true" servidor.log; then echo "O anel não se identificou com a experiência"; exit 1; fi
+          if ! grep -q "Teste do anel amaldiçoado: bônus -2, grudou = true" servidor.log; then echo "O anel amaldiçoado não funcionou"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
 
       # Liga o jogo de verdade (sem monitor, no Xvfb), entra no mundo do teste do servidor

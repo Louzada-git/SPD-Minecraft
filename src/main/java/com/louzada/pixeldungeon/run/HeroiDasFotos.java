@@ -9,6 +9,7 @@ import com.louzada.pixeldungeon.dungeon.GeradorDeAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
+import com.louzada.pixeldungeon.heroi.Aneis;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
@@ -51,6 +52,8 @@ public class HeroiDasFotos {
         jogador.getInventory().add(new ItemStack(ModItens.KATANA.get()));
         jogador.getInventory().add(NivelDoItem.sortearDoChao(new ItemStack(ModItens.ARMADURA_DE_ESCAMAS.get()), sorteio, true));
         jogador.getInventory().add(SaqueDoAndar.varinhaAleatoria(sorteio));
+        // Um anel no dedo (pra foto mostrar as casinhas de anel)
+        jogador.setItemSlot(Aneis.PRIMEIRO, SaqueDoAndar.anelAleatorio(sorteio));
         Ouro.pegar(jogador, 87);
         RegrasDoHeroi.ganharXp(jogador, 13);
         jogador.addEffect(new MobEffectInstance(ModEfeitos.ABENCOADO, 20 * 60));
