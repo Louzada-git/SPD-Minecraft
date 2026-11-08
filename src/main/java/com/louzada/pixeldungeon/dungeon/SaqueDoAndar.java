@@ -47,7 +47,7 @@ import net.minecraft.world.item.ItemStack;
 //   - todo andar também tem uma ração largada no chão
 //   - em cada região caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares
 //   - cada porta trancada tem a chave de ferro dela largada numa sala comum
-//   - as salas especiais (arsenal, tesouraria, biblioteca, jardim, cripta) têm os prêmios delas
+//   - as salas especiais (arsenal, tesouraria, biblioteca, jardim, cripta) e as secretas têm os prêmios delas
 //   - andares de chefe não têm nada
 // Onde tem item, a grama alta vira grama baixa (senão ninguém acharia o item), igual ao Shattered.
 // Os itens no chão nunca somem sozinhos.
@@ -130,9 +130,15 @@ public class SaqueDoAndar {
             saques.add(new Saque(lugar[0], lugar[1], List.of(ChaveDeFerro.criar(run.numeroDaRun(), andar)), Onde.CHAO));
         }
 
-        // Os prêmios das salas especiais
+        // Os prêmios das salas especiais (o ouro do tesouro secreto é dividido entre as pilhas dele)
+        int pilhasDoTesouro = 0;
         for (PremioNoChao premio : planta.premios()) {
-            saques.add(saqueDoPremio(premio, sorteio, andar, semente));
+            if (premio.premio() == Premio.OURO_DO_TESOURO) {
+                pilhasDoTesouro++;
+            }
+        }
+        for (PremioNoChao premio : planta.premios()) {
+            saques.add(saqueDoPremio(premio, sorteio, andar, semente, pilhasDoTesouro));
         }
 
         for (Saque saque : saques) {
@@ -144,7 +150,7 @@ public class SaqueDoAndar {
     }
 
     // O item de verdade de cada prêmio das salas especiais
-    private static Saque saqueDoPremio(PremioNoChao premio, Random sorteio, int andar, long semente) {
+    private static Saque saqueDoPremio(PremioNoChao premio, Random sorteio, int andar, long semente, int pilhasDoTesouro) {
         Onde onde = premio.noBau() ? Onde.BAU : Onde.CHAO;
         ItemStack item = switch (premio.premio()) {
             case ARMA -> armaAleatoria(sorteio, andar);
@@ -155,10 +161,15 @@ public class SaqueDoAndar {
             case PERGAMINHO_DE_IDENTIFICAR_OU_REMOVER ->
                 Identificacao.pergaminho(semente, sorteio.nextBoolean() ? TipoDePergaminho.IDENTIFICACAO : TipoDePergaminho.REMOVER_MALDICAO);
             case ARMADURA_AMALDICOADA -> armaduraDaCripta(sorteio, andar);
+            case RACAO_DE_SUPRIMENTOS -> new ItemStack(ModItens.RACAO_DE_SUPRIMENTOS.get());
+            case OURO_DO_TESOURO -> ouroDoTesouro(sorteio, andar, pilhasDoTesouro);
+            case PREMIO_DO_LABIRINTO -> premioDoLabirinto(sorteio, andar);
+            case ARREMESSO -> arremessoAleatorio(sorteio, andar);
             case PLANTA_ALEATORIA -> sementeAleatoria(sorteio);
             case PLANTA_GRAMA_SOLAR -> new ItemStack(ItemSemente.daPlanta(TipoDePlanta.GRAMA_SOLAR));
+            case PLANTA_ESTRELA -> new ItemStack(ItemSemente.daPlanta(TipoDePlanta.FLOR_ESTRELA));
         };
-        if (premio.premio() == Premio.PLANTA_ALEATORIA || premio.premio() == Premio.PLANTA_GRAMA_SOLAR) {
+        if (premio.premio() == Premio.PLANTA_ALEATORIA || premio.premio() == Premio.PLANTA_GRAMA_SOLAR || premio.premio() == Premio.PLANTA_ESTRELA) {
             onde = Onde.PLANTADA;
         }
         // Igual ao Shattered: a partir do andar 2, cada baú de ouro da tesouraria tem 1 chance em 5 de ser um mímico
@@ -181,6 +192,24 @@ public class SaqueDoAndar {
         }
         armadura.remove(ModComponentes.MALDICAO_CONHECIDA.get());
         return armadura;
+    }
+
+    // O tesouro secreto (igual ao Shattered): não importa quantas pilhas sejam, o total é umas 8 pilhas normais de ouro
+    private static ItemStack ouroDoTesouro(Random sorteio, int andar, int pilhas) {
+        float proporcao = 8F / Math.max(1, pilhas);
+        return Ouro.pilha(Math.round(Ouro.quantidade(Ouro.sortear(sorteio, andar)) * proporcao));
+    }
+
+    // O baú do fim do labirinto secreto (igual ao Shattered): metade das vezes uma arma, metade uma armadura,
+    // de um tier da região seguinte, nunca amaldiçoada (e já se sabe disso), e 1 em 3 vem com +1 a mais
+    public static ItemStack premioDoLabirinto(Random sorteio, int andar) {
+        ItemStack premio = sorteio.nextInt(2) == 0 ? armaAleatoria(sorteio, andar + 5) : armaduraAleatoria(sorteio, andar + 5);
+        premio.remove(ModComponentes.MALDICAO.get());
+        premio.remove(ModComponentes.MALDICAO_CONHECIDA.get());
+        if (sorteio.nextInt(3) == 0) {
+            NivelDoItem.definirNivel(premio, NivelDoItem.nivel(premio) + 1);
+        }
+        return premio;
     }
 
     // Coloca os itens no andar já construído
