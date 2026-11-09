@@ -86,4 +86,12 @@ public class ModComponentes {
     // O glifo da armadura ou o encantamento da arma (o id), se tiver
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> ENCANTO = COMPONENTES.registerComponentType("encanto",
             construtor -> construtor.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+
+    // Os artefatos achados na dungeon: a parte da próxima carga que já encheu (0 a 1)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> CARGA_PARCIAL = COMPONENTES.registerComponentType(
+            "carga_parcial", construtor -> construtor.persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT));
+
+    // O que o artefato guarda: os pergaminhos que o livro instável ainda aceita, a semente das sandálias...
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> GUARDADO = COMPONENTES.registerComponentType("guardado",
+            construtor -> construtor.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
 }
