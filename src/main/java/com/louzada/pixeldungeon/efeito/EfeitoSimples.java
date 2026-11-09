@@ -30,6 +30,13 @@ public class EfeitoSimples extends MobEffect {
         return efeito;
     }
 
+    // Muda a velocidade de ataque (0,6 = 60% mais rápido)
+    public static EfeitoSimples queMudaAVelocidadeDeAtaque(MobEffectCategory categoria, int cor, String nome, double quanto) {
+        EfeitoSimples efeito = new EfeitoSimples(categoria, cor);
+        efeito.addAttributeModifier(Attributes.ATTACK_SPEED, id(nome + "_ataque"), quanto, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        return efeito;
+    }
+
     private static ResourceLocation id(String nome) {
         return ResourceLocation.fromNamespaceAndPath(PixelDungeon.MODID, "efeito/" + nome);
     }

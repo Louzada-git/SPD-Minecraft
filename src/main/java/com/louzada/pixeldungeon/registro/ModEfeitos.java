@@ -161,6 +161,24 @@ public class ModEfeitos {
     public static final DeferredHolder<MobEffect, EfeitoSimples> CONDENADO = EFEITOS.register("condenado",
             () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0x330033));
 
+    // ---- As habilidades das armas da Duelista ----
+
+    // Postura defensiva (bastão): esquiva 3x maior
+    public static final DeferredHolder<MobEffect, EfeitoSimples> POSTURA_DEFENSIVA = EFEITOS.register("postura_defensiva",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x66AAFF));
+    // Dança da espada (cimitarra): 60% mais rápida e 50% mais precisa
+    public static final DeferredHolder<MobEffect, EfeitoSimples> DANCA_DA_ESPADA = EFEITOS.register("danca_da_espada",
+            () -> EfeitoSimples.queMudaAVelocidadeDeAtaque(MobEffectCategory.BENEFICIAL, 0xFFCC44, "danca_da_espada", 0.6));
+    // Defendendo (escudos): todo ataque contra a Duelista é anulado
+    public static final DeferredHolder<MobEffect, EfeitoSimples> DEFENDENDO = EFEITOS.register("defendendo",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xC0C0C0));
+    // Girando (mangual): o próximo golpe acerta com dano a mais por volta
+    public static final DeferredHolder<MobEffect, EfeitoSimples> GIRANDO = EFEITOS.register("girando",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x88FF44));
+    // Carregado (besta): o próximo golpe acerta e arremessa o inimigo
+    public static final DeferredHolder<MobEffect, EfeitoSimples> CARREGADO = EFEITOS.register("carregado",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xFFAA33));
+
     // Armadura de pedra (varinha de terra viva): segura metade de cada golpe até a pedra acabar
     public static final DeferredHolder<MobEffect, EfeitoSimples> ARMADURA_DE_PEDRA = EFEITOS.register("armadura_de_pedra",
             () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x806040));
