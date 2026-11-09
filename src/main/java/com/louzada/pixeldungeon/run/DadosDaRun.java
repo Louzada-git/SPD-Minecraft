@@ -19,7 +19,8 @@ import net.minecraft.world.level.saveddata.SavedData;
 
 // Tudo sobre a run atual que precisa continuar salvo quando o mundo fecha:
 // número da run, se ela está acontecendo, semente, andares já construídos, chefes já derrotados,
-// quantas vezes caíram os itens que são limitados por run (as armas do slime) e as portas escondidas já achadas.
+// quantas vezes caíram os itens que são limitados por run (as armas do slime), as portas escondidas já achadas
+// e a missão do fantasma triste.
 // (Em qual run cada jogador está fica salvo no próprio jogador, no DadosDoHeroi.)
 public class DadosDaRun extends SavedData {
     private static final String NOME_DO_ARQUIVO = "pixeldungeon_run";
@@ -39,6 +40,8 @@ public class DadosDaRun extends SavedData {
     private Map<String, Integer> quedas = new HashMap<>();
     // As portas escondidas já achadas em cada andar (a planta do andar sai de novo da semente, então elas ficam salvas aqui)
     private Map<Integer, Set<Integer>> portasAchadas = new HashMap<>();
+    // A missão do fantasma triste (ver MissaoDoFantasma)
+    private CompoundTag fantasma = new CompoundTag();
 
     // Pega os dados salvos no mundo (ou cria do zero se ainda não existem)
     public static DadosDaRun pegar(MinecraftServer servidor) {
@@ -66,6 +69,7 @@ public class DadosDaRun extends SavedData {
         chefesDerrotados.clear();
         quedas.clear();
         portasAchadas.clear();
+        fantasma = new CompoundTag();
         setDirty();
     }
 
@@ -112,6 +116,15 @@ public class DadosDaRun extends SavedData {
         setDirty();
     }
 
+    // O que se sabe da missão do fantasma triste nesta run (quem muda chama "mudouOFantasma")
+    public CompoundTag fantasma() {
+        return fantasma;
+    }
+
+    public void mudouOFantasma() {
+        setDirty();
+    }
+
     // ---- Salvar e carregar ----
 
     @Override
@@ -145,6 +158,7 @@ public class DadosDaRun extends SavedData {
             listaDePortas.add(portasTag);
         }
         tag.put("portas_achadas", listaDePortas);
+        tag.put("fantasma", fantasma.copy());
         return tag;
     }
 
@@ -177,6 +191,7 @@ public class DadosDaRun extends SavedData {
             }
             dados.portasAchadas.put(portasTag.getInt("andar"), achadas);
         }
+        dados.fantasma = tag.getCompound("fantasma").copy();
         return dados;
     }
 
