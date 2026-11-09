@@ -110,6 +110,7 @@ public class EventosDaRun {
             TestesDaBusca.testar(servidor);
             TestesDasVarinhasAliadas.testar(servidor);
             TestesDasArmasNovas.testar(servidor);
+            TestesDosArtefatos.testar(servidor);
         }
     }
 
