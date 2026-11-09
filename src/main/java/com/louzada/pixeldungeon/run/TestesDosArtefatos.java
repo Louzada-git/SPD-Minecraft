@@ -87,14 +87,15 @@ public class TestesDosArtefatos {
         DadosDaRun outraRun = new DadosDaRun();
         Set<String> vistos = new HashSet<>();
         Random sorteio = new Random(7);
-        for (int i = 0; i < 9; i++) {
+        int quantos = ModItens.artefatos().size();
+        for (int i = 0; i < quantos; i++) {
             ItemStack achado = SaqueDoAndar.artefatoAleatorio(sorteio, outraRun);
             if (achado.getItem() instanceof ArtefatoAchado artefato) {
                 vistos.add(artefato.id());
             }
         }
         ItemStack depois = SaqueDoAndar.artefatoAleatorio(sorteio, outraRun);
-        PixelDungeon.LOGGER.info("Teste do saque de artefatos: {} artefatos diferentes em 9 sorteios, o décimo virou {}", vistos.size(),
+        PixelDungeon.LOGGER.info("Teste do saque de artefatos: {} artefatos diferentes em {} sorteios, o seguinte virou {}", vistos.size(), quantos,
                 depois.getItem() instanceof ArtefatoAchado ? "artefato" : "anel");
 
         // ---- Cálice de sangue ----
