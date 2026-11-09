@@ -278,7 +278,7 @@ Os 12 anéis do Shattered, com os mesmos números. Igual às poções, cada gema
 
 ### Artefatos
 
-Os 9 artefatos do Shattered que dá pra achar pela dungeon, com os mesmos números. Cada um aparece **uma vez por run** (acabando, vem um anel no lugar). Só funcionam **equipados**: na mão ou na casinha de artefato (a outra mão). Clique direito usa; agachado, a outra ação. A barrinha do ícone mostra as cargas, e a dica mostra o nível. Pergaminho de melhoria não sobe artefato (cada um sobe do seu jeito); o de transmutação troca por outro artefato que ainda não apareceu, levando o nível na proporção.
+Os 10 artefatos do Shattered que dá pra achar pela dungeon, com os mesmos números. Cada um aparece **uma vez por run** (acabando, vem um anel no lugar). Só funcionam **equipados**: na mão ou na casinha de artefato (a outra mão). Clique direito usa; agachado, a outra ação. A barrinha do ícone mostra as cargas, e a dica mostra o nível. Pergaminho de melhoria não sobe artefato (cada um sobe do seu jeito); o de transmutação troca por outro artefato que ainda não apareceu, levando o nível na proporção.
 
 | Artefato | Carrega | Usar | Sobe de nível (máximo) |
 |---|---|---|---|
@@ -291,8 +291,27 @@ Os 9 artefatos do Shattered que dá pra achar pela dungeon, com os mesmos númer
 | Braçadeira do mestre dos ladrões | 5 + nível/2, com a experiência | rouba o item que o inimigo do lado deixaria ao morrer (chance x 1 + 0,1 x nível, mais 0,5 de surpresa). Ele fica cego e aleijado; quem foi roubado não deixa mais nada | roubando (10) |
 | Sandálias da natureza | até 100, pisoteando grama alta; e a grama solta mais sementes e orvalho | o efeito da última semente que comeram, até 3 quadradinhos (de 12 a 80 de carga) | comendo sementes diferentes, 3 + 3 x nível por nível: viram sapatos, botas e grevas (3) |
 | Chave de crânio | 3 + nível/2, vem cheia, com o tempo (120 turnos) | numa porta trancada, destranca (1 carga); numa porta comum, tranca (2 cargas, nenhum inimigo passa, você abre de graça); em outro lugar, paredes espectrais na sua frente por 10 turnos (2 cargas) | usando (10) |
+| Rosa seca | 100, vem cheia; sem o fantasma, 500 turnos | só depois da missão do fantasma triste: chama o fantasma (ver abaixo); com ele por perto, dá ordens mirando (inimigo: atacar; chão: guardar o lugar; nada: seguir); agachado, dá uma arma ou armadura pra ele | com as pétalas secas, que aparecem pelos andares depois da missão (10) |
 
 - Diferenças do Shattered: os artefatos nunca vêm amaldiçoados; o talismã não avisa de armadilhas escondidas (o mod ainda não tem armadilhas); a braçadeira ainda não rouba de lojas e a ampulheta ainda não sobe de nível (o mod ainda não tem lojas). O kit do alquimista fica pra quando tiver alquimia.
+
+### A missão do fantasma triste
+
+Igual ao Shattered, um **fantasma triste** espera na sala da saída de um dos andares do esgoto (1 em 3 no andar 2, 1 em 2 no 3, e com certeza no 4, se não apareceu antes). Ninguém consegue machucá-lo. Clique direito conversa com ele (a conversa abre numa janela).
+
+- Na primeira conversa, ele conta como morreu, e o inimigo que o matou nasce num canto do andar, acordado e vagando pro lado do herói:
+
+| Andar | Inimigo | Vida | Precisão | Esquiva | Dano | Armadura | XP | O que ele faz |
+|---|---|---|---|---|---|---|---|---|
+| 2 | Rato fétido | 20 | 12 | 5 | 1-4 | 0-3 | 4 | 1 em 3 golpes deixa muco cáustico; apanhando, solta uma nuvem de fedor que paralisa por 2 turnos |
+| 3 | Gnoll trapaceiro | 20 | 16 | 5 | 1-6 | 0-2 | 5 | só ataca de longe, jogando dardos, e foge de quem chega perto; cada acerto seguido é pior (veneno, e depois fogo). Sempre deixa armas de arremesso |
+| 4 | Caranguejo grande | 25 | 12 | 0 | 1-7 | 0-4 | 6 | mais lento; bloqueia todo golpe (e as magias das varinhas) de quem ele está caçando, se estiver vendo. Só dá pra acertar pegando ele distraído. Sempre deixa 2 carnes misteriosas |
+
+- Morto o inimigo, o fantasma agradece ("venha me encontrar"). Conversando de novo, dá pra escolher **uma** recompensa: uma arma ou uma armadura do tier 2 a 5 (50%, 30%, 15%, 5%), +0 a +3 (50%, 30%, 15%, 5%), e 20% de chance de vir com um encantamento (na arma) ou um glifo (na armadura). Aí o fantasma vai embora.
+- Os inimigos da missão não podem ser corrompidos (ficam condenados, igual ao Goo).
+- Completa a missão, a **rosa seca** (um dos artefatos) passa a funcionar, e as **pétalas secas** começam a aparecer pelos andares (uma a cada 2 andares, se a rosa já foi achada). Na mochila de quem tem a rosa, a pétala volta pra ela e a rosa sobe um nível.
+- **O fantasma da rosa:** vida 40 + 10 x nível da rosa; força 13 + nível/2; precisão nível do herói + 9; esquiva nível do herói + 4. Sem arma, bate 1 a força - 8; com a arma e a armadura que você der (que ele tenha força pra usar e que você saiba que não são amaldiçoadas), usa os números delas, igual ao herói. Segue o herói (até de andar), ataca os inimigos e obedece às ordens. Sem a rosa equipada, perde 1 de vida por turno. Enquanto ele vive, a rosa não carrega: cura o fantasma (a vida toda em 500 turnos). Clique direito nele: ele conversa.
+- Diferenças do Shattered: o fantasma da rosa anda pelo chão (não voa), não usa o encantamento da arma nem o glifo da armadura, e ataca sempre uma vez por turno (o peso e o alcance da arma não mudam isso).
 
 ### Armaduras
 
@@ -550,7 +569,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 ## O que vem depois
 
 1. **Texturas próprias** dos blocos.
-2. **Mais itens:** poções e pergaminhos exóticos e alquimia (e o kit do alquimista), a missão do fantasma triste e a rosa seca, e as lojas.
+2. **Mais itens:** poções e pergaminhos exóticos e alquimia (e o kit do alquimista), e as lojas.
 3. **O resto do esgoto do Shattered:** armadilhas, as salas secretas que faltam e as salas que precisam de abismo.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
@@ -563,7 +582,7 @@ src/main/java/com/louzada/pixeldungeon/
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas, portas gigantes, plantas e blocos de decoração
   item/                        armas, armas de arremesso, varinhas, anéis, armadura, glifos, encantamentos, o selo do Guerreiro, poções, pergaminhos, sementes, identificação e maldições
-    artefato/                  os 9 artefatos que se acha pela dungeon (o cálice, o chifre, a ampulheta, o livro, as correntes, o talismã, a braçadeira, as sandálias e a chave)
+    artefato/                  os 10 artefatos que se acha pela dungeon (o cálice, o chifre, a ampulheta, o livro, as correntes, o talismã, a braçadeira, as sandálias, a chave e a rosa)
   entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o guardião de terra, as guardas, o míssil mágico, as nuvens de gás...
   efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
   combate/
@@ -605,6 +624,7 @@ src/main/java/com/louzada/pixeldungeon/
     geracao/                   a geração do Shattered: os cômodos, o arquiteto (volta ou oito) e o pintor do esgoto
     ConstrutorDeAndar.java     transforma o mapa em blocos (com as portas gigantes; e abre as portas escondidas achadas)
     Busca.java                 procurar: acha as portas escondidas das salas secretas
+    MissaoDoFantasma.java      a missão do fantasma triste: onde ele aparece, os inimigos dela e a recompensa
     PopulacaoDoAndar.java      inimigos de cada andar e renascimento
     SaqueDoAndar.java          o que fica espalhado pelo andar
     Baus.java                  baús e mímicos disfarçados
