@@ -63,6 +63,10 @@ public record SpriteDoShattered(ResourceLocation textura, int larguraDaFolha, in
     public static final SpriteDoShattered GOO = new SpriteDoShattered(textura("goo"), 256, 16, 20, 14, 0.1F,
             anim(10, true, 2, 1, 0, 0, 1), anim(15, true, 3, 2, 1, 2), anim(10, false, 8, 9, 10), anim(10, false, 5, 6, 7),
             anim(20, true, 4, 3, 2, 1, 0));
+    // EarthGuardianSprite (o guardião da terra, do tamanho de uma pessoa)
+    public static final SpriteDoShattered GUARDIAO = new SpriteDoShattered(textura("guardian"), 256, 16, 12, 15, 0.125F,
+            anim(2, true, 0, 0, 0, 0, 0, 1, 1), anim(15, true, 2, 3, 4, 5, 6, 7), anim(12, false, 8, 9, 10), anim(5, false, 11, 12, 13, 14, 15, 15),
+            null);
     // MimicSprite (o mímico comum)
     public static final SpriteDoShattered MIMICO = new SpriteDoShattered(textura("mimic"), 256, 64, 16, 16, 1 / 16F,
             anim(5, true, 3, 3, 3, 4, 4), anim(10, true, 3, 4, 5, 6, 6, 5, 4), anim(10, false, 3, 7, 8, 9), anim(5, false, 10, 11, 12), null);
