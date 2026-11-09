@@ -247,6 +247,11 @@ public class EfeitosDeVarinha {
 
     // Empurra uns quadradinhos pra uma direção, parando antes de uma parede (e aí leva dano e fica paralisado)
     public static void empurrar(ServerPlayer jogador, LivingEntity criatura, Vec3 direcao, int quadradinhos) {
+        empurrar(jogador, criatura, direcao, quadradinhos, true);
+    }
+
+    // Igual, mas dá pra escolher se bater na parede machuca (a lança só empurra)
+    public static void empurrar(ServerPlayer jogador, LivingEntity criatura, Vec3 direcao, int quadradinhos, boolean machucaNaParede) {
         if (criatura.hasEffect(ModEfeitos.ENRAIZADO) || quadradinhos <= 0) {
             return;
         }
@@ -257,7 +262,7 @@ public class EfeitosDeVarinha {
         Vec3 destino = bateu ? parede.getLocation().subtract(direcao.scale(criatura.getBbWidth() / 2 + 0.3)) : fim;
         double andou = destino.distanceTo(inicio);
         criatura.teleportTo(destino.x, criatura.getY(), destino.z);
-        if (bateu) {
+        if (bateu && machucaNaParede) {
             int distancia = (int) Math.round(andou / QUADRADINHO);
             if (distancia > 0) {
                 criatura.invulnerableTime = 0;
