@@ -2,13 +2,14 @@ package com.louzada.pixeldungeon.entidade;
 
 import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.heroi.Furtividade;
+import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 
 // O ataque corpo a corpo dos inimigos do Shattered (e da imagem espelhada):
-//   - um golpe por turno (2 segundos)
+//   - um golpe por turno (2 segundos); lento (varinha de corrupção), um a cada 2 turnos
 //   - quem está caçando um herói invisível continua indo atrás dele, mas não consegue atacar
 public class AtaqueDoShattered extends MeleeAttackGoal {
     private PathfinderMob quemAtaca;
@@ -27,7 +28,7 @@ public class AtaqueDoShattered extends MeleeAttackGoal {
     @Override
     protected void resetAttackCooldown() {
         super.resetAttackCooldown();
-        proximoAtaque = quemAtaca.level().getGameTime() + Turno.TICKS;
+        proximoAtaque = quemAtaca.level().getGameTime() + (quemAtaca.hasEffect(ModEfeitos.LENTO) ? 2 : 1) * Turno.TICKS;
     }
 
     @Override

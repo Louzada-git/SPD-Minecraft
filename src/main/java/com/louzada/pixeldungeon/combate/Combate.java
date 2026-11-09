@@ -52,11 +52,18 @@ public class Combate {
             quemApanha.removeEffect(ModEfeitos.ILUMINADO);
         }
         dano = atacante.antesDaArmadura(golpe, dano);
+        // Fraco (varinha de corrupção): 33% a menos
+        if (atacante.entidade().hasEffect(ModEfeitos.FRACO)) {
+            dano *= 0.67F;
+        }
 
-        // 3. Quem apanha (o glifo da viscosidade age depois da armadura)
+        // 3. Quem apanha (o glifo da viscosidade age depois da armadura; o vulnerável também, igual ao Shattered)
         dano = alvo.aoSerAtingido(golpe, dano);
         dano = Math.max(0, dano - armadura(golpe));
         dano = alvo.depoisDaArmadura(golpe, dano);
+        if (quemApanha.hasEffect(ModEfeitos.VULNERAVEL)) {
+            dano *= 1.33F;
+        }
 
         // 4. Quem bate
         dano = atacante.aoAcertar(golpe, dano);
@@ -89,11 +96,14 @@ public class Combate {
         return sorteio.nextFloat() * precisao >= sorteio.nextFloat() * esquiva;
     }
 
-    // Atordoado: metade. Abençoado (flor-estrela): +25%. Vale pra precisão e pra esquiva.
+    // Atordoado: metade. Feitiço (varinha de corrupção): -20%. Abençoado (flor-estrela): +25%. Vale pra precisão e pra esquiva.
     public static float pelosEfeitos(LivingEntity criatura) {
         float fator = 1.0F;
         if (criatura.hasEffect(ModEfeitos.ATORDOADO)) {
             fator *= 0.5F;
+        }
+        if (criatura.hasEffect(ModEfeitos.FEITICO)) {
+            fator *= 0.8F;
         }
         if (criatura.hasEffect(ModEfeitos.ABENCOADO)) {
             fator *= 1.25F;
