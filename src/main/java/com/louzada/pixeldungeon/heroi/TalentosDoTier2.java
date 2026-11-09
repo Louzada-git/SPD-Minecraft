@@ -13,6 +13,7 @@ import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.Artefato;
+import com.louzada.pixeldungeon.item.ArtefatoAchado;
 import com.louzada.pixeldungeon.item.Baga;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
@@ -339,13 +340,14 @@ public class TalentosDoTier2 {
                 }
             }
         }
-        // Recarga de artefato: a capa e o tomo ganham 1/4 de carga por turno
+        // Recarga de artefato: a capa e o tomo ganham 1/4 de carga por turno; os artefatos achados equipados, cada um do seu jeito
         if (recargaDeArtefato) {
             for (ItemStack pilha : new ItemStack[] { CapaDasSombras.acharCapa(jogador), TomoSagrado.acharTomo(jogador) }) {
                 if (pilha != null && !pilha.isEmpty()) {
                     Cargas.adiantar(pilha, agora, Artefato.cargasMaximas(pilha), Artefato::ticksParaCarregar, 0.25F);
                 }
             }
+            ArtefatoAchado.recargaDeFora(jogador, 1);
         }
         // Recarga de arma (Duelista): com recarga de varinha ou de artefato, 1 carga a cada 15/10 turnos
         int pontos = dados.pontos(Talento.RECARGA_DE_ARMA);

@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.heroi;
 
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.combate.Particulas;
+import com.louzada.pixeldungeon.item.ArtefatoAchado;
 import com.louzada.pixeldungeon.registro.ModAnexos;
 
 import net.minecraft.ChatFormatting;
@@ -81,6 +82,8 @@ public class RegrasDoHeroi {
         DadosDoHeroi dados = dados(jogador);
         // Os anéis que ele está usando vão se identificando
         Aneis.aoGanharXp(jogador, dados, quantidade);
+        // Os artefatos que carregam com a experiência (o chifre, a braçadeira, as correntes): que parte de um nível foi
+        ArtefatoAchado.xpDoHeroi(jogador, quantidade / (float) xpParaSubir(dados.nivel()));
         dados.definirXp(dados.xp() + quantidade);
 
         int niveisGanhos = 0;

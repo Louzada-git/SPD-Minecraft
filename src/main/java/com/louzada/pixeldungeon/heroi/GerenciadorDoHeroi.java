@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon.heroi;
 import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.dungeon.Busca;
 import com.louzada.pixeldungeon.item.ArmaDeArremesso;
+import com.louzada.pixeldungeon.item.ArtefatoAchado;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
 import com.louzada.pixeldungeon.item.ItemAnel;
 import com.louzada.pixeldungeon.item.NivelDoItem;
@@ -58,6 +59,8 @@ public class GerenciadorDoHeroi {
             TalentosDoTier2.aoTurno(jogador, dados);
             Aneis.aoTurno(jogador, dados);
             EncantamentosDoHeroi.aoTurno(jogador, dados);
+            // Os artefatos achados na dungeon que estão equipados (recargas, o cálice, a ampulheta...)
+            ArtefatoAchado.turnoDoHeroi(jogador);
         }
         CapaDasSombras.aoTickDoHeroi(jogador, dados, umTurno);
         // Andando pela dungeon, às vezes o herói nota uma porta escondida
