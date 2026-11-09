@@ -5,6 +5,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.heroi.Aneis;
+import com.louzada.pixeldungeon.heroi.ArmaduraDePedra;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.Furtividade;
@@ -169,7 +170,8 @@ public class HeroiEmCombate implements Combatente {
             }
             NivelDoItem.aoUsar(jogador, armadura);
         }
-        return dano;
+        // A armadura de pedra (varinha de terra viva) segura metade do golpe
+        return ArmaduraDePedra.segurar(jogador, dano);
     }
 
     // Glifo da viscosidade: parte do dano que passou pela armadura vem aos poucos
