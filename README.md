@@ -90,11 +90,21 @@ Igual à interface completa do Shattered. Durante a run, a barra de itens, os co
 
 | Armas | Habilidade |
 |---|---|
-| Espada curta desgastada, espada curta, espada, espada larga | **Cortar:** +3/+4/+5/+7 de dano, acerto garantido. Se matar, o próximo corte em 5 turnos é de graça |
+| Espada curta desgastada, espada curta, espada, espada longa, espada larga | **Cortar:** +3/+4/+5/+6/+7 de dano, acerto garantido. Se matar, o próximo corte em 5 turnos é de graça |
 | Adaga, punhal, lâmina assassina | **Furtivo:** lampeja até 5/4/3 quadradinhos pra onde está olhando e fica 2 turnos invisível |
-| Luvas cravejadas, sai | **Combinação:** acerto garantido, +3/+4 de dano pra cada golpe que acertou antes |
+| Luvas cravejadas, sai, manopla de pedra | **Combinação:** acerto garantido, +3/+4/+5 de dano pra cada golpe que acertou antes |
 | Florete, katana | **Estocada:** avança até um inimigo a 1 quadradinho e golpeia com +5/+8, acerto garantido |
-| Maça, machadinha, clava, martelo de guerra | **Golpe pesado:** acerto garantido, atordoa 5 turnos (precisão e esquiva pela metade); de surpresa, +3/+4/+5/+6 |
+| Maça, machadinha, clava, machado de batalha, martelo de guerra | **Golpe pesado:** acerto garantido, atordoa 5 turnos (precisão e esquiva pela metade); de surpresa, +3/+4/+5/+5/+6 |
+| Lança, gládio | **Espetar:** um inimigo no alcance, mas não do lado, com +9/+12 e acerto garantido; ele é empurrado 1 quadradinho |
+| Bastão | **Postura defensiva:** esquiva 3x maior por 4 turnos (não leva tempo) |
+| Foice, foice de guerra | **Ceifar:** acerto garantido; o golpe vira 15/30 de sangramento |
+| Cimitarra | **Dança da espada:** +60% de velocidade de ataque e +50% de precisão por 4 turnos (não leva tempo) |
+| Escudo redondo, escudo grande | **Defender:** anula todos os ataques contra a Duelista por 5/3 turnos; depois de bloquear um, atacar ou usar magia acaba a defesa |
+| Chicote | **Chicotear:** golpeia todos os inimigos dentro do alcance, com acerto garantido |
+| Mangual | **Girar:** até 3 voltas (só a primeira gasta carga, cada uma dura 3 turnos); o próximo golpe acerta com +8 por volta |
+| Lâmina rúnica | **Corte rúnico:** acerto garantido, com +300% de poder de encantamento |
+| Besta | **Tiro carregado:** o próximo golpe acerta e arremessa o inimigo 4 quadradinhos |
+| Machado grande | **Retribuição:** só com menos de metade da vida; +15 de dano, acerto garantido |
 
 - **Tomo sagrado (Clérigo):** clique direito abre a lista de magias (em linhas de 5). Começa com 3 cargas e fica mais forte com o uso.
 
@@ -114,20 +124,36 @@ Igual à interface completa do Shattered. Durante a run, a barra de itens, os co
 
 ### Armas
 
-Além das armas iniciais, 10 armas do Shattered, com os mesmos números. Elas aparecem pelos andares (no esgoto: 75% tier 2, 20% tier 3, 4% tier 4, 1% tier 5).
+Além das armas iniciais, as outras 26 armas de perto do Shattered, com os mesmos números. Elas aparecem pelos andares (no esgoto: 75% tier 2, 20% tier 3, 4% tier 4, 1% tier 5).
 
 | Arma | Tier | Dano | Força | Especial |
 |---|---|---|---|---|
 | Espada curta | 2 | 2-15 | 12 | |
 | Machadinha | 2 | 2-12 | 12 | +32% de precisão |
 | Punhal | 2 | 2-12 | 12 | mais forte de surpresa |
+| Lança | 2 | 2-20 | 12 | lenta (1,5 turno), alcance +1 quadradinho; +4 por nível |
+| Bastão | 2 | 2-12 | 12 | 0-2 de defesa extra |
+| Foice | 2 | 2-20 | 12 | -32% de precisão |
 | Espada | 3 | 3-20 | 14 | |
 | Clava | 3 | 3-16 | 14 | +28% de precisão |
 | Sai | 3 | 3-10 | 14 | ataca 2x mais rápido |
+| Cimitarra | 3 | 3-16 | 14 | ataca 1,25x mais rápido |
+| Escudo redondo | 3 | 3-12 | 14 | 0-4 de defesa extra (+1 por nível); +2 de dano por nível |
+| Chicote | 3 | 3-15 | 14 | alcance +2 quadradinhos; +3 por nível |
 | Katana | 4 | 4-20 | 16 | 0-3 de defesa extra |
 | Lâmina assassina | 4 | 4-20 | 16 | mais forte de surpresa |
+| Espada longa | 4 | 4-25 | 16 | |
+| Machado de batalha | 4 | 4-20 | 16 | +24% de precisão |
+| Mangual | 4 | 4-35 | 16 | -20% de precisão, não ataca de surpresa; +8 por nível |
+| Lâmina rúnica | 4 | 4-20 | 16 | +6 por nível |
+| Besta | 4 | 4-20 | 16 | +4 por nível (os dardos que ela fortalece ainda não existem no mod) |
 | Espada larga | 5 | 5-30 | 18 | |
 | Martelo de guerra | 5 | 5-24 | 18 | +20% de precisão |
+| Gládio | 5 | 5-40 | 18 | lenta (1,5 turno), alcance +1 quadradinho; +8 por nível |
+| Machado grande | 5 | 5-45 | 20 | muito pesado |
+| Escudo grande | 5 | 5-18 | 18 | 0-6 de defesa extra (+2 por nível); +4 de dano por nível |
+| Manopla de pedra | 5 | 5-15 | 18 | ataca 2x mais rápido |
+| Foice de guerra | 5 | 5-40 | 18 | -20% de precisão |
 
 - Igual ao Shattered, cada ponto de força que falta deixa a arma bem menos precisa, e a Duelista não consegue usar a habilidade. Os heróis começam com 10 de força; cada **poção de força** dá +1 (caem 2 no esgoto).
 - **Nível:** o pergaminho de melhoria dá +1 de nível: +1 no dano mínimo, +(tier + 1) no máximo (as armas rápidas ganham metade) e um pouco menos de força necessária. Na armadura, +1 de defesa mínima e +tier na máxima. No cajado do Mago e nas varinhas, +1 carga (até 10) e uma magia mais forte.
