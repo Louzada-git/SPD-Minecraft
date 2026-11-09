@@ -138,7 +138,7 @@ jobs:
           if ! grep -q "Teste da faca cravada: cravadas = 1, caiu quando o rato morreu = true" servidor.log; then echo "A faca cravada não caiu"; exit 1; fi
           if ! grep -q "Teste do arremesso: ficaram 2 pedras na mão" servidor.log; then echo "A pedra não foi arremessada"; exit 1; fi
           if ! grep -q "Teste do arremesso: acertou o rato = true, a pedra caiu no chão = true" servidor.log; then echo "A pedra arremessada não acertou o rato"; exit 1; fi
-          if ! grep -q "Teste das varinhas: 10 varinhas, míssil mágico com 3 cargas, relâmpago 5-10 no +0 e 6-15 no +1" servidor.log; then echo "As varinhas não estão certas"; exit 1; fi
+          if ! grep -q "Teste das varinhas: 13 varinhas, míssil mágico com 3 cargas, relâmpago 5-10 no +0 e 6-15 no +1" servidor.log; then echo "As varinhas não estão certas"; exit 1; fi
           if ! grep -q "Teste do saque de varinha: identificada = false, disparos pra identificar = 10" servidor.log; then echo "As varinhas do chão não estão certas"; exit 1; fi
           if ! grep -q "Teste da varinha do relâmpago: acertou o rato = true, cargas 1/2, identificou = true" servidor.log; then echo "A varinha do relâmpago não funcionou"; exit 1; fi
           if ! grep -q "Teste da recarga nas varinhas: cargas 2/2" servidor.log; then echo "O pergaminho de recarga não encheu a varinha"; exit 1; fi
@@ -170,6 +170,13 @@ jobs:
           if ! grep -qE "Teste do mapeamento das portas: revelou [0-9]+ no andar [0-9], revelou alguma = true, sobrou escondida = 0" servidor.log; then echo "O mapeamento mágico não revelou as portas escondidas"; exit 1; fi
           if ! grep -q "Teste da previsão do ladino: com +2 avisou = true, sem o talento avisou = false, no andar 1 avisou = false" servidor.log; then echo "A previsão do ladino não funcionou"; exit 1; fi
           if ! grep -q "Teste do labirinto: 200 prêmios, amaldiçoados = 0, maldição desconhecida = 0, metade armaduras = true" servidor.log; then echo "O prêmio do labirinto não saiu como no Shattered"; exit 1; fi
+          if ! grep -qE "Teste da terra viva: o disparo virou [4-6] de pedra, efeito = true, no máximo 16, golpe de 6 virou 3.0 e a pedra ficou 13" servidor.log; then echo "A armadura de pedra não funcionou"; exit 1; fi
+          if ! grep -q "Teste do guardião da terra: nasceu aliado = true, vida 16.0 (a pedra era 13), a pedra foi pra ele = true, voltou sem inimigos = true, virou 16 de pedra" servidor.log; then echo "O guardião da terra não funcionou"; exit 1; fi
+          if ! grep -q "Teste dos efeitos novos: feitiço deixa 0.8 da precisão, lento deixa 0.5 da velocidade, condenado fez 3 de dano virar 5.01" servidor.log; then echo "Os efeitos da corrupção não funcionaram"; exit 1; fi
+          if ! grep -qE "Teste da varinha de corrupção: resistência [0-9.]+ com a vida cheia, ficou com efeito ruim = true; ferido [0-9.]+, corrompido = true, ganhou XP = true" servidor.log; then echo "A varinha de corrupção não funcionou"; exit 1; fi
+          if ! grep -q "Teste da corrupção no chefe: ficou condenado = true, virou aliado = false" servidor.log; then echo "A corrupção no chefe não funcionou"; exit 1; fi
+          if ! grep -q "Teste da varinha de proteção: sem varinha na mochila pode = false, com ela pode = true, a guarda nasceu nível 1, melhorou pra 2, energia 2/2, sem energia pra outra = true" servidor.log; then echo "A varinha de proteção não funcionou"; exit 1; fi
+          if ! grep -q "Teste da guarda: disparou no rato = true, disparos 1, virou sentinela nível 4 com vida 31.0/35.0" servidor.log; then echo "A guarda não funcionou"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
 
       # Liga o jogo de verdade (sem monitor, no Xvfb), entra no mundo do teste do servidor
