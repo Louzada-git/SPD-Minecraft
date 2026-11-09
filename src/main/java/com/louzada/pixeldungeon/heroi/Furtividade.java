@@ -28,5 +28,7 @@ public class Furtividade {
         if (invisivel(jogador)) {
             jogador.removeEffect(MobEffects.INVISIBILITY);
         }
+        // A defesa do escudo da Duelista também acaba (se já bloqueou algum ataque)
+        HabilidadesDaDuelista.aoAgir(jogador);
     }
 }

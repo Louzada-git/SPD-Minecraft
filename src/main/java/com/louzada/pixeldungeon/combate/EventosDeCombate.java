@@ -47,6 +47,13 @@ public class EventosDeCombate {
             return;
         }
 
+        // Defendendo com um escudo (Duelista): qualquer ataque de alguém contra ela é anulado
+        if (alvo instanceof ServerPlayer defensora && atacante != null && atacante != alvo && !(atacante instanceof Player)
+                && HabilidadesDaDuelista.defendeu(defensora)) {
+            evento.setCanceled(true);
+            return;
+        }
+
         // Golpe que já veio resolvido: só o que acontece com quem apanha
         if (Combate.golpeJaCalculado()) {
             finalizarGolpe(evento, alvo, atacante, evento.getAmount());
@@ -78,6 +85,8 @@ public class EventosDeCombate {
             // O Minecraft já calculou o golpe com base 1 (vezes a recarga e o crítico): fica essa proporção
             double ataqueBase = jogador.getAttributeValue(Attributes.ATTACK_DAMAGE);
             golpe.forca(ataqueBase > 0 ? (float) (evento.getAmount() / ataqueBase) : 1.0F);
+            // Mangual girando ou besta carregada: o golpe acerta (e o mangual bate mais forte)
+            HabilidadesDaDuelista.antesDoGolpe(jogador, golpe);
         }
         float dano = Combate.resolver(golpe);
         if (dano == Combate.ERROU) {

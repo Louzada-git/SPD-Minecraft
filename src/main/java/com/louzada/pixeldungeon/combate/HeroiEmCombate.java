@@ -77,6 +77,10 @@ public class HeroiEmCombate implements Combatente {
         precisao *= Maldicao.multiplicadorDePrecisao(jogador, golpe.arma());
         // Anel da precisão: 1,3x por bônus
         precisao *= (float) Math.pow(1.3, dados.bonusDoAnel(TipoDeAnel.PRECISAO));
+        // Dança da espada (cimitarra da Duelista): +50%
+        if (jogador.hasEffect(ModEfeitos.DANCA_DA_ESPADA)) {
+            precisao *= 1.5F;
+        }
         // Agilidade líquida: o próximo golpe de perto depois de usar uma poção
         return golpe.deLonge() ? precisao : TalentosDoTier2.precisaoDePerto(jogador, dados, precisao);
     }
@@ -92,6 +96,10 @@ public class HeroiEmCombate implements Combatente {
         float esquiva = RegrasDoHeroi.esquiva(dados.nivel()) * (float) Math.pow(1.125, dados.bonusDoAnel(TipoDeAnel.EVASAO));
         if (armadura().getItem() instanceof ArmaduraDoShattered armadura) {
             esquiva *= armadura.fatorDeEsquiva(armadura(), dados.forca());
+        }
+        // Postura defensiva (bastão da Duelista): 3x
+        if (jogador.hasEffect(ModEfeitos.POSTURA_DEFENSIVA)) {
+            esquiva *= 3;
         }
         return TalentosDoTier2.esquiva(jogador, esquiva);
     }
@@ -141,9 +149,10 @@ public class HeroiEmCombate implements Combatente {
         return defesa;
     }
 
+    // O mangual não ataca de surpresa
     @Override
     public boolean fazAtaqueSurpresa() {
-        return true;
+        return !(jogador.getMainHandItem().getItem() instanceof ArmaDoShattered arma) || arma.atacaDeSurpresa();
     }
 
     // ---- Reações ----
@@ -193,12 +202,16 @@ public class HeroiEmCombate implements Combatente {
         }
         if (NivelDoItem.podeIdentificar(golpe.arma())) {
             dano = Maldicao.aoGolpearCom(jogador, alvo, golpe.arma(), dano);
-            dano = Encantamento.aoGolpearCom(jogador, alvo, golpe.arma(), dano, GlifosDoHeroi.poder(jogador));
+            // O corte rúnico (lâmina rúnica da Duelista) deixa o encantamento mais forte
+            dano = Encantamento.aoGolpearCom(jogador, alvo, golpe.arma(), dano, GlifosDoHeroi.poder(jogador) + HabilidadesDaDuelista.poderExtraDoGolpe());
             NivelDoItem.aoUsar(jogador, golpe.arma());
         }
-        // A Duelista conta os golpes pra combinação das luvas
+        // A Duelista conta os golpes pra combinação das luvas, e a besta carregada arremessa
         if (dados.classe() == ClasseDoHeroi.DUELISTA) {
             HabilidadesDaDuelista.contarGolpe(dados, agora);
+        }
+        if (!golpe.deLonge()) {
+            HabilidadesDaDuelista.aoAcertar(jogador, golpe);
         }
         if (golpe.surpresa()) {
             NumerosFlutuantes.mostrar(alvo, "✦", NumerosFlutuantes.AMARELO);
