@@ -11,6 +11,8 @@ import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
 import com.louzada.pixeldungeon.heroi.GlifosDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.Talento;
+import com.louzada.pixeldungeon.item.ArtefatoAchado;
+import com.louzada.pixeldungeon.item.artefato.SandaliasDaNatureza;
 import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.louzada.pixeldungeon.registro.ModItens;
 
@@ -36,6 +38,7 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 // encostou em qualquer parte, o quadradinho todo é pisoteado e vira um tapete de musgo.
 //   - 1 em 6: cai uma gota de orvalho (ela voa sozinha pro odre de quem estiver perto)
 //   - 1 em 25: cai uma semente
+//   - com as sandálias da natureza: elas carregam, e a semente (até 1 em 9) e o orvalho (até 1 em 4) caem mais
 //   - Caçadora: passa sem derrubar a grama (fica "trilhada"), mas ainda ganha o que cair
 //   - Caçadora com recompensa da natureza: às vezes cai uma baga
 // Quem voa (o enxame de moscas) não pisoteia.
@@ -93,7 +96,15 @@ public class Grama {
 
         // A grama trilhada já deu o que tinha pra dar
         if (!jaTrilhado) {
-            soltarCoisas(mundo, criatura, inicioX + 2.0, baixo + 0.5, inicioZ + 2.0);
+            int natureza = 0;
+            if (criatura instanceof ServerPlayer jogador && GerenciadorDoHeroi.emJogo(jogador)) {
+                ItemStack sandalias = ArtefatoAchado.equipado(jogador, SandaliasDaNatureza.class);
+                if (sandalias != null) {
+                    natureza = ArtefatoAchado.nivel(sandalias) + 1;
+                    ((SandaliasDaNatureza) sandalias.getItem()).aoPisotear(jogador, sandalias);
+                }
+            }
+            soltarCoisas(mundo, criatura, inicioX + 2.0, baixo + 0.5, inicioZ + 2.0, natureza);
         }
     }
 
@@ -125,12 +136,13 @@ public class Grama {
         return cresceu;
     }
 
-    private static void soltarCoisas(ServerLevel mundo, LivingEntity quemPisou, double x, double y, double z) {
+    // natureza: o nível das sandálias da natureza + 1 (0 sem elas)
+    private static void soltarCoisas(ServerLevel mundo, LivingEntity quemPisou, double x, double y, double z, int natureza) {
         RandomSource sorteio = mundo.getRandom();
-        if (sorteio.nextInt(UMA_GOTA_EM) == 0) {
+        if (sorteio.nextFloat() < 1F / (UMA_GOTA_EM - natureza / 2F)) {
             GotaDeOrvalho.soltar(mundo, x, y, z);
         }
-        if (sorteio.nextInt(UMA_SEMENTE_EM) == 0) {
+        if (sorteio.nextFloat() < 1F / (UMA_SEMENTE_EM - natureza * 4F)) {
             SaqueDoAndar.soltar(mundo, x, y, z, SaqueDoAndar.sementeAleatoria(new Random(sorteio.nextLong())));
         }
         if (quemPisou instanceof ServerPlayer jogador && GerenciadorDoHeroi.emJogo(jogador)) {
