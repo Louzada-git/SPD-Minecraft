@@ -75,6 +75,7 @@ public class SaqueDoAndar {
 
     public static final String POCOES_DE_FORCA = "pocao_de_forca";
     public static final String PERGAMINHOS_DE_MELHORIA = "pergaminho_de_melhoria";
+    public static final String PETALAS = "petalas_da_rosa";
 
     // Sorteia os itens do andar e já apara a grama alta onde eles vão ficar (antes de construir o andar)
     public static List<Saque> sortear(PlantaDoAndar planta, int andar, DadosDaRun run) {
@@ -123,6 +124,16 @@ public class SaqueDoAndar {
             }
             int[] lugar = lugares.remove(sorteio.nextInt(lugares.size()));
             saques.add(new Saque(lugar[0], lugar[1], List.of(item), Onde.CHAO));
+        }
+
+        // As pétalas da rosa seca: com a missão do fantasma completa e a rosa já achada, uma a cada 2 andares (igual ao Shattered)
+        if (MissaoDoFantasma.completa(run) && run.quedas(chaveDoArtefato(ModItens.ROSA_SECA.get())) > 0) {
+            int faltam = (int) Math.ceil(((andar / 2) - run.quedas(PETALAS)) / 3F);
+            for (int i = 0; i < faltam && run.quedas(PETALAS) < 11 && !lugares.isEmpty(); i++) {
+                int[] lugar = lugares.remove(sorteio.nextInt(lugares.size()));
+                saques.add(new Saque(lugar[0], lugar[1], List.of(new ItemStack(ModItens.PETALA_SECA.get())), Onde.CHAO));
+                run.contarQueda(PETALAS);
+            }
         }
 
         // As chaves de ferro das portas trancadas
