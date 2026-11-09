@@ -14,6 +14,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -312,11 +313,20 @@ public class EfeitosNoTick {
         return new BlockPos(Math.floorDiv(entidade.getBlockX(), 4), 0, Math.floorDiv(entidade.getBlockZ(), 4)).asLong();
     }
 
-    // Quem não consegue agir (paralisado, congelado, dormindo, aterrorizado, encantado) não ataca
+    // Em estase (ampulheta do tempo), nenhum efeito ruim pega, igual ao Shattered
+    public static void aoReceberEfeito(MobEffectEvent.Applicable evento) {
+        if (evento.getEntity().hasEffect(ModEfeitos.ESTASE) && evento.getEffectInstance() != null
+                && evento.getEffectInstance().getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
+            evento.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+        }
+    }
+
+    // Quem não consegue agir (paralisado, congelado, dormindo, aterrorizado, encantado, fora do tempo) não ataca
     public static boolean impedidoDeAtacar(@Nullable Entity atacante) {
         return atacante instanceof LivingEntity criatura && (criatura.hasEffect(ModEfeitos.PARALISADO) || criatura.hasEffect(ModEfeitos.CONGELADO)
                 || criatura.hasEffect(ModEfeitos.SONO_MAGICO) || criatura.hasEffect(ModEfeitos.ATERRORIZADO)
-                || criatura.hasEffect(ModEfeitos.COMENDO) || criatura.hasEffect(ModEfeitos.ENCANTADO));
+                || criatura.hasEffect(ModEfeitos.COMENDO) || criatura.hasEffect(ModEfeitos.ENCANTADO)
+                || criatura.hasEffect(ModEfeitos.ESTASE) || criatura.hasEffect(ModEfeitos.PARADO_NO_TEMPO));
     }
 
     // Quem está preso (paralisado, congelado, dormindo) não consegue desviar

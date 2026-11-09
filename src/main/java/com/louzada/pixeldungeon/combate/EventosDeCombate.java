@@ -47,6 +47,12 @@ public class EventosDeCombate {
             return;
         }
 
+        // Em estase (ampulheta do tempo): nada machuca
+        if (alvo.hasEffect(ModEfeitos.ESTASE)) {
+            evento.setCanceled(true);
+            return;
+        }
+
         // Defendendo com um escudo (Duelista): qualquer ataque de alguém contra ela é anulado
         if (alvo instanceof ServerPlayer defensora && atacante != null && atacante != alvo && !(atacante instanceof Player)
                 && HabilidadesDaDuelista.defendeu(defensora)) {

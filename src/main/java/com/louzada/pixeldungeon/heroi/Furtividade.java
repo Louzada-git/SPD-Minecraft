@@ -1,6 +1,7 @@
 package com.louzada.pixeldungeon.heroi;
 
 import com.louzada.pixeldungeon.item.CapaDasSombras;
+import com.louzada.pixeldungeon.item.artefato.AmpulhetaDoTempo;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -9,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 // Invisibilidade do Shattered: os inimigos não veem o herói (perdem ele de vista e não acordam).
 // Usa o efeito de invisibilidade do Minecraft, que também deixa o herói transparente pros outros jogadores.
-// Atacar, lançar magia ou usar a varinha acaba com a invisibilidade.
+// Atacar, lançar magia ou usar a varinha acaba com a invisibilidade (e com o tempo parado da ampulheta).
 public class Furtividade {
 
     public static boolean invisivel(LivingEntity criatura) {
@@ -30,5 +31,7 @@ public class Furtividade {
         }
         // A defesa do escudo da Duelista também acaba (se já bloqueou algum ataque)
         HabilidadesDaDuelista.aoAgir(jogador);
+        // E o tempo parado da ampulheta (igual ao Shattered, acaba junto com a invisibilidade)
+        AmpulhetaDoTempo.soltarOTempo(jogador);
     }
 }

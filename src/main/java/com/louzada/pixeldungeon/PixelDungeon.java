@@ -82,6 +82,7 @@ public class PixelDungeon {
         // Efeitos do Shattered que agem a cada turno (veneno, cura, sono...) e o mapeamento mágico
         NeoForge.EVENT_BUS.addListener(EfeitosNoTick::aoTick);
         NeoForge.EVENT_BUS.addListener(EfeitosNoTick::aoAcabarEfeito);
+        NeoForge.EVENT_BUS.addListener(EfeitosNoTick::aoReceberEfeito);
         NeoForge.EVENT_BUS.addListener(MapeamentoMagico::aoTickDoServidor);
         // Baús: ninguém quebra, e os mímicos mordem quem mexe neles
         NeoForge.EVENT_BUS.addListener(Baus::aoClicarComDireito);

@@ -182,4 +182,15 @@ public class ModEfeitos {
     // Armadura de pedra (varinha de terra viva): segura metade de cada golpe até a pedra acabar
     public static final DeferredHolder<MobEffect, EfeitoSimples> ARMADURA_DE_PEDRA = EFEITOS.register("armadura_de_pedra",
             () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x806040));
+
+    // ---- A ampulheta do tempo ----
+
+    // Estase: o herói sai do tempo (não se mexe, não age, nada o machuca nem pega nele)
+    public static final DeferredHolder<MobEffect, EfeitoSimples> ESTASE = EFEITOS.register("estase",
+            () -> EfeitoSimples.quePrende(MobEffectCategory.BENEFICIAL, 0xFFD966, "estase"));
+    // Tempo parado: o herói anda e os inimigos em volta não (eles ficam "parados no tempo")
+    public static final DeferredHolder<MobEffect, EfeitoSimples> TEMPO_PARADO = EFEITOS.register("tempo_parado",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xCCCCFF));
+    public static final DeferredHolder<MobEffect, EfeitoSimples> PARADO_NO_TEMPO = EFEITOS.register("parado_no_tempo",
+            () -> EfeitoSimples.quePrende(MobEffectCategory.NEUTRAL, 0x8899FF, "parado_no_tempo"));
 }

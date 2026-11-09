@@ -26,11 +26,11 @@ public class Comida {
         return pilha.getItem() instanceof Baga || pilha.getItem() instanceof RacaoDeSuprimentos ? TURNOS_PRA_COMER_RAPIDO : TURNOS_PRA_COMER;
     }
 
-    // Clique direito com qualquer item: comendo não dá pra usar nada; comida é comida na hora
+    // Clique direito com qualquer item: comendo (ou em estase) não dá pra usar nada; comida é comida na hora
     public static void aoUsarItem(PlayerInteractEvent.RightClickItem evento) {
         Player jogador = evento.getEntity();
         ItemStack pilha = evento.getItemStack();
-        if (jogador.hasEffect(ModEfeitos.COMENDO)) {
+        if (jogador.hasEffect(ModEfeitos.COMENDO) || jogador.hasEffect(ModEfeitos.ESTASE)) {
             evento.setCanceled(true);
             evento.setCancellationResult(InteractionResult.FAIL);
             return;
