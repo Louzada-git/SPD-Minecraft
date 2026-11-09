@@ -96,8 +96,8 @@ public abstract class MobDoShattered extends Monster implements Combatente {
         if (nadaNaAgua()) {
             goalSelector.addGoal(1, new FloatGoal(this));
         }
-        // Ataca uma vez por segundo, que é um turno do Shattered
-        goalSelector.addGoal(2, new AtaqueDoShattered(this, 1.0, false));
+        // Ataca uma vez por turno do Shattered (o gnoll trapaceiro ataca de longe)
+        goalSelector.addGoal(2, ataque());
         goalSelector.addGoal(5, passeio());
         goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         goalSelector.addGoal(7, new RandomLookAroundGoal(this));
@@ -113,6 +113,21 @@ public abstract class MobDoShattered extends Monster implements Combatente {
         targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, MobDoShattered.class, 10, true, false,
                 alvo -> enxerga() && alvo instanceof MobDoShattered outro && outro.aliado() != aliado() && !(outro instanceof Mimico)
                         && !(this instanceof Mimico)));
+    }
+
+    // Como ele ataca (de perto, por padrão)
+    protected Goal ataque() {
+        return new AtaqueDoShattered(this, 1.0, false);
+    }
+
+    // Chefe ou chefe de missão (o Goo, os da missão do fantasma): não pode ser corrompido, fica condenado
+    public boolean chefe() {
+        return false;
+    }
+
+    // Aliado sem ninguém pra caçar vai atrás do herói (o fantasma da rosa pode receber a ordem de ficar num lugar)
+    protected boolean segueOHeroi() {
+        return true;
     }
 
     private boolean enxerga() {
@@ -361,7 +376,7 @@ public abstract class MobDoShattered extends Monster implements Combatente {
 
         @Override
         public boolean canUse() {
-            if (!aliado.aliado() || aliado.getTarget() != null) {
+            if (!aliado.aliado() || aliado.getTarget() != null || !aliado.segueOHeroi()) {
                 return false;
             }
             heroi = aliado.level().getNearestPlayer(aliado, 48);
@@ -370,7 +385,7 @@ public abstract class MobDoShattered extends Monster implements Combatente {
 
         @Override
         public boolean canContinueToUse() {
-            return heroi != null && aliado.aliado() && aliado.getTarget() == null && aliado.distanceTo(heroi) > 5;
+            return heroi != null && aliado.aliado() && aliado.getTarget() == null && aliado.segueOHeroi() && aliado.distanceTo(heroi) > 5;
         }
 
         @Override

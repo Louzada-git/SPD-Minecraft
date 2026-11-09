@@ -246,7 +246,7 @@ public enum Encantamento {
         @Override
         protected float aoGolpear(ServerPlayer jogador, LivingEntity alvo, ItemStack arma, float dano, int nivel, float poder) {
             float chance = (nivel + 5F) / (nivel + 20F) * poder;
-            if (alvo instanceof MobDoShattered inimigo && !(inimigo instanceof Goo) && !inimigo.aliado() && dano >= alvo.getHealth()
+            if (alvo instanceof MobDoShattered inimigo && !inimigo.chefe() && !inimigo.aliado() && dano >= alvo.getHealth()
                     && jogador.getRandom().nextFloat() < chance) {
                 alvo.getPersistentData().putUUID(CORROMPER, jogador.getUUID());
             }

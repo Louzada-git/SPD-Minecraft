@@ -137,6 +137,11 @@ public class Goo extends MobDoShattered {
         return Sorteio.normal(getRandom(), 1, maximo);
     }
 
+    @Override
+    public boolean chefe() {
+        return true;
+    }
+
     // 1 em cada 3 golpes que acertam deixa muco cáustico
     @Override
     public void aoAcertar(Entity alvo, float dano) {

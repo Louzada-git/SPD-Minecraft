@@ -16,7 +16,6 @@ import com.louzada.pixeldungeon.dungeon.Grama;
 import com.louzada.pixeldungeon.dungeon.Teleporte;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
-import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.entidade.Guarda;
 import com.louzada.pixeldungeon.entidade.GuardiaoDaTerra;
 import com.louzada.pixeldungeon.entidade.ImagemEspelhada;
@@ -485,13 +484,13 @@ public class EfeitosDeVarinha {
         Particulas.subindoEmVolta(inimigo, Particulas.poeira(TipoDeVarinha.CORRUPCAO.cor(), 1.2F), 8, 0.0);
     }
 
-    // Corrompe: vira aliado, e o herói ganha o XP e os itens dele. O chefe não pode ser corrompido: fica condenado.
+    // Corrompe: vira aliado, e o herói ganha o XP e os itens dele. Os chefes (e os da missão do fantasma) não podem ser corrompidos: ficam condenados.
     private static void corromper(ServerPlayer jogador, MobDoShattered inimigo) {
         if (inimigo.aliado() || inimigo.hasEffect(ModEfeitos.CONDENADO)) {
             jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.ja_corrompido").withStyle(ChatFormatting.GRAY), true);
             return;
         }
-        if (inimigo instanceof Goo) {
+        if (inimigo.chefe()) {
             inimigo.addEffect(new MobEffectInstance(ModEfeitos.CONDENADO, MobEffectInstance.INFINITE_DURATION));
             Particulas.subindoEmVolta(inimigo, Particulas.poeira(0x330033, 1.5F), 20, 0.0);
             return;
