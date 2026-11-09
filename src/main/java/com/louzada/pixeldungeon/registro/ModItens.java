@@ -73,21 +73,57 @@ public class ModItens {
     public static final DeferredItem<ArmaDoShattered> MACHADINHA = arma("machadinha",
             Numeros.doTier(2).dano(2, 12).precisao(1.32f).habilidade(Habilidade.GOLPE_PESADO, 4));
     public static final DeferredItem<ArmaDoShattered> PUNHAL = arma("punhal", Numeros.doTier(2).dano(2, 12).surpresa(0.67f).habilidade(Habilidade.FURTIVO, 4));
+    // Lenta, mas alcança 1 quadradinho a mais
+    public static final DeferredItem<ArmaDoShattered> LANCA = arma("lanca",
+            Numeros.doTier(2).dano(2, 20, 4).atraso(1.5f).alcance(1).habilidade(Habilidade.ESPETAR, 9, 2));
+    public static final DeferredItem<ArmaDoShattered> BASTAO = arma("bastao",
+            Numeros.doTier(2).dano(2, 12).defesa(2).habilidade(Habilidade.POSTURA_DEFENSIVA, 4, 1));
+    public static final DeferredItem<ArmaDoShattered> FOICE = arma("foice", Numeros.doTier(2).dano(2, 20).precisao(0.68f).habilidade(Habilidade.CEIFAR, 15, 2.5f));
 
     // Tier 3 (14 de força)
     public static final DeferredItem<ArmaDoShattered> ESPADA = arma("espada", Numeros.doTier(3).habilidade(Habilidade.CORTAR, 5));
     public static final DeferredItem<ArmaDoShattered> CLAVA = arma("clava", Numeros.doTier(3).dano(3, 16).precisao(1.28f).habilidade(Habilidade.GOLPE_PESADO, 5));
     public static final DeferredItem<ArmaDoShattered> SAI = arma("sai", Numeros.doTier(3).dano(3, 10).rapida().habilidade(Habilidade.COMBINACAO, 4));
+    public static final DeferredItem<ArmaDoShattered> CIMITARRA = arma("cimitarra",
+            Numeros.doTier(3).dano(3, 16).atraso(0.8f).habilidade(Habilidade.DANCA_DA_ESPADA, 4, 1));
+    // Bate fraco, mas defende 0-4 (+1 por nível)
+    public static final DeferredItem<ArmaDoShattered> ESCUDO_REDONDO = arma("escudo_redondo",
+            Numeros.doTier(3).dano(3, 12, 2).defesa(4, 1).habilidade(Habilidade.DEFENDER, 5, 1));
+    // Alcança 2 quadradinhos a mais
+    public static final DeferredItem<ArmaDoShattered> CHICOTE = arma("chicote", Numeros.doTier(3).dano(3, 15, 3).alcance(2).habilidade(Habilidade.CHICOTEAR, 0, 0));
 
     // Tier 4 (16 de força)
     public static final DeferredItem<ArmaDoShattered> KATANA = arma("katana", Numeros.doTier(4).dano(4, 20).defesa(3).habilidade(Habilidade.ESTOCADA, 8));
     public static final DeferredItem<ArmaDoShattered> LAMINA_ASSASSINA = arma("lamina_assassina",
             Numeros.doTier(4).dano(4, 20).surpresa(0.5f).habilidade(Habilidade.FURTIVO, 3));
+    public static final DeferredItem<ArmaDoShattered> ESPADA_LONGA = arma("espada_longa", Numeros.doTier(4).habilidade(Habilidade.CORTAR, 6));
+    public static final DeferredItem<ArmaDoShattered> MACHADO_DE_BATALHA = arma("machado_de_batalha",
+            Numeros.doTier(4).dano(4, 20).precisao(1.24f).habilidade(Habilidade.GOLPE_PESADO, 5));
+    // Pouco preciso e não ataca de surpresa, mas bate muito forte
+    public static final DeferredItem<ArmaDoShattered> MANGUAL = arma("mangual",
+            Numeros.doTier(4).dano(4, 35, 8).precisao(0.8f).semSurpresa().habilidade(Habilidade.GIRAR, 8, 2));
+    // Dano de tier 3, mas cresce como um tier 5
+    public static final DeferredItem<ArmaDoShattered> LAMINA_RUNICA = arma("lamina_runica",
+            Numeros.doTier(4).dano(4, 20, 6).habilidade(Habilidade.CORTE_RUNICO, 300, 50));
+    public static final DeferredItem<ArmaDoShattered> BESTA = arma("besta", Numeros.doTier(4).dano(4, 20, 4).habilidade(Habilidade.TIRO_CARREGADO, 0, 0));
 
     // Tier 5 (18 de força)
     public static final DeferredItem<ArmaDoShattered> ESPADA_LARGA = arma("espada_larga", Numeros.doTier(5).habilidade(Habilidade.CORTAR, 7));
     public static final DeferredItem<ArmaDoShattered> MARTELO_DE_GUERRA = arma("martelo_de_guerra",
             Numeros.doTier(5).dano(5, 24).precisao(1.2f).habilidade(Habilidade.GOLPE_PESADO, 6));
+    // Lento, mas alcança 1 quadradinho a mais
+    public static final DeferredItem<ArmaDoShattered> GLADIO = arma("gladio",
+            Numeros.doTier(5).dano(5, 40, 8).atraso(1.5f).alcance(1).habilidade(Habilidade.ESPETAR, 12, 2.5f));
+    // Muito pesado: pede a força do tier 6 (20)
+    public static final DeferredItem<ArmaDoShattered> MACHADO_GRANDE = arma("machado_grande",
+            Numeros.doTier(5).dano(5, 45).forcaDoTier(6).habilidade(Habilidade.RETRIBUICAO, 15, 2));
+    // Bate fraco, mas defende 0-6 (+2 por nível)
+    public static final DeferredItem<ArmaDoShattered> ESCUDO_GRANDE = arma("escudo_grande",
+            Numeros.doTier(5).dano(5, 18, 4).defesa(6, 2).habilidade(Habilidade.DEFENDER, 3, 1));
+    public static final DeferredItem<ArmaDoShattered> MANOPLA_DE_PEDRA = arma("manopla_de_pedra",
+            Numeros.doTier(5).dano(5, 15).rapida().habilidade(Habilidade.COMBINACAO, 5));
+    public static final DeferredItem<ArmaDoShattered> FOICE_DE_GUERRA = arma("foice_de_guerra",
+            Numeros.doTier(5).dano(5, 40).precisao(0.8f).habilidade(Habilidade.CEIFAR, 30, 4.5f));
 
     // ---- Armas de arremesso (números do Shattered: dano de 2 x tier a 5 x tier, 1 de força a menos) ----
     // Usos: quantos acertos o conjunto aguenta antes de uma quebrar. As que não grudam caem no chão depois do acerto.

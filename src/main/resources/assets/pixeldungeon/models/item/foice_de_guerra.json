@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "pixeldungeon:item/foice_de_guerra"
+  }
+}
