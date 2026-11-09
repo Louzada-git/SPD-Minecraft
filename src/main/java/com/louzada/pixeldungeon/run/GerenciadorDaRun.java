@@ -11,6 +11,7 @@ import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.dungeon.Busca;
 import com.louzada.pixeldungeon.dungeon.ConstrutorDeAndar;
 import com.louzada.pixeldungeon.dungeon.GeradorDeAndar;
+import com.louzada.pixeldungeon.dungeon.MissaoDoFantasma;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
@@ -225,6 +226,8 @@ public class GerenciadorDaRun {
         contarGrama(planta, andar);
         PopulacaoDoAndar.povoarNoInicio(servidor.overworld(), planta, origem, andar, dados.semente());
         SaqueDoAndar.colocar(servidor.overworld(), origem, andar, saque);
+        // Num dos andares 2 a 4, o fantasma triste espera na sala da saída
+        MissaoDoFantasma.talvezCriar(servidor.overworld(), planta, origem, andar, dados);
 
         BlockPos entrada = ConstrutorDeAndar.pontoDeChegada(origem, planta.entradaX(), planta.entradaY());
         BlockPos saida = null;
