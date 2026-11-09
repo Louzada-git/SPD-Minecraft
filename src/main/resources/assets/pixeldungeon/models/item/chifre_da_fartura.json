@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "pixeldungeon:item/chifre_da_fartura"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "pixeldungeon:estagio": 1
+      },
+      "model": "pixeldungeon:item/chifre_da_fartura_2"
+    },
+    {
+      "predicate": {
+        "pixeldungeon:estagio": 2
+      },
+      "model": "pixeldungeon:item/chifre_da_fartura_3"
+    },
+    {
+      "predicate": {
+        "pixeldungeon:estagio": 3
+      },
+      "model": "pixeldungeon:item/chifre_da_fartura_4"
+    }
+  ]
+}

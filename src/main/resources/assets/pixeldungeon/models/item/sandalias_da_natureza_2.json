@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "pixeldungeon:item/sandalias_da_natureza_2"
+  }
+}

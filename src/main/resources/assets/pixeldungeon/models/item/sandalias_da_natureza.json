@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "pixeldungeon:item/sandalias_da_natureza"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "pixeldungeon:estagio": 1
+      },
+      "model": "pixeldungeon:item/sandalias_da_natureza_2"
+    },
+    {
+      "predicate": {
+        "pixeldungeon:estagio": 2
+      },
+      "model": "pixeldungeon:item/sandalias_da_natureza_3"
+    },
+    {
+      "predicate": {
+        "pixeldungeon:estagio": 3
+      },
+      "model": "pixeldungeon:item/sandalias_da_natureza_4"
+    }
+  ]
+}

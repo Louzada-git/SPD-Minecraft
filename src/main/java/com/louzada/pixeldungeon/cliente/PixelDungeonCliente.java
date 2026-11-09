@@ -1,16 +1,20 @@
 package com.louzada.pixeldungeon.cliente;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.item.ArtefatoAchado;
 import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
 
 import net.minecraft.client.renderer.entity.NoopRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -23,6 +27,8 @@ public class PixelDungeonCliente {
         barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarRenderizadores);
         barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarCoresDosBlocos);
         barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarCoresDosItens);
+        // O desenho dos artefatos que mudam (o cálice enchendo, o chifre, as sandálias virando botas)
+        barramentoDoMod.addListener(PixelDungeonCliente::aoPrepararOCliente);
         // Teclas (K talentos, V habilidade)
         barramentoDoMod.addListener(TeclasDoMod::aoRegistrar);
         NeoForge.EVENT_BUS.addListener(TeclasDoMod::aoTick);
@@ -69,6 +75,16 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.GUARDIAO_DA_TERRA.get(),
                 contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.GUARDIAO, 0.45F));
         evento.registerEntityRenderer(ModEntidades.GUARDA.get(), RenderizadorDaGuarda::new);
+    }
+
+    private static void aoPrepararOCliente(FMLClientSetupEvent evento) {
+        evento.enqueueWork(() -> {
+            ResourceLocation estagio = ResourceLocation.fromNamespaceAndPath(PixelDungeon.MODID, "estagio");
+            for (var artefato : ModItens.artefatos()) {
+                ItemProperties.register(artefato.get(), estagio,
+                        (pilha, mundo, quem, semente) -> pilha.getItem() instanceof ArtefatoAchado achado ? achado.estagio(pilha) : 0);
+            }
+        });
     }
 
     // A grama usa as texturas cinza da grama do Minecraft; aqui ela ganha a cor verde do esgoto

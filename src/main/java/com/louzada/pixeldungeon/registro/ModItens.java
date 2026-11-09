@@ -6,21 +6,22 @@ import java.util.List;
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista.Habilidade;
 import com.louzada.pixeldungeon.item.ArcoEspiritual;
-import com.louzada.pixeldungeon.item.ArmaDeArremesso;
 import com.louzada.pixeldungeon.item.ArmaDeArremesso.Especial;
-import com.louzada.pixeldungeon.item.ArmaDoShattered;
+import com.louzada.pixeldungeon.item.ArmaDeArremesso;
 import com.louzada.pixeldungeon.item.ArmaDoShattered.Numeros;
+import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
+import com.louzada.pixeldungeon.item.ArtefatoAchado;
 import com.louzada.pixeldungeon.item.Baga;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
 import com.louzada.pixeldungeon.item.ChaveDeFerro;
 import com.louzada.pixeldungeon.item.CorDePocao;
 import com.louzada.pixeldungeon.item.GemaDeAnel;
-import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
-import com.louzada.pixeldungeon.item.ItemComDescricao;
 import com.louzada.pixeldungeon.item.ItemAnel;
 import com.louzada.pixeldungeon.item.ItemAnkh;
+import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
+import com.louzada.pixeldungeon.item.ItemComDescricao;
 import com.louzada.pixeldungeon.item.ItemPergaminho;
 import com.louzada.pixeldungeon.item.ItemPocao;
 import com.louzada.pixeldungeon.item.ItemSemente;
@@ -33,6 +34,15 @@ import com.louzada.pixeldungeon.item.SeloQuebrado;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 import com.louzada.pixeldungeon.item.TipoDeVarinha;
 import com.louzada.pixeldungeon.item.TomoSagrado;
+import com.louzada.pixeldungeon.item.artefato.AmpulhetaDoTempo;
+import com.louzada.pixeldungeon.item.artefato.BracadeiraDoLadrao;
+import com.louzada.pixeldungeon.item.artefato.CaliceDeSangue;
+import com.louzada.pixeldungeon.item.artefato.ChaveDeCranio;
+import com.louzada.pixeldungeon.item.artefato.ChifreDaFartura;
+import com.louzada.pixeldungeon.item.artefato.CorrentesEtereas;
+import com.louzada.pixeldungeon.item.artefato.LivroInstavel;
+import com.louzada.pixeldungeon.item.artefato.SandaliasDaNatureza;
+import com.louzada.pixeldungeon.item.artefato.TalismaDaVidencia;
 
 import net.minecraft.core.Holder;
 import net.minecraft.world.food.FoodProperties;
@@ -182,6 +192,23 @@ public class ModItens {
     public static final DeferredItem<SeloQuebrado> SELO_QUEBRADO = ITENS.registerItem("selo_quebrado", SeloQuebrado::new);
     // A flecha que o arco solta (não dá pra pegar; só serve pra desenhar a flecha voando)
     public static final DeferredItem<Item> FLECHA_ESPIRITUAL = ITENS.registerSimpleItem("flecha_espiritual");
+
+    // ---- Os artefatos que se acha pela dungeon (cada um aparece uma vez por run) ----
+
+    public static final DeferredItem<CaliceDeSangue> CALICE_DE_SANGUE = ITENS.registerItem("calice_de_sangue", CaliceDeSangue::new);
+    public static final DeferredItem<ChifreDaFartura> CHIFRE_DA_FARTURA = ITENS.registerItem("chifre_da_fartura", ChifreDaFartura::new);
+    public static final DeferredItem<AmpulhetaDoTempo> AMPULHETA_DO_TEMPO = ITENS.registerItem("ampulheta_do_tempo", AmpulhetaDoTempo::new);
+    public static final DeferredItem<LivroInstavel> LIVRO_INSTAVEL = ITENS.registerItem("livro_instavel", LivroInstavel::new);
+    public static final DeferredItem<CorrentesEtereas> CORRENTES_ETEREAS = ITENS.registerItem("correntes_etereas", CorrentesEtereas::new);
+    public static final DeferredItem<TalismaDaVidencia> TALISMA_DA_VIDENCIA = ITENS.registerItem("talisma_da_videncia", TalismaDaVidencia::new);
+    public static final DeferredItem<BracadeiraDoLadrao> BRACADEIRA_DO_LADRAO = ITENS.registerItem("bracadeira_do_ladrao", BracadeiraDoLadrao::new);
+    public static final DeferredItem<SandaliasDaNatureza> SANDALIAS_DA_NATUREZA = ITENS.registerItem("sandalias_da_natureza", SandaliasDaNatureza::new);
+    public static final DeferredItem<ChaveDeCranio> CHAVE_DE_CRANIO = ITENS.registerItem("chave_de_cranio", ChaveDeCranio::new);
+
+    public static List<DeferredItem<? extends ArtefatoAchado>> artefatos() {
+        return List.of(CALICE_DE_SANGUE, CHIFRE_DA_FARTURA, AMPULHETA_DO_TEMPO, LIVRO_INSTAVEL, CORRENTES_ETEREAS, TALISMA_DA_VIDENCIA,
+                BRACADEIRA_DO_LADRAO, SANDALIAS_DA_NATUREZA, CHAVE_DE_CRANIO);
+    }
 
     // Odre: todo herói começa com um; guarda as gotas de orvalho
     public static final DeferredItem<Odre> ODRE = ITENS.registerItem("odre", Odre::new);
