@@ -75,6 +75,14 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.GUARDIAO_DA_TERRA.get(),
                 contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.GUARDIAO, 0.45F));
         evento.registerEntityRenderer(ModEntidades.GUARDA.get(), RenderizadorDaGuarda::new);
+        // A missão do fantasma: o fantasma triste, os inimigos dela e o fantasma da rosa seca
+        evento.registerEntityRenderer(ModEntidades.FANTASMA_TRISTE.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.FANTASMA, 0.0F));
+        evento.registerEntityRenderer(ModEntidades.FANTASMA_ALIADO.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.FANTASMA, 0.0F));
+        evento.registerEntityRenderer(ModEntidades.RATO_FETIDO.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.RATO_FETIDO, 0.35F));
+        evento.registerEntityRenderer(ModEntidades.GNOLL_TRAPACEIRO.get(),
+                contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.GNOLL_TRAPACEIRO, 0.45F));
+        evento.registerEntityRenderer(ModEntidades.CARANGUEJO_GRANDE.get(),
+                contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.CARANGUEJO_GRANDE, 0.5F));
     }
 
     private static void aoPrepararOCliente(FMLClientSetupEvent evento) {

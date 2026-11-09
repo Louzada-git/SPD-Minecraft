@@ -70,4 +70,21 @@ public record SpriteDoShattered(ResourceLocation textura, int larguraDaFolha, in
     // MimicSprite (o mímico comum)
     public static final SpriteDoShattered MIMICO = new SpriteDoShattered(textura("mimic"), 256, 64, 16, 16, 1 / 16F,
             anim(5, true, 3, 3, 3, 4, 4), anim(10, true, 3, 4, 5, 6, 6, 5, 4), anim(10, false, 3, 7, 8, 9), anim(5, false, 10, 11, 12), null);
+
+    // ---- A missão do fantasma ----
+
+    // FetidRatSprite (a terceira linha da folha do rato)
+    public static final SpriteDoShattered RATO_FETIDO = new SpriteDoShattered(textura("rat"), 256, 64, 16, 15, 1 / 16F,
+            anim(2, true, 32, 32, 32, 33), anim(10, true, 38, 39, 40, 41, 42), anim(15, false, 34, 35, 36, 37, 32), anim(10, false, 43, 44, 45, 46),
+            null);
+    // GnollTricksterSprite (a terceira linha da folha do gnoll)
+    public static final SpriteDoShattered GNOLL_TRAPACEIRO = new SpriteDoShattered(textura("gnoll"), 256, 64, 12, 15, 0.125F,
+            anim(2, true, 42, 42, 42, 43, 42, 42, 43, 43), anim(12, true, 46, 47, 48, 49), anim(12, false, 44, 45, 42), anim(12, false, 50, 51, 52),
+            null);
+    // GreatCrabSprite (a terceira linha da folha do caranguejo)
+    public static final SpriteDoShattered CARANGUEJO_GRANDE = new SpriteDoShattered(textura("crab"), 256, 64, 16, 16, 1 / 16F,
+            anim(5, true, 32, 33, 32, 34), anim(10, true, 35, 36, 37, 38), anim(12, false, 39, 40, 41), anim(12, false, 42, 43, 44, 45), null);
+    // GhostSprite (o fantasma triste e o fantasma da rosa seca, do tamanho de uma pessoa)
+    public static final SpriteDoShattered FANTASMA = new SpriteDoShattered(textura("ghost"), 128, 16, 14, 15, 0.125F,
+            anim(5, true, 0, 1), anim(10, true, 0, 1), anim(10, false, 0, 2, 3), anim(8, false, 0, 4, 5, 6, 7), null);
 }

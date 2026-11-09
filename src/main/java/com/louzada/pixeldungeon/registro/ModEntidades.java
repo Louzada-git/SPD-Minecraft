@@ -3,10 +3,14 @@ package com.louzada.pixeldungeon.registro;
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.entidade.ArmaArremessada;
 import com.louzada.pixeldungeon.entidade.CaranguejoDeEsgoto;
+import com.louzada.pixeldungeon.entidade.CaranguejoGrande;
 import com.louzada.pixeldungeon.entidade.CobraDeEsgoto;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
+import com.louzada.pixeldungeon.entidade.FantasmaAliado;
+import com.louzada.pixeldungeon.entidade.FantasmaTriste;
 import com.louzada.pixeldungeon.entidade.FlechaEspiritual;
 import com.louzada.pixeldungeon.entidade.GnollExplorador;
+import com.louzada.pixeldungeon.entidade.GnollTrapaceiro;
 import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.entidade.GotaDeOrvalho;
 import com.louzada.pixeldungeon.entidade.Guarda;
@@ -20,6 +24,7 @@ import com.louzada.pixeldungeon.entidade.NuvemDeGas;
 import com.louzada.pixeldungeon.entidade.PocaoArremessada;
 import com.louzada.pixeldungeon.entidade.RaioSolar;
 import com.louzada.pixeldungeon.entidade.RatoAlbino;
+import com.louzada.pixeldungeon.entidade.RatoFetido;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
 import com.louzada.pixeldungeon.entidade.SementeArremessada;
 import com.louzada.pixeldungeon.entidade.SlimeDeEsgoto;
@@ -67,6 +72,22 @@ public class ModEntidades {
     // Chefe do andar 5: uma gosma larga e baixa
     public static final DeferredHolder<EntityType<?>, EntityType<Goo>> GOO = ENTIDADES.register("goo",
             () -> EntityType.Builder.of(Goo::new, MobCategory.MONSTER).sized(1.8F, 1.4F).build("goo"));
+
+    // ---- A missão do fantasma ----
+
+    // O fantasma triste (dá a missão) e os inimigos dela: o rato fétido, o gnoll trapaceiro e o caranguejo grande
+    public static final DeferredHolder<EntityType<?>, EntityType<FantasmaTriste>> FANTASMA_TRISTE = ENTIDADES.register("fantasma_triste",
+            () -> EntityType.Builder.of(FantasmaTriste::new, MobCategory.MISC).sized(0.6F, 1.8F).clientTrackingRange(8).build("fantasma_triste"));
+    public static final DeferredHolder<EntityType<?>, EntityType<RatoFetido>> RATO_FETIDO = ENTIDADES.register("rato_fetido",
+            () -> EntityType.Builder.of(RatoFetido::new, MobCategory.MONSTER).sized(0.6F, 0.6F).build("rato_fetido"));
+    public static final DeferredHolder<EntityType<?>, EntityType<GnollTrapaceiro>> GNOLL_TRAPACEIRO = ENTIDADES.register("gnoll_trapaceiro",
+            () -> EntityType.Builder.of(GnollTrapaceiro::new, MobCategory.MONSTER).sized(0.6F, 1.95F).build("gnoll_trapaceiro"));
+    public static final DeferredHolder<EntityType<?>, EntityType<CaranguejoGrande>> CARANGUEJO_GRANDE = ENTIDADES.register("caranguejo_grande",
+            () -> EntityType.Builder.of(CaranguejoGrande::new, MobCategory.MONSTER).sized(0.9F, 0.6F).build("caranguejo_grande"));
+    // O fantasma da rosa seca: o aliado que luta do lado do herói
+    public static final DeferredHolder<EntityType<?>, EntityType<FantasmaAliado>> FANTASMA_ALIADO = ENTIDADES.register("fantasma_aliado",
+            () -> EntityType.Builder.of(FantasmaAliado::new, MobCategory.MISC).sized(0.6F, 1.8F).fireImmune().clientTrackingRange(8)
+                    .build("fantasma_aliado"));
 
     // ---- Magias ----
 
@@ -132,6 +153,11 @@ public class ModEntidades {
     // Diz ao Minecraft a vida, velocidade etc. de cada inimigo
     public static void aoCriarAtributos(EntityAttributeCreationEvent evento) {
         evento.put(RATO_MARSUPIAL.get(), MobDoShattered.atributosDoMinecraft(RatoMarsupial.ATRIBUTOS).build());
+        evento.put(FANTASMA_TRISTE.get(), FantasmaTriste.atributos().build());
+        evento.put(RATO_FETIDO.get(), MobDoShattered.atributosDoMinecraft(RatoFetido.ATRIBUTOS).build());
+        evento.put(GNOLL_TRAPACEIRO.get(), MobDoShattered.atributosDoMinecraft(GnollTrapaceiro.ATRIBUTOS).build());
+        evento.put(CARANGUEJO_GRANDE.get(), MobDoShattered.atributosDoMinecraft(CaranguejoGrande.ATRIBUTOS).build());
+        evento.put(FANTASMA_ALIADO.get(), MobDoShattered.atributosDoMinecraft(FantasmaAliado.ATRIBUTOS).build());
         evento.put(COBRA_DE_ESGOTO.get(), MobDoShattered.atributosDoMinecraft(CobraDeEsgoto.ATRIBUTOS).build());
         evento.put(GNOLL_EXPLORADOR.get(), MobDoShattered.atributosDoMinecraft(GnollExplorador.ATRIBUTOS).build());
         evento.put(CARANGUEJO_DE_ESGOTO.get(), MobDoShattered.atributosDoMinecraft(CaranguejoDeEsgoto.ATRIBUTOS).build());
