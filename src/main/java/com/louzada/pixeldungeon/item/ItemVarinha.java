@@ -1,6 +1,7 @@
 package com.louzada.pixeldungeon.item;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import com.louzada.pixeldungeon.Turno;
@@ -133,6 +134,10 @@ public class ItemVarinha extends Item implements Equipamento {
             heroi.getCooldowns().addCooldown(this, Turno.TICKS);
             return InteractionResultHolder.success(pilha);
         }
+        // A de proteção não dispara se as guardas já gastam toda a energia (e a carga não é gasta)
+        if (!NivelDoItem.amaldicoado(pilha) && !EfeitosDeVarinha.podeLancar(heroi, tipo)) {
+            return InteractionResultHolder.fail(pilha);
+        }
         int usadas;
         if (NivelDoItem.amaldicoado(pilha)) {
             // Igual ao Shattered: a varinha amaldiçoada se revela na primeira vez e a magia sai aleatória
@@ -216,8 +221,16 @@ public class ItemVarinha extends Item implements Equipamento {
             case MATURACAO -> new Object[] { usadas };
             case RAJADA_DE_FOGO -> new Object[] { usadas, tipo.danoMinimo(nivel, usadas), tipo.danoMaximo(nivel, usadas) };
             case DESINTEGRACAO -> new Object[] { tipo.danoMinimo(nivel, 1), tipo.danoMaximo(nivel, 1), 6 + 2 * nivel };
+            case TERRA_VIVA -> new Object[] { tipo.danoMinimo(nivel, 1), tipo.danoMaximo(nivel, 1), 8 + 4 * nivel };
+            case CORRUPCAO -> new Object[] { poderDaCorrupcao(nivel), 6 + 3 * nivel };
+            case PROTECAO -> new Object[] { 2 + nivel, 8 + 4 * nivel, 2 + nivel };
             default -> new Object[] { tipo.danoMinimo(nivel, 1), tipo.danoMaximo(nivel, 1) };
         };
         Textos.adicionarQuebrado(linhas, tipo.chaveDoEfeito(), ChatFormatting.LIGHT_PURPLE, numeros);
+    }
+
+    // O poder de corrupção com até 2 casas, igual ao Shattered: 3, 3.33, 3.67, 4...
+    private static String poderDaCorrupcao(int nivel) {
+        return String.format(Locale.ROOT, "%.2f", 3 + nivel / 3F).replaceAll("\\.?0+$", "");
     }
 }

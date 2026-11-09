@@ -6,7 +6,7 @@ import com.louzada.pixeldungeon.combate.Sorteio;
 
 import net.minecraft.util.RandomSource;
 
-// As varinhas do Shattered que o mod já tem, com os números de lá (dano por nível, cargas).
+// As 13 varinhas do Shattered, com os números de lá (dano por nível, cargas).
 // O que cada uma faz quando é lançada fica no EfeitosDeVarinha.
 //   míssil mágico: 2-8 (+1/+2), 3 cargas
 //   relâmpago: 5-10 (+1/+5), pula pros inimigos perto (mais longe na água)
@@ -18,7 +18,9 @@ import net.minecraft.util.RandomSource;
 //   luz prismática: 1-5 (+1/+3), pode cegar
 //   transfusão: cura aliados com a vida de quem lança; em inimigos, encanta e dá blindagem
 //   maturação: cone de grama alta que enraíza; gasta 1 a 3 cargas
-// (Ainda faltam a de terra viva, a de proteção e a de corrupção.)
+//   terra viva: 4-6 (+0/+2), e o dano vira armadura de pedra no herói; com pedra bastante, nasce um guardião da terra
+//   corrupção: sem dano; corrompe o inimigo (vira aliado) ou deixa ele com um efeito ruim, pela vida e pelo XP dele
+//   proteção: sem dano; põe guardas no chão (ou melhora as que já existem), que disparam sozinhas nos inimigos
 public enum TipoDeVarinha {
     MISSEL_MAGICO("missel_magico", 0xFFFFFF, 3, 0),
     RAJADA_DE_FOGO("rajada_de_fogo", 0xFF8833, 2, 1),
@@ -29,7 +31,10 @@ public enum TipoDeVarinha {
     CORROSAO("corrosao", 0xDD8833, 2, 6),
     ONDA_DE_CHOQUE("onda_de_choque", 0xDDCC88, 2, 8),
     MATURACAO("maturacao", 0x66CC33, 2, 11),
-    TRANSFUSAO("transfusao", 0xFF44AA, 2, 12);
+    TRANSFUSAO("transfusao", 0xFF44AA, 2, 12),
+    TERRA_VIVA("terra_viva", 0x996633, 2, 7),
+    CORRUPCAO("corrupcao", 0x441144, 2, 9),
+    PROTECAO("protecao", 0x8822FF, 2, 10);
 
     private String id;
     private int cor;
@@ -95,9 +100,9 @@ public enum TipoDeVarinha {
         return 1;
     }
 
-    // Varinhas que causam dano direto (a corrosão, a transfusão e a maturação não)
+    // Varinhas que causam dano direto (a corrosão, a transfusão, a maturação, a corrupção e a proteção não)
     public boolean causaDano() {
-        return this != CORROSAO && this != TRANSFUSAO && this != MATURACAO;
+        return this != CORROSAO && this != TRANSFUSAO && this != MATURACAO && this != CORRUPCAO && this != PROTECAO;
     }
 
     public int danoMinimo(int nivel, int cargasUsadas) {
@@ -110,6 +115,7 @@ public enum TipoDeVarinha {
             case GEADA -> 2 + nivel;
             case LUZ_PRISMATICA -> 1 + nivel;
             case TRANSFUSAO -> 3 + nivel;
+            case TERRA_VIVA -> 4;
             default -> 0;
         };
     }
@@ -128,6 +134,7 @@ public enum TipoDeVarinha {
             case GEADA -> 8 + 5 * nivel;
             case LUZ_PRISMATICA -> 5 + 3 * nivel;
             case TRANSFUSAO -> 6 + 2 * nivel;
+            case TERRA_VIVA -> 6 + 2 * nivel;
             default -> 0;
         };
     }
