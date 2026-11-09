@@ -25,13 +25,15 @@ import net.minecraft.world.phys.Vec3;
 //   paralisante: paralisa por 10 turnos
 //   confusão (poção de levitação arremessada): vertigem por 2 turnos
 //   corrosivo (varinha da corrosão): dano que começa na força da nuvem e cresce 1 a cada turno
+//   fedor (o rato fétido, quando apanha): paralisa por 2 turnos (o rato fétido não sente)
 // Quem bebeu a poção de pureza não é afetado, e a pureza arremessada desfaz as nuvens.
 public class NuvemDeGas extends Entity {
     public enum Tipo {
         TOXICO(0x8CC63F),
         PARALISANTE(0xFFE97F),
         CONFUSAO(0xC98BFF),
-        CORROSIVO(0xDD8833);
+        CORROSIVO(0xDD8833),
+        FEDOR(0x4D6B2E);
 
         private int cor;
 
@@ -127,6 +129,12 @@ public class NuvemDeGas extends Entity {
                 case CORROSIVO -> {
                     criatura.invulnerableTime = 0;
                     criatura.hurt(damageSources().magic(), forca + tickCount / Turno.TICKS);
+                }
+                case FEDOR -> {
+                    MobEffectInstance atual = criatura.getEffect(ModEfeitos.PARALISADO);
+                    if (!(criatura instanceof RatoFetido) && (atual == null || atual.getDuration() < 2 * Turno.TICKS)) {
+                        criatura.addEffect(new MobEffectInstance(ModEfeitos.PARALISADO, 2 * Turno.TICKS));
+                    }
                 }
             }
         }
