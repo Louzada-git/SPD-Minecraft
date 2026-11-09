@@ -98,7 +98,7 @@ jobs:
           if ! grep -q "Teste das portas: comum fechada no começo = true, trancada fechada no começo = true" servidor.log; then echo "As portas não começaram fechadas"; exit 1; fi
           if ! grep -q "Teste das portas: a comum abriu com o rato perto = true, a trancada continuou fechada = true" servidor.log; then echo "As portas não abriram direito"; exit 1; fi
           if ! grep -q "Teste da chave de ferro: destrancou = true, gastou a chave = true, ficou comum = true" servidor.log; then echo "A chave de ferro não funcionou"; exit 1; fi
-          if ! grep -q "Teste das armas: 15 armas, 15 com habilidade, por tier 5/3/3/2/2" servidor.log; then echo "As armas novas não estão certas"; exit 1; fi
+          if ! grep -q "Teste das armas: 31 armas, 31 com habilidade, por tier 5/6/6/7/7" servidor.log; then echo "As armas novas não estão certas"; exit 1; fi
           if ! grep -q "Teste da espada larga: o rato morreu = true" servidor.log; then echo "A espada larga não cortou"; exit 1; fi
           if ! grep -q "Teste do ouro: ouro do herói = 50, a pilha sumiu = true, pilha do andar 3 com moedas entre 60 e 120 = true" servidor.log; then echo "O ouro não funcionou"; exit 1; fi
           if ! grep -q "Teste do baú: tem a espada dentro = true" servidor.log; then echo "O baú não guardou o item"; exit 1; fi
@@ -177,6 +177,16 @@ jobs:
           if ! grep -q "Teste da corrupção no chefe: ficou condenado = true, virou aliado = false" servidor.log; then echo "A corrupção no chefe não funcionou"; exit 1; fi
           if ! grep -q "Teste da varinha de proteção: sem varinha na mochila pode = false, com ela pode = true, a guarda nasceu nível 1, melhorou pra 2, energia 2/2, sem energia pra outra = true" servidor.log; then echo "A varinha de proteção não funcionou"; exit 1; fi
           if ! grep -q "Teste da guarda: disparou no rato = true, disparos 1, virou sentinela nível 4 com vida 31.0/35.0" servidor.log; then echo "A guarda não funcionou"; exit 1; fi
+          if ! grep -q "Teste dos números das armas novas: lança 2-20 (+1: 3-24), alcance +4.0 blocos, escudo redondo defende 4 (+1: 5), machado grande pede 20 de força, lâmina rúnica +1 até 26, mangual ataca de surpresa = false" servidor.log; then echo "Os números das armas novas não estão certos"; exit 1; fi
+          if ! grep -q "Teste das posturas: postura defensiva por 4 turnos = true, dança da espada deixa o ataque 1.6x mais rápido" servidor.log; then echo "As posturas da Duelista não funcionaram"; exit 1; fi
+          if ! grep -q "Teste do escudo: atacar antes de bloquear não acabou = true, anulou o golpe = true, a defesa acabou depois de atacar = true" servidor.log; then echo "A defesa do escudo não funcionou"; exit 1; fi
+          if ! grep -q "Teste da foice: sangrando = true, a vida não mudou na hora = true" servidor.log; then echo "Ceifar não funcionou"; exit 1; fi
+          if ! grep -q "Teste da lança: perto demais não gastou carga = true, de longe acertou = true, empurrou = true" servidor.log; then echo "Espetar não funcionou"; exit 1; fi
+          if ! grep -q "Teste do chicote: acertou os dois = true" servidor.log; then echo "Chicotear não funcionou"; exit 1; fi
+          if ! grep -qE "Teste do mangual: 3 voltas gastaram 1 carga, a 4ª não deu = true, o golpe tirou [0-9]+ de vida \(pelo menos 24 a mais\) = true, parou de girar = true" servidor.log; then echo "Girar não funcionou"; exit 1; fi
+          if ! grep -q "Teste da besta: carregou = true, o golpe arremessou o rato = true, descarregou = true" servidor.log; then echo "O tiro carregado não funcionou"; exit 1; fi
+          if ! grep -q "Teste da lâmina rúnica: pegou fogo 5 de 5" servidor.log; then echo "O corte rúnico não funcionou"; exit 1; fi
+          if ! grep -q "Teste do machado grande: com a vida cheia não deu = true, ferido acertou = true, mangual faz surpresa = false" servidor.log; then echo "A retribuição não funcionou"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
 
       # Liga o jogo de verdade (sem monitor, no Xvfb), entra no mundo do teste do servidor
