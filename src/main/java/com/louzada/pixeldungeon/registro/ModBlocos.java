@@ -10,6 +10,7 @@ import com.louzada.pixeldungeon.bloco.BlocoEscadaDescida;
 import com.louzada.pixeldungeon.bloco.BlocoEscadaSubida;
 import com.louzada.pixeldungeon.bloco.BlocoParedeEsgoto;
 import com.louzada.pixeldungeon.bloco.GramaBaixa;
+import com.louzada.pixeldungeon.bloco.ParedeDaChave;
 import com.louzada.pixeldungeon.bloco.PlantaDoShattered;
 import com.louzada.pixeldungeon.bloco.PortaGigante;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
@@ -85,6 +86,11 @@ public class ModBlocos {
 
     public static final DeferredBlock<BlocoEscadaSubida> ESCADA_SUBIDA = BLOCOS.registerBlock("escada_subida", BlocoEscadaSubida::new, inquebravel().noOcclusion());
     public static final DeferredBlock<BlocoEscadaDescida> ESCADA_DESCIDA = BLOCOS.registerBlock("escada_descida", BlocoEscadaDescida::new, inquebravel());
+
+    // A parede espectral da chave de crânio (some sozinha depois de 10 turnos)
+    public static final DeferredBlock<ParedeDaChave> PAREDE_DA_CHAVE = BLOCOS.registerBlock("parede_da_chave", ParedeDaChave::new,
+            inquebravel().sound(SoundType.AMETHYST).noOcclusion().lightLevel(estado -> 6).pushReaction(PushReaction.BLOCK)
+                    .isViewBlocking((estado, mundo, posicao) -> false).isSuffocating((estado, mundo, posicao) -> false));
 
     private static List<DeferredBlock<PlantaDoShattered>> registrarPlantas() {
         List<DeferredBlock<PlantaDoShattered>> lista = new ArrayList<>();
