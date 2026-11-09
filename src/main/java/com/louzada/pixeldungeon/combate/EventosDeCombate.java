@@ -16,6 +16,7 @@ import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
+import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -58,6 +59,7 @@ public class EventosDeCombate {
                 evento.setAmount(inimigo.reduzirDanoRecebido(evento.getAmount()));
                 Combate.acordar(alvo, atacante);
             }
+            evento.setAmount(condenado(alvo, evento.getAmount()));
             return;
         }
         LivingEntity quemBate = (LivingEntity) atacante;
@@ -92,11 +94,17 @@ public class EventosDeCombate {
             dano = inimigo.reduzirDanoRecebido(dano);
         }
         dano = EfeitosNoTick.segurarComARaiz(alvo, dano);
+        dano = condenado(alvo, dano);
         if (alvo instanceof EnxameDeMoscas enxame && dano > 0) {
             enxame.dividir(dano);
         }
         evento.setAmount(dano);
         Combate.acordar(alvo, atacante);
+    }
+
+    // Condenado (varinha de corrupção no chefe): qualquer dano é 67% maior
+    private static float condenado(LivingEntity alvo, float dano) {
+        return alvo.hasEffect(ModEfeitos.CONDENADO) ? dano * 1.67F : dano;
     }
 
     // Depois de tudo (armadura, efeitos...), mostra quanto de vida o alvo perdeu de verdade
@@ -127,8 +135,7 @@ public class EventosDeCombate {
     }
 
     // Quem mata um inimigo do Shattered ganha o XP dele (se não passou do nível máximo dele).
-    // Alguns inimigos deixam itens (carne misteriosa, ouro...). Igual ao Shattered, herói com mais de
-    // 2 níveis acima do máximo do inimigo não ganha mais itens dele, e os itens nunca somem do chão.
+    // Alguns inimigos deixam itens (carne misteriosa, ouro...): ver darRecompensa.
     public static void aoMorrerAlguem(LivingDeathEvent evento) {
         if (!(evento.getEntity() instanceof MobDoShattered inimigo) || inimigo.level().isClientSide()) {
             return;
@@ -149,6 +156,22 @@ public class EventosDeCombate {
                 && inimigo.getServer() != null) {
             matador = inimigo.getServer().getPlayerList().getPlayer(aliado.donoDoAliado());
         }
+        darRecompensa(inimigo, matador);
+        if (matador != null) {
+            DadosDoHeroi dados = RegrasDoHeroi.dados(matador);
+            if (dados.classe() == ClasseDoHeroi.DUELISTA) {
+                HabilidadesDaDuelista.aoMatar(dados, matador.level().getGameTime());
+            }
+            // Ímpeto letal e pressa letal
+            if (evento.getSource().getEntity() == matador) {
+                TalentosDoTier2.aoMatar(matador, evento.getSource(), HabilidadesDaDuelista.golpeDeHabilidade());
+            }
+        }
+    }
+
+    // O XP e os itens de um inimigo derrotado: morto, ou corrompido pela varinha de corrupção (igual ao Shattered).
+    // Herói com mais de 2 níveis acima do máximo do inimigo não ganha mais itens dele, e os itens nunca somem do chão.
+    public static void darRecompensa(MobDoShattered inimigo, @Nullable ServerPlayer matador) {
         boolean ganhaItens = matador == null || RegrasDoHeroi.dados(matador).nivel() <= inimigo.atributos().nivelMaximo() + 2;
         ItemStack saque = ganhaItens ? inimigo.sortearSaque() : ItemStack.EMPTY;
         if (!saque.isEmpty()) {
@@ -157,24 +180,18 @@ public class EventosDeCombate {
                 noChao.setUnlimitedLifetime();
             }
         }
-        if (matador != null) {
-            DadosDoHeroi dados = RegrasDoHeroi.dados(matador);
-            int xp = inimigo.xpAoMorrer();
-            if (xp > 0 && dados.nivel() <= inimigo.atributos().nivelMaximo()) {
-                NumerosFlutuantes.mostrar(matador, "+" + xp + " XP", NumerosFlutuantes.ROXO);
-                RegrasDoHeroi.ganharXp(matador, xp);
-            }
-            if (dados.classe() == ClasseDoHeroi.DUELISTA) {
-                HabilidadesDaDuelista.aoMatar(dados, matador.level().getGameTime());
-            }
-            // Anel da fortuna: às vezes um prêmio a mais
-            if (ganhaItens) {
-                Aneis.aoMatar(matador, inimigo);
-            }
-            // Ímpeto letal e pressa letal
-            if (evento.getSource().getEntity() == matador) {
-                TalentosDoTier2.aoMatar(matador, evento.getSource(), HabilidadesDaDuelista.golpeDeHabilidade());
-            }
+        if (matador == null) {
+            return;
+        }
+        DadosDoHeroi dados = RegrasDoHeroi.dados(matador);
+        int xp = inimigo.xpAoMorrer();
+        if (xp > 0 && dados.nivel() <= inimigo.atributos().nivelMaximo()) {
+            NumerosFlutuantes.mostrar(matador, "+" + xp + " XP", NumerosFlutuantes.ROXO);
+            RegrasDoHeroi.ganharXp(matador, xp);
+        }
+        // Anel da fortuna: às vezes um prêmio a mais
+        if (ganhaItens) {
+            Aneis.aoMatar(matador, inimigo);
         }
     }
 }
