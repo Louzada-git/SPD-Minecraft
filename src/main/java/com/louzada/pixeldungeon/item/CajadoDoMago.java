@@ -104,6 +104,10 @@ public class CajadoDoMago extends ArmaDoShattered {
         }
 
         TipoDeVarinha tipo = varinha(pilha);
+        // A de proteção não dispara se as guardas já gastam toda a energia (e a carga não é gasta)
+        if (!EfeitosDeVarinha.podeLancar(heroi, tipo)) {
+            return InteractionResultHolder.fail(pilha);
+        }
         int usadas = tipo.cargasPorDisparo(cargas);
         // Talentos do Mago (magia prolongada, barreira de apoio) e a invisibilidade acaba
         Talentos.aoUsarVarinha(heroi, cargas, usadas, true);

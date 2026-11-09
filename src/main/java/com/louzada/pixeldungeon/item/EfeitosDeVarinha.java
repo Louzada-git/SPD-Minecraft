@@ -2,26 +2,39 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.Turno;
+import com.louzada.pixeldungeon.combate.EventosDeCombate;
 import com.louzada.pixeldungeon.combate.Particulas;
+import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.dungeon.Grama;
 import com.louzada.pixeldungeon.dungeon.Teleporte;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
+import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
+import com.louzada.pixeldungeon.entidade.Goo;
+import com.louzada.pixeldungeon.entidade.Guarda;
+import com.louzada.pixeldungeon.entidade.GuardiaoDaTerra;
 import com.louzada.pixeldungeon.entidade.ImagemEspelhada;
+import com.louzada.pixeldungeon.entidade.Mimico;
+import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.entidade.NuvemDeGas;
+import com.louzada.pixeldungeon.heroi.ArmaduraDePedra;
 import com.louzada.pixeldungeon.heroi.Escudos;
 import com.louzada.pixeldungeon.heroi.Mira;
 import com.louzada.pixeldungeon.heroi.Talentos;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
+import com.louzada.pixeldungeon.registro.ModEntidades;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -33,9 +46,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.phys.AABB;
@@ -46,6 +62,7 @@ import net.minecraft.world.phys.Vec3;
 // O míssil mágico voa (MisselMagico); as outras acertam na hora, com um rastro de partículas:
 //   raios que param no primeiro inimigo ou na parede (relâmpago, geada, luz prismática, corrosão, onda de choque, transfusão),
 //   o da desintegração, que atravessa tudo, e os cones (rajada de fogo, maturação).
+// A terra viva, a corrupção e a proteção trazem aliados: o guardião da terra, os inimigos corrompidos e as guardas.
 // Varinhas amaldiçoadas fazem uma coisa aleatória (e ruim) no lugar.
 public class EfeitosDeVarinha {
     // 1 quadradinho do Shattered = 4 blocos
@@ -67,7 +84,30 @@ public class EfeitosDeVarinha {
             case LUZ_PRISMATICA -> luzPrismatica(jogador, nivel);
             case TRANSFUSAO -> transfusao(jogador, nivel);
             case MATURACAO -> maturacao(jogador, nivel, cargasUsadas);
+            case TERRA_VIVA -> terraViva(jogador, nivel);
+            case CORRUPCAO -> corrupcao(jogador, nivel);
+            case PROTECAO -> protecao(jogador, nivel);
         }
+    }
+
+    // Dá pra lançar? (a varinha de proteção não lança se as guardas já gastam toda a energia dela; aí a carga não é gasta)
+    public static boolean podeLancar(ServerPlayer jogador, TipoDeVarinha tipo) {
+        if (tipo != TipoDeVarinha.PROTECAO) {
+            return true;
+        }
+        int atual = energiaDasGuardas(jogador);
+        int maxima = energiaMaxima(jogador);
+        boolean pode;
+        if (Mira.inimigo(jogador, ALCANCE) instanceof Guarda guarda && jogador.getUUID().equals(guarda.donoDoAliado())) {
+            // Melhorar uma guarda gasta energia; uma sentinela sem energia sobrando só se cura
+            pode = atual < maxima || guarda.nivel() > 3;
+        } else {
+            pode = atual + 1 <= maxima;
+        }
+        if (!pode) {
+            jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.sem_energia_pra_guardas").withStyle(ChatFormatting.GRAY), true);
+        }
+        return pode;
     }
 
     // ---- Raios ----
@@ -252,6 +292,312 @@ public class EfeitosDeVarinha {
             Particulas.subindoEmVolta(inimigo, ParticleTypes.HEART, 4, 0.0);
             TalentosDoTier2.aoAcertarComVarinha(jogador, inimigo);
         }
+    }
+
+    // ---- Aliados ----
+
+    // Terra viva: 4-6 (+0/+2) no alvo. Atirando num inimigo, o dano vira armadura de pedra no herói (que segura metade dos golpes).
+    // Com pedra bastante (8 + 4 x nível), o disparo cria um guardião da terra do lado do alvo (ou onde o raio parar) com a pedra toda.
+    // Com o guardião em campo, o dano cura ele; atirando no próprio guardião, também.
+    private static void terraViva(ServerPlayer jogador, int nivel) {
+        LivingEntity alvo = Mira.inimigo(jogador, ALCANCE);
+        Vec3 fim = alvo != null ? alvo.getBoundingBox().getCenter() : Mira.ponto(jogador, ALCANCE);
+        rastro(jogador, fim, Particulas.poeira(TipoDeVarinha.TERRA_VIVA.cor(), 1.3F), 3);
+        som(jogador, fim, SoundEvents.STONE_HIT, 1.0F, 0.8F);
+        int dano = TipoDeVarinha.TERRA_VIVA.sortearDano(jogador.getRandom(), nivel, 1);
+        GuardiaoDaTerra guardiao = guardiaoDe(jogador);
+        // Só vira pedra o disparo num inimigo (ou no guardião)
+        boolean noGuardiao = guardiao != null && alvo == guardiao;
+        int pedra = noGuardiao || ehInimigo(alvo) ? dano : 0;
+        if (pedra > 0 && (guardiao == null || ArmaduraDePedra.pedra(jogador) > 0)) {
+            ArmaduraDePedra.somar(jogador, nivel, pedra);
+        }
+        if (noGuardiao) {
+            guardiao.receber(jogador, nivel, pedra);
+            return;
+        }
+        if (alvo != null) {
+            ferir(jogador, alvo, dano, true);
+        }
+        if (guardiao == null && ArmaduraDePedra.pedra(jogador) >= ArmaduraDePedra.paraOGuardiao(ArmaduraDePedra.nivel(jogador))) {
+            // Nasce o guardião, do lado do alvo (virado pro herói), ou onde o raio parou
+            ServerLevel mundo = jogador.serverLevel();
+            GuardiaoDaTerra novo = ModEntidades.GUARDIAO_DA_TERRA.get().create(mundo);
+            Vec3 lugar = novo == null ? null : lugarLivre(mundo, novo, alvo != null ? alvo.position() : fim, jogador.position());
+            if (lugar == null) {
+                return;
+            }
+            novo.moveTo(lugar.x, lugar.y, lugar.z, jogador.getYRot() + 180, 0.0F);
+            novo.receber(jogador, nivel, ArmaduraDePedra.pedra(jogador));
+            ArmaduraDePedra.tirar(jogador);
+            if (alvo != null && ehInimigo(alvo)) {
+                novo.setTarget(alvo);
+            }
+            mundo.addFreshEntity(novo);
+            som(jogador, lugar, SoundEvents.STONE_PLACE, 1.0F, 0.6F);
+        } else if (guardiao != null && alvo != null) {
+            guardiao.receber(jogador, nivel, pedra);
+            if (ehInimigo(alvo)) {
+                guardiao.setTarget(alvo);
+            }
+        }
+    }
+
+    // O guardião da terra desse herói, se ele estiver no andar
+    @Nullable
+    public static GuardiaoDaTerra guardiaoDe(ServerPlayer jogador) {
+        for (GuardiaoDaTerra guardiao : jogador.level().getEntitiesOfClass(GuardiaoDaTerra.class, jogador.getBoundingBox().inflate(256, 5, 256),
+                guardiao -> guardiao.isAlive() && jogador.getUUID().equals(guardiao.donoDoAliado()))) {
+            return guardiao;
+        }
+        return null;
+    }
+
+    private static boolean ehInimigo(@Nullable LivingEntity criatura) {
+        return criatura instanceof MobDoShattered inimigo && !inimigo.aliado();
+    }
+
+    // Corrupção: sem dano. Se o poder da varinha (3 + nível/3) passar da resistência do inimigo, ele vira aliado
+    // (e o herói ganha o XP e os itens dele, como se tivesse matado). Senão, ele fica com um efeito ruim por 6 + 3 x nível turnos,
+    // que às vezes é dos fortes (a chance é poder / resistência).
+    // A resistência é 1 + o XP dele, vezes 1 + 4 x (vida / vida máxima)², e cai com cada efeito ruim que ele já tem.
+    private static final Map<Holder<MobEffect>, Float> EFEITOS_FRACOS = new LinkedHashMap<>();
+    private static final Map<Holder<MobEffect>, Float> EFEITOS_FORTES = new LinkedHashMap<>();
+
+    static {
+        // Os de peso 0 não são postos pela varinha, mas contam como efeitos fracos/fortes pra resistência
+        EFEITOS_FRACOS.put(ModEfeitos.FRACO, 2F);
+        EFEITOS_FRACOS.put(ModEfeitos.VULNERAVEL, 2F);
+        EFEITOS_FRACOS.put(ModEfeitos.ALEIJADO, 1F);
+        EFEITOS_FRACOS.put(ModEfeitos.CEGO, 1F);
+        EFEITOS_FRACOS.put(ModEfeitos.ATERRORIZADO, 1F);
+        EFEITOS_FRACOS.put(ModEfeitos.RESFRIADO, 0F);
+        EFEITOS_FRACOS.put(ModEfeitos.MUCO_CAUSTICO, 0F);
+        EFEITOS_FRACOS.put(ModEfeitos.ENRAIZADO, 0F);
+        EFEITOS_FRACOS.put(ModEfeitos.VERTIGEM, 0F);
+        EFEITOS_FRACOS.put(ModEfeitos.SONOLENTO, 0F);
+        EFEITOS_FRACOS.put(ModEfeitos.SANGRANDO, 0F);
+        EFEITOS_FRACOS.put(ModEfeitos.VENENO, 0F);
+        EFEITOS_FORTES.put(ModEfeitos.FURIOSO, 3F);
+        EFEITOS_FORTES.put(ModEfeitos.LENTO, 2F);
+        EFEITOS_FORTES.put(ModEfeitos.FEITICO, 2F);
+        EFEITOS_FORTES.put(ModEfeitos.PARALISADO, 1F);
+        EFEITOS_FORTES.put(ModEfeitos.ATORDOADO, 0F);
+        EFEITOS_FORTES.put(ModEfeitos.ENCANTADO, 0F);
+        EFEITOS_FORTES.put(ModEfeitos.SONO_MAGICO, 0F);
+        EFEITOS_FORTES.put(ModEfeitos.CONGELADO, 0F);
+        EFEITOS_FORTES.put(ModEfeitos.CONDENADO, 0F);
+    }
+
+    private static void corrupcao(ServerPlayer jogador, int nivel) {
+        LivingEntity alvo = Mira.inimigo(jogador, ALCANCE);
+        Vec3 fim = alvo != null ? alvo.getBoundingBox().getCenter() : Mira.ponto(jogador, ALCANCE);
+        rastro(jogador, fim, Particulas.poeira(TipoDeVarinha.CORRUPCAO.cor(), 1.4F), 4);
+        som(jogador, fim, SoundEvents.ILLUSIONER_CAST_SPELL, 0.8F, 0.8F);
+        if (!(alvo instanceof MobDoShattered inimigo)) {
+            return;
+        }
+        float poder = 3 + nivel / 3F;
+        float resistencia = resistenciaACorrupcao(inimigo);
+        // Quem já é aliado (ou está condenado) não pode ser corrompido de novo: ganha um efeito forte
+        if (inimigo.aliado() || inimigo.hasEffect(ModEfeitos.CONDENADO)) {
+            poder = resistencia - 0.001F;
+        }
+        if (poder > resistencia) {
+            corromper(jogador, inimigo);
+        } else if (jogador.getRandom().nextFloat() < poder / resistencia) {
+            enfraquecer(jogador, inimigo, EFEITOS_FORTES, nivel);
+        } else {
+            enfraquecer(jogador, inimigo, EFEITOS_FRACOS, nivel);
+        }
+        TalentosDoTier2.aoAcertarComVarinha(jogador, inimigo);
+    }
+
+    // A resistência do inimigo à corrupção agora
+    public static float resistenciaACorrupcao(MobDoShattered inimigo) {
+        float resistencia;
+        if (inimigo instanceof Mimico) {
+            resistencia = 1 + Math.max(1, Andares.andarPelaAltura(inimigo.getBlockY()));
+        } else if (inimigo instanceof EnxameDeMoscas && inimigo.xpAoMorrer() == 0) {
+            // Os enxames divididos não dão XP, então contam como 3
+            resistencia = 1 + 3;
+        } else {
+            resistencia = 1 + inimigo.xpAoMorrer();
+        }
+        float vida = inimigo.getHealth() / inimigo.getMaxHealth();
+        resistencia *= 1 + 4 * vida * vida;
+        for (MobEffectInstance efeito : inimigo.getActiveEffects()) {
+            if (naLista(EFEITOS_FORTES, efeito.getEffect())) {
+                resistencia *= 0.5F;
+            } else if (naLista(EFEITOS_FRACOS, efeito.getEffect()) || efeito.getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
+                resistencia *= 0.75F;
+            }
+        }
+        // Pegando fogo também é um efeito ruim
+        if (inimigo.isOnFire()) {
+            resistencia *= 0.75F;
+        }
+        return resistencia;
+    }
+
+    private static boolean naLista(Map<Holder<MobEffect>, Float> lista, Holder<MobEffect> efeito) {
+        for (Holder<MobEffect> daLista : lista.keySet()) {
+            if (daLista.unwrapKey().isPresent() && efeito.is(daLista.unwrapKey().get())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Um efeito que ele ainda não tem (se já tem todos, sobe pros fortes; se já tem todos os fortes, é corrompido)
+    private static void enfraquecer(ServerPlayer jogador, MobDoShattered inimigo, Map<Holder<MobEffect>, Float> categoria, int nivel) {
+        List<Holder<MobEffect>> possiveis = new ArrayList<>();
+        List<Float> pesos = new ArrayList<>();
+        float total = 0;
+        for (Map.Entry<Holder<MobEffect>, Float> item : categoria.entrySet()) {
+            if (item.getValue() > 0 && !inimigo.hasEffect(item.getKey()) && inimigo.canBeAffected(new MobEffectInstance(item.getKey(), 1))) {
+                possiveis.add(item.getKey());
+                pesos.add(item.getValue());
+                total += item.getValue();
+            }
+        }
+        if (possiveis.isEmpty()) {
+            if (categoria == EFEITOS_FRACOS) {
+                enfraquecer(jogador, inimigo, EFEITOS_FORTES, nivel);
+            } else {
+                corromper(jogador, inimigo);
+            }
+            return;
+        }
+        float dado = jogador.getRandom().nextFloat() * total;
+        int escolhido = 0;
+        while (escolhido < possiveis.size() - 1 && dado >= pesos.get(escolhido)) {
+            dado -= pesos.get(escolhido);
+            escolhido++;
+        }
+        inimigo.acordar();
+        inimigo.addEffect(new MobEffectInstance(possiveis.get(escolhido), Turno.ticks(6 + 3 * nivel)));
+        Particulas.subindoEmVolta(inimigo, Particulas.poeira(TipoDeVarinha.CORRUPCAO.cor(), 1.2F), 8, 0.0);
+    }
+
+    // Corrompe: vira aliado, e o herói ganha o XP e os itens dele. O chefe não pode ser corrompido: fica condenado.
+    private static void corromper(ServerPlayer jogador, MobDoShattered inimigo) {
+        if (inimigo.aliado() || inimigo.hasEffect(ModEfeitos.CONDENADO)) {
+            jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.ja_corrompido").withStyle(ChatFormatting.GRAY), true);
+            return;
+        }
+        if (inimigo instanceof Goo) {
+            inimigo.addEffect(new MobEffectInstance(ModEfeitos.CONDENADO, MobEffectInstance.INFINITE_DURATION));
+            Particulas.subindoEmVolta(inimigo, Particulas.poeira(0x330033, 1.5F), 20, 0.0);
+            return;
+        }
+        inimigo.corromper(jogador);
+        EventosDeCombate.darRecompensa(inimigo, jogador);
+    }
+
+    // Proteção: mirando numa guarda sua, ela melhora (ou se cura, se as guardas já gastam toda a energia da varinha);
+    // mirando no chão, nasce uma guarda nova ali. Igual ao Shattered, se tiver alguém na mira, a guarda fica um
+    // quadradinho antes dele. As guardas não podem gastar mais energia que as varinhas de proteção do herói (2 + nível cada).
+    private static void protecao(ServerPlayer jogador, int nivel) {
+        ServerLevel mundo = jogador.serverLevel();
+        LivingEntity naMira = Mira.inimigo(jogador, ALCANCE);
+        if (naMira instanceof Guarda guarda && jogador.getUUID().equals(guarda.donoDoAliado())) {
+            rastro(jogador, guarda.getBoundingBox().getCenter(), Particulas.poeira(TipoDeVarinha.PROTECAO.cor(), 1.2F), 3);
+            if (energiaDasGuardas(jogador) < energiaMaxima(jogador)) {
+                guarda.melhorar(nivel);
+            } else {
+                guarda.curar(nivel, 1.0F);
+            }
+            som(jogador, guarda.position(), SoundEvents.AMETHYST_BLOCK_RESONATE, 1.0F, 1.2F);
+            return;
+        }
+        Vec3 ponto = Mira.ponto(jogador, ALCANCE);
+        if (naMira != null) {
+            Vec3 volta = jogador.position().subtract(naMira.position()).multiply(1, 0, 1);
+            if (volta.length() < QUADRADINHO * 1.5) {
+                semLugarPraGuarda(jogador);
+                return;
+            }
+            ponto = naMira.position().add(volta.normalize().scale(QUADRADINHO)).add(0, 0.5, 0);
+        }
+        rastro(jogador, ponto, Particulas.poeira(TipoDeVarinha.PROTECAO.cor(), 1.2F), 3);
+        Guarda nova = ModEntidades.GUARDA.get().create(mundo);
+        Vec3 chao = chaoAbaixo(mundo, ponto);
+        if (nova == null || chao == null) {
+            semLugarPraGuarda(jogador);
+            return;
+        }
+        nova.moveTo(chao.x, chao.y, chao.z, 0.0F, 0.0F);
+        if (!mundo.noCollision(nova) || !mundo.getEntitiesOfClass(LivingEntity.class, nova.getBoundingBox().inflate(0.2)).isEmpty()) {
+            semLugarPraGuarda(jogador);
+            return;
+        }
+        nova.nascer(jogador, nivel);
+        mundo.addFreshEntity(nova);
+        som(jogador, chao, SoundEvents.AMETHYST_BLOCK_RESONATE, 1.0F, 1.0F);
+    }
+
+    private static void semLugarPraGuarda(ServerPlayer jogador) {
+        jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.sem_lugar_pra_guarda").withStyle(ChatFormatting.GRAY), true);
+    }
+
+    // A energia que as guardas desse herói gastam (o nível de cada uma), no andar dele
+    public static int energiaDasGuardas(ServerPlayer jogador) {
+        int energia = 0;
+        for (Guarda guarda : jogador.level().getEntitiesOfClass(Guarda.class, jogador.getBoundingBox().inflate(256, 5, 256),
+                guarda -> guarda.isAlive() && jogador.getUUID().equals(guarda.donoDoAliado()))) {
+            energia += guarda.nivel();
+        }
+        return energia;
+    }
+
+    // A energia das varinhas de proteção que o herói carrega (2 + nível de cada; o cajado com ela dentro também conta)
+    public static int energiaMaxima(ServerPlayer jogador) {
+        int energia = 0;
+        List<ItemStack> pilhas = new ArrayList<>(jogador.getInventory().items);
+        pilhas.addAll(jogador.getInventory().offhand);
+        for (ItemStack pilha : pilhas) {
+            if (pilha.getItem() instanceof ItemVarinha varinha && varinha.tipo() == TipoDeVarinha.PROTECAO) {
+                energia += 2 + NivelDoItem.nivel(pilha);
+            } else if (pilha.getItem() instanceof CajadoDoMago && CajadoDoMago.varinha(pilha) == TipoDeVarinha.PROTECAO) {
+                energia += 2 + NivelDoItem.nivel(pilha);
+            }
+        }
+        return energia;
+    }
+
+    // O chão embaixo de um ponto (até 12 blocos pra baixo), ou null se não tiver
+    @Nullable
+    private static Vec3 chaoAbaixo(ServerLevel mundo, Vec3 ponto) {
+        BlockPos.MutableBlockPos lugar = BlockPos.containing(ponto).mutable();
+        for (int i = 0; i < 12; i++) {
+            BlockPos embaixo = lugar.below();
+            if (!mundo.getBlockState(embaixo).getCollisionShape(mundo, embaixo).isEmpty()) {
+                return new Vec3(ponto.x, lugar.getY(), ponto.z);
+            }
+            lugar.move(Direction.DOWN);
+        }
+        return null;
+    }
+
+    // Um lugar no chão perto de "perto" (do lado virado pra "frente") onde a criatura cabe
+    @Nullable
+    private static Vec3 lugarLivre(ServerLevel mundo, LivingEntity criatura, Vec3 perto, Vec3 frente) {
+        Vec3 direcao = frente.subtract(perto).multiply(1, 0, 1);
+        direcao = direcao.lengthSqr() < 0.01 ? new Vec3(1, 0, 0) : direcao.normalize();
+        Vec3 lado = new Vec3(-direcao.z, 0, direcao.x);
+        Vec3[] tentativas = { direcao.scale(1.5), direcao.scale(2.5), lado.scale(1.5), lado.scale(-1.5), Vec3.ZERO, direcao.scale(-1.5) };
+        for (Vec3 desvio : tentativas) {
+            Vec3 chao = chaoAbaixo(mundo, perto.add(desvio).add(0, 0.5, 0));
+            if (chao == null) {
+                continue;
+            }
+            criatura.moveTo(chao.x, chao.y, chao.z);
+            if (mundo.noCollision(criatura)) {
+                return chao;
+            }
+        }
+        return null;
     }
 
     // ---- Cones ----
