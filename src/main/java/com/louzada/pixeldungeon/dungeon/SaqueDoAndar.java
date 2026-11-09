@@ -10,6 +10,7 @@ import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.PremioNoChao;
 import com.louzada.pixeldungeon.item.ArmaDeArremesso;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
+import com.louzada.pixeldungeon.item.ArtefatoAchado;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.ChaveDeFerro;
 import com.louzada.pixeldungeon.item.Equipamento;
@@ -89,7 +90,7 @@ public class SaqueDoAndar {
         for (int i = 0; i < quantidade && !lugares.isEmpty(); i++) {
             int[] lugar = lugares.remove(sorteio.nextInt(lugares.size()));
             List<ItemStack> itens = new ArrayList<>();
-            itens.add(itemAleatorio(sorteio, andar, semente));
+            itens.add(itemAleatorio(sorteio, andar, run));
             Onde onde = Onde.CHAO;
             int dado = sorteio.nextInt(20);
             if (dado >= 1 && dado <= 4) {
@@ -276,8 +277,11 @@ public class SaqueDoAndar {
 
     // Ouro (10), poção (8), pergaminho (8), arma (2), armadura (2), semente (1), arma de arremesso (1), varinha (1) ou anel (1),
     // igual ao peso deles no Shattered
-    public static ItemStack itemAleatorio(Random sorteio, int andar, long semente) {
-        return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 2, 1, 1, 1, 1 })) {
+    // Os pesos de cada tipo de item, igual ao Shattered (a média dos dois "baralhos" dele):
+    // ouro 10, poção 8, pergaminho 8, arma 2, armadura 1,5, semente 1, arremesso 1,5, varinha 1, anel 0,5, artefato 0,5
+    public static ItemStack itemAleatorio(Random sorteio, int andar, DadosDaRun run) {
+        long semente = run.semente();
+        return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 1.5F, 1, 1.5F, 1, 0.5F, 0.5F })) {
             case 0 -> Ouro.sortear(sorteio, andar);
             case 1 -> pocaoAleatoria(sorteio, semente);
             case 2 -> pergaminhoAleatorio(sorteio, semente);
@@ -286,8 +290,30 @@ public class SaqueDoAndar {
             case 5 -> sementeAleatoria(sorteio);
             case 6 -> arremessoAleatorio(sorteio, andar);
             case 7 -> varinhaAleatoria(sorteio);
-            default -> anelAleatorio(sorteio);
+            case 8 -> anelAleatorio(sorteio);
+            default -> artefatoAleatorio(sorteio, run);
         };
+    }
+
+    // Um artefato que ainda não apareceu nesta run (todos com a mesma chance); se já saíram todos, um anel, igual ao Shattered
+    public static ItemStack artefatoAleatorio(Random sorteio, DadosDaRun run) {
+        List<ArtefatoAchado> sobrando = new ArrayList<>();
+        for (var registrado : ModItens.artefatos()) {
+            ArtefatoAchado artefato = registrado.get();
+            if (run.quedas(chaveDoArtefato(artefato)) == 0) {
+                sobrando.add(artefato);
+            }
+        }
+        if (sobrando.isEmpty()) {
+            return anelAleatorio(sorteio);
+        }
+        ArtefatoAchado escolhido = sobrando.get(sorteio.nextInt(sobrando.size()));
+        run.contarQueda(chaveDoArtefato(escolhido));
+        return new ItemStack(escolhido);
+    }
+
+    public static String chaveDoArtefato(ArtefatoAchado artefato) {
+        return "artefato_" + artefato.id();
     }
 
     // Um anel qualquer (todas as gemas têm a mesma chance), com nível e talvez amaldiçoado, sem identificar

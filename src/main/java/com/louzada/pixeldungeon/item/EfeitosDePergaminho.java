@@ -2,16 +2,19 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.dungeon.MapeamentoMagico;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
+import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
 import com.louzada.pixeldungeon.dungeon.Teleporte;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.entidade.ImagemEspelhada;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
+import com.louzada.pixeldungeon.registro.ModComponentes;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 import com.louzada.pixeldungeon.registro.ModItens;
 import com.louzada.pixeldungeon.run.DadosDaRun;
@@ -170,6 +173,7 @@ public class EfeitosDePergaminho {
     // Armas viram outra arma do mesmo tier (com o mesmo nível e maldição), armas de arremesso viram outras de arremesso
     // do mesmo tier, varinhas e anéis viram outro (com o mesmo nível), sementes viram outra semente,
     // poções e pergaminhos viram outro tipo. Força e melhoria não podem ser transmutadas.
+    // Artefatos viram outro artefato que ainda não apareceu na run, levando o nível (na proporção do nível máximo de cada um).
     // (No Shattered, poções e pergaminhos viram as versões "exóticas", que o mod ainda não tem.)
     public static boolean podeTransmutar(ServerPlayer jogador, ItemStack pilha) {
         long semente = Identificacao.sementeDaRun(jogador);
@@ -180,6 +184,9 @@ public class EfeitosDePergaminho {
         if (pilha.getItem() instanceof ItemSemente) {
             return true;
         }
+        if (pilha.getItem() instanceof ArtefatoAchado) {
+            return sobraArtefato(jogador);
+        }
         TipoDePocao pocao = Identificacao.tipoDaPocao(semente, pilha);
         if (pocao != null) {
             return pocao != TipoDePocao.FORCA;
@@ -188,10 +195,36 @@ public class EfeitosDePergaminho {
         return pergaminho != null && pergaminho != TipoDePergaminho.MELHORIA;
     }
 
+    // Ainda tem algum artefato que não apareceu na run?
+    private static boolean sobraArtefato(ServerPlayer jogador) {
+        DadosDaRun run = DadosDaRun.pegar(jogador.serverLevel().getServer());
+        for (var registrado : ModItens.artefatos()) {
+            if (run.quedas(SaqueDoAndar.chaveDoArtefato(registrado.get())) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static ItemStack transmutar(ServerPlayer jogador, ItemStack pilha) {
         RandomSource sorteio = jogador.getRandom();
         long semente = Identificacao.sementeDaRun(jogador);
         List<Item> opcoes = new ArrayList<>();
+        if (pilha.getItem() instanceof ArtefatoAchado antigo) {
+            if (!sobraArtefato(jogador)) {
+                return ItemStack.EMPTY;
+            }
+            ItemStack novo = SaqueDoAndar.artefatoAleatorio(new Random(sorteio.nextLong()), DadosDaRun.pegar(jogador.serverLevel().getServer()));
+            if (novo.getItem() instanceof ArtefatoAchado artefato) {
+                // Igual ao Shattered: o nível vai na proporção (um +5 de 10 vira um +2 de 5... arredondando)
+                int visivel = Math.round(ArtefatoAchado.nivel(pilha) * 10F / antigo.nivelMaximo());
+                int nivel = Math.min(artefato.nivelMaximo(), Math.round(visivel * artefato.nivelMaximo() / 10F));
+                if (nivel > 0) {
+                    novo.set(ModComponentes.NIVEL.get(), nivel);
+                }
+            }
+            return novo;
+        }
         if (pilha.getItem() instanceof ArmaDoShattered arma) {
             for (var registrado : ModItens.ITENS.getEntries()) {
                 if (registrado.get() instanceof ArmaDoShattered outra && outra.tier() == arma.tier() && outra != arma && !(outra instanceof CajadoDoMago)) {
