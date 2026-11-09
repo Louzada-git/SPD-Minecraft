@@ -6,6 +6,8 @@ import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.rede.PacoteEstadoDoHeroi;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 // Coisas que só existem no jogo do jogador (telas, desenho...).
 // O servidor nunca carrega esta classe.
@@ -32,6 +34,10 @@ public class ClienteDoMod {
 
     public static void abrirEscolhaDeItem(String pergaminho, List<Integer> espacos) {
         Minecraft.getInstance().setScreen(new TelaEscolherItem(pergaminho, espacos));
+    }
+
+    public static void abrirFantasma(Component texto, ItemStack arma, ItemStack armadura) {
+        Minecraft.getInstance().setScreen(new TelaDoFantasma(texto, arma, armadura));
     }
 
     public static void abrirCompartilhar(String modo, List<String> jogadores, List<String> escolhidos) {
