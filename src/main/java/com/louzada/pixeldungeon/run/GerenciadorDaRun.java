@@ -15,6 +15,7 @@ import com.louzada.pixeldungeon.dungeon.MissaoDoFantasma;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
+import com.louzada.pixeldungeon.entidade.FantasmaAliado;
 import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
@@ -275,6 +276,8 @@ public class GerenciadorDaRun {
             destino = info.saida();
         }
         teleportar(jogador, destino);
+        // O fantasma da rosa seca vai junto
+        FantasmaAliado.acompanhar(jogador);
         jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.andar", andar,
                 Component.translatable(Andares.regiaoDoAndar(andar))), true);
         // Primeira vez nesse andar: talentos que acontecem ao explorar (rações guardadas do Ladino)
