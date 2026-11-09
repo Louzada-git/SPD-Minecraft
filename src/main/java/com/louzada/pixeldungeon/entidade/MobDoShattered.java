@@ -49,6 +49,7 @@ import net.minecraft.world.level.Level;
 //   - depois de apanhar, mostra uma barra de vida em cima da cabeça
 //   - corrompido (encantamento de corrupção, varinha de corrupção), vira aliado dos heróis: ataca os outros inimigos,
 //     segue o herói e, igual ao Shattered, perde 1% da vida máxima por turno
+//   - alguns já nascem aliados (o guardião da terra e as guardas da varinha de proteção), sem perder vida
 public abstract class MobDoShattered extends Monster implements Combatente {
 
     // Os números de um inimigo, iguais aos do Shattered.
@@ -265,7 +266,7 @@ public abstract class MobDoShattered extends Monster implements Combatente {
     public void tick() {
         super.tick();
         // Corrompido: perde 1% da vida máxima por turno
-        if (aliado() && !level().isClientSide() && Turno.virou(this)) {
+        if (hasEffect(ModEfeitos.CORROMPIDO) && !level().isClientSide() && Turno.virou(this)) {
             corrupcaoAcumulada += getMaxHealth() / 100F;
             if (corrupcaoAcumulada >= 1) {
                 int dano = (int) corrupcaoAcumulada;
@@ -302,7 +303,17 @@ public abstract class MobDoShattered extends Monster implements Combatente {
     // ---- Aliado (corrompido) ----
 
     public boolean aliado() {
-        return hasEffect(ModEfeitos.CORROMPIDO);
+        return hasEffect(ModEfeitos.CORROMPIDO) || aliadoDeNascenca();
+    }
+
+    // Quem já nasce aliado (o guardião da terra, as guardas)
+    protected boolean aliadoDeNascenca() {
+        return false;
+    }
+
+    // O herói dono do aliado (o que o aliado mata conta pra ele)
+    protected void definirDono(@Nullable Player dono) {
+        donoDoAliado = dono == null ? null : dono.getUUID();
     }
 
     // Corrompe: vira aliado com a vida cheia e sem os efeitos ruins (igual ao Shattered)
@@ -315,7 +326,7 @@ public abstract class MobDoShattered extends Monster implements Combatente {
         }
         setHealth(getMaxHealth());
         addEffect(new MobEffectInstance(ModEfeitos.CORROMPIDO, MobEffectInstance.INFINITE_DURATION, 0, false, true, true));
-        donoDoAliado = dono == null ? null : dono.getUUID();
+        definirDono(dono);
         setTarget(null);
         setLastHurtByMob(null);
         setPersistenceRequired();
