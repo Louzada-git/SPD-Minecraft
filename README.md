@@ -276,6 +276,24 @@ Os 12 anéis do Shattered, com os mesmos números. Igual às poções, cada gema
 - **Identificação:** vêm +0 (2/3), +1 (4/15) ou +2 (1/15), sem identificar. Usando, o anel se identifica (o tipo e o nível) depois de 1 nível de experiência.
 - **Amaldiçoados:** 30% vêm amaldiçoados: o bônus fica de 0 a -2 (o efeito ao contrário), e o anel gruda no dedo. Pôr revela a maldição.
 
+### Artefatos
+
+Os 9 artefatos do Shattered que dá pra achar pela dungeon, com os mesmos números. Cada um aparece **uma vez por run** (acabando, vem um anel no lugar). Só funcionam **equipados**: na mão ou na casinha de artefato (a outra mão). Clique direito usa; agachado, a outra ação. A barrinha do ícone mostra as cargas, e a dica mostra o nível. Pergaminho de melhoria não sobe artefato (cada um sobe do seu jeito); o de transmutação troca por outro artefato que ainda não apareceu, levando o nível na proporção.
+
+| Artefato | Carrega | Usar | Sobe de nível (máximo) |
+|---|---|---|---|
+| Cálice de sangue | não tem cargas | se furar: 3-7 de dano no +0 até 253-357 no +10 (a armadura segura uma parte); clique 2 vezes pra confirmar | se furando (10). Equipado, cura mais rápido: no Shattered a cura natural leva 10 turnos por vida, com o cálice 10 - (1,33 + 0,667 x nível) |
+| Chifre da fartura | 5 + nível/2, com a experiência | lanche: 1 carga mata um quinto da fome | dando comida pra ele (agachado): cada ração guardada é um nível (10) |
+| Ampulheta do guardião do tempo | 5 + nível, vem cheia, com o tempo (90 turnos por carga) | **estase:** até 2 cargas, 5 turnos cada, congelado, invisível e nada te machuca. **Parar o tempo** (agachado): 1 carga a cada 2 turnos, os inimigos em volta ficam parados até você atacar | com os saquinhos de areia da loja (5) |
+| Livro de feitiços instável | 2 + 60% do nível, vem cheio, com o tempo (120 turnos) | lê um pergaminho ao acaso (nunca melhoria nem transmutação) | dando os pergaminhos que o índice pede, já identificados (10) |
+| Correntes etéreas | vêm com 5, até 5 + 2 x nível com o tempo (40 turnos); a experiência passa disso | num inimigo, puxa ele até você; numa parede, puxa você até ela. 1 carga por quadradinho | com a experiência (5) |
+| Talismã da vidência | até 100, com o tempo (0,05 + 0,005 x nível por turno) e 10 por porta escondida achada | vê num cone até onde você mira (até 5 + 2 x nível quadradinhos; o cone fecha com a distância): revela as portas escondidas e os inimigos brilham através das paredes. Custa 3 + 1,08 por quadradinho | com o que descobre: porta escondida, inimigo fora da vista, lugar que você não via (10) |
+| Braçadeira do mestre dos ladrões | 5 + nível/2, com a experiência | rouba o item que o inimigo do lado deixaria ao morrer (chance x 1 + 0,1 x nível, mais 0,5 de surpresa). Ele fica cego e aleijado; quem foi roubado não deixa mais nada | roubando (10) |
+| Sandálias da natureza | até 100, pisoteando grama alta; e a grama solta mais sementes e orvalho | o efeito da última semente que comeram, até 3 quadradinhos (de 12 a 80 de carga) | comendo sementes diferentes, 3 + 3 x nível por nível: viram sapatos, botas e grevas (3) |
+| Chave de crânio | 3 + nível/2, vem cheia, com o tempo (120 turnos) | numa porta trancada, destranca (1 carga); numa porta comum, tranca (2 cargas, nenhum inimigo passa, você abre de graça); em outro lugar, paredes espectrais na sua frente por 10 turnos (2 cargas) | usando (10) |
+
+- Diferenças do Shattered: os artefatos nunca vêm amaldiçoados; o talismã não avisa de armadilhas escondidas (o mod ainda não tem armadilhas); a braçadeira ainda não rouba de lojas e a ampulheta ainda não sobe de nível (o mod ainda não tem lojas). O kit do alquimista fica pra quando tiver alquimia.
+
 ### Armaduras
 
 5 armaduras do Shattered, com os mesmos números. Elas aparecem pelos andares com o mesmo sorteio de tier das armas, e vêm sem identificar (+0, +1 ou +2, 30% amaldiçoadas e 15% com um glifo).
@@ -324,7 +342,7 @@ Os 12 anéis do Shattered, com os mesmos números. Igual às poções, cada gema
 
 ### Ouro, baús e mímicos
 
-- Cada andar (menos o do chefe) tem de 3 a 5 itens espalhados (60% / 30% / 10%), mais uma ração. Cada item é **ouro** (10), **poção** (8), **pergaminho** (8), **arma** (2), **armadura** (2), **semente** (1), **arma de arremesso** (1), **varinha** (1) ou **anel** (1), com os pesos do Shattered. As salas especiais têm os prêmios delas, e cada porta trancada tem a sua chave de ferro. Em cada região também caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares.
+- Cada andar (menos o do chefe) tem de 3 a 5 itens espalhados (60% / 30% / 10%), mais uma ração. Cada item é **ouro** (10), **poção** (8), **pergaminho** (8), **arma** (2), **armadura** (1,5), **arma de arremesso** (1,5), **semente** (1), **varinha** (1), **anel** (0,5) ou **artefato** (0,5), com os pesos do Shattered (a média dos dois "baralhos" dele). As salas especiais têm os prêmios delas, e cada porta trancada tem a sua chave de ferro. Em cada região também caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares.
 - **Ouro:** uma pilha tem de 30 + 10 por andar até 60 + 20 por andar moedas. Encostou, as moedas vão direto pra bolsa (não ocupam o inventário), sobe um "+N" dourado e o total aparece no inventário, do lado do equipamento. Cada herói tem o seu ouro, pras lojas que vão vir.
 - De cada 20 itens, 4 ficam num **baú** (um baú comum do Minecraft, com o item no meio), 1 fica dentro de um **mímico** (a partir do andar 2) e o resto fica largado no chão. Onde tem item, a grama alta é aparada. Os itens nunca somem do chão.
 - Ninguém consegue quebrar um baú (só no criativo).
@@ -532,7 +550,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 ## O que vem depois
 
 1. **Texturas próprias** dos blocos.
-2. **Mais itens:** poções e pergaminhos exóticos e alquimia.
+2. **Mais itens:** poções e pergaminhos exóticos e alquimia (e o kit do alquimista), a missão do fantasma triste e a rosa seca, e as lojas.
 3. **O resto do esgoto do Shattered:** armadilhas, as salas secretas que faltam e as salas que precisam de abismo.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
@@ -545,6 +563,7 @@ src/main/java/com/louzada/pixeldungeon/
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas, portas gigantes, plantas e blocos de decoração
   item/                        armas, armas de arremesso, varinhas, anéis, armadura, glifos, encantamentos, o selo do Guerreiro, poções, pergaminhos, sementes, identificação e maldições
+    artefato/                  os 9 artefatos que se acha pela dungeon (o cálice, o chifre, a ampulheta, o livro, as correntes, o talismã, a braçadeira, as sandálias e a chave)
   entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o guardião de terra, as guardas, o míssil mágico, as nuvens de gás...
   efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
   combate/
