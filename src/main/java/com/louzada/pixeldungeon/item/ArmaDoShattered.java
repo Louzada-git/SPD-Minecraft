@@ -254,7 +254,28 @@ public class ArmaDoShattered extends Item implements Arma, Equipamento {
 
     @Override
     public float precisao(ItemStack pilha, DadosDoHeroi heroi) {
-        return numeros.precisao * Equipamento.divisaoPelaForca(forcaFaltando(pilha, heroi.forca()));
+        return precisaoComForca(pilha, heroi.forca());
+    }
+
+    // ---- Pra quem não é o herói (o fantasma da rosa seca): os mesmos números, com a força dele ----
+
+    public float precisaoComForca(ItemStack pilha, int forca) {
+        return numeros.precisao * Equipamento.divisaoPelaForca(forcaFaltando(pilha, forca));
+    }
+
+    public int sortearDanoComForca(ItemStack pilha, RandomSource sorteio, int forca) {
+        int nivel = NivelDoItem.nivel(pilha);
+        int dano = Sorteio.normal(sorteio, danoMinimo(nivel), danoMaximo(nivel));
+        int forcaSobrando = forca - forcaNecessaria(nivel);
+        if (forcaSobrando > 0) {
+            dano += sorteio.nextInt(forcaSobrando + 1);
+        }
+        return dano;
+    }
+
+    public int sortearDefesaComForca(ItemStack pilha, RandomSource sorteio, int forca) {
+        int valor = Sorteio.normal(sorteio, 0, defesa(NivelDoItem.nivel(pilha))) - 2 * forcaFaltando(pilha, forca);
+        return Math.max(0, valor);
     }
 
     // Defesa que a arma dá a quem segura (sorteada de 0 até a defesa dela; cada ponto de força que falta tira 2)
