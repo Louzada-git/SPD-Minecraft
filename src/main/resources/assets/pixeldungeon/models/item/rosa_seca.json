@@ -1,0 +1,20 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "pixeldungeon:item/rosa_seca"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "pixeldungeon:estagio": 1
+      },
+      "model": "pixeldungeon:item/rosa_seca_2"
+    },
+    {
+      "predicate": {
+        "pixeldungeon:estagio": 2
+      },
+      "model": "pixeldungeon:item/rosa_seca_3"
+    }
+  ]
+}

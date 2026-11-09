@@ -28,6 +28,7 @@ import com.louzada.pixeldungeon.item.ItemSemente;
 import com.louzada.pixeldungeon.item.ItemVarinha;
 import com.louzada.pixeldungeon.item.Odre;
 import com.louzada.pixeldungeon.item.Ouro;
+import com.louzada.pixeldungeon.item.PetalaSeca;
 import com.louzada.pixeldungeon.item.RacaoDeSuprimentos;
 import com.louzada.pixeldungeon.item.RunaDePergaminho;
 import com.louzada.pixeldungeon.item.SeloQuebrado;
@@ -41,6 +42,7 @@ import com.louzada.pixeldungeon.item.artefato.ChaveDeCranio;
 import com.louzada.pixeldungeon.item.artefato.ChifreDaFartura;
 import com.louzada.pixeldungeon.item.artefato.CorrentesEtereas;
 import com.louzada.pixeldungeon.item.artefato.LivroInstavel;
+import com.louzada.pixeldungeon.item.artefato.RosaSeca;
 import com.louzada.pixeldungeon.item.artefato.SandaliasDaNatureza;
 import com.louzada.pixeldungeon.item.artefato.TalismaDaVidencia;
 
@@ -204,10 +206,13 @@ public class ModItens {
     public static final DeferredItem<BracadeiraDoLadrao> BRACADEIRA_DO_LADRAO = ITENS.registerItem("bracadeira_do_ladrao", BracadeiraDoLadrao::new);
     public static final DeferredItem<SandaliasDaNatureza> SANDALIAS_DA_NATUREZA = ITENS.registerItem("sandalias_da_natureza", SandaliasDaNatureza::new);
     public static final DeferredItem<ChaveDeCranio> CHAVE_DE_CRANIO = ITENS.registerItem("chave_de_cranio", ChaveDeCranio::new);
+    // A rosa seca só funciona depois da missão do fantasma; as pétalas sobem o nível dela
+    public static final DeferredItem<RosaSeca> ROSA_SECA = ITENS.registerItem("rosa_seca", RosaSeca::new);
+    public static final DeferredItem<PetalaSeca> PETALA_SECA = ITENS.registerItem("petala_seca", PetalaSeca::new);
 
     public static List<DeferredItem<? extends ArtefatoAchado>> artefatos() {
         return List.of(CALICE_DE_SANGUE, CHIFRE_DA_FARTURA, AMPULHETA_DO_TEMPO, LIVRO_INSTAVEL, CORRENTES_ETEREAS, TALISMA_DA_VIDENCIA,
-                BRACADEIRA_DO_LADRAO, SANDALIAS_DA_NATUREZA, CHAVE_DE_CRANIO);
+                BRACADEIRA_DO_LADRAO, SANDALIAS_DA_NATUREZA, CHAVE_DE_CRANIO, ROSA_SECA);
     }
 
     // Odre: todo herói começa com um; guarda as gotas de orvalho
