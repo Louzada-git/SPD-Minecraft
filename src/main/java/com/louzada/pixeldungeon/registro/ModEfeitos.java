@@ -142,4 +142,26 @@ public class ModEfeitos {
     // Dano adiado (glifo da viscosidade): o dano guardado vem 10% por turno
     public static final DeferredHolder<MobEffect, EfeitoSimples> DANO_ADIADO = EFEITOS.register("dano_adiado",
             () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xA0A0A0));
+
+    // ---- Os efeitos ruins da varinha de corrupção ----
+
+    // Fraco: causa 33% menos dano
+    public static final DeferredHolder<MobEffect, EfeitoSimples> FRACO = EFEITOS.register("fraco",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0x998866));
+    // Vulnerável: leva 33% mais dano dos golpes (depois da armadura)
+    public static final DeferredHolder<MobEffect, EfeitoSimples> VULNERAVEL = EFEITOS.register("vulneravel",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xBB9955));
+    // Lento: anda pela metade e ataca a cada 2 turnos
+    public static final DeferredHolder<MobEffect, EfeitoSimples> LENTO = EFEITOS.register("lento",
+            () -> EfeitoSimples.queMudaAVelocidade(MobEffectCategory.HARMFUL, 0xFF5533, "lento", -0.5));
+    // Feitiço: precisão e esquiva 20% menores
+    public static final DeferredHolder<MobEffect, EfeitoSimples> FEITICO = EFEITOS.register("feitico",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0x9933CC));
+    // Condenado (o chefe não pode ser corrompido, então fica condenado): leva 67% mais de qualquer dano
+    public static final DeferredHolder<MobEffect, EfeitoSimples> CONDENADO = EFEITOS.register("condenado",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0x330033));
+
+    // Armadura de pedra (varinha de terra viva): segura metade de cada golpe até a pedra acabar
+    public static final DeferredHolder<MobEffect, EfeitoSimples> ARMADURA_DE_PEDRA = EFEITOS.register("armadura_de_pedra",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x806040));
 }
