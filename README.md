@@ -200,7 +200,7 @@ As 15 armas de arremesso do Shattered, com os mesmos números. Clique direito ar
 
 ### Varinhas
 
-10 das 13 varinhas do Shattered, com os mesmos números (faltam a de terra viva, a de proteção e a de corrupção). Clique direito lança (gasta 1 turno). Elas aparecem pelos andares; todos os tipos têm a mesma chance.
+As 13 varinhas do Shattered, com os mesmos números. Clique direito lança (gasta 1 turno). Elas aparecem pelos andares; todos os tipos têm a mesma chance.
 
 | Varinha | Cargas | O que faz |
 |---|---|---|
@@ -214,11 +214,18 @@ As 15 armas de arremesso do Shattered, com os mesmos números. Clique direito ar
 | Luz prismática | 2 | 1-5 (+1/+3) e pode cegar |
 | Transfusão | 2 | num aliado, gasta 5% da sua vida pra curá-lo; num inimigo, encanta por 5 turnos (não ataca) e dá blindagem |
 | Maturação | 2 | cone de grama alta que enraíza; gasta 1 a 3 cargas |
+| Terra viva | 2 | 4-6 (+0/+2); o dano num inimigo vira armadura de pedra em você (segura metade de cada golpe, até 2 x (8 + 4 x nível)). Com 8 + 4 x nível de pedra, o próximo disparo cria um **guardião de terra** |
+| Corrupção | 2 | sem dano: se o poder (3 + nível/3) passar da resistência do inimigo, ele vira **aliado** (e você ganha o XP e os itens dele); senão, ele fica enfraquecido, vulnerável, aleijado, cego ou aterrorizado (ou, às vezes, furioso, lento, enfeitiçado ou paralisado) por 6 + 3 x nível turnos |
+| Proteção | 2 | sem dano: põe **guardas** no chão, que disparam sozinhas nos inimigos (2 + nível a 8 + 4 x nível); disparar numa guarda sua melhora ela |
 
 - **Cargas:** as do tipo + 1 por nível, até 10. Voltam sozinhas, mais rápido quanto mais vazia. O pergaminho de recarga enche todas.
 - **Identificação:** vêm +0 (2/3), +1 (4/15) ou +2 (1/15), sem identificar: o nível e as cargas ficam escondidos. Se identificam depois de 10 disparos.
 - **Amaldiçoadas:** 30% vêm amaldiçoadas ("caóticas"): a magia sai aleatória (fogo, gelo, gás, grama, teletransporte ou nada). Descobre na primeira vez que lançar.
 - **Cajado do Mago:** agachado, com a varinha na mão e o cajado na outra, clique direito (duas vezes, pra confirmar) põe a varinha dentro do cajado. O cajado dá 1 carga a mais, fica com o maior nível dos dois (+1 se a varinha for melhor e o cajado já tiver nível), e a varinha antiga se perde.
+- **Guardião de terra:** um aliado de pedra com 16 + 8 x nível de vida, que segue você e luta do seu lado (bate 2 a 4 + andar/2 e segura nível a 3 + 3 x nível). Os disparos da varinha enquanto ele existe (nele ou num inimigo) curam ele. Quando não sobra nenhum inimigo à vista, ele volta a ser armadura de pedra em você.
+- **Corrupção:** a resistência é 1 + o XP do inimigo, vezes 1 + 4 x (vida / vida máxima)²: inimigo ferido é bem mais fácil. Cada efeito ruim que ele já tem diminui a resistência. Os aliados corrompidos perdem 1% da vida máxima por turno. O Goo não pode ser corrompido: depois de pegar todos os efeitos ruins, ele fica **sentenciado** (leva 67% mais de qualquer dano).
+  - Enfraquecido: causa 33% menos dano. Vulnerável: leva 33% mais dano dos golpes. Lentidão: anda pela metade e ataca a cada 2 turnos. Enfeitiçado: 20% menos precisão e esquiva.
+- **Guardas:** nível 1 a 3 (guardas) têm 1 de vida e somem depois de 1, 3 ou 5 disparos; nível 4 a 6 (sentinelas) têm 35, 54 e 84 de vida e gastam 5, 6 ou 7 em cada disparo. Enxergam 3 + nível quadradinhos. A soma dos níveis das suas guardas no andar não passa da energia das suas varinhas de proteção (2 + nível de cada; o cajado com ela dentro conta); sem energia, o disparo numa sentinela só cura ela. Agachado, clique direito numa guarda sua dispensa ela.
 
 ### Anéis
 
@@ -499,7 +506,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 ## O que vem depois
 
 1. **Texturas próprias** dos blocos.
-2. **Mais itens:** as varinhas de terra viva, proteção e corrupção, poções e pergaminhos exóticos e alquimia.
+2. **Mais itens:** poções e pergaminhos exóticos e alquimia.
 3. **O resto do esgoto do Shattered:** armadilhas, as salas secretas que faltam e as salas que precisam de abismo.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
@@ -512,7 +519,7 @@ src/main/java/com/louzada/pixeldungeon/
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas, portas gigantes, plantas e blocos de decoração
   item/                        armas, armas de arremesso, varinhas, anéis, armadura, glifos, encantamentos, o selo do Guerreiro, poções, pergaminhos, sementes, identificação e maldições
-  entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o míssil mágico, as nuvens de gás...
+  entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o guardião de terra, as guardas, o míssil mágico, as nuvens de gás...
   efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
   combate/
     Combate.java               o golpe do Shattered, igual pra todo mundo (acerto, dano, armadura, reações)
