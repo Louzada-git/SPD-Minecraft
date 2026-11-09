@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.entidade.ArmaArremessada;
+import com.louzada.pixeldungeon.entidade.CaranguejoGrande;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
 import com.louzada.pixeldungeon.entidade.ImagemEspelhada;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
@@ -69,6 +70,11 @@ public class EventosDeCombate {
 
         boolean corpoACorpo = atacante instanceof LivingEntity && fonte.getDirectEntity() == atacante;
         if (!corpoACorpo) {
+            // O caranguejo grande (missão do fantasma) bloqueia as magias de quem ele está caçando
+            if (alvo instanceof CaranguejoGrande caranguejo && caranguejo.bloqueiaMagia(atacante, fonte)) {
+                evento.setCanceled(true);
+                return;
+            }
             if (atacante != null && alvo instanceof MobDoShattered inimigo) {
                 evento.setAmount(inimigo.reduzirDanoRecebido(evento.getAmount()));
                 Combate.acordar(alvo, atacante);
