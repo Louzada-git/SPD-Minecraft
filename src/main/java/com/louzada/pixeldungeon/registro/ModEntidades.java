@@ -9,6 +9,8 @@ import com.louzada.pixeldungeon.entidade.FlechaEspiritual;
 import com.louzada.pixeldungeon.entidade.GnollExplorador;
 import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.entidade.GotaDeOrvalho;
+import com.louzada.pixeldungeon.entidade.Guarda;
+import com.louzada.pixeldungeon.entidade.GuardiaoDaTerra;
 import com.louzada.pixeldungeon.entidade.ImagemEspelhada;
 import com.louzada.pixeldungeon.entidade.LuzGuia;
 import com.louzada.pixeldungeon.entidade.Mimico;
@@ -25,6 +27,7 @@ import com.louzada.pixeldungeon.entidade.SlimeDeEsgoto;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -118,6 +121,14 @@ public class ModEntidades {
             () -> EntityType.Builder.of(ImagemEspelhada::new, MobCategory.MISC).sized(0.6F, 1.8F).clientTrackingRange(8)
                     .build("imagem_espelhada"));
 
+    // Guardião da terra (varinha de terra viva): aliado de pedra
+    public static final DeferredHolder<EntityType<?>, EntityType<GuardiaoDaTerra>> GUARDIAO_DA_TERRA = ENTIDADES.register("guardiao_da_terra",
+            () -> EntityType.Builder.of(GuardiaoDaTerra::new, MobCategory.MISC).sized(0.7F, 1.8F).clientTrackingRange(8)
+                    .build("guardiao_da_terra"));
+    // Guardas e sentinelas (varinha de proteção): aliados parados que disparam nos inimigos
+    public static final DeferredHolder<EntityType<?>, EntityType<Guarda>> GUARDA = ENTIDADES.register("guarda",
+            () -> EntityType.Builder.of(Guarda::new, MobCategory.MISC).sized(0.6F, 0.8F).clientTrackingRange(8).build("guarda"));
+
     // Diz ao Minecraft a vida, velocidade etc. de cada inimigo
     public static void aoCriarAtributos(EntityAttributeCreationEvent evento) {
         evento.put(RATO_MARSUPIAL.get(), MobDoShattered.atributosDoMinecraft(RatoMarsupial.ATRIBUTOS).build());
@@ -130,5 +141,7 @@ public class ModEntidades {
         evento.put(GOO.get(), Goo.atributosDoGoo().build());
         evento.put(MIMICO.get(), MobDoShattered.atributosDoMinecraft(Mimico.ATRIBUTOS).build());
         evento.put(IMAGEM_ESPELHADA.get(), ImagemEspelhada.atributosDaImagem().build());
+        evento.put(GUARDIAO_DA_TERRA.get(), MobDoShattered.atributosDoMinecraft(GuardiaoDaTerra.ATRIBUTOS).build());
+        evento.put(GUARDA.get(), MobDoShattered.atributosDoMinecraft(Guarda.ATRIBUTOS).add(Attributes.KNOCKBACK_RESISTANCE, 1.0).build());
     }
 }

@@ -65,6 +65,10 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.NUVEM_DE_GAS.get(), NoopRenderer::new);
         // Imagem espelhada: igual ao herói dono dela
         evento.registerEntityRenderer(ModEntidades.IMAGEM_ESPELHADA.get(), RenderizadorDaImagem::new);
+        // Os aliados das varinhas: o guardião da terra e as guardas (cada nível de guarda tem um desenho)
+        evento.registerEntityRenderer(ModEntidades.GUARDIAO_DA_TERRA.get(),
+                contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.GUARDIAO, 0.45F));
+        evento.registerEntityRenderer(ModEntidades.GUARDA.get(), RenderizadorDaGuarda::new);
     }
 
     // A grama usa as texturas cinza da grama do Minecraft; aqui ela ganha a cor verde do esgoto
