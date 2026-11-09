@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.item.ChaveDeFerro;
+import com.louzada.pixeldungeon.item.artefato.ChaveDeCranio;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -45,6 +46,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 //   - aberta, a porta some (dá pra passar e ver através); fechada, bloqueia a passagem e a visão
 //   - os inimigos andam pelas portas (elas abrem quando eles chegam perto), igual ao Shattered
 //   - a trancada só abre pra quem tem a chave de ferro do andar (a chave é gasta), e aí vira uma porta comum
+//   - a chave de crânio destranca a trancada, e tranca as comuns ("trancada pelo herói": nenhum inimigo passa;
+//     o herói abre de graça com a chave de crânio, e sem ela a porta abre quando ele chega, igual ao Shattered)
 public class PortaGigante extends Block {
     public static final int LARGURA = 4;
     public static final int ALTURA = 6;
@@ -61,18 +64,19 @@ public class PortaGigante extends Block {
     public static final EnumProperty<Direction.Axis> EIXO = BlockStateProperties.HORIZONTAL_AXIS;
     public static final BooleanProperty ABERTA = BlockStateProperties.OPEN;
     public static final BooleanProperty TRANCADA = BooleanProperty.create("trancada");
+    public static final BooleanProperty DO_HEROI = BooleanProperty.create("do_heroi");
 
     private static final Map<UUID, Long> ultimoAviso = new HashMap<>();
 
     public PortaGigante(Properties propriedades) {
         super(propriedades);
         registerDefaultState(stateDefinition.any().setValue(COLUNA, 0).setValue(LINHA, 0).setValue(EIXO, Direction.Axis.X).setValue(ABERTA, false)
-                .setValue(TRANCADA, false));
+                .setValue(TRANCADA, false).setValue(DO_HEROI, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> construtor) {
-        construtor.add(COLUNA, LINHA, EIXO, ABERTA, TRANCADA);
+        construtor.add(COLUNA, LINHA, EIXO, ABERTA, TRANCADA, DO_HEROI);
     }
 
     // O pedaço (coluna, linha) de uma porta atravessada no eixo
@@ -132,7 +136,12 @@ public class PortaGigante extends Block {
                 criatura -> criatura.isAlive() && !criatura.isSpectator());
 
         boolean trancada = estado.getValue(TRANCADA);
-        if (trancada) {
+        if (trancada && estado.getValue(DO_HEROI)) {
+            if (!abrirAForca(mundo, posicao, perto)) {
+                return;
+            }
+            trancada = false;
+        } else if (trancada) {
             if (!tentarDestrancar(mundo, posicao, perto)) {
                 return;
             }
@@ -176,7 +185,7 @@ public class PortaGigante extends Block {
     // Se o jogador tem a chave de ferro do andar (e da run) dessa porta, gasta a chave e destranca a porta inteira
     public boolean usarChave(ServerLevel mundo, BlockPos controle, ServerPlayer jogador) {
         BlockState estado = mundo.getBlockState(controle);
-        if (!estado.is(this) || !estado.getValue(TRANCADA)) {
+        if (!estado.is(this) || !estado.getValue(TRANCADA) || estado.getValue(DO_HEROI)) {
             return false;
         }
         int andar = Andares.andarPelaAltura(controle.getY());
@@ -192,15 +201,80 @@ public class PortaGigante extends Block {
         return true;
     }
 
-    // Muda a porta inteira (os 24 pedaços)
+    // Porta trancada pelo herói: quem chega sem a chave de crânio abre na marra; com ela, um aviso pra usar a chave
+    private boolean abrirAForca(ServerLevel mundo, BlockPos controle, List<LivingEntity> perto) {
+        for (LivingEntity criatura : perto) {
+            if (!(criatura instanceof ServerPlayer jogador)) {
+                continue;
+            }
+            if (!temChaveDeCranio(jogador)) {
+                destrancar(mundo, controle);
+                jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.chave_de_cranio.forcou").withStyle(ChatFormatting.GRAY), true);
+                return true;
+            }
+            long agora = mundo.getGameTime();
+            Long antes = ultimoAviso.get(jogador.getUUID());
+            if (antes == null || agora - antes >= TEMPO_ENTRE_AVISOS) {
+                ultimoAviso.put(jogador.getUUID(), agora);
+                jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.chave_de_cranio.trancada_com_chave").withStyle(ChatFormatting.GRAY), true);
+            }
+        }
+        return false;
+    }
+
+    private static boolean temChaveDeCranio(ServerPlayer jogador) {
+        for (ItemStack pilha : jogador.getInventory().items) {
+            if (pilha.getItem() instanceof ChaveDeCranio) {
+                return true;
+            }
+        }
+        return jogador.getOffhandItem().getItem() instanceof ChaveDeCranio;
+    }
+
+    // ---- Pra chave de crânio ----
+
+    // O pedaço de controle (o de baixo da esquerda) da porta desse pedaço
+    public static BlockPos controleDe(BlockState estado, BlockPos posicao) {
+        return posicao.relative(lado(estado.getValue(EIXO)), -estado.getValue(COLUNA)).below(estado.getValue(LINHA));
+    }
+
+    // Destranca a porta inteira (vira uma porta comum)
+    public void destrancar(ServerLevel mundo, BlockPos controle) {
+        BlockState estado = mundo.getBlockState(controle);
+        if (estado.is(this)) {
+            mudar(mundo, controle, estado.getValue(EIXO), estado.getValue(ABERTA), false);
+            mundo.playSound(null, controle, SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 1.0F, 0.8F);
+        }
+    }
+
+    // Tranca a porta inteira (fechada), como trancada pelo herói
+    public void trancarPeloHeroi(ServerLevel mundo, BlockPos controle) {
+        BlockState estado = mundo.getBlockState(controle);
+        if (estado.is(this)) {
+            mudar(mundo, controle, estado.getValue(EIXO), false, true, true);
+            mundo.playSound(null, controle, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 1.0F, 0.8F);
+        }
+    }
+
+    // O espaço da porta (quem estiver nele sai empurrado quando ela é trancada)
+    public static AABB espacoDaPorta(BlockPos controle, Direction.Axis eixo) {
+        BlockPos outroCanto = controle.relative(lado(eixo), LARGURA - 1).above(ALTURA - 1);
+        return new AABB(controle.getX(), controle.getY(), controle.getZ(), outroCanto.getX() + 1, outroCanto.getY() + 1, outroCanto.getZ() + 1);
+    }
+
+    // Muda a porta inteira (os 24 pedaços); destrancada, deixa de ser do herói
     private void mudar(ServerLevel mundo, BlockPos controle, Direction.Axis eixo, boolean aberta, boolean trancada) {
+        mudar(mundo, controle, eixo, aberta, trancada, trancada && mundo.getBlockState(controle).is(this) && mundo.getBlockState(controle).getValue(DO_HEROI));
+    }
+
+    private void mudar(ServerLevel mundo, BlockPos controle, Direction.Axis eixo, boolean aberta, boolean trancada, boolean doHeroi) {
         Direction lado = lado(eixo);
         for (int coluna = 0; coluna < LARGURA; coluna++) {
             for (int linha = 0; linha < ALTURA; linha++) {
                 BlockPos aqui = controle.relative(lado, coluna).above(linha);
                 BlockState estado = mundo.getBlockState(aqui);
                 if (estado.is(this)) {
-                    mundo.setBlock(aqui, estado.setValue(ABERTA, aberta).setValue(TRANCADA, trancada), Block.UPDATE_CLIENTS);
+                    mundo.setBlock(aqui, estado.setValue(ABERTA, aberta).setValue(TRANCADA, trancada).setValue(DO_HEROI, doHeroi), Block.UPDATE_CLIENTS);
                 }
             }
         }
