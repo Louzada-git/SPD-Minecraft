@@ -16,6 +16,7 @@ import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
+import com.louzada.pixeldungeon.item.artefato.BracadeiraDoLadrao;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.network.chat.Component;
@@ -188,7 +189,8 @@ public class EventosDeCombate {
     // Herói com mais de 2 níveis acima do máximo do inimigo não ganha mais itens dele, e os itens nunca somem do chão.
     public static void darRecompensa(MobDoShattered inimigo, @Nullable ServerPlayer matador) {
         boolean ganhaItens = matador == null || RegrasDoHeroi.dados(matador).nivel() <= inimigo.atributos().nivelMaximo() + 2;
-        ItemStack saque = ganhaItens ? inimigo.sortearSaque() : ItemStack.EMPTY;
+        // O item que a braçadeira do ladrão já roubou não cai de novo
+        ItemStack saque = ganhaItens && !BracadeiraDoLadrao.foiRoubado(inimigo) ? inimigo.sortearSaque() : ItemStack.EMPTY;
         if (!saque.isEmpty()) {
             ItemEntity noChao = inimigo.spawnAtLocation(saque);
             if (noChao != null) {
