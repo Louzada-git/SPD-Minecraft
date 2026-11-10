@@ -19,7 +19,8 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 // Pergaminho de mapeamento mágico. No Shattered ele mostra o mapa inteiro do andar; aqui,
 // como não tem mapa, o leitor fica sabendo pra que lado e a quantos quadradinhos está a saída,
 // e colunas de luz (que só ele vê, através das paredes) marcam a saída e a entrada por 30 turnos.
-// Igual ao Shattered, ele também revela todas as portas escondidas do andar (e elas ganham uma coluna de luz).
+// Igual ao Shattered, ele também revela todas as portas escondidas do andar (e elas ganham uma coluna de luz)
+// e todas as armadilhas escondidas.
 public class MapeamentoMagico {
     private static final int DURACAO = 30 * 20;
     private static final int ALTURA_DA_COLUNA = 8;
@@ -51,9 +52,10 @@ public class MapeamentoMagico {
             jogador.displayClientMessage(Component.translatable("efeito.pixeldungeon.mapeamento.sem_saida").withStyle(ChatFormatting.AQUA), false);
         }
         List<BlockPos> portas = Busca.revelarTodas(jogador);
-        if (!portas.isEmpty()) {
-            lugares.addAll(portas);
-            jogador.displayClientMessage(Component.translatable("efeito.pixeldungeon.mapeamento.segredos", portas.size())
+        int armadilhas = Busca.revelarArmadilhas(jogador);
+        lugares.addAll(portas);
+        if (portas.size() + armadilhas > 0) {
+            jogador.displayClientMessage(Component.translatable("efeito.pixeldungeon.mapeamento.segredos", portas.size() + armadilhas)
                     .withStyle(ChatFormatting.AQUA), false);
         }
         ativas.add(new Marca(jogador.getUUID(), lugares, new int[] { DURACAO }));

@@ -1,0 +1,72 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "minecraft:block/polished_tuff",
+    "chao": "minecraft:block/polished_tuff"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#chao",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#chao",
+          "cullface": "up"
+        },
+        "north": {
+          "texture": "#chao",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#chao",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#chao",
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#chao",
+          "cullface": "east"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            8,
+            12,
+            12,
+            16
+          ],
+          "texture": "#armadilha",
+          "cullface": "up"
+        }
+      }
+    }
+  ]
+}

@@ -99,7 +99,13 @@ public class FotosDeTeste {
             case 530 -> foto(jogo, "talentos.png");
             case 535 -> jogo.setScreen(new TelaDoTomo());
             case 555 -> foto(jogo, "tomo.png");
-            case 575 -> {
+            // As armadilhas do Shattered no chão (uma desarmada) e uma ovelha mágica
+            case 560 -> {
+                jogo.setScreen(null);
+                noServidor(jogo, HeroiDasFotos::mostrarArmadilhas);
+            }
+            case 640 -> foto(jogo, "armadilhas.png");
+            case 660 -> {
                 PixelDungeon.LOGGER.info("Fotos de teste: pronto");
                 jogo.stop();
             }

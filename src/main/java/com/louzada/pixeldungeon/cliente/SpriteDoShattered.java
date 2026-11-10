@@ -87,4 +87,8 @@ public record SpriteDoShattered(ResourceLocation textura, int larguraDaFolha, in
     // GhostSprite (o fantasma triste e o fantasma da rosa seca, do tamanho de uma pessoa)
     public static final SpriteDoShattered FANTASMA = new SpriteDoShattered(textura("ghost"), 128, 16, 14, 15, 0.125F,
             anim(5, true, 0, 1), anim(10, true, 0, 1), anim(10, false, 0, 2, 3), anim(8, false, 0, 4, 5, 6, 7), null);
+    // SheepSprite (a ovelha mágica da armadilha de rebanho: rumina parada)
+    public static final SpriteDoShattered OVELHA = new SpriteDoShattered(textura("sheep"), 64, 16, 16, 15, 0.09F,
+            anim(8, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0), anim(8, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0),
+            anim(8, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0), anim(20, false, 0), null);
 }

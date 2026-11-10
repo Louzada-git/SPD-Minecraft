@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.bloco.ArmadilhaBloco;
 import com.louzada.pixeldungeon.bloco.BlocoComFormato;
 import com.louzada.pixeldungeon.bloco.CapimAlto;
 import com.louzada.pixeldungeon.bloco.BlocoEscadaDescida;
@@ -55,6 +56,9 @@ public class ModBlocos {
     public static final DeferredBlock<PortaGigante> PORTA_GIGANTE = BLOCOS.registerBlock("porta_gigante", PortaGigante::new,
             inquebravel().sound(SoundType.WOOD).noOcclusion().isSuffocating((estado, mundo, posicao) -> false)
                     .isViewBlocking((estado, mundo, posicao) -> false));
+
+    // As armadilhas do Shattered (cada uma ocupa o chão de um quadradinho: 4x4 blocos)
+    public static final DeferredBlock<ArmadilhaBloco> ARMADILHA = BLOCOS.registerBlock("armadilha", ArmadilhaBloco::new, inquebravel());
 
     // ---- Decoração ----
 

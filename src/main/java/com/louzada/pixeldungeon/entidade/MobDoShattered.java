@@ -41,6 +41,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 // Base de todos os inimigos do Shattered.
 // Cada inimigo tem os números dele (vida, precisão, esquiva, dano, armadura, XP) e:
@@ -74,6 +75,9 @@ public abstract class MobDoShattered extends Monster implements Combatente {
     @Nullable
     private UUID donoDoAliado;
     private float corrupcaoAcumulada = 0;
+    // Pra onde foi chamado (a armadilha de alarme): vai até lá se não estiver caçando ninguém
+    @Nullable
+    private Vec3 chamadoPara;
 
     protected MobDoShattered(EntityType<? extends MobDoShattered> tipo, Level mundo, Atributos atributos, Sons sons) {
         super(tipo, mundo);
@@ -102,6 +106,7 @@ public abstract class MobDoShattered extends Monster implements Combatente {
         goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         goalSelector.addGoal(7, new RandomLookAroundGoal(this));
         goalSelector.addGoal(4, new SeguirHeroi(this));
+        goalSelector.addGoal(3, new IrAoChamado(this));
         targetSelector.addGoal(1, new HurtByTargetGoal(this));
         // Não enxerga nada quando está cego. Herói invisível ele ainda segue, mas não consegue atacar (AtaqueDoShattered).
         targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false,
@@ -259,6 +264,19 @@ public abstract class MobDoShattered extends Monster implements Combatente {
         NumerosFlutuantes.mostrar(this, "!", NumerosFlutuantes.VERMELHO);
     }
 
+    // Chamado de longe (a armadilha de alarme, o "beckon" do Shattered): acorda, mostra o "!" e, se não estiver caçando ninguém,
+    // vai até o lugar
+    public void chamar(Vec3 lugar) {
+        acordar();
+        NumerosFlutuantes.mostrar(this, "!", NumerosFlutuantes.VERMELHO);
+        chamadoPara = lugar;
+    }
+
+    @Nullable
+    public Vec3 chamadoPara() {
+        return chamadoPara;
+    }
+
     // Chamado quando este inimigo acerta alguém (o rato albino faz sangrar, por exemplo)
     public void aoAcertar(Entity alvo, float dano) {
     }
@@ -399,6 +417,38 @@ public abstract class MobDoShattered extends Monster implements Combatente {
         public void stop() {
             heroi = null;
             aliado.getNavigation().stop();
+        }
+    }
+
+    // Foi chamado e não está caçando ninguém: anda até o lugar do chamado
+    private static class IrAoChamado extends Goal {
+        private MobDoShattered quem;
+
+        IrAoChamado(MobDoShattered quem) {
+            this.quem = quem;
+            setFlags(EnumSet.of(Goal.Flag.MOVE));
+        }
+
+        @Override
+        public boolean canUse() {
+            return quem.chamadoPara != null && quem.getTarget() == null && !quem.dormindo() && !quem.aliado();
+        }
+
+        @Override
+        public void start() {
+            if (quem.chamadoPara != null) {
+                quem.getNavigation().moveTo(quem.chamadoPara.x, quem.chamadoPara.y, quem.chamadoPara.z, 1.0);
+            }
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return quem.chamadoPara != null && quem.getTarget() == null && !quem.getNavigation().isDone();
+        }
+
+        @Override
+        public void stop() {
+            quem.chamadoPara = null;
         }
     }
 

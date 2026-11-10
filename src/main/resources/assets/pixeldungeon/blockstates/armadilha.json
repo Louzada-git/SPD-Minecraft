@@ -1,0 +1,1358 @@
+{
+  "variants": {
+    "escondida=true": [
+      {
+        "model": "pixeldungeon:block/chao_esgoto",
+        "weight": 5
+      },
+      {
+        "model": "pixeldungeon:block/chao_esgoto_bruto",
+        "weight": 2
+      }
+    ],
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/cinza_mira_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=dardos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/verde_mira_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=dardos_venenosos": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/branco_pontos_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=resfriamento": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/amarelo_pontos_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=eletrica": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/verde_grade_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=gas_toxico": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/vermelho_pontos_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=alarme": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/verde_pontos_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=muco": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/ciano_grade_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=confusao": {
+      "model": "pixeldungeon:block/armadilha/preto_grade_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/branco_ondas_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=rebanho": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/ciano_ondas_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=invocacao": {
+      "model": "pixeldungeon:block/armadilha/preto_ondas_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/ciano_pontos_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=teletransporte": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/ciano_mira_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=portal": {
+      "model": "pixeldungeon:block/armadilha/preto_mira_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/cinza_pontos_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=agarradora": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/cinza_losango_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=desmoronamento": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c3_l3"
+    }
+  }
+}

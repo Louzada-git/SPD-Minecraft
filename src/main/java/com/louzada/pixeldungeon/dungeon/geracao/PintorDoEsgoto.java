@@ -12,6 +12,7 @@ import java.util.Set;
 
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
+import com.louzada.pixeldungeon.dungeon.TipoDeArmadilha;
 
 // Desenha os cômodos já posicionados na planta (o "RegularPainter" + "SewerPainter" do Shattered):
 //   1. a planta fica do tamanho dos cômodos, com 1 quadradinho de parede em volta
@@ -21,6 +22,7 @@ import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
 //      Igual ao Shattered, as das salas secretas ficam escondidas, e as comuns também podem ficar (andar / 20 de chance,
 //      a partir do andar 2), desde que dê pra chegar nas duas salas sem passar por porta escondida.
 //   5. manchas de água (30%) e de grama (20%), igual ao esgoto
+//   6. as armadilhas: de 2 a 3 por andar (só a de dardos no andar 1), em chão vazio de qualquer cômodo
 public class PintorDoEsgoto {
     private static final float AGUA = 0.30f;
     private static final int AGRUPAMENTO_DA_AGUA = 5;
@@ -75,11 +77,12 @@ public class PintorDoEsgoto {
         // 3 e 4. Juntar salas e desenhar as portas
         pintarPortas(planta, embaralhados, andar);
 
-        // 5. Água e grama (com um sorteador separado, igual ao Shattered)
+        // 5 e 6. Água, grama e armadilhas (com um sorteador separado, igual ao Shattered)
         Random sorteioDaGeracao = Dado.atual();
         Dado.usar(new Random(Dado.numeroGrande()));
         pintarAgua(planta, embaralhados);
         pintarGrama(planta, embaralhados);
+        pintarArmadilhas(planta, embaralhados, andar);
         Dado.usar(sorteioDaGeracao);
         return planta;
     }
@@ -231,7 +234,9 @@ public class PintorDoEsgoto {
         boolean[] lago = Mancha.gerar(planta.largura(), planta.altura(), AGUA, AGRUPAMENTO_DA_AGUA, true);
         for (Comodo comodo : comodos) {
             for (Ponto p : comodo.pontosComAgua()) {
-                if (lago[p.x + p.y * planta.largura()] && planta.tipo(p.x, p.y) == PlantaDoAndar.CHAO && planta.grama(p.x, p.y) == PlantaDoAndar.SEM_GRAMA) {
+                // (as armadilhas das salas especiais e secretas ficam: no Shattered, a água só cai em chão vazio)
+                if (lago[p.x + p.y * planta.largura()] && planta.tipo(p.x, p.y) == PlantaDoAndar.CHAO && planta.grama(p.x, p.y) == PlantaDoAndar.SEM_GRAMA
+                        && !planta.temArmadilha(p.x, p.y)) {
                     planta.definir(p.x, p.y, PlantaDoAndar.AGUA);
                 }
             }
@@ -246,7 +251,7 @@ public class PintorDoEsgoto {
         for (Comodo comodo : comodos) {
             for (Ponto p : comodo.pontosComGrama()) {
                 if (grama[p.x + p.y * largura] && planta.tipo(p.x, p.y) == PlantaDoAndar.CHAO && planta.grama(p.x, p.y) == PlantaDoAndar.SEM_GRAMA
-                        && !planta.temPremioEm(p.x, p.y)) {
+                        && !planta.temPremioEm(p.x, p.y) && !planta.temArmadilha(p.x, p.y)) {
                     comGrama.add(p);
                 }
             }
@@ -262,5 +267,58 @@ public class PintorDoEsgoto {
             }
             planta.definirGrama(p.x, p.y, Dado.decimal() < vizinhos / 12f ? PlantaDoAndar.GRAMA_ALTA : PlantaDoAndar.GRAMA);
         }
+    }
+
+    // As armadilhas do andar (o "paintTraps" do Shattered):
+    //   - de 2 a 3 (o meio é mais comum), mas no máximo 1 a cada 5 quadradinhos livres
+    //   - só em chão vazio (sem grama, água, prêmio, porta, escada ou outra armadilha), em qualquer cômodo que deixe
+    //   - as que evitam lugares fechados (dardos, portal) preferem quadradinhos abertos pros dois lados,
+    //     e nenhuma armadilha fica do lado de outra nesses lugares abertos
+    //   - todas começam escondidas, menos as que não dá pra esconder (a de dardos)
+    private static void pintarArmadilhas(PlantaDoAndar planta, List<Comodo> comodos, int andar) {
+        int quantas = Dado.normalEntre(2, 3 + andar / 5);
+        int largura = planta.largura();
+        boolean[] visto = new boolean[largura * planta.altura()];
+        List<Ponto> livres = new ArrayList<>();
+        for (Comodo comodo : comodos) {
+            for (Ponto p : comodo.pontosComArmadilha()) {
+                if (!planta.dentro(p.x, p.y) || visto[p.x + p.y * largura]) {
+                    continue;
+                }
+                visto[p.x + p.y * largura] = true;
+                if (planta.tipo(p.x, p.y) == PlantaDoAndar.CHAO && planta.grama(p.x, p.y) == PlantaDoAndar.SEM_GRAMA
+                        && !planta.temPremioEm(p.x, p.y) && !planta.temArmadilha(p.x, p.y)) {
+                    livres.add(p);
+                }
+            }
+        }
+        // Aberto: dá pra passar pra cima ou pra baixo, e pra esquerda ou pra direita
+        List<Ponto> abertos = new ArrayList<>();
+        for (Ponto p : livres) {
+            boolean vertical = passavelPraArmadilha(planta, p.x, p.y - 1) || passavelPraArmadilha(planta, p.x, p.y + 1);
+            boolean horizontal = passavelPraArmadilha(planta, p.x - 1, p.y) || passavelPraArmadilha(planta, p.x + 1, p.y);
+            if (vertical && horizontal) {
+                abertos.add(p);
+            }
+        }
+        quantas = Math.min(quantas, livres.size() / 5);
+        TipoDeArmadilha[] tipos = TipoDeArmadilha.doAndar(andar);
+        float[] pesos = TipoDeArmadilha.pesosDoAndar(andar);
+        int[][] lados = { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
+        for (int i = 0; i < quantas && !livres.isEmpty(); i++) {
+            TipoDeArmadilha tipo = tipos[Dado.chances(pesos)];
+            Ponto lugar = tipo.evitaLugaresFechados() && !abertos.isEmpty() ? Dado.elemento(abertos) : Dado.elemento(livres);
+            livres.remove(lugar);
+            abertos.remove(lugar);
+            for (int[] lado : lados) {
+                abertos.remove(new Ponto(lugar.x + lado[0], lugar.y + lado[1]));
+            }
+            planta.colocarArmadilha(lugar.x, lugar.y, tipo, false);
+        }
+    }
+
+    // A porta trancada não conta como passagem (no Shattered ela é sólida)
+    private static boolean passavelPraArmadilha(PlantaDoAndar planta, int x, int y) {
+        return planta.passavel(x, y) && planta.tipo(x, y) != PlantaDoAndar.PORTA_TRANCADA;
     }
 }

@@ -125,7 +125,7 @@ public class MissaoDoFantasma {
         if (sala != null) {
             for (int y = sala.y(); y < sala.y() + sala.altura(); y++) {
                 for (int x = sala.x(); x < sala.x() + sala.largura(); x++) {
-                    if (planta.tipo(x, y) == PlantaDoAndar.CHAO && (x != planta.saidaX() || y != planta.saidaY())) {
+                    if (planta.tipo(x, y) == PlantaDoAndar.CHAO && !planta.temArmadilha(x, y) && (x != planta.saidaX() || y != planta.saidaY())) {
                         lugares.add(new int[] { x, y });
                     }
                 }

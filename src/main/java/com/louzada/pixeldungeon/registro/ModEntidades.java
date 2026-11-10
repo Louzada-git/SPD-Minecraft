@@ -21,6 +21,7 @@ import com.louzada.pixeldungeon.entidade.Mimico;
 import com.louzada.pixeldungeon.entidade.MisselMagico;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.entidade.NuvemDeGas;
+import com.louzada.pixeldungeon.entidade.OvelhaMagica;
 import com.louzada.pixeldungeon.entidade.PocaoArremessada;
 import com.louzada.pixeldungeon.entidade.RaioSolar;
 import com.louzada.pixeldungeon.entidade.RatoAlbino;
@@ -89,6 +90,12 @@ public class ModEntidades {
             () -> EntityType.Builder.of(FantasmaAliado::new, MobCategory.MISC).sized(0.6F, 1.8F).fireImmune().clientTrackingRange(8)
                     .build("fantasma_aliado"));
 
+    // ---- Armadilhas ----
+
+    // As ovelhas mágicas da armadilha de rebanho
+    public static final DeferredHolder<EntityType<?>, EntityType<OvelhaMagica>> OVELHA_MAGICA = ENTIDADES.register("ovelha_magica",
+            () -> EntityType.Builder.of(OvelhaMagica::new, MobCategory.MISC).sized(1.2F, 1.1F).clientTrackingRange(8).build("ovelha_magica"));
+
     // ---- Magias ----
 
     // Míssil mágico do cajado do Mago
@@ -154,6 +161,7 @@ public class ModEntidades {
     public static void aoCriarAtributos(EntityAttributeCreationEvent evento) {
         evento.put(RATO_MARSUPIAL.get(), MobDoShattered.atributosDoMinecraft(RatoMarsupial.ATRIBUTOS).build());
         evento.put(FANTASMA_TRISTE.get(), FantasmaTriste.atributos().build());
+        evento.put(OVELHA_MAGICA.get(), OvelhaMagica.atributos().build());
         evento.put(RATO_FETIDO.get(), MobDoShattered.atributosDoMinecraft(RatoFetido.ATRIBUTOS).build());
         evento.put(GNOLL_TRAPACEIRO.get(), MobDoShattered.atributosDoMinecraft(GnollTrapaceiro.ATRIBUTOS).build());
         evento.put(CARANGUEJO_GRANDE.get(), MobDoShattered.atributosDoMinecraft(CaranguejoGrande.ATRIBUTOS).build());

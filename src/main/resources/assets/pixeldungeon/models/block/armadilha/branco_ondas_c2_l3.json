@@ -1,0 +1,7 @@
+{
+  "parent": "pixeldungeon:block/armadilha/base_c2_l3",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "armadilha": "pixeldungeon:block/armadilha/branco_ondas"
+  }
+}

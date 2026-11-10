@@ -5,10 +5,13 @@ import java.util.Random;
 
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.dungeon.Andares;
+import com.louzada.pixeldungeon.dungeon.Armadilhas;
 import com.louzada.pixeldungeon.dungeon.GeradorDeAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
+import com.louzada.pixeldungeon.dungeon.TipoDeArmadilha;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
+import com.louzada.pixeldungeon.entidade.OvelhaMagica;
 import com.louzada.pixeldungeon.heroi.Aneis;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
@@ -25,10 +28,12 @@ import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 
 // Só no teste do GitHub que tira fotos da tela (propriedade pixeldungeon.fotografar):
 // quem entra no mundo vira Guerreiro na hora, com alguns itens, um efeito, um pouco de fome e de dano,
@@ -102,6 +107,53 @@ public class HeroiDasFotos {
         }
         RedeDoHeroi.enviarEstado(jogador, false);
         PixelDungeon.LOGGER.info("Herói das fotos virou Clérigo do nível {} com {} pontos livres", dados.nivel(), dados.pontosLivres());
+    }
+
+    // Três armadilhas à vista lado a lado (uma já desarmada) e uma ovelha mágica, com o herói olhando de perto
+    // (no primeiro andar de 2 a 4 com um pedaço de chão de 3x3 quadradinhos; a grama em cima sai)
+    public static void mostrarArmadilhas(ServerPlayer jogador) {
+        DadosDaRun run = DadosDaRun.pegar(jogador.getServer());
+        ServerLevel mundo = jogador.serverLevel();
+        int t = Andares.TAMANHO_DO_QUADRADINHO;
+        for (int andar : new int[] { 2, 3, 4, 1 }) {
+            PlantaDoAndar planta = GeradorDeAndar.gerar(run.semente(), andar);
+            BlockPos origem = Andares.origemDoAndar(run.numeroDaRun(), andar);
+            for (int y = 1; y < planta.altura() - 2; y++) {
+                for (int x = 1; x < planta.largura() - 1; x++) {
+                    boolean cabe = true;
+                    for (int dx = -1; dx <= 1; dx++) {
+                        for (int dy = 0; dy <= 2; dy++) {
+                            cabe &= planta.tipo(x + dx, y + dy) == PlantaDoAndar.CHAO && !planta.temArmadilha(x + dx, y + dy)
+                                    && !planta.temPremioEm(x + dx, y + dy) && planta.salaEm(x + dx, y + dy) != null;
+                        }
+                    }
+                    if (!cabe) {
+                        continue;
+                    }
+                    for (int dx = -1; dx <= 1; dx++) {
+                        for (int dy = 0; dy <= 2; dy++) {
+                            BlockPos canto = Armadilhas.controle(origem, x + dx, y + dy);
+                            for (BlockPos bloco : BlockPos.betweenClosed(canto.offset(0, 1, 0), canto.offset(t - 1, 3, t - 1))) {
+                                if (!mundo.getBlockState(bloco).isAir() && mundo.getBlockState(bloco).getCollisionShape(mundo, bloco).isEmpty()) {
+                                    mundo.removeBlock(bloco, false);
+                                }
+                            }
+                        }
+                    }
+                    Armadilhas.colocar(mundo, Armadilhas.controle(origem, x - 1, y), TipoDeArmadilha.GAS_TOXICO, false);
+                    Armadilhas.colocar(mundo, Armadilhas.controle(origem, x, y), TipoDeArmadilha.PORTAL, false);
+                    BlockPos desarmada = Armadilhas.controle(origem, x + 1, y);
+                    Armadilhas.colocar(mundo, desarmada, TipoDeArmadilha.AGARRADORA, false);
+                    Armadilhas.desarmar(mundo, desarmada);
+                    OvelhaMagica.criar(mundo, Armadilhas.centro(Armadilhas.controle(origem, x + 1, y + 1)), 30);
+                    Vec3 lugar = Armadilhas.centro(Armadilhas.controle(origem, x, y + 2));
+                    jogador.teleportTo(mundo, lugar.x, lugar.y, lugar.z, 180.0F, 25.0F);
+                    PixelDungeon.LOGGER.info("Herói das fotos olhando as armadilhas do andar {} em {}, {}", andar, x, y);
+                    return;
+                }
+            }
+        }
+        PixelDungeon.LOGGER.info("Herói das fotos: nenhum andar tem lugar pras armadilhas");
     }
 
     // Leva o herói pra olhar uma porta do andar 2 (comum ou trancada) de 2 quadradinhos de distância.

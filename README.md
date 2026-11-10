@@ -10,14 +10,14 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 - Andares do esgoto (1 a 4) gerados igual ao Shattered (o mesmo jeito de montar o mapa do jogo original):
   - A entrada, a saída, de 4 a 6 salas comuns (algumas grandes) e 1 ou 2 salas especiais. Metade dos andares é uma volta, a outra metade é um oito, com galhos e túneis entre as salas.
   - As salas do esgoto do Shattered: a dos canos (canais de água com uma calçada em volta), a do anel, a da ponte na água, a dos barris de armazenamento e a das plantas. Salas vizinhas às vezes viram uma só (a parede entre elas some).
-  - **Salas especiais**, sempre trancadas: **arsenal** (uma arma e uma armadura), **tesouraria** (ouro no chão ou em baús, que a partir do andar 2 podem ser mímicos), **biblioteca** (estantes e pergaminhos; o primeiro é de identificação ou de remover maldição), **jardim** (grama alta e às vezes plantas) e **cripta** (uma armadura melhor que as do andar, +1, mas amaldiçoada).
-  - **Salas secretas**, com a porta escondida (parece parede): 2 ou 3 no esgoto, espalhadas pelos andares 2 a 4, igual ao Shattered. São 6 das 12 do Shattered:
-    - **jardim secreto** (grama alta, uma flor-estrela e mais 3 plantas), **biblioteca secreta** (estantes em volta de um oval e 2 ou 3 pergaminhos), **despensa** (uma planta no meio de uma poça e uma ração de suprimentos), **tesouro** (montes de ouro que somam umas 8 pilhas), **labirinto** (um baú no fim, com uma arma ou armadura da região seguinte, nunca amaldiçoada, e 1 em 3 com +1 a mais) e **arsenal secreto** (uma estátua e 2 conjuntos de armas de arremesso).
-    - As outras 6 precisam de coisas que o mod ainda não tem (alquimia, pedras rúnicas, poço mágico, bombas, abismo e armadilhas).
+  - **Salas especiais**, trancadas: **arsenal** (uma arma e uma armadura), **tesouraria** (ouro no chão ou em baús, que a partir do andar 2 podem ser mímicos), **biblioteca** (estantes e pergaminhos; o primeiro é de identificação ou de remover maldição), **jardim** (grama alta e às vezes plantas) e **cripta** (uma armadura melhor que as do andar, +1, mas amaldiçoada). A **sala das armadilhas** tem porta comum (ver Armadilhas).
+  - **Salas secretas**, com a porta escondida (parece parede): 2 ou 3 no esgoto, espalhadas pelos andares 2 a 4, igual ao Shattered. São 7 das 12 do Shattered:
+    - **jardim secreto** (grama alta, uma flor-estrela e mais 3 plantas), **biblioteca secreta** (estantes em volta de um oval e 2 ou 3 pergaminhos), **despensa** (uma planta no meio de uma poça e uma ração de suprimentos), **tesouro** (montes de ouro que somam umas 8 pilhas, e metade do chão com armadilhas à vista), **labirinto** (um baú no fim, com uma arma ou armadura da região seguinte, nunca amaldiçoada, e 1 em 3 com +1 a mais), **arsenal secreto** (uma estátua e 2 conjuntos de armas de arremesso) e **invocação secreta** (o chão todo de armadilhas de invocação escondidas, e um item qualquer no meio).
+    - As outras 5 precisam de coisas que o mod ainda não tem (alquimia, pedras rúnicas, poço mágico, bombas e abismo).
   - A partir do andar 2, algumas portas comuns também ficam escondidas (o andar dividido por 20: 10% no andar 2, 20% no 4), mas só se der pra chegar nas salas por outro caminho.
-- **Procurar** (tecla **G** ou o botão de procurar da barra do inventário), igual ao Shattered: acha na hora as portas escondidas que estiverem perto e à vista, e leva 2 turnos. A porta escondida vira uma porta gigante comum, pra todo mundo.
+- **Procurar** (tecla **G** ou o botão de procurar da barra do inventário), igual ao Shattered: acha na hora as portas e as armadilhas escondidas que estiverem perto e à vista, e leva 2 turnos. A porta escondida vira uma porta gigante comum, pra todo mundo.
   - Perto quer dizer 1 quadradinho em volta (3x3). O Ladino procura 2 (5x5), e a grande busca soma mais 1 (+1: um círculo de 7x7, +2: um quadrado de 7x7).
-  - Andando, a cada quadradinho novo o herói tem uma chance de notar sozinho cada porta escondida perto (20% no andar 0, caindo 1% por andar). Quando acha, aparece "Você percebeu algo.".
+  - Andando, a cada quadradinho novo o herói tem uma chance de notar sozinho cada segredo perto: porta escondida 20% no andar 0, caindo 1% por andar; armadilha escondida 40%, caindo 0,4% por andar. Quando acha, aparece "Você percebeu algo.".
   - Manchas de água (30%) e de grama (20%), igual ao esgoto do Shattered.
   - 1 quadradinho do Shattered = 4x4 blocos. As paredes têm 8 blocos de altura.
   - Paredes, chão e teto são inquebráveis.
@@ -38,6 +38,39 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
   - Moldura de tufo entalhado em volta das escadas.
 - Escada de subida na entrada de cada andar e alçapão de descida na saída.
 - Sem dia/noite, sem chuva e sem mobs do Minecraft nascendo.
+
+### Armadilhas
+
+As armadilhas do esgoto do Shattered, com os mesmos desenhos e os mesmos números. Cada uma ocupa o chão de um quadradinho inteiro (4x4 blocos, cada bloco com um pedaço do desenho).
+
+- Cada andar tem **2 ou 3**, sorteadas igual ao Shattered, só em chão vazio (nunca na grama, na água, em portas ou embaixo de itens), e no máximo 1 a cada 5 quadradinhos livres. A sala da entrada do andar 1 não tem nenhuma. Os itens e os inimigos nunca aparecem em cima delas.
+- Quase todas começam **escondidas**: parecem o chão comum até alguém achar (procurando, pisando, com o pergaminho de mapeamento mágico ou com o talismã da vidência). As de dardos e a de desmoronamento ficam sempre à vista.
+- **Quem ativa:** o herói ativa qualquer uma, até as escondidas ("Uma armadilha ... oculta ativa!"). Os inimigos só ativam as que estão à vista, e desviam delas quando dá. Quem voa (o enxame, os fantasmas, o herói levitando) passa por cima sem ativar. Um item que cai em cima (arremessado, ou o que um inimigo deixa ao morrer ali) ativa qualquer uma. Com o tempo parado da ampulheta, a armadilha aparece mas só ativa quando o tempo voltar.
+- Ativou, fica à vista e (quase todas) **desarmada**, com o desenho preto. A agarradora e a de portal funcionam pra sempre, mas cada um que chega só ativa uma vez.
+- Clique direito numa armadilha à vista: o nome e o que ela faz.
+
+| Armadilha | Andares | O que faz |
+|---|---|---|
+| Dardos | 1 a 4 | um dardo no alvo mais perto à vista (até 8 quadradinhos; quem está em cima é o primeiro): 4 a 8 de dano menos a armadura |
+| Resfriamento | 2 a 4 | ar congelante nos 3x3 quadradinhos em volta por 10 turnos: resfria (+3 turnos por turno, +5 na água) e, chegando a 10, congela |
+| Elétrica | 2 a 4 | eletricidade nos 3x3 em volta por 10 turnos: paralisa pelos turnos que faltam e, de 2 em 2 turnos, um choque de 0 a 2 + andar/5 |
+| Gás tóxico | 2 a 4 | uma nuvem de gás tóxico em volta |
+| Alarme | 2 a 4 | todos os inimigos do andar acordam e vão até a armadilha |
+| Muco | 2 a 4 | muco cáustico em quem estiver nos 3x3 em volta (menos quem voa) |
+| Gás da confusão | 2 a 4 | uma nuvem de gás da confusão em volta |
+| Rebanho | 2 a 4 | **ovelhas mágicas** em todo lugar livre até 2 quadradinhos: ninguém machuca nem atravessa, e somem sozinhas em uns 6 turnos |
+| Invocação | 2 a 4 | 1 a 3 inimigos do andar (50%, 25%, 25%) nos quadradinhos do lado |
+| Teletransporte | 2 a 4 | tudo nos 3x3 em volta (criaturas e itens) vai pra lugares aleatórios do andar |
+| Portal | 2 a 4 | tudo nos 3x3 em volta vai sempre pro mesmo lugar do andar; não desarma |
+| Agarradora | sala das armadilhas | quem está em cima sangra (2 + andar/2, menos metade da armadura) e fica aleijado por 10 turnos; não desarma |
+| Dardo venenoso | tesouro secreto | igual à de dardos, e envenena por 8 + 2/3 do andar turnos |
+| Desmoronamento | tesouro secreto | pedras caem na sala inteira: 5 + andar a 10 + 2 x andar de dano menos a armadura, e paralisa por 10 turnos |
+
+- Pesos nos andares 2 a 4 (igual ao Shattered): resfriamento, elétrica, gás tóxico e dardos 4; alarme e muco 2; confusão, rebanho, invocação, teletransporte e portal 1.
+- **Sala das armadilhas** (uma das salas especiais, com porta comum): o chão inteiro coberto de armadilhas à vista, todas iguais (agarradora, de teletransporte ou de rebanho), e um baú do outro lado, às vezes num pedestal. O baú guarda, 2 em 3 vezes, um dos itens garantidos do andar (a ração, a poção de força ou o pergaminho de melhoria); senão, uma arma ou armadura da região seguinte, nunca amaldiçoada, 1 em 3 com +1. O andar ganha uma **poção de levitação** pra atravessar voando.
+- **Tesouro secreto:** metade do chão com armadilhas à vista (de desmoronamento ou de dardo venenoso), até embaixo do ouro. **Invocação secreta:** o chão todo de armadilhas de invocação escondidas; um inimigo invocado em cima de outra armadilha ativa ela também.
+- O **talismã da vidência** equipado deixa o herói apreensivo ("Você se sente apreensivo.") quando tem uma armadilha escondida a até 3 quadradinhos, à vista; a busca dá 2 de carga por armadilha achada, e a vidência revela as do cone.
+- Diferenças do Shattered: 1 em 4 salas das armadilhas do Shattered é um abismo (o mod ainda não tem abismos); a eletricidade não corre pela água; o item amaldiçoado da invocação secreta não solta espectro.
 
 ### Tela do jogo e inventário
 
@@ -287,13 +320,13 @@ Os 10 artefatos do Shattered que dá pra achar pela dungeon, com os mesmos núme
 | Ampulheta do guardião do tempo | 5 + nível, vem cheia, com o tempo (90 turnos por carga) | **estase:** até 2 cargas, 5 turnos cada, congelado, invisível e nada te machuca. **Parar o tempo** (agachado): 1 carga a cada 2 turnos, os inimigos em volta ficam parados até você atacar | com os saquinhos de areia da loja (5) |
 | Livro de feitiços instável | 2 + 60% do nível, vem cheio, com o tempo (120 turnos) | lê um pergaminho ao acaso (nunca melhoria nem transmutação) | dando os pergaminhos que o índice pede, já identificados (10) |
 | Correntes etéreas | vêm com 5, até 5 + 2 x nível com o tempo (40 turnos); a experiência passa disso | num inimigo, puxa ele até você; numa parede, puxa você até ela. 1 carga por quadradinho | com a experiência (5) |
-| Talismã da vidência | até 100, com o tempo (0,05 + 0,005 x nível por turno) e 10 por porta escondida achada | vê num cone até onde você mira (até 5 + 2 x nível quadradinhos; o cone fecha com a distância): revela as portas escondidas e os inimigos brilham através das paredes. Custa 3 + 1,08 por quadradinho | com o que descobre: porta escondida, inimigo fora da vista, lugar que você não via (10) |
+| Talismã da vidência | até 100, com o tempo (0,05 + 0,005 x nível por turno), 10 por porta escondida achada e 2 por armadilha | vê num cone até onde você mira (até 5 + 2 x nível quadradinhos; o cone fecha com a distância): revela as portas e as armadilhas escondidas e os inimigos brilham através das paredes. Custa 3 + 1,08 por quadradinho. Equipado, avisa das armadilhas escondidas perto | com o que descobre: porta escondida, armadilha, inimigo fora da vista, lugar que você não via (10) |
 | Braçadeira do mestre dos ladrões | 5 + nível/2, com a experiência | rouba o item que o inimigo do lado deixaria ao morrer (chance x 1 + 0,1 x nível, mais 0,5 de surpresa). Ele fica cego e aleijado; quem foi roubado não deixa mais nada | roubando (10) |
 | Sandálias da natureza | até 100, pisoteando grama alta; e a grama solta mais sementes e orvalho | o efeito da última semente que comeram, até 3 quadradinhos (de 12 a 80 de carga) | comendo sementes diferentes, 3 + 3 x nível por nível: viram sapatos, botas e grevas (3) |
 | Chave de crânio | 3 + nível/2, vem cheia, com o tempo (120 turnos) | numa porta trancada, destranca (1 carga); numa porta comum, tranca (2 cargas, nenhum inimigo passa, você abre de graça); em outro lugar, paredes espectrais na sua frente por 10 turnos (2 cargas) | usando (10) |
 | Rosa seca | 100, vem cheia; sem o fantasma, 500 turnos | só depois da missão do fantasma triste: chama o fantasma (ver abaixo); com ele por perto, dá ordens mirando (inimigo: atacar; chão: guardar o lugar; nada: seguir); agachado, dá uma arma ou armadura pra ele | com as pétalas secas, que aparecem pelos andares depois da missão (10) |
 
-- Diferenças do Shattered: os artefatos nunca vêm amaldiçoados; o talismã não avisa de armadilhas escondidas (o mod ainda não tem armadilhas); a braçadeira ainda não rouba de lojas e a ampulheta ainda não sobe de nível (o mod ainda não tem lojas). O kit do alquimista fica pra quando tiver alquimia.
+- Diferenças do Shattered: os artefatos nunca vêm amaldiçoados; a braçadeira ainda não rouba de lojas e a ampulheta ainda não sobe de nível (o mod ainda não tem lojas). O kit do alquimista fica pra quando tiver alquimia.
 
 ### A missão do fantasma triste
 
@@ -560,7 +593,7 @@ O arquivo fica em `build/libs/pixeldungeon-1.1.jar`. É esse que vai na pasta `m
 
 ### Fotos do teste
 
-A cada push, o teste do GitHub também abre o jogo de verdade (sem monitor), entra no mundo como Guerreiro e tira fotos da tela do jogo e do inventário (com as dicas do mouse e em dois tamanhos de interface), de uma porta comum, de uma trancada e dos inimigos. Elas ficam no branch `fotos`.
+A cada push, o teste do GitHub também abre o jogo de verdade (sem monitor), entra no mundo como Guerreiro e tira fotos da tela do jogo e do inventário (com as dicas do mouse e em dois tamanhos de interface), de uma porta comum, de uma trancada, dos inimigos e das armadilhas. Elas ficam no branch `fotos`.
 
 ### Se der erro
 
@@ -570,7 +603,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 
 1. **Texturas próprias** dos blocos.
 2. **Mais itens:** poções e pergaminhos exóticos e alquimia (e o kit do alquimista), e as lojas.
-3. **O resto do esgoto do Shattered:** armadilhas, as salas secretas que faltam e as salas que precisam de abismo.
+3. **O resto do esgoto do Shattered:** as salas secretas que faltam e as salas que precisam de abismo.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
 
@@ -580,10 +613,10 @@ Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod 
 src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
-  bloco/                       escadas, portas gigantes, plantas e blocos de decoração
+  bloco/                       escadas, portas gigantes, armadilhas, plantas e blocos de decoração
   item/                        armas, armas de arremesso, varinhas, anéis, armadura, glifos, encantamentos, o selo do Guerreiro, poções, pergaminhos, sementes, identificação e maldições
     artefato/                  os 10 artefatos que se acha pela dungeon (o cálice, o chifre, a ampulheta, o livro, as correntes, o talismã, a braçadeira, as sandálias, a chave e a rosa)
-  entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o guardião de terra, as guardas, o míssil mágico, as nuvens de gás...
+  entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o guardião de terra, as guardas, as ovelhas mágicas, o míssil mágico, as nuvens de gás...
   efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
   combate/
     Combate.java               o golpe do Shattered, igual pra todo mundo (acerto, dano, armadura, reações)
@@ -623,7 +656,10 @@ src/main/java/com/louzada/pixeldungeon/
     GeradorDeAndar.java        gera o mapa de cada andar (os comuns pela geração do Shattered, o do chefe é a arena)
     geracao/                   a geração do Shattered: os cômodos, o arquiteto (volta ou oito) e o pintor do esgoto
     ConstrutorDeAndar.java     transforma o mapa em blocos (com as portas gigantes; e abre as portas escondidas achadas)
-    Busca.java                 procurar: acha as portas escondidas das salas secretas
+    Busca.java                 procurar: acha as portas escondidas das salas secretas e as armadilhas escondidas
+    TipoDeArmadilha.java       as armadilhas do esgoto, os desenhos delas e quais aparecem em cada andar
+    Armadilhas.java            quem pisa, quem ativa, esconder, revelar e desarmar
+    EfeitosDasArmadilhas.java  o que cada armadilha faz
     MissaoDoFantasma.java      a missão do fantasma triste: onde ele aparece, os inimigos dela e a recompensa
     PopulacaoDoAndar.java      inimigos de cada andar e renascimento
     SaqueDoAndar.java          o que fica espalhado pelo andar

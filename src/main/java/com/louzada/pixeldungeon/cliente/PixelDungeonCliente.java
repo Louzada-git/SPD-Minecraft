@@ -78,6 +78,7 @@ public class PixelDungeonCliente {
         // A missão do fantasma: o fantasma triste, os inimigos dela e o fantasma da rosa seca
         evento.registerEntityRenderer(ModEntidades.FANTASMA_TRISTE.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.FANTASMA, 0.0F));
         evento.registerEntityRenderer(ModEntidades.FANTASMA_ALIADO.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.FANTASMA, 0.0F));
+        evento.registerEntityRenderer(ModEntidades.OVELHA_MAGICA.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.OVELHA, 0.5F));
         evento.registerEntityRenderer(ModEntidades.RATO_FETIDO.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.RATO_FETIDO, 0.35F));
         evento.registerEntityRenderer(ModEntidades.GNOLL_TRAPACEIRO.get(),
                 contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.GNOLL_TRAPACEIRO, 0.45F));

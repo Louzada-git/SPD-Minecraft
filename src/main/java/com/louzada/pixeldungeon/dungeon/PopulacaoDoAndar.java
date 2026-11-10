@@ -214,6 +214,20 @@ public class PopulacaoDoAndar {
         return ConstrutorDeAndar.pontoDeChegada(origem, lugar[0], lugar[1]);
     }
 
+    // Um inimigo acordado nesse bloco (a armadilha de invocação)
+    @Nullable
+    public static MobDoShattered invocar(ServerLevel mundo, EntityType<? extends MobDoShattered> tipo, BlockPos posicao) {
+        MobDoShattered inimigo = tipo.create(mundo);
+        if (inimigo == null) {
+            return null;
+        }
+        inimigo.moveTo(posicao.getX() + 0.5, posicao.getY(), posicao.getZ() + 0.5, mundo.getRandom().nextFloat() * 360.0F, 0.0F);
+        inimigo.ajustarVida(mundo, multiplicadorDeVida(mundo.getServer()));
+        inimigo.setPersistenceRequired();
+        mundo.addFreshEntity(inimigo);
+        return inimigo;
+    }
+
     // ---- Ajudantes ----
 
     @Nullable

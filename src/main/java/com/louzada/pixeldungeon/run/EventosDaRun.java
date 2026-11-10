@@ -112,6 +112,7 @@ public class EventosDaRun {
             TestesDasArmasNovas.testar(servidor);
             TestesDosArtefatos.testar(servidor);
             TestesDaMissaoDoFantasma.testar(servidor);
+            TestesDasArmadilhas.testar(servidor);
         }
     }
 
@@ -201,6 +202,8 @@ public class EventosDaRun {
                 // Dentro do quadradinho da porta, 2 blocos pro lado de passar
                 boolean pelaX = mundo.getBlockState(porta).getValue(PortaGigante.EIXO) == Direction.Axis.X;
                 rato.moveTo(porta.getX() + (pelaX ? 2.5 : 1.5), porta.getY(), porta.getZ() + (pelaX ? 1.5 : 2.5));
+                // (invulnerável: uma armadilha de dardos perto da porta, ativada por outro teste, não pode matar o rato antes da hora)
+                rato.setInvulnerable(true);
                 mundo.addFreshEntity(rato);
                 rato.dormir();
                 ratosDasPortas.add(rato);

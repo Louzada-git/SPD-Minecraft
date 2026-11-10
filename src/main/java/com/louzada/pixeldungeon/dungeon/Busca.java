@@ -31,14 +31,16 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-// A busca do Shattered: achar as portas escondidas das salas secretas.
-//   procurar (tecla G ou o botão da barra do inventário): sempre acha as portas que estiverem perto e à vista; leva 2 turnos
-//   andando: a cada quadradinho novo, cada porta perto e à vista tem uma chance de ser notada
-//     (20% no andar 0, caindo 1% por andar: 18% no andar 2)
+// A busca do Shattered: achar as portas escondidas das salas secretas e as armadilhas escondidas.
+//   procurar (tecla G ou o botão da barra do inventário): sempre acha as portas e armadilhas que estiverem perto e à vista;
+//     leva 2 turnos
+//   andando: a cada quadradinho novo, cada segredo perto e à vista tem uma chance de ser notado
+//     (porta: 20% no andar 0, caindo 1% por andar: 18% no andar 2; armadilha: 40%, caindo 0,4% por andar)
 //   perto: 1 quadradinho em volta (3x3); o Ladino procura 2 (5x5); a grande busca soma 1 (+1: um círculo, +2: um quadrado)
-//   o pergaminho de mapeamento mágico revela todas as portas escondidas do andar
+//   o pergaminho de mapeamento mágico revela todas as portas e armadilhas escondidas do andar
 //   a previsão do ladino avisa, ao chegar num andar com uma sala secreta, que ela existe (+1: 75%, +2: sempre)
-//   o talismã da vidência revela as portas num cone (e carrega quando a busca acha uma)
+//   o talismã da vidência revela as portas e as armadilhas num cone (e carrega quando a busca acha alguma:
+//     10 por porta, 2 por armadilha), e deixa o herói apreensivo quando tem armadilha escondida perto
 public class Busca {
     private static final int T = Andares.TAMANHO_DO_QUADRADINHO;
     private static final int TEMPO_PARA_PROCURAR = Turno.ticks(2);
@@ -53,7 +55,7 @@ public class Busca {
 
     // ---- Procurar de propósito ----
 
-    // Devolve quantas portas achou
+    // Devolve quantos segredos (portas e armadilhas) achou
     public static int procurar(ServerPlayer jogador) {
         long agora = jogador.serverLevel().getGameTime();
         if (agora < podeProcurarEm.getOrDefault(jogador.getUUID(), 0L)) {
@@ -110,14 +112,51 @@ public class Busca {
         return portas;
     }
 
+    // Revela todas as armadilhas escondidas do andar em que o jogador está; devolve quantas
+    public static int revelarArmadilhas(ServerPlayer jogador) {
+        Lugar lugar = ondeEsta(jogador);
+        if (lugar == null) {
+            return 0;
+        }
+        int reveladas = 0;
+        PlantaDoAndar planta = lugar.planta();
+        for (int y = 0; y < planta.altura(); y++) {
+            for (int x = 0; x < planta.largura(); x++) {
+                if (planta.temArmadilha(x, y) && Armadilhas.revelar(jogador.serverLevel(), Armadilhas.controle(lugar.origem(), x, y))) {
+                    reveladas++;
+                }
+            }
+        }
+        return reveladas;
+    }
+
+    // Tem armadilha escondida a até "distancia" quadradinhos, à vista? (o talismã da vidência deixa o herói apreensivo)
+    public static boolean armadilhaEscondidaPerto(ServerPlayer jogador, int distancia) {
+        Lugar lugar = ondeEsta(jogador);
+        if (lugar == null) {
+            return false;
+        }
+        for (int dy = -distancia; dy <= distancia; dy++) {
+            for (int dx = -distancia; dx <= distancia; dx++) {
+                int x = lugar.qx() + dx;
+                int y = lugar.qy() + dy;
+                if (lugar.planta().temArmadilha(x, y) && Armadilhas.escondidaEm(jogador.serverLevel(), lugar.origem(), x, y)
+                        && enxerga(lugar.planta(), lugar.qx(), lugar.qy(), x, y, false)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // ---- Talismã da vidência ----
 
     // Os quadradinhos que cada herói já viu com o talismã, por andar (pra não ganhar experiência duas vezes no mesmo)
     private static Map<UUID, Map<Integer, Set<Long>>> vistosPelaVidencia = new HashMap<>();
 
-    // O que a vidência viu: as portas reveladas, quantos quadradinhos novos que o herói não via
+    // O que a vidência viu: as portas e armadilhas reveladas, quantos quadradinhos novos que o herói não via
     // (atrás de portas ou longe, a mais de 8 quadradinhos), e os quadradinhos do cone (pra achar os inimigos neles)
-    public record Videncia(int portas, int novos, Set<Long> quadradinhos, BlockPos origem) {
+    public record Videncia(int portas, int armadilhas, int novos, Set<Long> quadradinhos, BlockPos origem) {
         public boolean contem(double x, double z) {
             return quadradinhos.contains(chave(Math.floorDiv(Mth.floor(x) - origem.getX(), T), Math.floorDiv(Mth.floor(z) - origem.getZ(), T)));
         }
@@ -143,6 +182,7 @@ public class Busca {
         int raio = Mth.ceil(distancia);
         Set<Long> quadradinhos = new HashSet<>();
         int portas = 0;
+        int armadilhas = 0;
         int novos = 0;
         ServerLevel mundo = jogador.serverLevel();
         for (int dy = -raio; dy <= raio; dy++) {
@@ -165,6 +205,9 @@ public class Busca {
                     continue;
                 }
                 quadradinhos.add(chave(x, y));
+                if (lugar.planta().temArmadilha(x, y) && Armadilhas.revelar(mundo, Armadilhas.controle(lugar.origem(), x, y))) {
+                    armadilhas++;
+                }
                 if (escondida(lugar, x, y)) {
                     revelar(mundo, lugar, x, y);
                     portas++;
@@ -178,11 +221,11 @@ public class Busca {
                 }
             }
         }
-        if (portas > 0) {
+        if (portas + armadilhas > 0) {
             jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.percebeu_algo").withStyle(ChatFormatting.GOLD), false);
             mundo.playSound(null, jogador.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.5F, 1.0F);
         }
-        return new Videncia(portas, novos, quadradinhos, lugar.origem());
+        return new Videncia(portas, armadilhas, novos, quadradinhos, lugar.origem());
     }
 
     // ---- Previsão do ladino ----
@@ -237,8 +280,10 @@ public class Busca {
         // Igual ao Shattered, o "círculo" é o quadrado sem os 4 cantos
         boolean circular = pontos == 1;
         float chance = deProposito ? 1.0F : 0.2F - lugar.andar() / 100F;
+        float chanceDaArmadilha = deProposito ? 1.0F : 0.4F - lugar.andar() / 250F;
         ServerLevel mundo = jogador.serverLevel();
         int achou = 0;
+        int armadilhas = 0;
         for (int dy = -distancia; dy <= distancia; dy++) {
             for (int dx = -distancia; dx <= distancia; dx++) {
                 if ((dx == 0 && dy == 0) || (circular && Math.abs(dx) == distancia && Math.abs(dy) == distancia)) {
@@ -258,15 +303,23 @@ public class Busca {
                     revelar(mundo, lugar, x, y);
                     achou++;
                 }
+                if (lugar.planta().temArmadilha(x, y) && Armadilhas.escondidaEm(mundo, lugar.origem(), x, y)
+                        && jogador.getRandom().nextFloat() < chanceDaArmadilha) {
+                    BlockPos controle = Armadilhas.controle(lugar.origem(), x, y);
+                    Armadilhas.revelar(mundo, controle);
+                    BlockPos meio = BlockPos.containing(Armadilhas.centro(controle));
+                    mundo.sendParticles(ParticleTypes.END_ROD, meio.getX(), meio.getY() + 0.3, meio.getZ(), 12, 1.0, 0.2, 1.0, 0.01);
+                    armadilhas++;
+                }
             }
         }
-        if (achou > 0) {
+        if (achou + armadilhas > 0) {
             jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.percebeu_algo").withStyle(ChatFormatting.GOLD), false);
             mundo.playSound(null, jogador.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.5F, 1.0F);
-            // O talismã da vidência equipado ganha 10 de carga por porta achada
-            TalismaDaVidencia.aoAcharPortas(jogador, achou);
+            // O talismã da vidência equipado ganha 10 de carga por porta e 2 por armadilha achada
+            TalismaDaVidencia.aoAcharSegredos(jogador, achou, armadilhas);
         }
-        return achou;
+        return achou + armadilhas;
     }
 
     // Dá pra ver o quadradinho daqui? (a linha entre os dois não pode passar por parede, estante ou porta;

@@ -16,7 +16,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 
-// Teletransporte pra um lugar aleatório do andar (pergaminho de teletransporte, folha-sumida, maldição de deslocamento).
+// Teletransporte pra um lugar aleatório do andar (pergaminho de teletransporte, folha-sumida, maldição de deslocamento,
+// armadilha de teletransporte).
 // Igual ao Shattered, prefere um lugar longe de onde a criatura estava.
 public class Teleporte {
     private static final int TENTATIVAS = 8;
@@ -26,6 +27,12 @@ public class Teleporte {
         if (destino == null) {
             return false;
         }
+        para(mundo, quem, destino);
+        return true;
+    }
+
+    // Teletransporta pra esse bloco (o meio dele), com as partículas e o som (a armadilha de portal usa direto)
+    public static void para(ServerLevel mundo, LivingEntity quem, BlockPos destino) {
         Particulas.explosao(mundo, ParticleTypes.PORTAL, quem.getX(), quem.getY(0.5), quem.getZ(), 30, 0.4, 0.3);
         mundo.playSound(null, quem.blockPosition(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.NEUTRAL, 1.0F, 1.0F);
         if (quem instanceof ServerPlayer jogador) {
@@ -41,7 +48,6 @@ public class Teleporte {
         }
         Particulas.explosao(mundo, ParticleTypes.PORTAL, quem.getX(), quem.getY(0.5), quem.getZ(), 30, 0.4, 0.3);
         mundo.playSound(null, destino, SoundEvents.ENDERMAN_TELEPORT, SoundSource.NEUTRAL, 1.0F, 1.2F);
-        return true;
     }
 
     // Um lugar livre do andar onde a criatura está, o mais longe dela entre alguns sorteados

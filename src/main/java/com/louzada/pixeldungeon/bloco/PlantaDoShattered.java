@@ -95,10 +95,12 @@ public class PlantaDoShattered extends Block {
         return null;
     }
 
-    // Usado pra saber se dá pra plantar aqui (ar, ou grama que sai do caminho)
+    // Usado pra saber se dá pra plantar aqui (ar, ou grama que sai do caminho). Igual ao Shattered,
+    // não dá pra plantar em cima de armadilha (a semente cai no chão e ativa a armadilha).
     public static boolean daPraPlantar(Level mundo, BlockPos posicao) {
         BlockState aqui = mundo.getBlockState(posicao);
         boolean livre = aqui.isAir() || aqui.getBlock() instanceof GramaBaixa || aqui.getBlock() instanceof CapimAlto;
-        return livre && mundo.getBlockState(posicao.below()).isFaceSturdy(mundo, posicao.below(), Direction.UP);
+        BlockState chao = mundo.getBlockState(posicao.below());
+        return livre && !(chao.getBlock() instanceof ArmadilhaBloco) && chao.isFaceSturdy(mundo, posicao.below(), Direction.UP);
     }
 }

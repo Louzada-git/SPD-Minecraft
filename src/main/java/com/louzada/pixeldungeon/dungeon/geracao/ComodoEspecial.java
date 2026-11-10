@@ -10,13 +10,14 @@ import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 
 // As salas especiais (o "SpecialRoom" do Shattered): têm uma porta só, e as do mod ficam trancadas
 // (a chave de ferro do andar aparece numa sala comum).
-// O mod tem o arsenal, a cripta (de equipamento), o jardim, a biblioteca e a tesouraria (de consumíveis).
+// O mod tem o arsenal, a cripta (de equipamento), o jardim, a biblioteca, a tesouraria e a sala das armadilhas (de consumíveis).
+// A sala das armadilhas é a única com porta comum.
 public abstract class ComodoEspecial extends Comodo {
 
     // Os tipos de sala especial, separados igual ao Shattered
     public enum Tipo {
         ARSENAL(true, Arsenal::new), CRIPTA(true, Cripta::new), JARDIM(false, Jardim::new), BIBLIOTECA(false, Biblioteca::new),
-        TESOURARIA(false, Tesouraria::new);
+        TESOURARIA(false, Tesouraria::new), ARMADILHAS(false, SalaDasArmadilhas::new);
 
         // De equipamento (senão, de consumíveis)
         public final boolean deEquipamento;

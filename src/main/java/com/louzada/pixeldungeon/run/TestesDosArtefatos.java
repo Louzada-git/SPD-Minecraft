@@ -310,7 +310,7 @@ public class TestesDosArtefatos {
         boolean brilhou = vigiado.hasEffect(MobEffects.GLOWING);
         vigiado.discard();
         ArtefatoAchado.definirCargas(talisma, 50);
-        TalismaDaVidencia.aoAcharPortas(heroi, 2);
+        TalismaDaVidencia.aoAcharSegredos(heroi, 2, 0);
         PixelDungeon.LOGGER.info("Teste do talismã da vidência: sem carga não vê = {}, viu 7 quadradinhos = {} (100 virou {}), o rato brilhou = {}, achar 2 portas deu {}",
                 semCarga, viu, depoisDeVer, brilhou, ArtefatoAchado.cargas(talisma) - 50);
 

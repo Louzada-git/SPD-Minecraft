@@ -40,6 +40,8 @@ public class PlantaDoAndar {
         ARMA, ARMADURA, OURO, OURO_POUCO, PERGAMINHO, PERGAMINHO_DE_IDENTIFICAR_OU_REMOVER, ARMADURA_AMALDICOADA,
         // Das salas secretas: a comida da despensa, o ouro miúdo do tesouro, o prêmio do labirinto e as armas de arremesso do arsenal
         RACAO_DE_SUPRIMENTOS, OURO_DO_TESOURO, PREMIO_DO_LABIRINTO, ARREMESSO,
+        // O baú do fundo da sala das armadilhas, e o item qualquer da sala de invocação secreta
+        PREMIO_DAS_ARMADILHAS, ITEM_ALEATORIO,
         // Plantas já plantadas (não são itens)
         PLANTA_ALEATORIA, PLANTA_GRAMA_SOLAR, PLANTA_ESTRELA
     }
@@ -79,6 +81,12 @@ public class PlantaDoAndar {
     // Número da sala de cada quadradinho (-1 = não é sala, ou seja, corredor ou parede)
     private int[] salaDoQuadradinho;
     private List<Sala> salas = new ArrayList<>();
+    // As armadilhas (outra camada por cima do chão, igual à grama): o tipo de cada uma (null = nenhuma)
+    // e se ela começa à vista. Depois de construída, quem sabe se ela está escondida ou desarmada é o bloco no mundo.
+    private TipoDeArmadilha[] armadilhas;
+    private boolean[] armadilhaVisivel;
+    // Quantas poções de levitação o andar ganha (a sala das armadilhas pede uma)
+    private int pocoesDeLevitacao = 0;
 
     private List<PremioNoChao> premios = new ArrayList<>();
     // Quantas chaves de ferro o andar precisa (uma por porta trancada); elas ficam em salas comuns
@@ -99,6 +107,8 @@ public class PlantaDoAndar {
         this.grama = new byte[largura * altura];
         this.salaDoQuadradinho = new int[largura * altura];
         Arrays.fill(salaDoQuadradinho, -1);
+        this.armadilhas = new TipoDeArmadilha[largura * altura];
+        this.armadilhaVisivel = new boolean[largura * altura];
     }
 
     // Cava a sala (vira chão) e lembra que esses quadradinhos são dela
@@ -170,6 +180,47 @@ public class PlantaDoAndar {
 
     public int chavesDeFerro() {
         return chavesDeFerro;
+    }
+
+    // ---- Armadilhas ----
+
+    public void colocarArmadilha(int x, int y, TipoDeArmadilha tipo, boolean visivel) {
+        if (dentro(x, y)) {
+            armadilhas[y * largura + x] = tipo;
+            armadilhaVisivel[y * largura + x] = visivel || !tipo.escondivel();
+        }
+    }
+
+    @Nullable
+    public TipoDeArmadilha armadilha(int x, int y) {
+        return dentro(x, y) ? armadilhas[y * largura + x] : null;
+    }
+
+    public boolean temArmadilha(int x, int y) {
+        return armadilha(x, y) != null;
+    }
+
+    // Começa à vista? (as escondidas só aparecem procurando, pisando ou com o mapeamento mágico)
+    public boolean armadilhaVisivel(int x, int y) {
+        return dentro(x, y) && armadilhaVisivel[y * largura + x];
+    }
+
+    public int quantasArmadilhas() {
+        int total = 0;
+        for (TipoDeArmadilha tipo : armadilhas) {
+            if (tipo != null) {
+                total++;
+            }
+        }
+        return total;
+    }
+
+    public void pedirPocaoDeLevitacao() {
+        pocoesDeLevitacao++;
+    }
+
+    public int pocoesDeLevitacao() {
+        return pocoesDeLevitacao;
     }
 
     public void contarSalaSecreta() {
@@ -252,14 +303,14 @@ public class PlantaDoAndar {
         return false;
     }
 
-    // Onde inimigos e itens podem aparecer, igual ao Shattered: chão (sem água, escada ou porta) das salas comuns,
+    // Onde inimigos e itens podem aparecer, igual ao Shattered: chão (sem água, escada, porta ou armadilha) das salas comuns,
     // longe da entrada e sem nada já posto ali. Nas salas especiais e nos túneis não aparece nada.
     // (O andar do chefe não tem salas comuns de verdade: lá vale qualquer chão.)
     public List<int[]> lugaresLivres(int raioEmVoltaDaEntrada) {
         List<int[]> lugares = new ArrayList<>();
         for (int qy = 0; qy < altura; qy++) {
             for (int qx = 0; qx < largura; qx++) {
-                if (tipo(qx, qy) != CHAO || temPremioEm(qx, qy)) {
+                if (tipo(qx, qy) != CHAO || temPremioEm(qx, qy) || temArmadilha(qx, qy)) {
                     continue;
                 }
                 Sala sala = salaEm(qx, qy);

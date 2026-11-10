@@ -112,6 +112,12 @@ public abstract class ComodoComum extends Comodo {
         return escada == Escada.SAIDA;
     }
 
+    // Igual ao Shattered: a sala da entrada do andar 1 não tem armadilhas
+    @Override
+    public boolean podePorArmadilha(Ponto p) {
+        return !(ehEntrada() && andar <= 1);
+    }
+
     // Duas salas comuns encostadas podem virar uma só se o lado de dentro perto da parede não for sólido.
     // A entrada dos andares 1 e 2 nunca se junta (igual ao Shattered).
     @Override

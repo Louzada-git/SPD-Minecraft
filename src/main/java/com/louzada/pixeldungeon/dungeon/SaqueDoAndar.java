@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Premio;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.PremioNoChao;
@@ -48,7 +50,8 @@ import net.minecraft.world.item.ItemStack;
 //   - todo andar também tem uma ração largada no chão
 //   - em cada região caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares
 //   - cada porta trancada tem a chave de ferro dela largada numa sala comum
-//   - as salas especiais (arsenal, tesouraria, biblioteca, jardim, cripta) e as secretas têm os prêmios delas
+//   - as salas especiais (arsenal, tesouraria, biblioteca, jardim, cripta, armadilhas) e as secretas têm os prêmios delas
+//   - a sala das armadilhas pede uma poção de levitação no chão do andar
 //   - andares de chefe não têm nada
 // Onde tem item, a grama alta vira grama baixa (senão ninguém acharia o item), igual ao Shattered.
 // Os itens no chão nunca somem sozinhos.
@@ -118,6 +121,21 @@ public class SaqueDoAndar {
             run.contarQueda(PERGAMINHOS_DE_MELHORIA);
             garantidos.add(Identificacao.pergaminho(semente, TipoDePergaminho.MELHORIA));
         }
+        // A sala das armadilhas (igual ao Shattered): 2 em 3 vezes, o baú do fundo guarda um desses itens garantidos;
+        // senão, uma arma ou armadura igual à do labirinto. E o andar ganha uma poção de levitação pra atravessar a sala.
+        ItemStack premioDasArmadilhas = null;
+        for (PremioNoChao premio : planta.premios()) {
+            if (premio.premio() == Premio.PREMIO_DAS_ARMADILHAS && premioDasArmadilhas == null) {
+                if (sorteio.nextInt(3) != 0 && !garantidos.isEmpty()) {
+                    premioDasArmadilhas = garantidos.remove(sorteio.nextInt(garantidos.size()));
+                } else {
+                    premioDasArmadilhas = premioDoLabirinto(sorteio, andar);
+                }
+            }
+        }
+        for (int i = 0; i < planta.pocoesDeLevitacao(); i++) {
+            garantidos.add(Identificacao.pocao(semente, TipoDePocao.LEVITACAO));
+        }
         for (ItemStack item : garantidos) {
             if (lugares.isEmpty()) {
                 break;
@@ -150,7 +168,7 @@ public class SaqueDoAndar {
             }
         }
         for (PremioNoChao premio : planta.premios()) {
-            saques.add(saqueDoPremio(premio, sorteio, andar, semente, pilhasDoTesouro));
+            saques.add(saqueDoPremio(premio, sorteio, andar, run, pilhasDoTesouro, premioDasArmadilhas));
         }
 
         for (Saque saque : saques) {
@@ -162,7 +180,9 @@ public class SaqueDoAndar {
     }
 
     // O item de verdade de cada prêmio das salas especiais
-    private static Saque saqueDoPremio(PremioNoChao premio, Random sorteio, int andar, long semente, int pilhasDoTesouro) {
+    private static Saque saqueDoPremio(PremioNoChao premio, Random sorteio, int andar, DadosDaRun run, int pilhasDoTesouro,
+            @Nullable ItemStack premioDasArmadilhas) {
+        long semente = run.semente();
         Onde onde = premio.noBau() ? Onde.BAU : Onde.CHAO;
         ItemStack item = switch (premio.premio()) {
             case ARMA -> armaAleatoria(sorteio, andar);
@@ -176,6 +196,8 @@ public class SaqueDoAndar {
             case RACAO_DE_SUPRIMENTOS -> new ItemStack(ModItens.RACAO_DE_SUPRIMENTOS.get());
             case OURO_DO_TESOURO -> ouroDoTesouro(sorteio, andar, pilhasDoTesouro);
             case PREMIO_DO_LABIRINTO -> premioDoLabirinto(sorteio, andar);
+            case PREMIO_DAS_ARMADILHAS -> premioDasArmadilhas != null ? premioDasArmadilhas : premioDoLabirinto(sorteio, andar);
+            case ITEM_ALEATORIO -> itemAleatorio(sorteio, andar, run);
             case ARREMESSO -> arremessoAleatorio(sorteio, andar);
             case PLANTA_ALEATORIA -> sementeAleatoria(sorteio);
             case PLANTA_GRAMA_SOLAR -> new ItemStack(ItemSemente.daPlanta(TipoDePlanta.GRAMA_SOLAR));

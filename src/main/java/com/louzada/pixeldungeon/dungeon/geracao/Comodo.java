@@ -249,7 +249,12 @@ public abstract class Comodo extends Retangulo {
         return true;
     }
 
-    // Os quadradinhos (inclusive as paredes) onde a água e a grama do andar podem cair
+    // Dá pra sortear uma armadilha nesse quadradinho? (o "canPlaceTrap" do Shattered)
+    public boolean podePorArmadilha(Ponto p) {
+        return true;
+    }
+
+    // Os quadradinhos (inclusive as paredes) onde a água, a grama e as armadilhas do andar podem cair
     public List<Ponto> pontosComAgua() {
         List<Ponto> pontos = new ArrayList<>();
         for (Ponto p : pontos()) {
@@ -264,6 +269,16 @@ public abstract class Comodo extends Retangulo {
         List<Ponto> pontos = new ArrayList<>();
         for (Ponto p : pontos()) {
             if (podeTerGrama(p)) {
+                pontos.add(p);
+            }
+        }
+        return pontos;
+    }
+
+    public List<Ponto> pontosComArmadilha() {
+        List<Ponto> pontos = new ArrayList<>();
+        for (Ponto p : pontos()) {
+            if (podePorArmadilha(p)) {
                 pontos.add(p);
             }
         }

@@ -203,6 +203,28 @@ jobs:
           if ! grep -q "Teste do rato fétido: deixou muco cáustico = true, apanhando soltou fedor = true, é chefe (não corrompe) = true" servidor.log; then echo "O rato fétido não funcionou"; exit 1; fi
           if ! grep -qE "Teste da rosa seca: sem a missão não funciona = true, veio com 100 de carga, chamou o fantasma = true \(vida 40.0, ficou 0 de carga\), sem arma bate até [45], levou a arma = true, devolveu = true, obedeceu as ordens = true, a rosa curou [78].0 em 100 turnos, a pétala subiu a rosa pro nível 1" servidor.log; then echo "A rosa seca não funcionou"; exit 1; fi
           if ! grep -q "Teste das pétalas: sem a missão 0 no andar 4, com a missão 1" servidor.log; then echo "As pétalas da rosa não aparecem"; exit 1; fi
+          if ! grep -qE "Teste das armadilhas nos andares: por andar [1-9][0-9]*/[1-9][0-9]*/[1-9][0-9]*/[1-9][0-9]*, escondidas nos andares 2 a 4 = [1-9][0-9]*, andar 1 só de dardos = true, tipos do esgoto = true, só em chão vazio = true, construídas iguais à planta = true, fora dos lugares de itens e inimigos = true" servidor.log; then echo "As armadilhas não foram sorteadas como no Shattered"; exit 1; fi
+          if ! grep -q "Teste da sala das armadilhas: tem armadilhas = true, todas à vista = true, um tipo só da sala = true, baú com prêmio = true, o baú fora das armadilhas = true, poção de levitação no andar = true" servidor.log; then echo "A sala das armadilhas não está certa"; exit 1; fi
+          if ! grep -q "Teste do tesouro secreto: tem armadilhas de desmoronamento ou de dardo venenoso = true, todas à vista = true" servidor.log; then echo "O tesouro secreto ficou sem armadilhas"; exit 1; fi
+          if ! grep -q "Teste da invocação secreta: o chão todo de armadilhas de invocação = true, todas escondidas = true, o item em cima de uma = true" servidor.log; then echo "A sala de invocação secreta não está certa"; exit 1; fi
+          if ! grep -q "Teste da armadilha de dardos: nunca fica escondida = true, o rato em cima levou o dardo = true, desarmou = true" servidor.log; then echo "A armadilha de dardos não funcionou"; exit 1; fi
+          if ! grep -q "Teste da armadilha de dardo venenoso: acertou o rato mais perto = true" servidor.log; then echo "A armadilha de dardo venenoso não funcionou"; exit 1; fi
+          if ! grep -q "Teste da armadilha de resfriamento: nuvem = true, resfriado = true, congelou no turno 4" servidor.log; then echo "A armadilha de resfriamento não funcionou"; exit 1; fi
+          if ! grep -q "Teste da armadilha elétrica: nuvem = true, o rato do lado ficou paralisado = true" servidor.log; then echo "A armadilha elétrica não funcionou"; exit 1; fi
+          if ! grep -q "Teste das armadilhas de gás: tóxico = true, confusão = true" servidor.log; then echo "As armadilhas de gás não funcionaram"; exit 1; fi
+          if ! grep -q "Teste da armadilha de alarme: acordou = true, foi chamado = true" servidor.log; then echo "A armadilha de alarme não funcionou"; exit 1; fi
+          if ! grep -q "Teste da armadilha de muco: o rato do lado = true, o enxame (voa) = false" servidor.log; then echo "A armadilha de muco não funcionou"; exit 1; fi
+          if ! grep -q "Teste da armadilha de rebanho: 24 ovelhas, somem sozinhas = true" servidor.log; then echo "A armadilha de rebanho não funcionou"; exit 1; fi
+          if ! grep -q "Teste da armadilha de invocação: invocou de 1 a 3 = true" servidor.log; then echo "A armadilha de invocação não funcionou"; exit 1; fi
+          if ! grep -q "Teste da armadilha agarradora: sangrou = true, aleijou = true, continua armada = true, agarrou de novo quem ficou parado = false" servidor.log; then echo "A armadilha agarradora não funcionou"; exit 1; fi
+          if ! grep -q "Teste da armadilha de desmoronamento: acertou os 2 ratos = true" servidor.log; then echo "A armadilha de desmoronamento não funcionou"; exit 1; fi
+          if ! grep -q "Teste das armadilhas escondidas: o rato não ativou a escondida = true, o rato ativou a que estava à vista = true, o herói ativou a escondida = true, o enxame (voa) não ativou = true" servidor.log; then echo "As armadilhas escondidas não funcionaram"; exit 1; fi
+          if ! grep -q "Teste das armadilhas com itens: o item que já estava lá não ativou = true, o que caiu em cima ativou = true" servidor.log; then echo "Os itens não ativaram as armadilhas"; exit 1; fi
+          if ! grep -q "Teste do caminho dos inimigos: desviam da armadilha à vista = true, da escondida = false, da desarmada = false" servidor.log; then echo "Os inimigos não desviam das armadilhas"; exit 1; fi
+          if ! grep -q "Teste da armadilha de teletransporte: o rato foi pra longe = true, o item também = true, desarmou = true" servidor.log; then echo "A armadilha de teletransporte não funcionou"; exit 1; fi
+          if ! grep -q "Teste da armadilha de portal: os 2 ratos foram pro mesmo lugar = true, continua armada = true" servidor.log; then echo "A armadilha de portal não funcionou"; exit 1; fi
+          if ! grep -qE "Teste da busca de armadilhas: o talismã avisou = true, achou [1-9][0-9]* segredo\(s\), a armadilha apareceu = true" servidor.log; then echo "A busca não achou a armadilha"; exit 1; fi
+          if ! grep -q "Teste do mapeamento das armadilhas: revelou alguma = true, sobrou escondida = 0, o talismã parou de avisar = true" servidor.log; then echo "O mapeamento mágico não revelou as armadilhas"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
 
       # Liga o jogo de verdade (sem monitor, no Xvfb), entra no mundo do teste do servidor

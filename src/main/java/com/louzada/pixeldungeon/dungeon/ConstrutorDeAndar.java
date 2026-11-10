@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.louzada.pixeldungeon.bloco.ArmadilhaBloco;
 import com.louzada.pixeldungeon.bloco.CapimAlto;
 import com.louzada.pixeldungeon.bloco.PortaGigante;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
@@ -26,7 +27,7 @@ import net.minecraft.world.level.block.state.properties.Half;
 //   y + 9      teto
 //   y + 8      cornija (degraus de cabeça pra baixo encostados na parede)
 //   y + 1 a 8  espaço livre (8 blocos); a parede tem rodapé no y + 1
-//   y          chão (ou água, com um chão embaixo)
+//   y          chão (ou água, com um chão embaixo; ou os 16 blocos de uma armadilha)
 //
 // Os corredores são túneis mais baixos (6 blocos), com arcos no alto dos dois lados.
 // As portas gigantes ficam no meio da parede entre dois cômodos, com a altura dos corredores (4 de largura, 6 de altura).
@@ -174,6 +175,9 @@ public class ConstrutorDeAndar {
         boolean temLanterna = temLanterna(qx, qy);
         // O chão especial (as pontes, a biblioteca) é de tufo entalhado
         BlockState chaoDaqui = tipo == PlantaDoAndar.CHAO_ESPECIAL ? moldura : chao;
+        // A armadilha toma o lugar do chão (os 16 blocos, cada um com um pedaço do desenho dela)
+        TipoDeArmadilha armadilha = tipo == PlantaDoAndar.AGUA ? null : planta.armadilha(qx, qy);
+        boolean escondida = armadilha != null && !planta.armadilhaVisivel(qx, qy);
 
         for (int dx = 0; dx < T; dx++) {
             for (int dz = 0; dz < T; dz++) {
@@ -181,6 +185,8 @@ public class ConstrutorDeAndar {
                 if (tipo == PlantaDoAndar.AGUA) {
                     colocar(qx, qy, dx, -1, dz, chao);
                     colocar(qx, qy, dx, 0, dz, agua);
+                } else if (armadilha != null) {
+                    colocar(qx, qy, dx, 0, dz, ModBlocos.ARMADILHA.get().pedaco(armadilha, escondida, false, dx, dz));
                 } else {
                     colocar(qx, qy, dx, 0, dz, chaoDaqui);
                 }
@@ -208,6 +214,11 @@ public class ConstrutorDeAndar {
                     colocar(qx, qy, dx, 1, dz, gramaBaixa);
                 }
             }
+        }
+
+        if (armadilha != null) {
+            // O controle da armadilha começa a olhar quem pisa
+            nivel.scheduleTick(Armadilhas.controle(origem, qx, qy), ModBlocos.ARMADILHA.get(), ArmadilhaBloco.INTERVALO);
         }
 
         if (!planta.passavel(qx, qy) || planta.ehPorta(qx, qy)) {
