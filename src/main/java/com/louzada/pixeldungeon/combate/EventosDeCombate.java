@@ -17,6 +17,7 @@ import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
+import com.louzada.pixeldungeon.item.EfeitosDePergaminhoExotico;
 import com.louzada.pixeldungeon.item.artefato.BracadeiraDoLadrao;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
@@ -51,6 +52,12 @@ public class EventosDeCombate {
 
         // Em estase (ampulheta do tempo): nada machuca
         if (alvo.hasEffect(ModEfeitos.ESTASE)) {
+            evento.setCanceled(true);
+            return;
+        }
+
+        // Imune à magia (pergaminho antimagia): magia não machuca
+        if (alvo.hasEffect(ModEfeitos.ANTIMAGIA) && EfeitosDePergaminhoExotico.danoMagico(fonte)) {
             evento.setCanceled(true);
             return;
         }

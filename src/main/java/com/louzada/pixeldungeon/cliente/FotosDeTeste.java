@@ -105,7 +105,20 @@ public class FotosDeTeste {
                 noServidor(jogo, HeroiDasFotos::mostrarArmadilhas);
             }
             case 640 -> foto(jogo, "armadilhas.png");
-            case 660 -> {
+            // O guia de alquimia (com todas as páginas, aberto na da energia e comida)
+            // e a tela da alquimia aberta pelo kit do alquimista, com um pergaminho (as pedras ou o exótico)
+            case 645 -> {
+                jogo.setScreen(null);
+                noServidor(jogo, HeroiDasFotos::mostrarGuia);
+            }
+            case 655 -> jogo.setScreen(new TelaDoGuiaDeAlquimia(2, null));
+            case 670 -> foto(jogo, "guia_de_alquimia.png");
+            case 675 -> {
+                jogo.setScreen(null);
+                noServidor(jogo, HeroiDasFotos::mostrarAlquimia);
+            }
+            case 700 -> foto(jogo, "alquimia.png");
+            case 720 -> {
                 PixelDungeon.LOGGER.info("Fotos de teste: pronto");
                 jogo.stop();
             }

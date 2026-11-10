@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "parte=0": {
+      "model": "pixeldungeon:block/pote_de_alquimia"
+    },
+    "parte=1": {
+      "model": "pixeldungeon:block/pote_de_alquimia",
+      "y": 90
+    },
+    "parte=2": {
+      "model": "pixeldungeon:block/pote_de_alquimia",
+      "y": 180
+    },
+    "parte=3": {
+      "model": "pixeldungeon:block/pote_de_alquimia",
+      "y": 270
+    }
+  }
+}

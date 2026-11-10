@@ -136,11 +136,15 @@ public class TalentosDoTier2 {
 
     // As poções de força e de experiência valem em dobro, igual ao Shattered
     public static void aoUsarPocao(ServerPlayer jogador, TipoDePocao tipo) {
+        aoUsarPocao(jogador, tipo == TipoDePocao.FORCA || tipo == TipoDePocao.EXPERIENCIA ? 2 : 1);
+    }
+
+    // "dobro": 2 nas poções que valem em dobro (força, experiência e as exóticas delas), 1 nas outras
+    public static void aoUsarPocao(ServerPlayer jogador, int dobro) {
         if (!GerenciadorDoHeroi.emJogo(jogador)) {
             return;
         }
         DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
-        int dobro = tipo == TipoDePocao.FORCA || tipo == TipoDePocao.EXPERIENCIA ? 2 : 1;
         int pontos;
         // Tenacidade líquida (Guerreiro): 6,5%/10% da vida máxima em blindagem
         pontos = dados.pontos(Talento.TENACIDADE_LIQUIDA);

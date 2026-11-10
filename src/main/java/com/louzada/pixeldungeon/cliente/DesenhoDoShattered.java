@@ -20,6 +20,8 @@ public class DesenhoDoShattered {
     public static final Folha FAMINTO = new Folha("faminto", 16, 16);
     public static final Folha TALENTO = new Folha("talento", 13, 13);
     public static final Folha MOEDA = new Folha("moeda", 7, 7);
+    // O cristalzinho da energia alquímica (do lado do ouro)
+    public static final Folha ENERGIA = new Folha("energia", 8, 7);
     // Os desenhos das casinhas vazias de equipamento
     public static final Folha ESPACO_ARMADURA = new Folha("espaco_armadura", 16, 16);
     public static final Folha ESPACO_ARTEFATO = new Folha("espaco_artefato", 16, 16);

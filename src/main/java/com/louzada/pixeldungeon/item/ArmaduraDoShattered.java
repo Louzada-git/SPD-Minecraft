@@ -53,9 +53,21 @@ public class ArmaduraDoShattered extends ArmorItem implements Equipamento {
         return tier * (2 + nivel);
     }
 
+    // Com a alteração (pedra de alteração), igual ao "DRMax" e ao "DRMin" do Shattered: a defesa máxima muda,
+    // e se ela ficar abaixo do nível, a mínima e a máxima se ajeitam
+    public int defesaMaxima(ItemStack pilha, int nivel) {
+        int maximo = defesaMaxima(nivel) + Alteracao.defesa(pilha, nivel);
+        return nivel > maximo ? (nivel - maximo + 1) / 2 : maximo;
+    }
+
+    public int defesaMinima(ItemStack pilha, int nivel) {
+        int maximo = defesaMaxima(pilha, nivel);
+        return nivel >= maximo ? nivel - maximo : nivel;
+    }
+
     public int sortearDefesa(ItemStack pilha, RandomSource sorteio, int forcaDoHeroi) {
         int nivel = NivelDoItem.nivel(pilha);
-        int defesa = Sorteio.normal(sorteio, defesaMinima(nivel), defesaMaxima(nivel)) - 2 * forcaFaltando(pilha, forcaDoHeroi);
+        int defesa = Sorteio.normal(sorteio, defesaMinima(pilha, nivel), defesaMaxima(pilha, nivel)) - 2 * forcaFaltando(pilha, forcaDoHeroi);
         return Math.max(0, defesa);
     }
 
@@ -95,10 +107,17 @@ public class ArmaduraDoShattered extends ArmorItem implements Equipamento {
         // Sem identificar, mostra os números de uma armadura +0 (os "típicos", igual ao Shattered)
         int nivel = conhecida ? NivelDoItem.nivel(pilha) : 0;
         linhas.add(Component.translatable("dica.pixeldungeon.tier", tier).withStyle(ChatFormatting.GRAY));
-        linhas.add(Component.translatable(conhecida ? "dica.pixeldungeon.defesa" : "dica.pixeldungeon.defesa_tipica", defesaMinima(nivel),
-                defesaMaxima(nivel)).withStyle(ChatFormatting.GRAY));
-        linhas.add(Component.translatable(conhecida ? "dica.pixeldungeon.forca" : "dica.pixeldungeon.forca_tipica", forcaNecessaria(nivel))
+        linhas.add(Component.translatable(conhecida ? "dica.pixeldungeon.defesa" : "dica.pixeldungeon.defesa_tipica", defesaMinima(pilha, nivel),
+                defesaMaxima(pilha, nivel)).withStyle(ChatFormatting.GRAY));
+        Alteracao alteracao = Alteracao.de(pilha);
+        if (alteracao != null) {
+            linhas.add(Component.translatable(alteracao.chaveDaDica()).withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
+        linhas.add(Component.translatable(conhecida ? "dica.pixeldungeon.forca" : "dica.pixeldungeon.forca_tipica", forcaNecessaria(nivel) - maestria(pilha))
                 .withStyle(ChatFormatting.GRAY));
+        if (maestria(pilha) > 0) {
+            linhas.add(Component.translatable("dica.pixeldungeon.maestria").withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
         NivelDoItem.dicaDeIdentificacao(pilha, linhas);
         // Selo quebrado do Guerreiro: escudo de 3 + 2 x tier quando a vida cai pela metade
         if (pilha.getOrDefault(ModComponentes.SELO.get(), false)) {

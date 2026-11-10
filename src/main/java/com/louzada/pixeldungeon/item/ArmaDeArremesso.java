@@ -180,8 +180,9 @@ public class ArmaDeArremesso extends Item implements Arma, Equipamento {
         if (deSurpresa && numeros.surpresa > 0) {
             minimo = minimo + Math.round((maximo - minimo) * numeros.surpresa);
         }
-        int dano = Sorteio.normal(sorteio, minimo, maximo);
-        int forcaSobrando = heroi.forca() - forcaNecessaria(nivel);
+        // A alteração (pedra de alteração) muda o dano sorteado, antes do bônus da força
+        int dano = Alteracao.dano(pilha, Sorteio.normal(sorteio, minimo, maximo));
+        int forcaSobrando = heroi.forca() - forcaNecessaria(pilha);
         if (forcaSobrando > 0) {
             dano += Sorteio.normal(sorteio, 0, forcaSobrando);
         }
@@ -217,9 +218,14 @@ public class ArmaDeArremesso extends Item implements Arma, Equipamento {
         return usos * (float) Math.pow(1.2, tiroCerteiro);
     }
 
-    // Quanto cada acerto gasta da durabilidade (0 = dura pra sempre, com 100 usos ou mais)
+    // Quanto cada acerto gasta da durabilidade (0 = dura pra sempre, com 100 usos ou mais).
+    // Igual ao Shattered, a alteração muda os usos na proporção da velocidade (mais rápida, dura mais).
     public float gastoPorUso(int nivel, int pontosDuraveis, int tiroCerteiro) {
-        float usos = usos(nivel, pontosDuraveis, tiroCerteiro);
+        return gastoPorUso(nivel, pontosDuraveis, tiroCerteiro, 1F);
+    }
+
+    public float gastoPorUso(int nivel, int pontosDuraveis, int tiroCerteiro, float fatorDeAtraso) {
+        float usos = usos(nivel, pontosDuraveis, tiroCerteiro) / fatorDeAtraso;
         if (usos >= 100) {
             return 0;
         }
@@ -231,7 +237,8 @@ public class ArmaDeArremesso extends Item implements Arma, Equipamento {
     }
 
     public float gastoPorUso(ItemStack pilha, DadosDoHeroi dados) {
-        return gastoPorUso(NivelDoItem.nivel(pilha), dados.pontos(Talento.PROJETEIS_DURAVEIS), dados.bonusDoAnel(TipoDeAnel.TIRO_CERTEIRO));
+        return gastoPorUso(NivelDoItem.nivel(pilha), dados.pontos(Talento.PROJETEIS_DURAVEIS), dados.bonusDoAnel(TipoDeAnel.TIRO_CERTEIRO),
+                Alteracao.fatorDeAtraso(pilha));
     }
 
     // ---- Arremessar ----
@@ -262,7 +269,7 @@ public class ArmaDeArremesso extends Item implements Arma, Equipamento {
         jogador.level().addFreshEntity(arma);
         jogador.level().playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.PLAYERS, 0.7F, 0.6F);
         // Arremessar gasta 1 turno (pra todas as armas de arremesso); a shuriken sai na hora uma vez a cada 20 turnos
-        int espera = Turno.TICKS;
+        int espera = Math.round(Turno.TICKS * Alteracao.fatorDeAtraso(voando));
         if (numeros.especial == Especial.INSTANTANEA && !dados.ativo(SHURIKEN_RECARGA, agora)) {
             espera = 4;
             dados.ativarPor(SHURIKEN_RECARGA, agora, Turno.ticks(19));
@@ -361,10 +368,17 @@ public class ArmaDeArremesso extends Item implements Arma, Equipamento {
         int nivel = conhecida ? NivelDoItem.nivel(pilha) : 0;
         linhas.add(Component.translatable("dica.pixeldungeon.arremessar").withStyle(ChatFormatting.AQUA));
         linhas.add(Component.translatable("dica.pixeldungeon.tier", numeros.tier).withStyle(ChatFormatting.GRAY));
-        linhas.add(Component.translatable(conhecida ? "dica.pixeldungeon.dano" : "dica.pixeldungeon.dano_tipico", danoMinimo(nivel), danoMaximo(nivel))
+        linhas.add(Component.translatable(conhecida ? "dica.pixeldungeon.dano" : "dica.pixeldungeon.dano_tipico", Alteracao.dano(pilha, danoMinimo(nivel)),
+                Alteracao.dano(pilha, danoMaximo(nivel))).withStyle(ChatFormatting.GRAY));
+        linhas.add(Component.translatable(conhecida ? "dica.pixeldungeon.forca" : "dica.pixeldungeon.forca_tipica", forcaNecessaria(nivel) - maestria(pilha))
                 .withStyle(ChatFormatting.GRAY));
-        linhas.add(Component.translatable(conhecida ? "dica.pixeldungeon.forca" : "dica.pixeldungeon.forca_tipica", forcaNecessaria(nivel))
-                .withStyle(ChatFormatting.GRAY));
+        if (maestria(pilha) > 0) {
+            linhas.add(Component.translatable("dica.pixeldungeon.maestria").withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
+        Alteracao alteracao = Alteracao.de(pilha);
+        if (alteracao != null) {
+            linhas.add(Component.translatable(alteracao.chaveDaDica()).withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
         if (numeros.surpresa > 0) {
             linhas.add(Component.translatable("dica.pixeldungeon.surpresa_forte", Math.round(numeros.surpresa * 100)).withStyle(ChatFormatting.GRAY));
         }
@@ -379,7 +393,7 @@ public class ArmaDeArremesso extends Item implements Arma, Equipamento {
         }
         // Quantos acertos ainda aguenta antes de uma quebrar
         int pontosDuraveis = EstadoNoCliente.pontos(Talento.PROJETEIS_DURAVEIS);
-        float gasto = gastoPorUso(nivel, pontosDuraveis);
+        float gasto = gastoPorUso(nivel, pontosDuraveis, 0, Alteracao.fatorDeAtraso(pilha));
         if (gasto <= 0) {
             linhas.add(Component.translatable("dica.pixeldungeon.arremesso.para_sempre").withStyle(ChatFormatting.GRAY));
         } else if (conhecida) {

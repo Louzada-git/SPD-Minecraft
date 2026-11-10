@@ -18,6 +18,7 @@ import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -255,6 +256,14 @@ public abstract class MobDoShattered extends Monster implements Combatente {
             dormindo = false;
             setNoAi(false);
         }
+        removeEffect(ModEfeitos.SONO_MAGICO);
+    }
+
+    // Sono mágico (pedra do sono profundo): dorme e não nota ninguém; só acorda se alguém machucar
+    public void dormirProfundamente() {
+        dormir();
+        setTarget(null);
+        addEffect(new MobEffectInstance(ModEfeitos.SONO_MAGICO, MobEffectInstance.INFINITE_DURATION));
     }
 
     // Notou um herói: acorda e vai atrás dele. Igual ao Shattered, aparece um "!" em cima.
@@ -311,12 +320,13 @@ public abstract class MobDoShattered extends Monster implements Combatente {
         // Uma vez por turno, quem está dormindo pode notar um herói por perto.
         // Igual ao Shattered: a chance é maior quanto mais perto (1 quadradinho = 4 blocos).
         if (dormindo && !level().isClientSide() && Turno.virou(this)) {
+            boolean sonoMagico = hasEffect(ModEfeitos.SONO_MAGICO);
             // De vez em quando sobe um "z" em cima de quem dorme (só se tiver alguém por perto pra ver)
             if (tickCount % 60 == 0 && level().getNearestPlayer(this, 16) != null) {
                 NumerosFlutuantes.mostrar(this, "z", NumerosFlutuantes.BRANCO);
             }
             for (Player jogador : level().players()) {
-                if (jogador.isSpectator() || jogador.isCreative() || Furtividade.invisivel(jogador) || !hasLineOfSight(jogador)
+                if (sonoMagico || jogador.isSpectator() || jogador.isCreative() || Furtividade.invisivel(jogador) || !hasLineOfSight(jogador)
                         || hasEffect(ModEfeitos.CEGO)) {
                     continue;
                 }
@@ -336,7 +346,7 @@ public abstract class MobDoShattered extends Monster implements Combatente {
     // ---- Aliado (corrompido) ----
 
     public boolean aliado() {
-        return hasEffect(ModEfeitos.CORROMPIDO) || aliadoDeNascenca();
+        return hasEffect(ModEfeitos.CORROMPIDO) || hasEffect(ModEfeitos.DOMINADO) || aliadoDeNascenca();
     }
 
     // Quem já nasce aliado (o guardião da terra, as guardas)
@@ -364,6 +374,17 @@ public abstract class MobDoShattered extends Monster implements Combatente {
         setLastHurtByMob(null);
         setPersistenceRequired();
         Particulas.subindoEmVolta(this, Particulas.poeira(0x4B0F4B, 1.2F), 20, 0.0);
+    }
+
+    // Dominado (pergaminho do canto da sereia): vira aliado pra sempre, sem perder vida (e sem se curar)
+    public void dominar(@Nullable Player dono) {
+        acordar();
+        addEffect(new MobEffectInstance(ModEfeitos.DOMINADO, MobEffectInstance.INFINITE_DURATION, 0, false, true, true));
+        definirDono(dono);
+        setTarget(null);
+        setLastHurtByMob(null);
+        setPersistenceRequired();
+        Particulas.subindoEmVolta(this, ParticleTypes.HEART, 10, 0.0);
     }
 
     // O herói que corrompeu (pra contar o XP do que o aliado mata)

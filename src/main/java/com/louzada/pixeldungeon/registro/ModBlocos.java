@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.bloco.ArbustoDeFruta;
 import com.louzada.pixeldungeon.bloco.ArmadilhaBloco;
 import com.louzada.pixeldungeon.bloco.BlocoComFormato;
 import com.louzada.pixeldungeon.bloco.CapimAlto;
@@ -14,6 +15,7 @@ import com.louzada.pixeldungeon.bloco.GramaBaixa;
 import com.louzada.pixeldungeon.bloco.ParedeDaChave;
 import com.louzada.pixeldungeon.bloco.PlantaDoShattered;
 import com.louzada.pixeldungeon.bloco.PortaGigante;
+import com.louzada.pixeldungeon.bloco.PoteDeAlquimia;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 
 import net.minecraft.world.level.block.Block;
@@ -60,6 +62,11 @@ public class ModBlocos {
     // As armadilhas do Shattered (cada uma ocupa o chão de um quadradinho: 4x4 blocos)
     public static final DeferredBlock<ArmadilhaBloco> ARMADILHA = BLOCOS.registerBlock("armadilha", ArmadilhaBloco::new, inquebravel());
 
+    // O pote de alquimia (2x2 blocos no meio do quadradinho do laboratório)
+    public static final DeferredBlock<PoteDeAlquimia> POTE_DE_ALQUIMIA = BLOCOS.registerBlock("pote_de_alquimia", PoteDeAlquimia::new,
+            inquebravel().sound(SoundType.DECORATED_POT).noOcclusion().isSuffocating((estado, mundo, posicao) -> false)
+                    .isViewBlocking((estado, mundo, posicao) -> false));
+
     // ---- Decoração ----
 
     public static final DeferredBlock<BlocoComFormato> LANTERNA_ESGOTO = BLOCOS.registerBlock("lanterna_esgoto",
@@ -85,6 +92,9 @@ public class ModBlocos {
 
     // Uma pra cada tipo, na ordem do TipoDePlanta. Não dá pra quebrar: só pisando nelas.
     public static final List<DeferredBlock<PlantaDoShattered>> PLANTAS = registrarPlantas();
+    // O arbusto de fruta-sem-graça (nos jardins e na despensa secreta)
+    public static final DeferredBlock<ArbustoDeFruta> ARBUSTO_DE_FRUTA = BLOCOS.registerBlock("arbusto_de_fruta", ArbustoDeFruta::new,
+            planta().strength(-1.0F, 3600000.0F));
 
     // ---- Escadas entre os andares ----
 

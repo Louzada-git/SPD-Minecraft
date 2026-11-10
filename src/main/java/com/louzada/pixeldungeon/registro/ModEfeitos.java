@@ -59,6 +59,39 @@ public class ModEfeitos {
     // Aterrorizado (pergaminho de terror): foge de quem leu e não ataca
     public static final DeferredHolder<MobEffect, EfeitoSimples> ATERRORIZADO = EFEITOS.register("aterrorizado",
             () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xFF4444));
+    // Visão mágica (poção da visão mágica): vê todo mundo até 12 quadradinhos, através das paredes
+    public static final DeferredHolder<MobEffect, EfeitoSimples> VISAO_MAGICA = EFEITOS.register("visao_magica",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x66CCFF));
+    // Vigor (poção do vigor): anda 1,5x mais rápido
+    public static final DeferredHolder<MobEffect, EfeitoSimples> VIGOR = EFEITOS.register("vigor",
+            () -> EfeitoSimples.queMudaAVelocidade(MobEffectCategory.BENEFICIAL, 0xFFDD55, "vigor", 0.5));
+    // Armadura de barro (poção da armadura de barro): de 0 até (nível + 1) de armadura; perde 1 nível a cada 50 turnos
+    public static final DeferredHolder<MobEffect, EfeitoSimples> ARMADURA_DE_BARRO = EFEITOS.register("armadura_de_barro",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x8A6A3A));
+    // Purificado (poção da limpeza): nenhum efeito ruim pega
+    public static final DeferredHolder<MobEffect, EfeitoSimples> PURIFICADO = EFEITOS.register("purificado",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xFF4CD2));
+    // Imune à magia (pergaminho antimagia): magia não machuca nem pega, e os glifos e encantamentos do herói param
+    public static final DeferredHolder<MobEffect, EfeitoSimples> ANTIMAGIA = EFEITOS.register("antimagia",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x00FF00));
+    // Vidência (pergaminho da vidência): acha sozinho os segredos até 8 quadradinhos
+    public static final DeferredHolder<MobEffect, EfeitoSimples> VIDENCIA = EFEITOS.register("videncia",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x99DDFF));
+    // Arena de desafio (pergaminho do desafio): dentro dela, o herói toma 67% do dano e não fica com fome
+    public static final DeferredHolder<MobEffect, EfeitoSimples> DESAFIO = EFEITOS.register("desafio",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xFF0000));
+    // Pavor (pergaminho do pavor): foge e, longe e fora da vista do herói, some da dungeon
+    public static final DeferredHolder<MobEffect, EfeitoSimples> PAVOR = EFEITOS.register("pavor",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xAA0000));
+    // Dominado (pergaminho do canto da sereia): aliado pra sempre (sem perder vida, diferente do corrompido)
+    public static final DeferredHolder<MobEffect, EfeitoSimples> DOMINADO = EFEITOS.register("dominado",
+            () -> new EfeitoSimples(MobEffectCategory.NEUTRAL, 0xFF66CC));
+    // Bem alimentado (torta de carne): sem fome, e cura 1 de vida a cada 18 turnos
+    public static final DeferredHolder<MobEffect, EfeitoSimples> BEM_ALIMENTADO = EFEITOS.register("bem_alimentado",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xC89650));
+    // Alvo (pedra da agressão): todos os inimigos que virem preferem atacar quem tem isso
+    public static final DeferredHolder<MobEffect, EfeitoSimples> AGRESSAO = EFEITOS.register("agressao",
+            () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xFF8822));
     // Furioso (pergaminho de fúria): ataca quem estiver mais perto, até os outros inimigos
     public static final DeferredHolder<MobEffect, EfeitoSimples> FURIOSO = EFEITOS.register("furioso",
             () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xFF6600));

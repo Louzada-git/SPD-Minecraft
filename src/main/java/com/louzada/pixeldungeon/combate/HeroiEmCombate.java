@@ -16,6 +16,7 @@ import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.Talento;
 import com.louzada.pixeldungeon.heroi.Talentos;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
+import com.louzada.pixeldungeon.item.Alteracao;
 import com.louzada.pixeldungeon.item.Arma;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
@@ -96,6 +97,8 @@ public class HeroiEmCombate implements Combatente {
         float esquiva = RegrasDoHeroi.esquiva(dados.nivel()) * (float) Math.pow(1.125, dados.bonusDoAnel(TipoDeAnel.EVASAO));
         if (armadura().getItem() instanceof ArmaduraDoShattered armadura) {
             esquiva *= armadura.fatorDeEsquiva(armadura(), dados.forca());
+            // Alteração da armadura (pedra de alteração): esquiva a mais ou a menos, igual ao Shattered
+            esquiva = Math.max(0, esquiva + Alteracao.esquiva(armadura()));
         }
         // Postura defensiva (bastão da Duelista): 3x
         if (jogador.hasEffect(ModEfeitos.POSTURA_DEFENSIVA)) {
@@ -202,8 +205,11 @@ public class HeroiEmCombate implements Combatente {
         }
         if (NivelDoItem.podeIdentificar(golpe.arma())) {
             dano = Maldicao.aoGolpearCom(jogador, alvo, golpe.arma(), dano);
-            // O corte rúnico (lâmina rúnica da Duelista) deixa o encantamento mais forte
-            dano = Encantamento.aoGolpearCom(jogador, alvo, golpe.arma(), dano, GlifosDoHeroi.poder(jogador) + HabilidadesDaDuelista.poderExtraDoGolpe());
+            // O corte rúnico (lâmina rúnica da Duelista) deixa o encantamento mais forte.
+            // Imune à magia (pergaminho antimagia), o encantamento da arma não funciona.
+            if (!jogador.hasEffect(ModEfeitos.ANTIMAGIA)) {
+                dano = Encantamento.aoGolpearCom(jogador, alvo, golpe.arma(), dano, GlifosDoHeroi.poder(jogador) + HabilidadesDaDuelista.poderExtraDoGolpe());
+            }
             NivelDoItem.aoUsar(jogador, golpe.arma());
         }
         // A Duelista conta os golpes pra combinação das luvas, e a besta carregada arremessa

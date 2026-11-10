@@ -154,19 +154,31 @@ public abstract class ArtefatoAchado extends Item {
 
     // ---- Os ganchos chamados pelo herói (pros artefatos equipados) ----
 
+    // Imune à magia (pergaminho antimagia), os artefatos não funcionam nem recarregam
     public static void turnoDoHeroi(ServerPlayer jogador) {
+        boolean semMagia = EfeitosDePergaminhoExotico.semMagia(jogador);
         for (ItemStack pilha : equipados(jogador)) {
-            ((ArtefatoAchado) pilha.getItem()).aoTurno(jogador, pilha);
+            if (semMagia) {
+                ((ArtefatoAchado) pilha.getItem()).aoTurnoSemMagia(jogador, pilha);
+            } else {
+                ((ArtefatoAchado) pilha.getItem()).aoTurno(jogador, pilha);
+            }
         }
     }
 
     public static void xpDoHeroi(ServerPlayer jogador, float porcao) {
+        if (EfeitosDePergaminhoExotico.semMagia(jogador)) {
+            return;
+        }
         for (ItemStack pilha : equipados(jogador)) {
             ((ArtefatoAchado) pilha.getItem()).aoGanharXp(jogador, pilha, porcao);
         }
     }
 
     public static void recargaDeFora(ServerPlayer jogador, float quanto) {
+        if (EfeitosDePergaminhoExotico.semMagia(jogador)) {
+            return;
+        }
         for (ItemStack pilha : equipados(jogador)) {
             ((ArtefatoAchado) pilha.getItem()).recarregarDeFora(jogador, pilha, quanto);
         }
@@ -176,6 +188,10 @@ public abstract class ArtefatoAchado extends Item {
 
     // Uma vez por turno, equipado (recarregar com o tempo, efeitos que ficam ligados)
     public void aoTurno(ServerPlayer jogador, ItemStack pilha) {
+    }
+
+    // Uma vez por turno, equipado, mas com o herói imune à magia (o artefato fica parado)
+    public void aoTurnoSemMagia(ServerPlayer jogador, ItemStack pilha) {
     }
 
     // O herói ganhou XP (porcao = que parte de um nível)
@@ -208,6 +224,9 @@ public abstract class ArtefatoAchado extends Item {
         }
         if (!GerenciadorDoHeroi.emJogo(heroi)) {
             return InteractionResultHolder.pass(pilha);
+        }
+        if (EfeitosDePergaminhoExotico.bloqueado(heroi, "item")) {
+            return InteractionResultHolder.fail(pilha);
         }
         boolean usou = heroi.isShiftKeyDown() ? usarAgachado(heroi, pilha) : usar(heroi, pilha);
         return usou ? InteractionResultHolder.success(pilha) : InteractionResultHolder.fail(pilha);

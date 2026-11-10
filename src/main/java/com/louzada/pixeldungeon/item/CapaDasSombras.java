@@ -70,6 +70,9 @@ public class CapaDasSombras extends Item {
             desativar(heroi, true);
             return InteractionResultHolder.success(pilha);
         }
+        if (EfeitosDePergaminhoExotico.bloqueado(heroi, "item")) {
+            return InteractionResultHolder.fail(pilha);
+        }
         long agora = mundo.getGameTime();
         Cargas.recarregar(pilha, agora, Artefato.cargasMaximas(pilha), Artefato::ticksParaCarregar);
         if (Cargas.cargas(pilha, Artefato.cargasMaximas(pilha)) <= 0) {

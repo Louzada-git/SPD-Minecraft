@@ -297,7 +297,7 @@ public class EfeitosDePergaminho {
         return lista;
     }
 
-    private static List<MobDoShattered> inimigosDoAndar(ServerPlayer jogador) {
+    public static List<MobDoShattered> inimigosDoAndar(ServerPlayer jogador) {
         DadosDaRun run = DadosDaRun.pegar(jogador.serverLevel().getServer());
         Integer andar = PopulacaoDoAndar.andarEm(run, jogador.getX(), jogador.getY(), jogador.getZ());
         AABB caixa = andar == null ? jogador.getBoundingBox().inflate(64)

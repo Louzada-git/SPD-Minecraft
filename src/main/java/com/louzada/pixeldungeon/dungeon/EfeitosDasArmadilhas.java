@@ -468,7 +468,7 @@ public class EfeitosDasArmadilhas {
                 criatura -> criatura.isAlive() && !criatura.isSpectator() && !criativo(criatura) && pertoDoQuadradinho(criatura, controle, raio));
     }
 
-    private static List<ItemEntity> itensEmVolta(ServerLevel mundo, BlockPos controle, int raio) {
+    public static List<ItemEntity> itensEmVolta(ServerLevel mundo, BlockPos controle, int raio) {
         AABB caixa = new AABB(controle.getX() - raio * T, controle.getY() + 0.5, controle.getZ() - raio * T, controle.getX() + (raio + 1) * T,
                 controle.getY() + 3.5, controle.getZ() + (raio + 1) * T);
         return mundo.getEntitiesOfClass(ItemEntity.class, caixa, item -> item.isAlive() && pertoDoQuadradinho(item, controle, raio));
@@ -491,7 +491,7 @@ public class EfeitosDasArmadilhas {
     }
 
     // Dá pra ficar em pé no meio do quadradinho? (chão firme embaixo, espaço livre pro corpo)
-    private static boolean quadradinhoLivre(ServerLevel mundo, BlockPos controle) {
+    public static boolean quadradinhoLivre(ServerLevel mundo, BlockPos controle) {
         BlockPos pe = BlockPos.containing(Armadilhas.centro(controle));
         return !mundo.getBlockState(pe.below()).getCollisionShape(mundo, pe.below()).isEmpty()
                 && mundo.getBlockState(pe).getCollisionShape(mundo, pe).isEmpty()
@@ -500,7 +500,7 @@ public class EfeitosDasArmadilhas {
 
     // Os quadradinhos livres até "distancia" passos (andando também na diagonal), sem atravessar paredes
     // (o "buildDistanceMap" do Shattered). O da armadilha vem primeiro.
-    private static List<BlockPos> quadradinhosAte(ServerLevel mundo, BlockPos controle, int distancia) {
+    public static List<BlockPos> quadradinhosAte(ServerLevel mundo, BlockPos controle, int distancia) {
         List<BlockPos> achados = new ArrayList<>();
         Map<BlockPos, Integer> passos = new HashMap<>();
         Deque<BlockPos> fila = new ArrayDeque<>();
@@ -527,7 +527,7 @@ public class EfeitosDasArmadilhas {
     }
 
     // A armadura sorteada de quem leva o golpe (igual a um golpe comum)
-    private static int armadura(LivingEntity alvo) {
+    public static int armadura(LivingEntity alvo) {
         Combatente combatente = Combatente.de(alvo);
         return combatente.sortearArmadura(Golpe.de(combatente, combatente));
     }

@@ -7,6 +7,8 @@ import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
+import com.louzada.pixeldungeon.item.EfeitosDePergaminhoExotico;
+import com.louzada.pixeldungeon.item.EfeitosDePocaoExotica;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.core.BlockPos;
@@ -140,7 +142,27 @@ public class EfeitosNoTick {
     public static void aoAcabarEfeito(MobEffectEvent.Expired evento) {
         MobEffectInstance efeito = evento.getEffectInstance();
         LivingEntity criatura = evento.getEntity();
-        if (efeito == null || criatura.level().isClientSide() || !efeito.is(ModEfeitos.SONOLENTO)) {
+        if (efeito == null || criatura.level().isClientSide()) {
+            return;
+        }
+        // A armadura de barro perde 1 nível a cada 50 turnos
+        if (efeito.is(ModEfeitos.ARMADURA_DE_BARRO)) {
+            if (efeito.getAmplifier() > 0) {
+                criatura.addEffect(new MobEffectInstance(ModEfeitos.ARMADURA_DE_BARRO, EfeitosDePocaoExotica.TURNOS_DA_ARMADURA_DE_BARRO * Turno.TICKS,
+                        efeito.getAmplifier() - 1));
+            }
+            return;
+        }
+        // Acabou a agressão: quem estava caçando esse alvo por causa dela desiste
+        if (efeito.is(ModEfeitos.AGRESSAO)) {
+            for (MobDoShattered inimigo : criatura.level().getEntitiesOfClass(MobDoShattered.class, criatura.getBoundingBox().inflate(32))) {
+                if (inimigo != criatura && inimigo.getTarget() == criatura && !inimigo.aliado() && !(criatura instanceof Player)) {
+                    inimigo.setTarget(null);
+                }
+            }
+            return;
+        }
+        if (!efeito.is(ModEfeitos.SONOLENTO)) {
             return;
         }
         if (criatura instanceof MobDoShattered inimigo) {
@@ -152,8 +174,11 @@ public class EfeitosNoTick {
         }
     }
 
-    // Apanhar acorda do sono mágico
+    // Apanhar acorda do sono mágico (o inimigo da pedra do sono profundo acorda de vez)
     public static void aoApanhar(LivingEntity alvo) {
+        if (alvo instanceof MobDoShattered inimigo && inimigo.hasEffect(ModEfeitos.SONO_MAGICO)) {
+            inimigo.acordar();
+        }
         alvo.removeEffect(ModEfeitos.SONO_MAGICO);
     }
 
@@ -220,8 +245,25 @@ public class EfeitosNoTick {
             criatura.removeEffect(ModEfeitos.RAIZ_DA_TERRA);
         }
 
+        // Visão mágica: todo mundo em volta brilha (dá pra ver através das paredes)
+        if (criatura instanceof ServerPlayer comVisao && criatura.hasEffect(ModEfeitos.VISAO_MAGICA)) {
+            EfeitosDePocaoExotica.verAtravesDasParedes(comVisao);
+        }
+        // Bem alimentado (torta de carne): sem fome, e cura 1 de vida a cada 18 turnos
+        MobEffectInstance bemAlimentado = criatura.getEffect(ModEfeitos.BEM_ALIMENTADO);
+        if (bemAlimentado != null && criatura instanceof ServerPlayer alimentado) {
+            alimentado.getFoodData().setExhaustion(0);
+            if ((bemAlimentado.getDuration() / Turno.TICKS) % 18 == 0 && alimentado.getHealth() < alimentado.getMaxHealth()) {
+                alimentado.heal(1.0F);
+            }
+        }
+        // Vidência e arena do desafio (pergaminhos exóticos)
+        if (criatura instanceof ServerPlayer leitor) {
+            EfeitosDePergaminhoExotico.aoTurno(leitor);
+        }
+
         // Sono mágico do herói: cura 1 por turno até encher
-        if (criatura.hasEffect(ModEfeitos.SONO_MAGICO)) {
+        if (criatura instanceof Player && criatura.hasEffect(ModEfeitos.SONO_MAGICO)) {
             if (criatura.getHealth() >= criatura.getMaxHealth()) {
                 criatura.removeEffect(ModEfeitos.SONO_MAGICO);
             } else {
@@ -248,21 +290,29 @@ public class EfeitosNoTick {
         }
     }
 
-    // Inimigos cegos, tontos, aterrorizados ou furiosos
+    // Inimigos cegos, tontos, aterrorizados, furiosos, ou vendo alguém marcado pela pedra da agressão
     private static void comportamento(MobDoShattered inimigo) {
+        LivingEntity marcado = alvoDaAgressao(inimigo);
+        if (marcado != null) {
+            inimigo.setTarget(marcado);
+        }
         if (inimigo.hasEffect(ModEfeitos.CEGO)) {
             inimigo.setTarget(null);
             andarAToa(inimigo);
         } else if (inimigo.hasEffect(ModEfeitos.VERTIGEM)) {
             andarAToa(inimigo);
         }
-        if (inimigo.hasEffect(ModEfeitos.ATERRORIZADO)) {
+        if (inimigo.hasEffect(ModEfeitos.ATERRORIZADO) || inimigo.hasEffect(ModEfeitos.PAVOR)) {
             // Foge do herói mais perto
             Player heroi = inimigo.level().getNearestPlayer(inimigo, 32);
             inimigo.setTarget(null);
             if (heroi != null) {
                 Vec3 longe = inimigo.position().add(inimigo.position().subtract(heroi.position()).normalize().scale(8));
                 inimigo.getNavigation().moveTo(longe.x, longe.y, longe.z, 1.2);
+            }
+            // Pavor: longe (6 quadradinhos) e fora da vista do herói, some da dungeon
+            if (inimigo.hasEffect(ModEfeitos.PAVOR) && EfeitosDePergaminhoExotico.sumiuDePavor(inimigo)) {
+                return;
             }
         } else if (inimigo.hasEffect(ModEfeitos.FURIOSO)) {
             // Ataca o que estiver mais perto, até outro inimigo
@@ -283,6 +333,24 @@ public class EfeitosNoTick {
                 inimigo.setTarget(maisPerto);
             }
         }
+    }
+
+    // Pedra da agressão: o inimigo acordado (que não é aliado nem está com medo) vai atrás de quem ele vê marcado,
+    // até de outro inimigo (o "chooseEnemy" do Shattered)
+    @Nullable
+    public static LivingEntity alvoDaAgressao(MobDoShattered inimigo) {
+        if (inimigo.aliado() || inimigo.dormindo() || inimigo.hasEffect(ModEfeitos.ATERRORIZADO) || inimigo.hasEffect(ModEfeitos.PAVOR)
+                || inimigo.hasEffect(ModEfeitos.CEGO)) {
+            return null;
+        }
+        LivingEntity maisPerto = null;
+        for (LivingEntity outro : inimigo.level().getEntitiesOfClass(LivingEntity.class, inimigo.getBoundingBox().inflate(24),
+                criatura -> criatura.hasEffect(ModEfeitos.AGRESSAO) && criatura.isAlive())) {
+            if (outro != inimigo && inimigo.hasLineOfSight(outro) && (maisPerto == null || outro.distanceToSqr(inimigo) < maisPerto.distanceToSqr(inimigo))) {
+                maisPerto = outro;
+            }
+        }
+        return maisPerto;
     }
 
     private static void andarAToa(MobDoShattered inimigo) {
@@ -314,9 +382,13 @@ public class EfeitosNoTick {
     }
 
     // Em estase (ampulheta do tempo), nenhum efeito ruim pega, igual ao Shattered
+    // Em estase (ampulheta) ou purificado (poção da limpeza), nenhum efeito ruim pega
     public static void aoReceberEfeito(MobEffectEvent.Applicable evento) {
-        if (evento.getEntity().hasEffect(ModEfeitos.ESTASE) && evento.getEffectInstance() != null
-                && evento.getEffectInstance().getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
+        LivingEntity criatura = evento.getEntity();
+        if (((criatura.hasEffect(ModEfeitos.ESTASE) || criatura.hasEffect(ModEfeitos.PURIFICADO)) && evento.getEffectInstance() != null
+                && evento.getEffectInstance().getEffect().value().getCategory() == MobEffectCategory.HARMFUL)
+                || (criatura.hasEffect(ModEfeitos.ANTIMAGIA) && evento.getEffectInstance() != null
+                        && EfeitosDePergaminhoExotico.efeitoMagico(evento.getEffectInstance()))) {
             evento.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         }
     }

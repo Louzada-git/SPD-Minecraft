@@ -12,13 +12,13 @@ import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 // procurando (ou com o pergaminho de mapeamento mágico). Igual ao Shattered:
 //   - cada região tem 2 salas secretas (mais 0 a 1 nas regiões seguintes), espalhadas pelos andares; o andar 1 não tem
 //   - a ordem dos tipos é embaralhada por run, e cada sala costuma ser a primeira da fila (60% / 30% / 10%)
-// O mod tem 7 das 12 do Shattered: as que precisam de coisas que o mod ainda não tem (alquimia, pedras rúnicas,
+// O mod tem 8 das 12 do Shattered: as que precisam de coisas que o mod ainda não tem (estantes que pegam fogo,
 // poço mágico, bombas de mel e abismo com chaves douradas) ficam pra depois.
 public abstract class ComodoSecreto extends ComodoEspecial {
 
     public enum Tipo {
         JARDIM(JardimSecreto::new), BIBLIOTECA(BibliotecaSecreta::new), DESPENSA(DespensaSecreta::new), TESOURO(TesouroSecreto::new),
-        LABIRINTO(LabirintoSecreto::new), ARSENAL(ArsenalSecreto::new), INVOCACAO(InvocacaoSecreta::new);
+        LABIRINTO(LabirintoSecreto::new), ARSENAL(ArsenalSecreto::new), INVOCACAO(InvocacaoSecreta::new), LABORATORIO(LaboratorioSecreto::new);
 
         private final Supplier<ComodoSecreto> criador;
 

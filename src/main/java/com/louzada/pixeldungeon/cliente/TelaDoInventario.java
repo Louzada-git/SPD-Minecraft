@@ -254,6 +254,13 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
         int y = yDaCelula(0) + 8;
         desenho.drawString(font, ouro, x, y, DesenhoDoShattered.AMARELO, false);
         DesenhoDoShattered.MOEDA.desenhar(desenho, x + font.width(ouro) + 2, y);
+        // A energia alquímica embaixo do ouro (em azul), quando tiver
+        int energia = EstadoNoCliente.energia();
+        if (energia > 0) {
+            String texto = String.valueOf(energia);
+            desenho.drawString(font, texto, x, y + 10, 0xFF44CCFF, false);
+            DesenhoDoShattered.ENERGIA.desenhar(desenho, x + font.width(texto) + 2, y + 10);
+        }
     }
 
     private void desenharCelula(GuiGraphics desenho, int x, int y, ItemStack pilha, boolean equipado, int mouseX, int mouseY) {

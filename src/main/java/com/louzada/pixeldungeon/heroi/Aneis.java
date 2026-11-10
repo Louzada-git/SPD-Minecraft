@@ -12,6 +12,7 @@ import com.louzada.pixeldungeon.item.Artefato;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.Cargas;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
+import com.louzada.pixeldungeon.item.EfeitosDePergaminhoExotico;
 import com.louzada.pixeldungeon.item.Identificacao;
 import com.louzada.pixeldungeon.item.ItemAnel;
 import com.louzada.pixeldungeon.item.ItemVarinha;
@@ -69,11 +70,13 @@ public class Aneis {
     public static void atualizar(ServerPlayer jogador, DadosDoHeroi dados) {
         int[] bonus = new int[TipoDeAnel.values().length];
         boolean[] usando = new boolean[TipoDeAnel.values().length];
+        // Imune à magia, os anéis não fazem nada (nem os amaldiçoados)
+        boolean semMagia = EfeitosDePergaminhoExotico.semMagia(jogador);
         for (EquipmentSlot lugar : CASINHAS) {
             ItemStack anel = jogador.getItemBySlot(lugar);
             if (anel.getItem() instanceof ItemAnel item) {
                 TipoDeAnel tipo = Identificacao.tipoDa(jogador, item.gema());
-                bonus[tipo.ordinal()] += bonus(anel);
+                bonus[tipo.ordinal()] += semMagia ? 0 : bonus(anel);
                 usando[tipo.ordinal()] = true;
             }
         }

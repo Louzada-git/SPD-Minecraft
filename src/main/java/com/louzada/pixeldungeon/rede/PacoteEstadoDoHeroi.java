@@ -12,7 +12,8 @@ import net.minecraft.resources.ResourceLocation;
 
 // Servidor -> jogador: o que a tela de talentos, o inventário e a barra da Duelista precisam saber.
 //   talentos: "id=pontos;id=pontos;..."
-//   numeros: nível, pontos de talento livres, cargas da habilidade, cargas máximas, golpes seguidos (luvas), ouro, força
+//   numeros: nível, pontos de talento livres, cargas da habilidade, cargas máximas, golpes seguidos (luvas), ouro, força,
+//            energia alquímica, tiers com os pontos da inspiração divina (um bit por tier), páginas do guia de alquimia (um bit por página)
 public record PacoteEstadoDoHeroi(String classe, String talentos, List<Integer> numeros) implements CustomPacketPayload {
     public static final Type<PacoteEstadoDoHeroi> TIPO = new Type<>(ResourceLocation.fromNamespaceAndPath(PixelDungeon.MODID, "estado_do_heroi"));
 

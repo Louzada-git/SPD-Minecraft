@@ -22,6 +22,7 @@ import com.louzada.pixeldungeon.entidade.MisselMagico;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.entidade.NuvemDeGas;
 import com.louzada.pixeldungeon.entidade.OvelhaMagica;
+import com.louzada.pixeldungeon.entidade.PedraArremessada;
 import com.louzada.pixeldungeon.entidade.PocaoArremessada;
 import com.louzada.pixeldungeon.entidade.RaioSolar;
 import com.louzada.pixeldungeon.entidade.RatoAlbino;
@@ -140,6 +141,10 @@ public class ModEntidades {
     public static final DeferredHolder<EntityType<?>, EntityType<SementeArremessada>> SEMENTE_ARREMESSADA = ENTIDADES.register("semente_arremessada",
             () -> EntityType.Builder.<SementeArremessada>of(SementeArremessada::new, MobCategory.MISC).sized(0.25F, 0.25F)
                     .clientTrackingRange(4).updateInterval(10).build("semente_arremessada"));
+    // Pedra rúnica arremessada (o efeito acontece onde ela cair)
+    public static final DeferredHolder<EntityType<?>, EntityType<PedraArremessada>> PEDRA_ARREMESSADA = ENTIDADES.register("pedra_arremessada",
+            () -> EntityType.Builder.<PedraArremessada>of(PedraArremessada::new, MobCategory.MISC).sized(0.25F, 0.25F)
+                    .clientTrackingRange(4).updateInterval(10).build("pedra_arremessada"));
     // Nuvem de gás (tóxico, paralisante, confusão)
     public static final DeferredHolder<EntityType<?>, EntityType<NuvemDeGas>> NUVEM_DE_GAS = ENTIDADES.register("nuvem_de_gas",
             () -> EntityType.Builder.<NuvemDeGas>of(NuvemDeGas::new, MobCategory.MISC).sized(0.5F, 0.5F)

@@ -58,7 +58,11 @@ public class GlifosDoHeroi {
     }
 
     // O nível do glifo na armadura do herói (-1 se ele não está vestindo esse glifo), igual ao "glyphLevel" do Shattered
+    // Imune à magia (pergaminho antimagia): nenhum glifo funciona
     public static int nivel(Player jogador, Glifo glifo) {
+        if (jogador.hasEffect(ModEfeitos.ANTIMAGIA)) {
+            return -1;
+        }
         ItemStack peito = armadura(jogador);
         return !peito.isEmpty() && NivelDoItem.glifo(peito) == glifo ? NivelDoItem.nivel(peito) : -1;
     }

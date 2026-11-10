@@ -1,5 +1,7 @@
 package com.louzada.pixeldungeon.item;
 
+import com.louzada.pixeldungeon.registro.ModComponentes;
+
 import net.minecraft.world.item.ItemStack;
 
 // O que as armas e as armaduras do Shattered têm em comum:
@@ -17,8 +19,14 @@ public interface Equipamento {
         return NivelDoItem.forcaNecessaria(tier(), nivel);
     }
 
+    // Com a poção da maestria, o item pede 2 de força a menos
     default int forcaNecessaria(ItemStack pilha) {
-        return forcaNecessaria(NivelDoItem.nivel(pilha));
+        return forcaNecessaria(NivelDoItem.nivel(pilha)) - maestria(pilha);
+    }
+
+    // Quanto a poção da maestria tira da força necessária (0 ou 2)
+    default int maestria(ItemStack pilha) {
+        return pilha.getOrDefault(ModComponentes.MAESTRIA.get(), false) ? 2 : 0;
     }
 
     // Quanto de força falta pro herói usar direito (0 = tem força suficiente)

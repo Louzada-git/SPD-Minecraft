@@ -17,6 +17,7 @@ import com.louzada.pixeldungeon.heroi.Talento;
 import com.louzada.pixeldungeon.heroi.Talentos;
 import com.louzada.pixeldungeon.item.ConhecimentoDoCliente;
 import com.louzada.pixeldungeon.item.EscolhaDeItem;
+import com.louzada.pixeldungeon.item.EscolhaDeOpcao;
 import com.louzada.pixeldungeon.run.GerenciadorDaRun;
 
 import net.minecraft.network.chat.Component;
@@ -47,9 +48,14 @@ public class ModRede {
         registrador.playToServer(PacotePedirCompartilhar.TIPO, PacotePedirCompartilhar.CODEC, ModRede::aoReceberPedirCompartilhar);
         registrador.playToClient(PacoteTelaCompartilhar.TIPO, PacoteTelaCompartilhar.CODEC, ModRede::aoReceberTelaCompartilhar);
         registrador.playToServer(PacoteDefinirCompartilhar.TIPO, PacoteDefinirCompartilhar.CODEC, ModRede::aoReceberDefinirCompartilhar);
+        // A janelinha de opções (a pedra de alteração, o palpite da pedra de intuição)
+        registrador.playToClient(PacoteOpcoes.TIPO, PacoteOpcoes.CODEC, ModRede::aoReceberOpcoes);
+        registrador.playToServer(PacoteOpcaoEscolhida.TIPO, PacoteOpcaoEscolhida.CODEC, ModRede::aoReceberOpcaoEscolhida);
         // A conversa com o fantasma triste e a recompensa dele
         registrador.playToClient(PacoteDoFantasma.TIPO, PacoteDoFantasma.CODEC, ModRede::aoReceberFantasma);
         registrador.playToServer(PacoteRecompensaDoFantasma.TIPO, PacoteRecompensaDoFantasma.CODEC, ModRede::aoReceberRecompensaDoFantasma);
+        // O guia de alquimia (quando o herói lê uma página)
+        registrador.playToClient(PacoteGuiaDeAlquimia.TIPO, PacoteGuiaDeAlquimia.CODEC, ModRede::aoReceberGuiaDeAlquimia);
     }
 
     // ---- No jogo do jogador (a classe ClienteDoMod só existe lá, nunca no servidor) ----
@@ -74,8 +80,16 @@ public class ModRede {
         ClienteDoMod.abrirEscolhaDeItem(pacote.pergaminho(), pacote.espacos());
     }
 
+    private static void aoReceberOpcoes(PacoteOpcoes pacote, IPayloadContext contexto) {
+        ClienteDoMod.abrirOpcoes(pacote.titulo(), pacote.texto(), pacote.icone(), pacote.opcoes());
+    }
+
     private static void aoReceberFantasma(PacoteDoFantasma pacote, IPayloadContext contexto) {
         ClienteDoMod.abrirFantasma(pacote.texto(), pacote.arma(), pacote.armadura());
+    }
+
+    private static void aoReceberGuiaDeAlquimia(PacoteGuiaDeAlquimia pacote, IPayloadContext contexto) {
+        ClienteDoMod.abrirGuiaDeAlquimia(pacote.pagina());
     }
 
     private static void aoReceberTelaCompartilhar(PacoteTelaCompartilhar pacote, IPayloadContext contexto) {
@@ -115,6 +129,12 @@ public class ModRede {
     private static void aoReceberRecompensaDoFantasma(PacoteRecompensaDoFantasma pacote, IPayloadContext contexto) {
         if (contexto.player() instanceof ServerPlayer jogador && GerenciadorDoHeroi.emJogo(jogador)) {
             MissaoDoFantasma.escolherRecompensa(jogador, pacote.qual());
+        }
+    }
+
+    private static void aoReceberOpcaoEscolhida(PacoteOpcaoEscolhida pacote, IPayloadContext contexto) {
+        if (contexto.player() instanceof ServerPlayer jogador) {
+            EscolhaDeOpcao.escolheu(jogador, pacote.indice());
         }
     }
 

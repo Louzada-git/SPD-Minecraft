@@ -9,6 +9,8 @@ import javax.annotation.Nullable;
 import com.louzada.pixeldungeon.combate.Combatente;
 import com.louzada.pixeldungeon.combate.Golpe;
 import com.louzada.pixeldungeon.combate.Particulas;
+import com.louzada.pixeldungeon.combate.Sorteio;
+import com.louzada.pixeldungeon.dungeon.EfeitosDasArmadilhas;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.item.Arma;
@@ -44,6 +46,9 @@ import net.minecraft.world.level.Level;
 public class ImagemEspelhada extends PathfinderMob implements Combatente {
     private static final EntityDataAccessor<Optional<UUID>> DONO = SynchedEntityData.defineId(ImagemEspelhada.class,
             EntityDataSerializers.OPTIONAL_UUID);
+    // Prismática (pergaminho da imagem prismática): uma imagem mais forte, que dura até morrer
+    private static final EntityDataAccessor<Boolean> PRISMATICA = SynchedEntityData.defineId(ImagemEspelhada.class,
+            EntityDataSerializers.BOOLEAN);
     private static final double DISTANCIA_MAXIMA = 48;
 
     public ImagemEspelhada(EntityType<? extends ImagemEspelhada> tipo, Level mundo) {
@@ -79,6 +84,32 @@ public class ImagemEspelhada extends PathfinderMob implements Combatente {
         return imagem;
     }
 
+    // A imagem prismática do Shattered: vida 10 + 2,5 por nível do herói, dano de (2 + nível/4) a (4 + nível/2),
+    // a precisão e a esquiva do herói e a armadura dele somada. Se o herói já tem uma, ela só se cura toda.
+    @Nullable
+    public static ImagemEspelhada criarPrismatica(ServerLevel mundo, ServerPlayer dono) {
+        for (ImagemEspelhada outra : mundo.getEntitiesOfClass(ImagemEspelhada.class, dono.getBoundingBox().inflate(DISTANCIA_MAXIMA),
+                imagem -> imagem.prismatica() && dono.getUUID().equals(imagem.dono()))) {
+            outra.setHealth(outra.getMaxHealth());
+            Particulas.subindoEmVolta(outra, ParticleTypes.HAPPY_VILLAGER, 8, 0.0);
+            return outra;
+        }
+        ImagemEspelhada imagem = criar(mundo, dono);
+        if (imagem != null) {
+            imagem.entityData.set(PRISMATICA, true);
+            int vida = 10 + (int) Math.floor(RegrasDoHeroi.dados(dono).nivel() * 2.5F);
+            imagem.getAttribute(Attributes.MAX_HEALTH).setBaseValue(vida);
+            imagem.setHealth(vida);
+            imagem.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+            Particulas.explosao(mundo, ParticleTypes.END_ROD, imagem.getX(), imagem.getY(0.5), imagem.getZ(), 20, 0.4, 0.08);
+        }
+        return imagem;
+    }
+
+    public boolean prismatica() {
+        return entityData.get(PRISMATICA);
+    }
+
     @Nullable
     public UUID dono() {
         return entityData.get(DONO).orElse(null);
@@ -94,6 +125,7 @@ public class ImagemEspelhada extends PathfinderMob implements Combatente {
     protected void defineSynchedData(SynchedEntityData.Builder construtor) {
         super.defineSynchedData(construtor);
         construtor.define(DONO, Optional.empty());
+        construtor.define(PRISMATICA, false);
     }
 
     @Override
@@ -127,16 +159,22 @@ public class ImagemEspelhada extends PathfinderMob implements Combatente {
         return sortearDano();
     }
 
+    // A prismática usa a armadura do herói
     @Override
     public int sortearArmadura(Golpe golpe) {
-        return 0;
+        ServerPlayer dono = jogadorDono();
+        return prismatica() && dono != null ? EfeitosDasArmadilhas.armadura(dono) : 0;
     }
 
-    // Metade do dano da arma do herói, arredondado pra cima
+    // Metade do dano da arma do herói, arredondado pra cima (a prismática tem o dano dela)
     public int sortearDano() {
         ServerPlayer dono = jogadorDono();
         if (dono == null) {
             return 1;
+        }
+        if (prismatica()) {
+            int nivel = RegrasDoHeroi.dados(dono).nivel();
+            return Sorteio.normal(getRandom(), 2 + nivel / 4, 4 + nivel / 2);
         }
         ItemStack arma = dono.getMainHandItem();
         int dano = arma.getItem() instanceof Arma comDano ? comDano.sortearDano(arma, getRandom(), RegrasDoHeroi.dados(dono), false) : 1;
@@ -148,11 +186,14 @@ public class ImagemEspelhada extends PathfinderMob implements Combatente {
         return dono == null ? 10 : RegrasDoHeroi.precisao(RegrasDoHeroi.dados(dono).nivel());
     }
 
-    // Metade da esquiva do herói (mais 1)
+    // Metade da esquiva do herói (mais 1); a prismática, a esquiva toda
     public float esquiva() {
         ServerPlayer dono = jogadorDono();
         DadosDoHeroi dados = dono == null ? null : RegrasDoHeroi.dados(dono);
-        return dados == null ? 1 : (1 + RegrasDoHeroi.esquiva(dados.nivel())) / 2F;
+        if (dados == null) {
+            return 1;
+        }
+        return prismatica() ? RegrasDoHeroi.esquiva(dados.nivel()) : (1 + RegrasDoHeroi.esquiva(dados.nivel())) / 2F;
     }
 
     @Override
@@ -192,6 +233,7 @@ public class ImagemEspelhada extends PathfinderMob implements Combatente {
         if (dono != null) {
             tag.putUUID("dono", dono);
         }
+        tag.putBoolean("prismatica", prismatica());
     }
 
     @Override
@@ -200,6 +242,7 @@ public class ImagemEspelhada extends PathfinderMob implements Combatente {
         if (tag.hasUUID("dono")) {
             entityData.set(DONO, Optional.of(tag.getUUID("dono")));
         }
+        entityData.set(PRISMATICA, tag.getBoolean("prismatica"));
     }
 
     // Vai atrás do herói quando ele fica longe e não tem ninguém pra atacar

@@ -10,14 +10,16 @@ import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 
 // As salas especiais (o "SpecialRoom" do Shattered): têm uma porta só, e as do mod ficam trancadas
 // (a chave de ferro do andar aparece numa sala comum).
-// O mod tem o arsenal, a cripta (de equipamento), o jardim, a biblioteca, a tesouraria e a sala das armadilhas (de consumíveis).
-// A sala das armadilhas é a única com porta comum.
+// O mod tem o arsenal, a cripta (de equipamento), o jardim, a biblioteca, a tesouraria e a sala das armadilhas (de consumíveis),
+// e o laboratório (um por região, no andar 3 ou 4). A sala das armadilhas é a única com porta comum.
 public abstract class ComodoEspecial extends Comodo {
 
     // Os tipos de sala especial, separados igual ao Shattered
     public enum Tipo {
         ARSENAL(true, Arsenal::new), CRIPTA(true, Cripta::new), JARDIM(false, Jardim::new), BIBLIOTECA(false, Biblioteca::new),
-        TESOURARIA(false, Tesouraria::new), ARMADILHAS(false, SalaDasArmadilhas::new);
+        TESOURARIA(false, Tesouraria::new), ARMADILHAS(false, SalaDasArmadilhas::new),
+        // O laboratório não entra na fila: aparece uma vez por região, sempre como a primeira sala especial do andar
+        LABORATORIO(false, Laboratorio::new);
 
         // De equipamento (senão, de consumíveis)
         public final boolean deEquipamento;
@@ -96,12 +98,15 @@ public abstract class ComodoEspecial extends Comodo {
     // (uma de consumíveis, uma de equipamento...). Cada andar tem 1 ou 2 (quase sempre 2) e escolhe
     // geralmente a primeira da fila; a usada vai pro fim da fila. Aqui a run é "simulada" do andar 1 até o pedido,
     // pra cada andar sair sempre igual sem precisar guardar nada.
+    // O laboratório (o "labRoomNeeded" do Shattered): um por região, no andar 3 (metade das vezes) ou no 4.
     public static List<Tipo> doAndar(long semente, int andar) {
         Random sorteio = new Random(semente * 15485863L + 7);
         List<Tipo> deEquipamento = new ArrayList<>();
         List<Tipo> deConsumiveis = new ArrayList<>();
         for (Tipo tipo : Tipo.values()) {
-            (tipo.deEquipamento ? deEquipamento : deConsumiveis).add(tipo);
+            if (tipo != Tipo.LABORATORIO) {
+                (tipo.deEquipamento ? deEquipamento : deConsumiveis).add(tipo);
+            }
         }
         Collections.shuffle(deEquipamento, sorteio);
         Collections.shuffle(deConsumiveis, sorteio);
@@ -117,6 +122,7 @@ public abstract class ComodoEspecial extends Comodo {
         }
 
         List<Tipo> escolhidas = new ArrayList<>();
+        int laboratorios = 0;
         for (int a = 1; a <= andar; a++) {
             // Andares de chefe não têm salas especiais
             if (a % 5 == 0) {
@@ -125,6 +131,12 @@ public abstract class ComodoEspecial extends Comodo {
             escolhidas = new ArrayList<>();
             List<Tipo> doAndar = new ArrayList<>(daRun);
             int quantas = 1 + escolher(sorteio, new float[] { 1, 4 });
+            int regiao = 1 + a / 5;
+            if (regiao > laboratorios && (a % 5 == 4 || (a % 5 == 3 && sorteio.nextInt(2) == 0))) {
+                laboratorios++;
+                escolhidas.add(Tipo.LABORATORIO);
+                quantas--;
+            }
             for (int i = 0; i < quantas && !doAndar.isEmpty(); i++) {
                 int indice = escolher(sorteio, new float[] { 6, 3, 1 });
                 while (indice >= doAndar.size()) {

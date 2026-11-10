@@ -12,6 +12,7 @@ import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista.Habilidade;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -180,6 +181,16 @@ public class ArmaDoShattered extends Item implements Arma, Equipamento {
         return construtor.build();
     }
 
+    // A pedra de alteração muda a velocidade de ataque desta arma (só desta pilha)
+    public void atualizarVelocidade(ItemStack pilha) {
+        pilha.set(DataComponents.ATTRIBUTE_MODIFIERS, atributos(atraso(pilha), numeros.alcance));
+    }
+
+    // Quantos turnos leva cada ataque (com a alteração, se tiver)
+    public float atraso(ItemStack pilha) {
+        return numeros.atraso * Alteracao.fatorDeAtraso(pilha);
+    }
+
     // Alcance a mais, em blocos
     public double alcanceExtra() {
         return 4.0 * numeros.alcance;
@@ -235,6 +246,7 @@ public class ArmaDoShattered extends Item implements Arma, Equipamento {
     // ---- Combate ----
 
     // Dano de um golpe. Cada ponto de força acima do necessário pode somar até +1 de dano.
+    // A alteração (pedra de alteração) muda o dano sorteado, antes do bônus da força, igual ao Shattered.
     // No ataque surpresa, a adaga bate entre 75% e 100% do dano máximo (o punhal 67%, a lâmina assassina 50%).
     @Override
     public int sortearDano(ItemStack pilha, RandomSource sorteio, DadosDoHeroi heroi, boolean deSurpresa) {
@@ -244,8 +256,8 @@ public class ArmaDoShattered extends Item implements Arma, Equipamento {
         if (deSurpresa && numeros.surpresa > 0) {
             minimo = minimo + Math.round((maximo - minimo) * numeros.surpresa);
         }
-        int dano = Sorteio.normal(sorteio, minimo, maximo);
-        int forcaSobrando = heroi.forca() - forcaNecessaria(nivel);
+        int dano = Alteracao.dano(pilha, Sorteio.normal(sorteio, minimo, maximo));
+        int forcaSobrando = heroi.forca() - forcaNecessaria(pilha);
         if (forcaSobrando > 0) {
             dano += sorteio.nextInt(forcaSobrando + 1);
         }
@@ -265,8 +277,8 @@ public class ArmaDoShattered extends Item implements Arma, Equipamento {
 
     public int sortearDanoComForca(ItemStack pilha, RandomSource sorteio, int forca) {
         int nivel = NivelDoItem.nivel(pilha);
-        int dano = Sorteio.normal(sorteio, danoMinimo(nivel), danoMaximo(nivel));
-        int forcaSobrando = forca - forcaNecessaria(nivel);
+        int dano = Alteracao.dano(pilha, Sorteio.normal(sorteio, danoMinimo(nivel), danoMaximo(nivel)));
+        int forcaSobrando = forca - forcaNecessaria(pilha);
         if (forcaSobrando > 0) {
             dano += sorteio.nextInt(forcaSobrando + 1);
         }
@@ -314,19 +326,27 @@ public class ArmaDoShattered extends Item implements Arma, Equipamento {
         // Sem identificar, mostra os números de uma arma +0 (os "típicos", igual ao Shattered)
         int nivel = conhecida ? NivelDoItem.nivel(pilha) : 0;
         linhas.add(Component.translatable("dica.pixeldungeon.tier", numeros.tier).withStyle(ChatFormatting.GRAY));
-        linhas.add(Component.translatable(conhecida ? "dica.pixeldungeon.dano" : "dica.pixeldungeon.dano_tipico", danoMinimo(nivel), danoMaximo(nivel))
+        linhas.add(Component.translatable(conhecida ? "dica.pixeldungeon.dano" : "dica.pixeldungeon.dano_tipico", Alteracao.dano(pilha, danoMinimo(nivel)),
+                Alteracao.dano(pilha, danoMaximo(nivel))).withStyle(ChatFormatting.GRAY));
+        linhas.add(Component.translatable(conhecida ? "dica.pixeldungeon.forca" : "dica.pixeldungeon.forca_tipica", forcaNecessaria(nivel) - maestria(pilha))
                 .withStyle(ChatFormatting.GRAY));
-        linhas.add(Component.translatable(conhecida ? "dica.pixeldungeon.forca" : "dica.pixeldungeon.forca_tipica", forcaNecessaria(nivel))
-                .withStyle(ChatFormatting.GRAY));
+        if (maestria(pilha) > 0) {
+            linhas.add(Component.translatable("dica.pixeldungeon.maestria").withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
         if (numeros.precisao > 1.0f) {
             linhas.add(Component.translatable("dica.pixeldungeon.precisao", Math.round((numeros.precisao - 1.0f) * 100)).withStyle(ChatFormatting.GRAY));
         } else if (numeros.precisao < 1.0f) {
             linhas.add(Component.translatable("dica.pixeldungeon.imprecisa", Math.round((1.0f - numeros.precisao) * 100)).withStyle(ChatFormatting.GRAY));
         }
-        if (numeros.atraso < 1.0f) {
-            linhas.add(Component.translatable("dica.pixeldungeon.rapida", vezes(1.0f / numeros.atraso)).withStyle(ChatFormatting.GRAY));
-        } else if (numeros.atraso > 1.0f) {
-            linhas.add(Component.translatable("dica.pixeldungeon.lenta", vezes(numeros.atraso)).withStyle(ChatFormatting.GRAY));
+        float atraso = atraso(pilha);
+        if (atraso < 0.999f) {
+            linhas.add(Component.translatable("dica.pixeldungeon.rapida", vezes(1.0f / atraso)).withStyle(ChatFormatting.GRAY));
+        } else if (atraso > 1.001f) {
+            linhas.add(Component.translatable("dica.pixeldungeon.lenta", vezes(atraso)).withStyle(ChatFormatting.GRAY));
+        }
+        Alteracao alteracao = Alteracao.de(pilha);
+        if (alteracao != null) {
+            linhas.add(Component.translatable(alteracao.chaveDaDica()).withStyle(ChatFormatting.LIGHT_PURPLE));
         }
         if (numeros.alcance > 0) {
             linhas.add(Component.translatable("dica.pixeldungeon.alcance", numeros.alcance).withStyle(ChatFormatting.GRAY));

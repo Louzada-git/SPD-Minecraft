@@ -35,7 +35,8 @@ public class Comida {
             evento.setCancellationResult(InteractionResult.FAIL);
             return;
         }
-        if (!pilha.has(DataComponents.FOOD) || jogador.isCreative()) {
+        // A fruta-sem-graça cozida: agachado, arremessa em vez de comer
+        if (!pilha.has(DataComponents.FOOD) || jogador.isCreative() || (pilha.getItem() instanceof FrutaSemGraca && jogador.isShiftKeyDown())) {
             return;
         }
         evento.setCanceled(true);

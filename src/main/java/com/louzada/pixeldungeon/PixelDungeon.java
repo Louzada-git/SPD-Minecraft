@@ -14,12 +14,15 @@ import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
 import com.louzada.pixeldungeon.heroi.GlifosDoHeroi;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.Comida;
+import com.louzada.pixeldungeon.item.CristalDeEnergia;
+import com.louzada.pixeldungeon.item.EfeitosDePergaminhoExotico;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.rede.ModRede;
 import com.louzada.pixeldungeon.registro.ModAbas;
 import com.louzada.pixeldungeon.registro.ModAnexos;
 import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.louzada.pixeldungeon.registro.ModComponentes;
+import com.louzada.pixeldungeon.registro.ModMenus;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
@@ -51,6 +54,7 @@ public class PixelDungeon {
         ModMateriais.MATERIAIS.register(barramentoDoMod);
         ModEfeitos.EFEITOS.register(barramentoDoMod);
         ModComponentes.COMPONENTES.register(barramentoDoMod);
+        ModMenus.MENUS.register(barramentoDoMod);
         barramentoDoMod.addListener(ModEntidades::aoCriarAtributos);
 
         // Pacotes de rede (menu de escolha de herói)
@@ -67,6 +71,7 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(TalentosDoTier2::aoReceberDano);
         NeoForge.EVENT_BUS.addListener(Aneis::aoReceberDano);
         NeoForge.EVENT_BUS.addListener(GlifosDoHeroi::aoReceberDano);
+        NeoForge.EVENT_BUS.addListener(EfeitosDePergaminhoExotico::aoReceberDano);
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoMorrerAlguem);
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoTomarDano);
         // O selo do Guerreiro olha o dano depois que o combate calculou (por isso prioridade baixa)
@@ -79,6 +84,7 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(PopulacaoDoAndar::aoTickDoServidor);
         // Ouro: encostou na pilha, as moedas vão pra bolsa
         NeoForge.EVENT_BUS.addListener(Ouro::aoEncostar);
+        NeoForge.EVENT_BUS.addListener(CristalDeEnergia::aoEncostar);
         // Efeitos do Shattered que agem a cada turno (veneno, cura, sono...) e o mapeamento mágico
         NeoForge.EVENT_BUS.addListener(EfeitosNoTick::aoTick);
         NeoForge.EVENT_BUS.addListener(EfeitosNoTick::aoAcabarEfeito);

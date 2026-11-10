@@ -30,7 +30,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 // ativa o efeito e a planta some. Quem voa (o enxame, o herói levitando) não ativa.
 public class PlantaDoShattered extends Block {
     private static final VoxelShape FORMATO = Block.box(2, 0, 2, 14, 12, 14);
-    private static final int TICKS_ENTRE_OLHADAS = 4;
+    protected static final int TICKS_ENTRE_OLHADAS = 4;
     private static final int T = Andares.TAMANHO_DO_QUADRADINHO;
 
     private TipoDePlanta tipo;
@@ -81,7 +81,7 @@ public class PlantaDoShattered extends Block {
     }
 
     @Nullable
-    private static LivingEntity quemEstaNoQuadradinho(ServerLevel mundo, BlockPos posicao) {
+    protected static LivingEntity quemEstaNoQuadradinho(ServerLevel mundo, BlockPos posicao) {
         int inicioX = posicao.getX() - Math.floorMod(posicao.getX(), T);
         int inicioZ = posicao.getZ() - Math.floorMod(posicao.getZ(), T);
         AABB quadradinho = new AABB(inicioX, posicao.getY(), inicioZ, inicioX + T, posicao.getY() + 1.5, inicioZ + T);

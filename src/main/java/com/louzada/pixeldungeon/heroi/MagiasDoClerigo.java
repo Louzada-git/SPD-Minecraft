@@ -15,6 +15,7 @@ import com.louzada.pixeldungeon.entidade.RaioSolar;
 import com.louzada.pixeldungeon.item.Artefato;
 import com.louzada.pixeldungeon.item.Cargas;
 import com.louzada.pixeldungeon.item.EfeitosDePergaminho;
+import com.louzada.pixeldungeon.item.EfeitosDePergaminhoExotico;
 import com.louzada.pixeldungeon.item.EscolhaDeItem;
 import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.item.TipoDePergaminho;
@@ -126,7 +127,7 @@ public class MagiasDoClerigo {
             return;
         }
         ItemStack tomo = TomoSagrado.acharTomo(jogador);
-        if (tomo == null || jogador.getCooldowns().isOnCooldown(tomo.getItem())) {
+        if (tomo == null || jogador.getCooldowns().isOnCooldown(tomo.getItem()) || EfeitosDePergaminhoExotico.bloqueado(jogador, "item")) {
             return;
         }
         long agora = jogador.level().getGameTime();

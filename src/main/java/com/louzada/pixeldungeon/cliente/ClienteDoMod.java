@@ -40,6 +40,14 @@ public class ClienteDoMod {
         Minecraft.getInstance().setScreen(new TelaDoFantasma(texto, arma, armadura));
     }
 
+    public static void abrirOpcoes(Component titulo, Component texto, ItemStack icone, List<Component> opcoes) {
+        Minecraft.getInstance().setScreen(new TelaDeOpcoes(titulo, texto, icone, opcoes));
+    }
+
+    public static void abrirGuiaDeAlquimia(int pagina) {
+        Minecraft.getInstance().setScreen(new TelaDoGuiaDeAlquimia(pagina, null));
+    }
+
     public static void abrirCompartilhar(String modo, List<String> jogadores, List<String> escolhidos) {
         Minecraft.getInstance().setScreen(new TelaCompartilhar(modo, jogadores, escolhidos));
     }

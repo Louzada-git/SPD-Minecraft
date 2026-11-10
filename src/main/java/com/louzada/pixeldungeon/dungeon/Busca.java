@@ -130,6 +130,42 @@ public class Busca {
         return reveladas;
     }
 
+    // ---- Pedra da clarividência ----
+
+    // Revela as portas e as armadilhas escondidas num círculo de "raio" quadradinhos em volta do lugar (atravessa paredes).
+    // Devolve quantos segredos achou.
+    public static int revelarEmVolta(ServerLevel mundo, Vec3 centro, int raio) {
+        DadosDaRun run = DadosDaRun.pegar(mundo.getServer());
+        Integer andar = run.ativa() ? PopulacaoDoAndar.andarEm(run, centro.x, centro.y, centro.z) : null;
+        if (andar == null || run.andar(andar) == null) {
+            return 0;
+        }
+        BlockPos origem = Andares.origemDoAndar(run.numeroDaRun(), andar);
+        int qx = Math.floorDiv(Mth.floor(centro.x) - origem.getX(), T);
+        int qy = Math.floorDiv(Mth.floor(centro.z) - origem.getZ(), T);
+        Lugar lugar = new Lugar(run, andar, PopulacaoDoAndar.planta(run.semente(), andar), origem, qx, qy);
+        PlantaDoAndar planta = lugar.planta();
+        int achou = 0;
+        for (int y = Math.max(0, qy - raio); y <= Math.min(planta.altura() - 1, qy + raio); y++) {
+            for (int x = Math.max(0, qx - raio); x <= Math.min(planta.largura() - 1, qx + raio); x++) {
+                if ((x - qx) * (x - qx) + (y - qy) * (y - qy) > raio * raio + raio) {
+                    continue;
+                }
+                if (escondida(lugar, x, y)) {
+                    revelar(mundo, lugar, x, y);
+                    achou++;
+                }
+                if (planta.temArmadilha(x, y) && Armadilhas.revelar(mundo, Armadilhas.controle(origem, x, y))) {
+                    achou++;
+                }
+            }
+        }
+        if (achou > 0) {
+            mundo.playSound(null, BlockPos.containing(centro), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.5F, 1.0F);
+        }
+        return achou;
+    }
+
     // Tem armadilha escondida a até "distancia" quadradinhos, à vista? (o talismã da vidência deixa o herói apreensivo)
     public static boolean armadilhaEscondidaPerto(ServerPlayer jogador, int distancia) {
         Lugar lugar = ondeEsta(jogador);

@@ -116,6 +116,9 @@ public class Combate {
         LivingEntity quemApanha = golpe.alvo().entidade();
         MobEffectInstance pele = quemApanha.getEffect(ModEfeitos.PELE_DE_ARVORE);
         int extra = pele == null ? 0 : Sorteio.normal(quemApanha.getRandom(), 0, pele.getAmplifier() + 1);
+        // Armadura de barro (poção exótica): soma do mesmo jeito
+        MobEffectInstance barro = quemApanha.getEffect(ModEfeitos.ARMADURA_DE_BARRO);
+        extra += barro == null ? 0 : Sorteio.normal(quemApanha.getRandom(), 0, barro.getAmplifier() + 1);
         return extra + golpe.alvo().sortearArmadura(golpe);
     }
 

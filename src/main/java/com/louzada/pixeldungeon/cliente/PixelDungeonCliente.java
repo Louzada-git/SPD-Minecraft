@@ -1,10 +1,15 @@
 package com.louzada.pixeldungeon.cliente;
 
+import javax.annotation.Nullable;
+
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.item.ArtefatoAchado;
+import com.louzada.pixeldungeon.item.FrutaSemGraca;
+import com.louzada.pixeldungeon.item.TipoDePocao;
 import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
+import com.louzada.pixeldungeon.registro.ModMenus;
 
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -16,6 +21,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
@@ -25,6 +31,7 @@ public class PixelDungeonCliente {
 
     public PixelDungeonCliente(IEventBus barramentoDoMod, ModContainer container) {
         barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarRenderizadores);
+        barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarTelas);
         barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarCoresDosBlocos);
         barramentoDoMod.addListener(PixelDungeonCliente::aoRegistrarCoresDosItens);
         // O desenho dos artefatos que mudam (o cálice enchendo, o chifre, as sandálias virando botas)
@@ -43,6 +50,11 @@ public class PixelDungeonCliente {
     }
 
     // Como cada inimigo aparece na tela: com o desenho animado do Shattered (ver RenderizadorDeSprite)
+    // As telas com casinhas (o pote de alquimia)
+    private static void aoRegistrarTelas(RegisterMenuScreensEvent evento) {
+        evento.register(ModMenus.ALQUIMIA.get(), TelaDaAlquimia::new);
+    }
+
     private static void aoRegistrarRenderizadores(EntityRenderersEvent.RegisterRenderers evento) {
         evento.registerEntityRenderer(ModEntidades.RATO_MARSUPIAL.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.RATO, 0.35F));
         evento.registerEntityRenderer(ModEntidades.RATO_ALBINO.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.RATO_ALBINO, 0.35F));
@@ -67,6 +79,7 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.POCAO_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, false));
         evento.registerEntityRenderer(ModEntidades.ARMA_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, false));
         evento.registerEntityRenderer(ModEntidades.SEMENTE_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 0.8F, false));
+        evento.registerEntityRenderer(ModEntidades.PEDRA_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 0.8F, false));
         // Nuvem de gás: só a fumaça (as partículas saem dela mesma)
         evento.registerEntityRenderer(ModEntidades.NUVEM_DE_GAS.get(), NoopRenderer::new);
         // Imagem espelhada: igual ao herói dono dela
@@ -105,5 +118,32 @@ public class PixelDungeonCliente {
 
     private static void aoRegistrarCoresDosItens(RegisterColorHandlersEvent.Item evento) {
         evento.register((pilha, camada) -> COR_DA_GRAMA, ModItens.CAPIM_ALTO.get(), ModItens.GRAMA_BAIXA.get());
+        // A fruta-sem-graça cozida fica com a cor do brilho dela no Shattered
+        evento.register((pilha, camada) -> corDaFruta(FrutaSemGraca.pocao(pilha)), ModItens.FRUTA_SEM_GRACA.get());
+    }
+
+    // O brilho da fruta cozida no Shattered (clareado, pra a fruta não ficar escura demais)
+    private static int corDaFruta(@Nullable TipoDePocao tipo) {
+        if (tipo == null) {
+            return 0xFFFFFFFF;
+        }
+        int cor = switch (tipo) {
+            case CURA -> 0x2EE62E;
+            case FORCA -> 0xCC0022;
+            case GAS_PARALISANTE -> 0x67583D;
+            case INVISIBILIDADE -> 0xD9D9D9;
+            case CHAMA_LIQUIDA -> 0xFF7F00;
+            case GELO -> 0x66B3FF;
+            case VISAO_MENTAL -> 0x919999;
+            case GAS_TOXICO -> 0xA15CE5;
+            case LEVITACAO -> 0x1B5F79;
+            case PUREZA -> 0xC152AA;
+            case EXPERIENCIA -> 0x404040;
+            case PRESSA -> 0xCCBB00;
+        };
+        int r = (((cor >> 16) & 0xFF) + 255) / 2;
+        int g = (((cor >> 8) & 0xFF) + 255) / 2;
+        int b = ((cor & 0xFF) + 255) / 2;
+        return 0xFF000000 | (r << 16) | (g << 8) | b;
     }
 }

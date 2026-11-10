@@ -1,13 +1,16 @@
 package com.louzada.pixeldungeon.heroi;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.louzada.pixeldungeon.item.EfeitosDePocaoExotica;
 import com.louzada.pixeldungeon.item.TipoDeAnel;
 
 import net.minecraft.core.HolderLookup;
@@ -27,6 +30,7 @@ import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 //     o escudo do selo, as cargas das habilidades da Duelista... Cada um tem um nome (a chave).
 //   - os tipos de poção e pergaminho que ele já identificou nesta run
 //   - com quem ele compartilha o que identifica (essa escolha continua de uma run pra outra)
+//   - as páginas do guia de alquimia que ele já leu (também continuam de uma run pra outra)
 public class DadosDoHeroi {
     public static final int FORCA_INICIAL = 10;
 
@@ -42,11 +46,14 @@ public class DadosDoHeroi {
     private boolean morto = false;
     private int run = 0;
     private Map<String, Integer> talentos = new HashMap<>();
+    public static final String METAMORFOSE = "metamorfose:";
     private CompoundTag estado = new CompoundTag();
     // Tipos de poção e pergaminho que o jogador já sabe (ex.: "pocao:cura")
     private Set<String> conhecidos = new HashSet<>();
     private String modoDeCompartilhar = COMPARTILHAR_COM_TODOS;
     private Set<String> compartilharCom = new HashSet<>();
+    // As páginas do guia de alquimia que ele já leu, um bit por página (continuam de uma run pra outra, igual ao diário do Shattered)
+    private int paginasDoGuia = 0;
     // O bônus somado dos anéis que ele está usando, por tipo (não é salvo)
     private int[] bonusDosAneis = new int[0];
     private boolean[] usandoAneis = new boolean[0];
@@ -81,6 +88,14 @@ public class DadosDoHeroi {
 
     public Set<String> compartilharCom() {
         return compartilharCom;
+    }
+
+    public int paginasDoGuia() {
+        return paginasDoGuia;
+    }
+
+    public void definirPaginasDoGuia(int paginas) {
+        paginasDoGuia = paginas;
     }
 
     public void definirCompartilhamento(String modo, Set<String> nomes) {
@@ -168,6 +183,45 @@ public class DadosDoHeroi {
         talentos.put(talento.id(), pontos);
     }
 
+    // Os talentos do herói num tier: os da classe dele, menos os que o pergaminho da metamorfose trocou por outros
+    // (a troca fica no estado: "metamorfose:<talento da classe>" = o talento que entrou no lugar)
+    public List<Talento> talentos(int tier) {
+        List<Talento> lista = new ArrayList<>();
+        ClasseDoHeroi minha = classe();
+        if (minha == null) {
+            return lista;
+        }
+        for (Talento daClasse : Talento.daClasse(minha, tier)) {
+            Talento novo = Talento.peloId(estado.getString(METAMORFOSE + daClasse.id()));
+            lista.add(novo != null ? novo : daClasse);
+        }
+        return lista;
+    }
+
+    public boolean temTalento(Talento talento) {
+        return talentos(talento.tier()).contains(talento);
+    }
+
+    // Troca um talento do herói por outro do mesmo tier (os pontos passam pro novo)
+    public void metamorfosear(Talento antigo, Talento novo) {
+        ClasseDoHeroi minha = classe();
+        if (minha == null) {
+            return;
+        }
+        for (Talento daClasse : Talento.daClasse(minha, antigo.tier())) {
+            Talento noLugar = Talento.peloId(estado.getString(METAMORFOSE + daClasse.id()));
+            if ((noLugar != null ? noLugar : daClasse) == antigo) {
+                int pontos = pontos(antigo);
+                talentos.remove(antigo.id());
+                if (pontos > 0) {
+                    talentos.put(novo.id(), pontos);
+                }
+                estado.putString(METAMORFOSE + daClasse.id(), novo.id());
+                return;
+            }
+        }
+    }
+
     public int pontosGastos(int tier) {
         int total = 0;
         for (Map.Entry<String, Integer> talento : talentos.entrySet()) {
@@ -181,7 +235,7 @@ public class DadosDoHeroi {
 
     // Os pontos do tier que ainda dá pra gastar
     public int pontosLivres(int tier) {
-        return Math.max(0, Talento.pontosGanhos(tier, nivel) - pontosGastos(tier));
+        return Math.max(0, Talento.pontosGanhos(tier, nivel, EfeitosDePocaoExotica.pontosDaInspiracao(this, tier)) - pontosGastos(tier));
     }
 
     // Os pontos livres de todos os tiers
@@ -263,6 +317,7 @@ public class DadosDoHeroi {
                 dados.modoDeCompartilhar = tag.getString("compartilhar");
             }
             dados.compartilharCom = lerLista(tag, "compartilhar_com");
+            dados.paginasDoGuia = tag.getInt("paginas_do_guia");
             return dados;
         }
 
@@ -284,6 +339,7 @@ public class DadosDoHeroi {
             tag.put("conhecidos", escreverLista(dados.conhecidos));
             tag.putString("compartilhar", dados.modoDeCompartilhar);
             tag.put("compartilhar_com", escreverLista(dados.compartilharCom));
+            tag.putInt("paginas_do_guia", dados.paginasDoGuia);
             return tag;
         }
 

@@ -4,15 +4,19 @@ import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
+import com.louzada.pixeldungeon.heroi.Furtividade;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -31,6 +35,9 @@ import net.minecraft.world.phys.Vec3;
 //     (quem já está congelado fica congelado mais um pouco)
 //   elétrico (armadilha elétrica): paralisa pelos turnos que faltam pra nuvem acabar e, de 2 em 2 turnos, dá um choque
 //     de 0 a 2 + andar / 5
+//   neblina (poção da neblina): ninguém enxerga através dela: os inimigos dentro perdem o alvo de vista e o herói
+//     dentro fica escondido
+//   tempestade (poção de nuvens tempestuosas): chove; apaga o fogo de quem está dentro e do chão
 // Quem bebeu a poção de pureza não é afetado, e a pureza arremessada desfaz as nuvens.
 public class NuvemDeGas extends Entity {
     public enum Tipo {
@@ -40,7 +47,9 @@ public class NuvemDeGas extends Entity {
         CORROSIVO(0xDD8833),
         FEDOR(0x4D6B2E),
         CONGELANTE(0xB2D6FF),
-        ELETRICO(0xFFFF66);
+        ELETRICO(0xFFFF66),
+        NEBLINA(0x707070),
+        TEMPESTADE(0x8899BB);
 
         private int cor;
 
@@ -110,6 +119,12 @@ public class NuvemDeGas extends Entity {
                     level().addParticle(ParticleTypes.ELECTRIC_SPARK, x, y, z, 0.0, 0.0, 0.0);
                 } else if (tipo() == Tipo.CONGELANTE) {
                     level().addParticle(ParticleTypes.SNOWFLAKE, x, y, z, 0.0, -0.01, 0.0);
+                } else if (tipo() == Tipo.NEBLINA) {
+                    level().addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, 0.0, 0.005, 0.0);
+                    level().addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 0.0, 0.003, 0.0);
+                } else if (tipo() == Tipo.TEMPESTADE) {
+                    level().addParticle(ParticleTypes.FALLING_WATER, x, getY() + ALTURA * 0.9, z, 0.0, 0.0, 0.0);
+                    level().addParticle(Particulas.poeira(tipo().cor(), 2.5F), x, getY() + ALTURA * 0.8, z, 0.0, 0.0, 0.0);
                 } else {
                     level().addParticle(Particulas.poeira(tipo().cor(), 2.5F), x, y, z, 0.0, 0.01, 0.0);
                 }
@@ -122,6 +137,16 @@ public class NuvemDeGas extends Entity {
         }
         if (tickCount % Turno.TICKS != 0) {
             return;
+        }
+        // A chuva apaga o fogo do chão
+        if (tipo() == Tipo.TEMPESTADE) {
+            BlockPos meio = blockPosition();
+            int alcance = (int) Math.ceil(raio);
+            for (BlockPos posicao : BlockPos.betweenClosed(meio.offset(-alcance, -1, -alcance), meio.offset(alcance, 2, alcance))) {
+                if (level().getBlockState(posicao).is(BlockTags.FIRE)) {
+                    level().removeBlock(posicao, false);
+                }
+            }
         }
         for (LivingEntity criatura : level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(raio, ALTURA, raio))) {
             if (!criatura.isAlive() || criatura.isSpectator() || criatura.hasEffect(ModEfeitos.IMUNE_A_GAS)
@@ -159,6 +184,15 @@ public class NuvemDeGas extends Entity {
             }
             case CONGELANTE -> congelar(criatura);
             case ELETRICO -> eletrocutar(criatura);
+            case NEBLINA -> {
+                if (criatura instanceof MobDoShattered inimigo) {
+                    inimigo.setTarget(null);
+                    inimigo.addEffect(new MobEffectInstance(ModEfeitos.CEGO, 2 * Turno.TICKS));
+                } else if (criatura instanceof ServerPlayer jogador) {
+                    Furtividade.ficarInvisivel(jogador, 2 * Turno.TICKS);
+                }
+            }
+            case TEMPESTADE -> criatura.clearFire();
         }
     }
 

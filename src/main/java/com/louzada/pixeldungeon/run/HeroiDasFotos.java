@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Random;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.alquimia.EnergiaAlquimica;
+import com.louzada.pixeldungeon.alquimia.GuiaDeAlquimia;
+import com.louzada.pixeldungeon.alquimia.MenuDaAlquimia;
 import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.dungeon.Armadilhas;
 import com.louzada.pixeldungeon.dungeon.GeradorDeAndar;
@@ -18,9 +21,11 @@ import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.Talento;
 import com.louzada.pixeldungeon.heroi.Talentos;
+import com.louzada.pixeldungeon.item.ArtefatoAchado;
 import com.louzada.pixeldungeon.item.Identificacao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.item.Ouro;
+import com.louzada.pixeldungeon.item.TipoDePergaminho;
 import com.louzada.pixeldungeon.item.TomoSagrado;
 import com.louzada.pixeldungeon.rede.RedeDoHeroi;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
@@ -30,6 +35,7 @@ import com.louzada.pixeldungeon.registro.ModItens;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -154,6 +160,26 @@ public class HeroiDasFotos {
             }
         }
         PixelDungeon.LOGGER.info("Herói das fotos: nenhum andar tem lugar pras armadilhas");
+    }
+
+    // O guia de alquimia com todas as páginas
+    public static void mostrarGuia(ServerPlayer jogador) {
+        RegrasDoHeroi.dados(jogador).definirPaginasDoGuia((1 << GuiaDeAlquimia.PAGINAS.length) - 1);
+        RedeDoHeroi.enviarEstado(jogador, true);
+    }
+
+    // A tela da alquimia aberta pelo kit do alquimista (com 3 de energia guardada), com um pergaminho nas casinhas
+    public static void mostrarAlquimia(ServerPlayer jogador) {
+        DadosDaRun run = DadosDaRun.pegar(jogador.getServer());
+        ItemStack kit = new ItemStack(ModItens.KIT_DO_ALQUIMISTA.get());
+        ArtefatoAchado.definirCargas(kit, 3);
+        jogador.setItemInHand(InteractionHand.OFF_HAND, kit);
+        EnergiaAlquimica.ganhar(jogador, 9);
+        ModItens.KIT_DO_ALQUIMISTA.get().usar(jogador, jogador.getOffhandItem());
+        if (jogador.containerMenu instanceof MenuDaAlquimia menu) {
+            menu.getSlot(0).set(Identificacao.pergaminho(run.semente(), TipoDePergaminho.IDENTIFICACAO));
+        }
+        PixelDungeon.LOGGER.info("Herói das fotos: tela da alquimia aberta = {}", jogador.containerMenu instanceof MenuDaAlquimia);
     }
 
     // Leva o herói pra olhar uma porta do andar 2 (comum ou trancada) de 2 quadradinhos de distância.

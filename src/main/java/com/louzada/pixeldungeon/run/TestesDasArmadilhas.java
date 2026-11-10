@@ -95,7 +95,9 @@ public class TestesDasArmadilhas {
                     if (!planta.armadilhaVisivel(x, y)) {
                         escondidas++;
                     }
-                    if (andar == 1 && tipo != TipoDeArmadilha.DARDOS) {
+                    // (a sala das armadilhas pode cair no andar 1, igual ao Shattered, e as armadilhas dela são outras)
+                    PlantaDoAndar.Sala sala = planta.salaEm(x, y);
+                    if (andar == 1 && tipo != TipoDeArmadilha.DARDOS && (sala == null || !sala.especial())) {
                         andar1SoDardos = false;
                     }
                     if (!doEsgoto.contains(tipo)) {

@@ -65,7 +65,7 @@ public class TelaDeTalentos extends Screen {
         tiers = new ArrayList<>();
         if (classe != null) {
             for (int tier = 1; tier <= Talento.TIERS; tier++) {
-                tiers.add(Talento.daClasse(classe, tier));
+                tiers.add(EstadoNoCliente.talentos(tier));
             }
             if (escolhido == null && !tiers.get(0).isEmpty()) {
                 escolhido = tiers.get(0).get(0);

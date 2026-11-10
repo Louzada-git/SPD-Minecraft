@@ -1,0 +1,7 @@
+{
+  "parent": "pixeldungeon:block/planta_do_shattered",
+  "textures": {
+    "planta": "pixeldungeon:block/arbusto_de_fruta",
+    "particle": "pixeldungeon:block/arbusto_de_fruta"
+  }
+}

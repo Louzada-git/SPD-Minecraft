@@ -7,6 +7,7 @@ import java.util.Random;
 import com.louzada.pixeldungeon.bloco.ArmadilhaBloco;
 import com.louzada.pixeldungeon.bloco.CapimAlto;
 import com.louzada.pixeldungeon.bloco.PortaGigante;
+import com.louzada.pixeldungeon.bloco.PoteDeAlquimia;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
 import com.louzada.pixeldungeon.registro.ModBlocos;
 
@@ -174,7 +175,7 @@ public class ConstrutorDeAndar {
         int alturaLivre = alturaLivre(qx, qy);
         boolean temLanterna = temLanterna(qx, qy);
         // O chão especial (as pontes, a biblioteca) é de tufo entalhado
-        BlockState chaoDaqui = tipo == PlantaDoAndar.CHAO_ESPECIAL ? moldura : chao;
+        BlockState chaoDaqui = tipo == PlantaDoAndar.CHAO_ESPECIAL || tipo == PlantaDoAndar.POTE ? moldura : chao;
         // A armadilha toma o lugar do chão (os 16 blocos, cada um com um pedaço do desenho dela)
         TipoDeArmadilha armadilha = tipo == PlantaDoAndar.AGUA ? null : planta.armadilha(qx, qy);
         boolean escondida = armadilha != null && !planta.armadilhaVisivel(qx, qy);
@@ -250,6 +251,7 @@ public class ConstrutorDeAndar {
             case PlantaDoAndar.ESTATUA -> construirEstatua(qx, qy);
             case PlantaDoAndar.ESTANTE -> construirEstante(qx, qy);
             case PlantaDoAndar.BARRIL -> construirBarris(qx, qy);
+            case PlantaDoAndar.POTE -> construirPote(qx, qy);
             default -> {
             }
         }
@@ -312,6 +314,14 @@ public class ConstrutorDeAndar {
                     colocar(qx, qy, dx, 3, dz, barril);
                 }
             }
+        }
+    }
+
+    // O pote de alquimia: 2x2 blocos no meio do quadradinho (cada um é um quarto do caldeirão)
+    private void construirPote(int qx, int qy) {
+        PoteDeAlquimia pote = ModBlocos.POTE_DE_ALQUIMIA.get();
+        for (int parte = 0; parte < 4; parte++) {
+            colocar(qx, qy, 1 + PoteDeAlquimia.dx(parte), 1, 1 + PoteDeAlquimia.dz(parte), pote.defaultBlockState().setValue(PoteDeAlquimia.PARTE, parte));
         }
     }
 

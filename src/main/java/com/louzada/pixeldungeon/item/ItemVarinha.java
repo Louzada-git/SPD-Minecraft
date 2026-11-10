@@ -121,6 +121,9 @@ public class ItemVarinha extends Item implements Equipamento {
             CajadoDoMago.pedirParaColocar(heroi, outraMao, pilha);
             return InteractionResultHolder.success(pilha);
         }
+        if (EfeitosDePergaminhoExotico.bloqueado(heroi, "varinha")) {
+            return InteractionResultHolder.fail(pilha);
+        }
         long agora = mundo.getGameTime();
         recarregar(pilha, agora);
         int cargas = cargas(pilha);

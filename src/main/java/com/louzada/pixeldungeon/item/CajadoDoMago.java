@@ -88,6 +88,9 @@ public class CajadoDoMago extends ArmaDoShattered {
         if (!(jogador instanceof ServerPlayer heroi)) {
             return cargas(pilha) > 0 ? InteractionResultHolder.success(pilha) : InteractionResultHolder.fail(pilha);
         }
+        if (EfeitosDePergaminhoExotico.bloqueado(heroi, "varinha")) {
+            return InteractionResultHolder.fail(pilha);
+        }
         long agora = mundo.getGameTime();
         recarregar(pilha, agora);
         int cargas = cargas(pilha);

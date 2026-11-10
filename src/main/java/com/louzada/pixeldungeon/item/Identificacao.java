@@ -62,6 +62,12 @@ public class Identificacao {
         if (pilha.getItem() instanceof ItemPocao pocao) {
             return !conhece(jogador, pocao.cor());
         }
+        if (pilha.getItem() instanceof ItemPocaoExotica exotica) {
+            return !conhece(jogador, exotica.cor());
+        }
+        if (pilha.getItem() instanceof ItemPergaminhoExotico exotico) {
+            return !conhece(jogador, exotico.runa());
+        }
         if (pilha.getItem() instanceof ItemPergaminho pergaminho) {
             return !conhece(jogador, pergaminho.runa());
         }
@@ -75,6 +81,10 @@ public class Identificacao {
     public static void identificarItem(ServerPlayer jogador, ItemStack pilha) {
         if (pilha.getItem() instanceof ItemPocao pocao) {
             identificar(jogador, pocao.cor());
+        } else if (pilha.getItem() instanceof ItemPocaoExotica exotica) {
+            identificar(jogador, exotica.cor());
+        } else if (pilha.getItem() instanceof ItemPergaminhoExotico exotico) {
+            identificar(jogador, exotico.runa());
         } else if (pilha.getItem() instanceof ItemPergaminho pergaminho) {
             identificar(jogador, pergaminho.runa());
         } else if (NivelDoItem.podeIdentificar(pilha)) {
@@ -110,6 +120,10 @@ public class Identificacao {
 
     public static void identificar(ServerPlayer jogador, TipoDePergaminho tipo) {
         identificar(jogador, IdentidadesDaRun.runaDoTipo(sementeDaRun(jogador), tipo));
+    }
+
+    public static void identificar(ServerPlayer jogador, TipoDeAnel tipo) {
+        identificar(jogador, IdentidadesDaRun.gemaDoTipo(sementeDaRun(jogador), tipo));
     }
 
     // Aprende e compartilha com quem o jogador escolheu

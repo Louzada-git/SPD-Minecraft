@@ -54,6 +54,9 @@ public class ItemPergaminho extends Item {
         if (!(jogador instanceof ServerPlayer leitor)) {
             return InteractionResultHolder.success(pilha);
         }
+        if (EfeitosDePergaminhoExotico.bloqueado(leitor, "pergaminho")) {
+            return InteractionResultHolder.fail(pilha);
+        }
         TipoDePergaminho tipo = Identificacao.tipoDa(leitor, runa);
         boolean eraDesconhecido = !Identificacao.conhece(leitor, runa);
         Identificacao.identificar(leitor, runa);

@@ -1,12 +1,15 @@
 package com.louzada.pixeldungeon.dungeon;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.bloco.PlantaDoShattered;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Premio;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.PremioNoChao;
 import com.louzada.pixeldungeon.item.ArmaDeArremesso;
@@ -16,6 +19,7 @@ import com.louzada.pixeldungeon.item.ArtefatoAchado;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.ChaveDeFerro;
 import com.louzada.pixeldungeon.item.Equipamento;
+import com.louzada.pixeldungeon.item.FrutaSemGraca;
 import com.louzada.pixeldungeon.item.GemaDeAnel;
 import com.louzada.pixeldungeon.item.Identificacao;
 import com.louzada.pixeldungeon.item.ItemAnel;
@@ -24,10 +28,12 @@ import com.louzada.pixeldungeon.item.ItemVarinha;
 import com.louzada.pixeldungeon.item.Maldicao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.item.Ouro;
+import com.louzada.pixeldungeon.item.TipoDePedra;
 import com.louzada.pixeldungeon.item.TipoDePergaminho;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 import com.louzada.pixeldungeon.item.TipoDePocao;
 import com.louzada.pixeldungeon.item.TipoDeVarinha;
+import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.louzada.pixeldungeon.registro.ModComponentes;
 import com.louzada.pixeldungeon.registro.ModItens;
 import com.louzada.pixeldungeon.run.DadosDaRun;
@@ -42,13 +48,14 @@ import net.minecraft.world.item.ItemStack;
 
 // Os itens espalhados por cada andar, igual ao Shattered (RegularLevel.createItems):
 //   - 3 itens em 60% dos andares, 4 em 30% e 5 em 10%
-//   - cada item é ouro (10), poção (8), pergaminho (8), arma (2), armadura (2) ou semente (1), com esses pesos.
-//     No Shattered também tem armaduras, varinhas, anéis... que o mod ainda não tem.
+//   - cada item é ouro, poção, pergaminho, arma, armadura, semente, arma de arremesso, varinha, anel, artefato ou pedra rúnica,
+//     com os pesos do Shattered (ver itemAleatorio)
 //   - a arma é de um tier sorteado pela região (no esgoto: 75% tier 2, 20% tier 3, 4% tier 4, 1% tier 5),
 //     com nível +0 (75%), +1 (20%) ou +2 (5%), 30% amaldiçoada, e vem sem identificar
 //   - cada item fica: num baú (4 em 20), dentro de um mímico (1 em 20, só a partir do andar 2) ou largado no chão
 //   - todo andar também tem uma ração largada no chão
-//   - em cada região caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares
+//   - em cada região caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares;
+//     e uma pedra de intuição a mais em um dos andares 1 a 4
 //   - cada porta trancada tem a chave de ferro dela largada numa sala comum
 //   - as salas especiais (arsenal, tesouraria, biblioteca, jardim, cripta, armadilhas) e as secretas têm os prêmios delas
 //   - a sala das armadilhas pede uma poção de levitação no chão do andar
@@ -79,6 +86,7 @@ public class SaqueDoAndar {
     public static final String POCOES_DE_FORCA = "pocao_de_forca";
     public static final String PERGAMINHOS_DE_MELHORIA = "pergaminho_de_melhoria";
     public static final String PETALAS = "petalas_da_rosa";
+    public static final String PEDRA_DE_INTUICAO = "pedra_de_intuicao";
 
     // Sorteia os itens do andar e já apara a grama alta onde eles vão ficar (antes de construir o andar)
     public static List<Saque> sortear(PlantaDoAndar planta, int andar, DadosDaRun run) {
@@ -110,9 +118,10 @@ public class SaqueDoAndar {
             saques.add(new Saque(lugar[0], lugar[1], itens, onde));
         }
 
-        // A ração de todo andar, e as poções de força e os pergaminhos de melhoria da região (no chão)
+        // A comida de todo andar (igual ao Shattered: ração 4 vezes em 5, pastel 1 em 5), e as poções de força e
+        // os pergaminhos de melhoria da região (no chão)
         List<ItemStack> garantidos = new ArrayList<>();
-        garantidos.add(new ItemStack(ModItens.RACAO.get()));
+        garantidos.add(new ItemStack(sorteio.nextInt(5) == 0 ? ModItens.PASTEL.get() : ModItens.RACAO.get()));
         if (precisaDePocaoDeForca(run, andar, sorteio)) {
             run.contarQueda(POCOES_DE_FORCA);
             garantidos.add(Identificacao.pocao(semente, TipoDePocao.FORCA));
@@ -120,6 +129,23 @@ public class SaqueDoAndar {
         if (precisaDePergaminhoDeMelhoria(run, andar, sorteio)) {
             run.contarQueda(PERGAMINHOS_DE_MELHORIA);
             garantidos.add(Identificacao.pergaminho(semente, TipoDePergaminho.MELHORIA));
+        }
+        // Igual ao Shattered, uma pedra de intuição a mais nos andares 1 a 4 (cai no máximo até o 4)
+        if (andar < 5 && run.quedas(PEDRA_DE_INTUICAO) == 0 && (andar == 4 || sorteio.nextInt(4 - andar) == 0)) {
+            run.contarQueda(PEDRA_DE_INTUICAO);
+            garantidos.add(new ItemStack(ModItens.pedra(TipoDePedra.INTUICAO)));
+        }
+        // O laboratório (igual ao Shattered): se o andar tem uma poção de força, ela vira o primeiro prêmio do laboratório
+        ItemStack forcaDoLaboratorio = null;
+        for (PremioNoChao premio : planta.premios()) {
+            if (premio.premio() == Premio.PREMIO_DO_LABORATORIO && forcaDoLaboratorio == null) {
+                for (ItemStack item : garantidos) {
+                    if (Identificacao.tipoDaPocao(semente, item) == TipoDePocao.FORCA) {
+                        forcaDoLaboratorio = item;
+                    }
+                }
+                garantidos.remove(forcaDoLaboratorio);
+            }
         }
         // A sala das armadilhas (igual ao Shattered): 2 em 3 vezes, o baú do fundo guarda um desses itens garantidos;
         // senão, uma arma ou armadura igual à do labirinto. E o andar ganha uma poção de levitação pra atravessar a sala.
@@ -167,8 +193,14 @@ public class SaqueDoAndar {
                 pilhasDoTesouro++;
             }
         }
+        Set<TipoDePocao> pocoesDoLaboratorio = EnumSet.noneOf(TipoDePocao.class);
         for (PremioNoChao premio : planta.premios()) {
-            saques.add(saqueDoPremio(premio, sorteio, andar, run, pilhasDoTesouro, premioDasArmadilhas));
+            if (premio.premio() == Premio.PREMIO_DO_LABORATORIO && forcaDoLaboratorio != null) {
+                saques.add(new Saque(premio.x(), premio.y(), List.of(forcaDoLaboratorio), Onde.CHAO));
+                forcaDoLaboratorio = null;
+                continue;
+            }
+            saques.add(saqueDoPremio(premio, sorteio, andar, run, pilhasDoTesouro, premioDasArmadilhas, pocoesDoLaboratorio));
         }
 
         for (Saque saque : saques) {
@@ -181,7 +213,7 @@ public class SaqueDoAndar {
 
     // O item de verdade de cada prêmio das salas especiais
     private static Saque saqueDoPremio(PremioNoChao premio, Random sorteio, int andar, DadosDaRun run, int pilhasDoTesouro,
-            @Nullable ItemStack premioDasArmadilhas) {
+            @Nullable ItemStack premioDasArmadilhas, Set<TipoDePocao> pocoesDoLaboratorio) {
         long semente = run.semente();
         Onde onde = premio.noBau() ? Onde.BAU : Onde.CHAO;
         ItemStack item = switch (premio.premio()) {
@@ -202,8 +234,16 @@ public class SaqueDoAndar {
             case PLANTA_ALEATORIA -> sementeAleatoria(sorteio);
             case PLANTA_GRAMA_SOLAR -> new ItemStack(ItemSemente.daPlanta(TipoDePlanta.GRAMA_SOLAR));
             case PLANTA_ESTRELA -> new ItemStack(ItemSemente.daPlanta(TipoDePlanta.FLOR_ESTRELA));
+            case ARBUSTO_DE_FRUTA -> new ItemStack(ModItens.FRUTA_SEM_GRACA.get());
+            case CARNE_GRELHADA -> new ItemStack(ModItens.CARNE_GRELHADA.get());
+            case CRISTAIS_DO_LABORATORIO -> new ItemStack(ModItens.CRISTAL_DE_ENERGIA.get(), 5);
+            case CRISTAIS_DO_LABORATORIO_SECRETO -> new ItemStack(ModItens.CRISTAL_DE_ENERGIA.get(), 3 + sorteio.nextInt(3));
+            case PREMIO_DO_LABORATORIO -> sorteio.nextBoolean() ? pocaoAleatoria(sorteio, semente) : pedraAleatoria(sorteio);
+            case PAGINA_DO_GUIA -> new ItemStack(ModItens.PAGINA_DO_GUIA.get());
+            case POCAO_DO_LABORATORIO_SECRETO -> Identificacao.pocao(semente, pocaoDoLaboratorioSecreto(sorteio, pocoesDoLaboratorio));
         };
-        if (premio.premio() == Premio.PLANTA_ALEATORIA || premio.premio() == Premio.PLANTA_GRAMA_SOLAR || premio.premio() == Premio.PLANTA_ESTRELA) {
+        if (premio.premio() == Premio.PLANTA_ALEATORIA || premio.premio() == Premio.PLANTA_GRAMA_SOLAR || premio.premio() == Premio.PLANTA_ESTRELA
+                || premio.premio() == Premio.ARBUSTO_DE_FRUTA) {
             onde = Onde.PLANTADA;
         }
         // Igual ao Shattered: a partir do andar 2, cada baú de ouro da tesouraria tem 1 chance em 5 de ser um mímico
@@ -211,6 +251,24 @@ public class SaqueDoAndar {
             onde = Onde.MIMICO;
         }
         return new Saque(premio.x(), premio.y(), List.of(item), onde);
+    }
+
+    // As chances de cada poção do laboratório secreto (igual ao Shattered: as mais fracas são mais comuns); não repete na mesma sala
+    private static final TipoDePocao[] POCOES_DO_LABORATORIO = { TipoDePocao.CURA, TipoDePocao.VISAO_MENTAL, TipoDePocao.GELO,
+            TipoDePocao.CHAMA_LIQUIDA, TipoDePocao.GAS_TOXICO, TipoDePocao.PRESSA, TipoDePocao.INVISIBILIDADE, TipoDePocao.LEVITACAO,
+            TipoDePocao.GAS_PARALISANTE, TipoDePocao.PUREZA, TipoDePocao.EXPERIENCIA };
+    private static final float[] CHANCES_DO_LABORATORIO = { 1, 2, 3, 3, 3, 4, 4, 4, 4, 4, 6 };
+
+    private static TipoDePocao pocaoDoLaboratorioSecreto(Random sorteio, Set<TipoDePocao> jaSairam) {
+        float[] chances = CHANCES_DO_LABORATORIO.clone();
+        for (int i = 0; i < chances.length; i++) {
+            if (jaSairam.contains(POCOES_DO_LABORATORIO[i])) {
+                chances[i] = 0;
+            }
+        }
+        TipoDePocao tipo = POCOES_DO_LABORATORIO[sortearPeso(sorteio, chances)];
+        jaSairam.add(tipo);
+        return tipo;
     }
 
     // A armadura do túmulo da cripta (igual ao Shattered): de um tier da região seguinte, sempre amaldiçoada
@@ -257,6 +315,9 @@ public class SaqueDoAndar {
                 for (ItemStack item : saque.itens()) {
                     if (item.getItem() instanceof ItemSemente semente) {
                         ItemSemente.plantar(mundo, lugar, semente.planta());
+                    } else if (item.getItem() instanceof FrutaSemGraca && PlantaDoShattered.daPraPlantar(mundo, lugar)) {
+                        // O arbusto de fruta-sem-graça
+                        mundo.setBlock(lugar, ModBlocos.ARBUSTO_DE_FRUTA.get().defaultBlockState(), 3);
                     }
                 }
             } else if (saque.onde() == Onde.CHAO) {
@@ -308,13 +369,11 @@ public class SaqueDoAndar {
         return sorteio.nextInt(5 - andarNaRegiao) < faltamNaRegiao;
     }
 
-    // Ouro (10), poção (8), pergaminho (8), arma (2), armadura (2), semente (1), arma de arremesso (1), varinha (1) ou anel (1),
-    // igual ao peso deles no Shattered
     // Os pesos de cada tipo de item, igual ao Shattered (a média dos dois "baralhos" dele):
-    // ouro 10, poção 8, pergaminho 8, arma 2, armadura 1,5, semente 1, arremesso 1,5, varinha 1, anel 0,5, artefato 0,5
+    // ouro 10, poção 8, pergaminho 8, arma 2, armadura 1,5, semente 1, arremesso 1,5, varinha 1, anel 0,5, artefato 0,5, pedra rúnica 1
     public static ItemStack itemAleatorio(Random sorteio, int andar, DadosDaRun run) {
         long semente = run.semente();
-        return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 1.5F, 1, 1.5F, 1, 0.5F, 0.5F })) {
+        return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 1.5F, 1, 1.5F, 1, 0.5F, 0.5F, 1 })) {
             case 0 -> Ouro.sortear(sorteio, andar);
             case 1 -> pocaoAleatoria(sorteio, semente);
             case 2 -> pergaminhoAleatorio(sorteio, semente);
@@ -324,7 +383,8 @@ public class SaqueDoAndar {
             case 6 -> arremessoAleatorio(sorteio, andar);
             case 7 -> varinhaAleatoria(sorteio);
             case 8 -> anelAleatorio(sorteio);
-            default -> artefatoAleatorio(sorteio, run);
+            case 9 -> artefatoAleatorio(sorteio, run);
+            default -> pedraAleatoria(sorteio);
         };
     }
 
@@ -378,6 +438,16 @@ public class SaqueDoAndar {
             pesos[i] = tipos[i].peso();
         }
         return Identificacao.pergaminho(semente, tipos[sortearPeso(sorteio, pesos)]);
+    }
+
+    // Uma pedra rúnica pelo peso de cada tipo (a de encantamento e a de alteração têm peso 0: só saem da alquimia)
+    public static ItemStack pedraAleatoria(Random sorteio) {
+        TipoDePedra[] tipos = TipoDePedra.values();
+        float[] pesos = new float[tipos.length];
+        for (int i = 0; i < tipos.length; i++) {
+            pesos[i] = tipos[i].peso();
+        }
+        return new ItemStack(ModItens.pedra(tipos[sortearPeso(sorteio, pesos)]));
     }
 
     public static ItemStack sementeAleatoria(Random sorteio) {

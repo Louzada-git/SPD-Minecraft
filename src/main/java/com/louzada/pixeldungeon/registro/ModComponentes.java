@@ -94,4 +94,23 @@ public class ModComponentes {
     // O que o artefato guarda: os pergaminhos que o livro instável ainda aceita, a semente das sandálias...
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> GUARDADO = COMPONENTES.registerComponentType("guardado",
             construtor -> construtor.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+
+    // A alteração da arma ou da armadura (pedra de alteração): "velocidade", "dano", "evasao" ou "defesa"
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> ALTERACAO = COMPONENTES.registerComponentType("alteracao",
+            construtor -> construtor.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+
+    // A arma ou armadura em que o herói usou a poção da maestria (pede 2 de força a menos)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> MAESTRIA = COMPONENTES.registerComponentType("maestria",
+            construtor -> construtor.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+
+    // A fruta-sem-graça cozida no pote: o id do TipoDePocao da semente com que ela foi cozida
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> FRUTA_COZIDA = COMPONENTES.registerComponentType("fruta_cozida",
+            construtor -> construtor.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+
+    // O kit do alquimista: quanto ainda falta pra ele esquentar (100 = acabou de equipar, 0 = pronto)
+    // e o tick do jogo do último turno em que ele estava equipado (pra saber quando foi equipado de novo)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> AQUECIMENTO = COMPONENTES.registerComponentType("aquecimento",
+            construtor -> construtor.persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> EQUIPADO_EM = COMPONENTES.registerComponentType("equipado_em",
+            construtor -> construtor.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG));
 }

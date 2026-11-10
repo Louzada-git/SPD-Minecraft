@@ -158,4 +158,9 @@ public enum Talento {
     public static int pontosGanhos(int tier, int nivel) {
         return Math.max(0, Math.min(PONTOS_DO_TIER[tier - 1], nivel - NIVEL_DO_TIER[tier - 1] + 1));
     }
+
+    // Com os pontos a mais da poção da inspiração divina: igual ao Shattered, já valem um nível antes do tier liberar
+    public static int pontosGanhos(int tier, int nivel, int bonus) {
+        return pontosGanhos(tier, nivel) + (nivel >= NIVEL_DO_TIER[tier - 1] - 1 ? bonus : 0);
+    }
 }

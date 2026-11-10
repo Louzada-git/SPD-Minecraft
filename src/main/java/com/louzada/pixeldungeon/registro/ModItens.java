@@ -16,22 +16,30 @@ import com.louzada.pixeldungeon.item.Baga;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
 import com.louzada.pixeldungeon.item.ChaveDeFerro;
+import com.louzada.pixeldungeon.item.ComidaDoShattered;
 import com.louzada.pixeldungeon.item.CorDePocao;
+import com.louzada.pixeldungeon.item.CristalDeEnergia;
 import com.louzada.pixeldungeon.item.GemaDeAnel;
 import com.louzada.pixeldungeon.item.ItemAnel;
 import com.louzada.pixeldungeon.item.ItemAnkh;
+import com.louzada.pixeldungeon.item.FrutaSemGraca;
 import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
 import com.louzada.pixeldungeon.item.ItemComDescricao;
+import com.louzada.pixeldungeon.item.ItemPedraRunica;
 import com.louzada.pixeldungeon.item.ItemPergaminho;
+import com.louzada.pixeldungeon.item.ItemPergaminhoExotico;
 import com.louzada.pixeldungeon.item.ItemPocao;
+import com.louzada.pixeldungeon.item.ItemPocaoExotica;
 import com.louzada.pixeldungeon.item.ItemSemente;
 import com.louzada.pixeldungeon.item.ItemVarinha;
 import com.louzada.pixeldungeon.item.Odre;
 import com.louzada.pixeldungeon.item.Ouro;
+import com.louzada.pixeldungeon.item.PaginaDoGuia;
 import com.louzada.pixeldungeon.item.PetalaSeca;
 import com.louzada.pixeldungeon.item.RacaoDeSuprimentos;
 import com.louzada.pixeldungeon.item.RunaDePergaminho;
 import com.louzada.pixeldungeon.item.SeloQuebrado;
+import com.louzada.pixeldungeon.item.TipoDePedra;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 import com.louzada.pixeldungeon.item.TipoDeVarinha;
 import com.louzada.pixeldungeon.item.TomoSagrado;
@@ -41,6 +49,7 @@ import com.louzada.pixeldungeon.item.artefato.CaliceDeSangue;
 import com.louzada.pixeldungeon.item.artefato.ChaveDeCranio;
 import com.louzada.pixeldungeon.item.artefato.ChifreDaFartura;
 import com.louzada.pixeldungeon.item.artefato.CorrentesEtereas;
+import com.louzada.pixeldungeon.item.artefato.KitDoAlquimista;
 import com.louzada.pixeldungeon.item.artefato.LivroInstavel;
 import com.louzada.pixeldungeon.item.artefato.RosaSeca;
 import com.louzada.pixeldungeon.item.artefato.SandaliasDaNatureza;
@@ -209,10 +218,12 @@ public class ModItens {
     // A rosa seca só funciona depois da missão do fantasma; as pétalas sobem o nível dela
     public static final DeferredItem<RosaSeca> ROSA_SECA = ITENS.registerItem("rosa_seca", RosaSeca::new);
     public static final DeferredItem<PetalaSeca> PETALA_SECA = ITENS.registerItem("petala_seca", PetalaSeca::new);
+    // O kit do alquimista: a alquimia sem pote
+    public static final DeferredItem<KitDoAlquimista> KIT_DO_ALQUIMISTA = ITENS.registerItem("kit_do_alquimista", KitDoAlquimista::new);
 
     public static List<DeferredItem<? extends ArtefatoAchado>> artefatos() {
         return List.of(CALICE_DE_SANGUE, CHIFRE_DA_FARTURA, AMPULHETA_DO_TEMPO, LIVRO_INSTAVEL, CORRENTES_ETEREAS, TALISMA_DA_VIDENCIA,
-                BRACADEIRA_DO_LADRAO, SANDALIAS_DA_NATUREZA, CHAVE_DE_CRANIO, ROSA_SECA);
+                BRACADEIRA_DO_LADRAO, SANDALIAS_DA_NATUREZA, CHAVE_DE_CRANIO, ROSA_SECA, KIT_DO_ALQUIMISTA);
     }
 
     // Odre: todo herói começa com um; guarda as gotas de orvalho
@@ -248,6 +259,19 @@ public class ModItens {
     // Ração de suprimentos: aparece em baús pro Ladino com o talento rações guardadas
     public static final DeferredItem<RacaoDeSuprimentos> RACAO_DE_SUPRIMENTOS = ITENS.registerItem("racao_de_suprimentos", RacaoDeSuprimentos::new);
 
+    // As comidas da alquimia (ver ComidaDoShattered e ReceitasDeComida)
+    public static final DeferredItem<ComidaDoShattered> CARNE_GRELHADA = ITENS.registerItem("carne_grelhada",
+            propriedades -> new ComidaDoShattered(propriedades, "carne_grelhada", 5, false));
+    public static final DeferredItem<ComidaDoShattered> ENSOPADO = ITENS.registerItem("ensopado",
+            propriedades -> new ComidaDoShattered(propriedades, "ensopado", 5, false));
+    public static final DeferredItem<ComidaDoShattered> PASTEL = ITENS.registerItem("pastel",
+            propriedades -> new ComidaDoShattered(propriedades, "pastel", 15, false));
+    public static final DeferredItem<ComidaDoShattered> TORTA_DE_CARNE = ITENS.registerItem("torta_de_carne",
+            propriedades -> new ComidaDoShattered(propriedades, "torta_de_carne", 30, true));
+    public static final DeferredItem<ComidaDoShattered> PEDACOS_DE_FRUTA = ITENS.registerItem("pedacos_de_fruta",
+            propriedades -> new ComidaDoShattered(propriedades, "pedacos_de_fruta", 15, false));
+    public static final DeferredItem<FrutaSemGraca> FRUTA_SEM_GRACA = ITENS.registerItem("fruta_sem_graca", FrutaSemGraca::new);
+
     // ---- Poções, pergaminhos e sementes do Shattered ----
 
     // Uma poção pra cada cor, um pergaminho pra cada runa, uma semente pra cada planta (na ordem dos enums).
@@ -255,6 +279,24 @@ public class ModItens {
     public static final List<DeferredItem<ItemPocao>> POCOES = registrarPocoes();
     public static final List<DeferredItem<ItemPergaminho>> PERGAMINHOS = registrarPergaminhos();
     public static final List<DeferredItem<ItemSemente>> SEMENTES = registrarSementes();
+
+    // ---- Alquimia ----
+
+    // Cristal de energia alquímica: vira energia na hora em que o herói encosta
+    public static final DeferredItem<CristalDeEnergia> CRISTAL_DE_ENERGIA = ITENS.registerItem("cristal_de_energia", CristalDeEnergia::new);
+    // O desenho do que vai sair do pote quando não dá pra saber antes (não é um item de verdade)
+    public static final DeferredItem<ItemComDescricao> POCAO_ALEATORIA = ITENS.registerItem("pocao_aleatoria",
+            propriedades -> new ItemComDescricao(propriedades, "pocao_aleatoria"));
+    public static final DeferredItem<ItemComDescricao> PEDRA_ALEATORIA = ITENS.registerItem("pedra_aleatoria",
+            propriedades -> new ItemComDescricao(propriedades, "pedra_aleatoria"));
+    // As 12 pedras rúnicas (na ordem do TipoDePedra)
+    public static final List<DeferredItem<ItemPedraRunica>> PEDRAS = registrarPedras();
+    // As poções exóticas, uma pra cada cor (na ordem do CorDePocao)
+    public static final List<DeferredItem<ItemPocaoExotica>> POCOES_EXOTICAS = registrarPocoesExoticas();
+    // Os pergaminhos exóticos, um pra cada runa (na ordem do RunaDePergaminho)
+    public static final List<DeferredItem<ItemPergaminhoExotico>> PERGAMINHOS_EXOTICOS = registrarPergaminhosExoticos();
+    // A página rasgada do guia de alquimia (fica nos laboratórios)
+    public static final DeferredItem<PaginaDoGuia> PAGINA_DO_GUIA = ITENS.registerItem("pagina_do_guia", PaginaDoGuia::new);
 
     // ---- Itens especiais ----
 
@@ -365,10 +407,44 @@ public class ModItens {
         return lista;
     }
 
+    private static List<DeferredItem<ItemPocaoExotica>> registrarPocoesExoticas() {
+        List<DeferredItem<ItemPocaoExotica>> lista = new ArrayList<>();
+        for (CorDePocao cor : CorDePocao.values()) {
+            lista.add(ITENS.registerItem("pocao_exotica_" + cor.id(), propriedades -> new ItemPocaoExotica(propriedades, cor)));
+        }
+        return lista;
+    }
+
+    private static List<DeferredItem<ItemPergaminhoExotico>> registrarPergaminhosExoticos() {
+        List<DeferredItem<ItemPergaminhoExotico>> lista = new ArrayList<>();
+        for (RunaDePergaminho runa : RunaDePergaminho.values()) {
+            lista.add(ITENS.registerItem("pergaminho_exotico_" + runa.id(), propriedades -> new ItemPergaminhoExotico(propriedades, runa)));
+        }
+        return lista;
+    }
+
+    private static List<DeferredItem<ItemPedraRunica>> registrarPedras() {
+        List<DeferredItem<ItemPedraRunica>> lista = new ArrayList<>();
+        for (TipoDePedra tipo : TipoDePedra.values()) {
+            lista.add(ITENS.registerItem(tipo.nomeDoItem(), propriedades -> new ItemPedraRunica(propriedades, tipo)));
+        }
+        return lista;
+    }
+
+    // O item da pedra desse tipo
+    public static ItemPedraRunica pedra(TipoDePedra tipo) {
+        return PEDRAS.get(tipo.ordinal()).get();
+    }
+
+    // Os desenhos do pote de alquimia (não aparecem no criativo)
+    public static boolean marcadorDaAlquimia(Item item) {
+        return item == POCAO_ALEATORIA.get() || item == PEDRA_ALEATORIA.get();
+    }
+
     // Usado pela aba do criativo para mostrar todos os itens do mod
     public static void colocarTodos(CreativeModeTab.Output saida) {
         for (var item : ITENS.getEntries()) {
-            if (item.get() != FLECHA_ESPIRITUAL.get() && item.get() != GOTA_DE_ORVALHO.get()) {
+            if (item.get() != FLECHA_ESPIRITUAL.get() && item.get() != GOTA_DE_ORVALHO.get() && !marcadorDaAlquimia(item.get())) {
                 saida.accept(item.get());
             }
         }

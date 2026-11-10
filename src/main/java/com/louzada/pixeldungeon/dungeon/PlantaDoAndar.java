@@ -29,6 +29,8 @@ public class PlantaDoAndar {
     public static final byte BARRIL = 10;
     // Porta escondida (o "SECRET_DOOR" do Shattered): é construída como parede e vira porta comum quando alguém procura
     public static final byte PORTA_ESCONDIDA = 11;
+    // O pote de alquimia (o laboratório): fica no meio do quadradinho, ninguém passa
+    public static final byte POTE = 12;
 
     // Grama por cima do chão (uma camada separada, o quadradinho continua sendo chão)
     public static final byte SEM_GRAMA = 0;
@@ -43,7 +45,12 @@ public class PlantaDoAndar {
         // O baú do fundo da sala das armadilhas, e o item qualquer da sala de invocação secreta
         PREMIO_DAS_ARMADILHAS, ITEM_ALEATORIO,
         // Plantas já plantadas (não são itens)
-        PLANTA_ALEATORIA, PLANTA_GRAMA_SOLAR, PLANTA_ESTRELA
+        PLANTA_ALEATORIA, PLANTA_GRAMA_SOLAR, PLANTA_ESTRELA, ARBUSTO_DE_FRUTA,
+        // A carne grelhada da despensa secreta
+        CARNE_GRELHADA,
+        // Do laboratório: os cristais de energia (5; no secreto, de 3 a 5), o prêmio (a poção de força do andar, ou uma poção ou uma
+        // pedra rúnica), a página do guia de alquimia e as poções do laboratório secreto (todas diferentes)
+        CRISTAIS_DO_LABORATORIO, CRISTAIS_DO_LABORATORIO_SECRETO, PREMIO_DO_LABORATORIO, PAGINA_DO_GUIA, POCAO_DO_LABORATORIO_SECRETO
     }
 
     // Um prêmio num quadradinho, no chão ou dentro de um baú
@@ -282,7 +289,7 @@ public class PlantaDoAndar {
     // Dá pra andar em cima?
     public boolean passavel(int x, int y) {
         byte tipo = tipo(x, y);
-        return tipo != PAREDE && tipo != PORTA_ESCONDIDA && tipo != ESTATUA && tipo != ESTANTE && tipo != BARRIL;
+        return tipo != PAREDE && tipo != PORTA_ESCONDIDA && tipo != ESTATUA && tipo != ESTANTE && tipo != BARRIL && tipo != POTE;
     }
 
     // As portas gigantes (as comuns e as trancadas)

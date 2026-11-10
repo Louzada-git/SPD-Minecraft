@@ -4,8 +4,8 @@ import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Premio;
 
 // O jardim (o "GardenRoom" do Shattered): grama alta na beirada, grama baixa no meio, e às vezes plantas.
-// No Shattered: 1 em 3 tem uma grama-solar, 1 em 3 tem um arbusto de fruta-sem-graça (o mod ainda não tem:
-// aqui vira uma planta qualquer), e no resto, 1 em 5 tem os dois.
+// Igual ao Shattered: 1 em 3 tem uma grama-solar, 1 em 3 tem um arbusto de fruta-sem-graça, e no resto,
+// 1 em 5 tem os dois.
 public class Jardim extends ComodoEspecial {
 
     @Override
@@ -24,10 +24,10 @@ public class Jardim extends ComodoEspecial {
         if (arbustos == 0) {
             plantar(planta, Premio.PLANTA_GRAMA_SOLAR);
         } else if (arbustos == 1) {
-            plantar(planta, Premio.PLANTA_ALEATORIA);
+            plantar(planta, Premio.ARBUSTO_DE_FRUTA);
         } else if (Dado.ate(5) == 0) {
             plantar(planta, Premio.PLANTA_GRAMA_SOLAR);
-            plantar(planta, Premio.PLANTA_ALEATORIA);
+            plantar(planta, Premio.ARBUSTO_DE_FRUTA);
         }
     }
 
