@@ -195,3 +195,10 @@ idea {
         downloadJavadoc = true
     }
 }
+
+// Temporário: mostra o classpath de compilação
+tasks.register('mostrarClasspath') {
+    doLast {
+        sourceSets.main.compileClasspath.files.each { println "CP:" + it }
+    }
+}
