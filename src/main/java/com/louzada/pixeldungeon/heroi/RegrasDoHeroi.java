@@ -3,6 +3,7 @@ package com.louzada.pixeldungeon.heroi;
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.item.ArtefatoAchado;
+import com.louzada.pixeldungeon.item.EfeitosDeElixir;
 import com.louzada.pixeldungeon.registro.ModAnexos;
 
 import net.minecraft.ChatFormatting;
@@ -56,7 +57,7 @@ public class RegrasDoHeroi {
         if (vida != null) {
             // O Minecraft já dá 20 de vida; o modificador soma o que o nível dá a mais
             vida.addOrUpdateTransientModifier(new AttributeModifier(ID_VIDA_DO_NIVEL,
-                    vidaMaxima(dados.nivel()) - 20, AttributeModifier.Operation.ADD_VALUE));
+                    vidaMaxima(dados.nivel()) - 20 + EfeitosDeElixir.bonusDeVida(dados), AttributeModifier.Operation.ADD_VALUE));
         }
         if (jogador.getHealth() > jogador.getMaxHealth()) {
             jogador.setHealth(jogador.getMaxHealth());
@@ -94,6 +95,7 @@ public class RegrasDoHeroi {
         }
 
         if (niveisGanhos > 0) {
+            EfeitosDeElixir.aoSubirNivel(dados, niveisGanhos);
             aplicar(jogador);
             // Igual ao Shattered: cada nível dá +5 de vida máxima e cura esses 5
             jogador.heal(5 * niveisGanhos);

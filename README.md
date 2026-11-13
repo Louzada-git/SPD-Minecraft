@@ -10,10 +10,10 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 - Andares do esgoto (1 a 4) gerados igual ao Shattered (o mesmo jeito de montar o mapa do jogo original):
   - A entrada, a saída, de 4 a 6 salas comuns (algumas grandes) e 1 ou 2 salas especiais. Metade dos andares é uma volta, a outra metade é um oito, com galhos e túneis entre as salas.
   - As salas do esgoto do Shattered: a dos canos (canais de água com uma calçada em volta), a do anel, a da ponte na água, a dos barris de armazenamento e a das plantas. Salas vizinhas às vezes viram uma só (a parede entre elas some).
-  - **Salas especiais**, trancadas: **arsenal** (uma arma e uma armadura), **tesouraria** (ouro no chão ou em baús, que a partir do andar 2 podem ser mímicos), **biblioteca** (estantes e pergaminhos; o primeiro é de identificação ou de remover maldição), **jardim** (grama alta e às vezes plantas), **cripta** (uma armadura melhor que as do andar, +1, mas amaldiçoada) e **laboratório** (um no esgoto, no andar 3 ou 4; ver Alquimia). A **sala das armadilhas** tem porta comum (ver Armadilhas).
+  - **Salas especiais**, trancadas: **arsenal** (2 ou 3 prêmios diferentes: bomba, arma, armadura ou armas de arremesso), **tesouraria** (ouro no chão ou em baús, que a partir do andar 2 podem ser mímicos), **biblioteca** (estantes e pergaminhos; o primeiro é de identificação ou de remover maldição), **jardim** (grama alta e às vezes plantas), **cripta** (uma armadura melhor que as do andar, +1, mas amaldiçoada) e **laboratório** (um no esgoto, no andar 3 ou 4; ver Alquimia). A **sala das armadilhas** tem porta comum (ver Armadilhas).
   - **Salas secretas**, com a porta escondida (parece parede): 2 ou 3 no esgoto, espalhadas pelos andares 2 a 4, igual ao Shattered. São 8 das 12 do Shattered:
-    - **jardim secreto** (grama alta, uma flor-estrela e mais 3 plantas), **biblioteca secreta** (estantes em volta de um oval e 2 ou 3 pergaminhos), **despensa** (uma planta no meio de uma poça e uma ração de suprimentos), **tesouro** (montes de ouro que somam umas 8 pilhas, e metade do chão com armadilhas à vista), **labirinto** (um baú no fim, com uma arma ou armadura da região seguinte, nunca amaldiçoada, e 1 em 3 com +1 a mais), **arsenal secreto** (uma estátua e 2 conjuntos de armas de arremesso), **invocação secreta** (o chão todo de armadilhas de invocação escondidas, e um item qualquer no meio) e **laboratório secreto** (o pote de alquimia no meio, 2 montes de 3 a 5 cristais de energia e 2 ou 3 poções diferentes).
-    - As outras 4 precisam de coisas que o mod ainda não tem (estantes que pegam fogo, poço mágico, bombas e abismo).
+    - **jardim secreto** (grama alta, uma flor-estrela e mais 3 plantas), **biblioteca secreta** (estantes em volta de um oval e 2 ou 3 pergaminhos), **despensa** (uma planta no meio de uma poça e uma ração de suprimentos), **tesouro** (montes de ouro que somam umas 8 pilhas, e metade do chão com armadilhas à vista), **labirinto** (um baú no fim, com uma arma ou armadura da região seguinte, nunca amaldiçoada, e 1 em 3 com +1 a mais), **arsenal secreto** (uma estátua, 2 bombas e 2 conjuntos de armas de arremesso), **invocação secreta** (o chão todo de armadilhas de invocação escondidas, e um item qualquer no meio) e **laboratório secreto** (o pote de alquimia no meio, 2 montes de 3 a 5 cristais de energia e 2 ou 3 poções diferentes).
+    - As outras 4 precisam de coisas que o mod ainda não tem (estantes que pegam fogo, poço mágico, pote de mel e abismo).
   - A partir do andar 2, algumas portas comuns também ficam escondidas (o andar dividido por 20: 10% no andar 2, 20% no 4), mas só se der pra chegar nas salas por outro caminho.
 - **Procurar** (tecla **G** ou o botão de procurar da barra do inventário), igual ao Shattered: acha na hora as portas e as armadilhas escondidas que estiverem perto e à vista, e leva 2 turnos. A porta escondida vira uma porta gigante comum, pra todo mundo.
   - Perto quer dizer 1 quadradinho em volta (3x3). O Ladino procura 2 (5x5), e a grande busca soma mais 1 (+1: um círculo de 7x7, +2: um quadrado de 7x7).
@@ -459,14 +459,14 @@ Igual ao Shattered, um **fantasma triste** espera na sala da saída de um dos an
 
 ### Alquimia
 
-As receitas do esgoto do Shattered (as 5 primeiras páginas do guia de alquimia), com os mesmos números.
+As receitas do esgoto e da prisão do Shattered (as 9 páginas do guia de alquimia) e os acessórios, com os mesmos números.
 
 - **Pote de alquimia:** fica nos laboratórios. Clique direito abre a tela: 3 casinhas de ingredientes à esquerda, um botão **Criar** pra cada receita que serve (até 3: um pergaminho vira pedras ou o pergaminho exótico, por exemplo), o que vai sair do lado (apagadinho) e o resultado à direita. O que sobrar nas casinhas volta pro inventário quando fecha.
 - **Energia alquímica:** cada herói tem a sua (zera numa run nova). Aparece na tela do pote e no inventário, em azul do lado do ouro.
   - **Cristais de energia:** viram energia na hora em que o herói encosta (1 por cristal). Ficam nos laboratórios.
-  - **Energizar:** o botão desfaz o que estiver nas casinhas em energia. Poção e pergaminho dão 6 (a de força, a de experiência, o de aprimoramento e o de transmutação dão 10, se você já souber o que são), poção exótica 4 a mais que a comum, pergaminho exótico 6 a mais, pedra rúnica 3 (a de encantamento e a de alteração, 5) e bolha de gosma 3. Energizar uma poção ou um pergaminho identifica o tipo.
-- **Guia de alquimia:** o botão **Guia** da tela do pote. São 5 páginas, uma pra cada grupo de receitas (com o texto do Shattered e o desenho das receitas). Cada laboratório tem uma **página rasgada**: clique direito lê (ela vira a primeira página que você ainda não tem). Igual ao diário do Shattered, as páginas que você leu continuam de uma run pra outra; quem já tem todas não gasta a página e pode dar pra um amigo.
-- **Laboratório** (sala especial): um no esgoto, no andar 3 (metade das vezes) ou no 4, sempre trancado. Chão especial, o pote num canto da parede do outro lado da porta, 5 cristais de energia, 1 ou 2 prêmios (a poção de força do andar, se ele tiver uma; senão, uma poção ou uma pedra rúnica) e uma página do guia.
+  - **Energizar:** o botão desfaz o que estiver nas casinhas em energia. Poção e pergaminho dão 6 (a de força, a de experiência, o de aprimoramento e o de transmutação dão 10, se você já souber o que são), poção exótica 4 a mais que a comum, pergaminho exótico 6 a mais, pedra rúnica 3 (a de encantamento e a de alteração, 5), bolha de gosma 3, composto e elixir 12 (o instável, 8), acessório 5, e cada feitiço a energia da receita dividida pelos que ela faz (8 alquimizar dão 4, por exemplo). Energizar uma poção ou um pergaminho identifica o tipo.
+- **Guia de alquimia:** o botão **Guia** da tela do pote. São 9 páginas (5 do esgoto e 4 da prisão), uma pra cada grupo de receitas (com o texto do Shattered e o desenho das receitas). Cada laboratório tem uma **página rasgada**: clique direito lê (ela vira a primeira página que você ainda não tem). Igual ao diário do Shattered, as páginas que você leu continuam de uma run pra outra; quem já tem todas não gasta a página e pode dar pra um amigo.
+- **Laboratório** (sala especial): um no esgoto, no andar 3 (metade das vezes) ou no 4, sempre trancado. Chão especial, o pote num canto da parede do outro lado da porta, 5 cristais de energia, 1 ou 2 prêmios (o catalisador mágico, se ele cair nesse andar; a poção de força do andar, se ele tiver uma; senão, uma poção ou uma pedra rúnica) e uma página do guia.
 - **Laboratório secreto** (sala secreta): o pote no meio, 2 montes de 3 a 5 cristais e 2 ou 3 poções diferentes (as mais fracas são mais comuns).
 
 | Receita | Energia | Sai |
@@ -531,7 +531,83 @@ As receitas do esgoto do Shattered (as 5 primeiras páginas do guia de alquimia)
 | Metamorfose (transmutação) | troca um talento seu por um de outra classe |
 
 - **Comidas:** a carne misteriosa no fogo vira **carne grelhada**. A **torta de carne** mata toda a fome e deixa **bem alimentado** por 450 turnos (sem fome e curando). A **frutinsossa** crua não se come; cozida, comer é igual a beber a poção da semente (a de fogo, gelo, gás, levitação e pureza quebra quando arremessada, agachado). Ela cresce num **arbusto**: quem pisa colhe. O andar às vezes troca a ração por um **salgado**.
-- Diferenças do Shattered: o mod ainda não tem as receitas da prisão (bombas, infusões, elixires e feitiços) nem os berloques.
+- **Bombas:** a bomba comum aparece no arsenal (às vezes 2) e no arsenal secreto (2). Clique direito acende e joga; agachado, joga apagada (dá pra pegar de volta). Acesa, explode 2 turnos depois de cair: fere quem estiver no quadradinho dela e nos vizinhos (de 4 + andar a 12 + 3 × andar, menos a armadura), quebra as poções no chão e faz as outras bombas perto explodirem também. Clique direito numa bomba acesa apaga o pavio. As melhoradas saem do pote (bomba + um ingrediente identificado) e explodem num raio maior:
+
+| Bomba | Ingrediente | Energia | O que faz |
+|---|---|---|---|
+| De gelo | poção gélida | 0 | congela quem estiver em volta (2 quadradinhos) |
+| De lã | pergaminho de imagem espelhada | 0 | ovelhas mágicas por 200 turnos em volta |
+| De fogo | poção de chama líquida | 1 | põe fogo em volta |
+| Barulhenta | pergaminho de fúria | 1 | não explode: vira um alarme que chama o andar todo a cada 6 turnos, até alguém pisar nela (aí explode) |
+| De fumaça | poção de invisibilidade | 2 | uma nuvem de fumaça grande |
+| De clarão | pergaminho de recarga | 2 | fere um pouco (magia) e paralisa por 10 turnos |
+| De brotamento | poção de cura | 3 | não fere: cura os heróis e aliados, faz crescer grama, 2 ou 3 plantas e orvalho ou sementes |
+| Sagrada | pergaminho de remover maldição | 3 | dano a mais nos mortos-vivos e demônios (o esgoto ainda não tem nenhum) |
+| Arcana | bolha de gosma | 6 | não quebra nada, e o dano ignora a armadura |
+
+- **Metal líquido e resina arcana:**
+
+| Receita | Energia | Sai |
+|---|---|---|
+| 1 conjunto de armas de arremesso (maldição conhecida e sem maldição) | 3 | metal líquido (5 × (tier + 1) por arma, mais com nível). Clique direito no metal escolhe um conjunto: conserta, e com ele inteiro completa uma arma que falte (até 3) |
+| 1 varinha (maldição conhecida e sem maldição) | 5 | resina arcana (2 por nível da varinha + 2). Clique direito escolhe uma varinha: gasta nível + 1 de resina e ela ganha +1 (até +3) |
+
+- **Compostos e elixires:** os compostos se arremessam (clique direito) e quebram onde caem; os elixires se bebem. Os ingredientes têm que estar identificados.
+
+| Composto / elixir | Ingredientes | Energia | O que faz |
+|---|---|---|---|
+| Composto cáustico | poção de gás tóxico + bolha de gosma | 1 | muco cáustico em todo mundo a até 3 quadradinhos |
+| Composto nevado | poção gélida | 8 | uma nevasca grande |
+| Composto infernal | poção de chama líquida | 12 | fogo em tudo a até 2 quadradinhos |
+| Composto eletrizado | poção de gás paralítico | 10 | eletricidade a até 3 quadradinhos |
+| Composto aquático (sai 8) | poção de nuvens tempestuosas | 8 | um gêiser: alaga o chão, desarma armadilhas, apaga o fogo e empurra quem estiver perto |
+| Composto instável | qualquer poção (até desconhecida) + semente | 1 | arremessado, uma poção de quebrar qualquer; bebido (clique direito; agachado arremessa), uma de beber qualquer |
+| Elixir de sangue de dragão | poção de bafo de dragão | 10 | 50 turnos: imune a fogo, e os golpes às vezes põem fogo |
+| Elixir de toque gélido | poção de congelamento instantâneo | 6 | 50 turnos: imune a frio, e os golpes resfriam |
+| Elixir de essência tóxica | poção de gás corrosivo | 8 | 50 turnos: imune a veneno e gás tóxico, e solta gás tóxico em volta |
+| Elixir do poder | poção de força | 16 | +1 de força e vida a mais, que diminui em 5 níveis |
+| Elixir da queda suave | poção de levitação | 10 | 50 turnos: não leva dano de queda |
+| Elixir de armadura arcana | poção de armadura de barro + bolha de gosma | 8 | 80 turnos: menos dano de magia |
+| Elixir de rejuvenescimento aquático | poção de cura + bolha de gosma | 6 | cura 1,5x a vida máxima, mas só enquanto estiver na água |
+
+- **Feitiços:** clique direito lança. Os que pedem um item só se gastam quando o item é escolhido; os de mira, só quando acertam alguma coisa.
+
+| Feitiço | Ingredientes | Energia | O que faz |
+|---|---|---|---|
+| Feitiço instável | qualquer pergaminho (até desconhecido) + pedra rúnica | 1 | um pergaminho ao acaso: com inimigos à vista, um de luta; sem, um de explorar |
+| Alquimizar (sai 8) | semente + pedra rúnica | 2 | escolhe um item: a pilha inteira vira energia alquímica (sem precisar do pote) |
+| Infusão mágica | pergaminho de aprimoramento | 12 | aprimora um equipamento (+1) sem perder o encantamento ou o glifo |
+| Mudança de fase (sai 6) | pergaminho de teletransporte | 10 | o inimigo na mira vai pra um lugar qualquer do andar e fica paralisado por 10 turnos (menos chefes) |
+| Reciclar (sai 12) | pergaminho de transmutação | 12 | troca uma poção, pergaminho, semente ou pedra rúnica por outra do mesmo tipo |
+| Sinalizador de retorno (sai 5) | pergaminho de passagem | 12 | marca o lugar (não gasta); depois, volta pra ele de qualquer andar (gasta). Não dá pra sair de um andar de chefe enquanto ele luta |
+| Pegar telecinético (sai 8) | 10 de metal líquido | 10 | pega os itens do quadradinho na mira, ou as armas de arremesso cravadas no inimigo |
+
+- **Acessórios:** o **catalisador mágico** cai uma vez por run, num dos andares 1 a 4 (se o andar tiver laboratório, é o primeiro prêmio dele; senão, a sala das armadilhas guarda ele, ou ele fica no chão). No pote, sozinho, com 6 de energia, vira um acessório: aparecem 3 pra escolher (os mesmos até você escolher). Os acessórios valem enquanto estiverem no inventário e sobem até +3 no pote (sozinhos: 6, 8 e 10 de energia; o pedaço de papiro, a moita de musgo e a resina maravilhosa, 10, 15 e 20). Os que mexem na masmorra valem pra run toda se algum herói carregar.
+
+| Acessório | O que faz (do nível 0 ao 3) |
+|---|---|
+| Crânio de rato | o rato albino 2x a 5x mais comum |
+| Pedaço de papiro | encantamentos e glifos 2x, 4x, 7x e 10x mais comuns; maldições em armas e armaduras 1,5x, 2x, 1x e nenhuma |
+| Semente petrificada | a grama pisoteada solta coisas mais vezes, e 25% a 80% das sementes viram pedras rúnicas |
+| Cristais exóticos | 20% a 80% das poções e pergaminhos achados vêm exóticos (menos a de força e o de aprimoramento) |
+| Moita de musgo | 25% a 100% dos andares sem tema (metade deles, a partir do 2) ficam cheios de água ou de grama |
+| Relógio de sol dimensional | os inimigos renascem 5% a 20% menos de dia (8h às 20h, na vida real) e 25% a 100% mais de noite |
+| Trevo de treze folhas | 25% a 100% dos seus golpes saem com o dano máximo (60%) ou o mínimo (40%) |
+| Mecanismo de armadilha | 25% a 100% dos andares sem tema ficam cheios de armadilhas (5x, as a mais à vista); 10% a 40% das armadilhas escondidas ficam à vista |
+| Dente de mímico | mímicos 1,5x a 3x mais comuns |
+| Resina maravilhosa | a varinha amaldiçoada solta um efeito neutro ou bom 25% a 100% das vezes; as outras varinhas soltam também um disparo amaldiçoado bom 12,5% a 50% das vezes |
+| Olho de salamandra | você enxerga 12,5% a 50% menos longe (uma névoa), mas vê os inimigos a 2 a 5 quadradinhos através das paredes |
+| Cubo de sal | a fome demora 25% a 100% mais, mas a vida volta 16% a 40% mais devagar |
+| Frasco de sangue | a poção de cura cura 12,5% a 50% mais, mas devagar (no máximo de 4 + 15% a 1 + 5% da vida máxima por turno) |
+| Fragmento do esquecimento | os equipamentos não se identificam sozinhos: avisam que estão prontos, e o fragmento (clique direito) identifica. Os inimigos soltam itens 20% mais por equipamento sem identificar que você está usando (até 1 a 4) |
+| Incensário caótico | a cada 300 / (nível + 1) turnos, mais ou menos, solta um gás perto de um inimigo à vista (nos níveis maiores, os mais fortes vêm mais) |
+| Tufo de furão | todo mundo desvia 12,5% a 50% mais |
+| Luneta trincada | 37,5% a 150% de chance de um item a mais em cada andar |
+
+- Diferenças do Shattered:
+  - Faltam as receitas com ingredientes que só aparecem mais pra frente: a bomba de estilhaços, a infusão de maldição, a armadilha armazenada e a energia selvagem (fragmento de metal), a invocação de elemental (brasas) e o elixir de cura com mel (pote de mel).
+  - O catalisador mostra 3 acessórios (no Shattered, 4), porque o pote mostra até 3 receitas de cada vez.
+  - O mod ainda não tem os outros temas de andar do Shattered (escuro, grande, abismos...), os mímicos de ébano e de ouro, nem as estátuas e mímicos de cristal (o crânio de rato e o dente de mímico só mexem no que já tem). O mecanismo de armadilha nunca deixa o andar cheio de abismos, só de armadilhas. Os itens da luneta ficam à vista.
 
 ### Talentos
 
@@ -679,7 +755,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 ## O que vem depois
 
 1. **Texturas próprias** dos blocos.
-2. **Mais itens:** as receitas de alquimia da prisão (bombas, infusões, elixires e feitiços), os berloques e as lojas.
+2. **Mais itens:** as lojas.
 3. **O resto do esgoto do Shattered:** as salas secretas que faltam e as salas que precisam de abismo.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
@@ -691,9 +767,9 @@ src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
   bloco/                       escadas, portas gigantes, armadilhas, plantas e blocos de decoração
-  item/                        armas, armas de arremesso, varinhas, anéis, armadura, glifos, encantamentos, o selo do Guerreiro, poções, pergaminhos, sementes, pedras rúnicas, poções e pergaminhos exóticos, comidas, identificação e maldições
+  item/                        armas, armas de arremesso, varinhas, anéis, armadura, glifos, encantamentos, o selo do Guerreiro, poções, pergaminhos, sementes, pedras rúnicas, poções e pergaminhos exóticos, bombas, compostos, elixires, feitiços, acessórios, comidas, identificação e maldições
     artefato/                  os 11 artefatos que se acha pela dungeon (o cálice, o chifre, a ampulheta, o livro, as correntes, o talismã, a braçadeira, as sandálias, a chave, a rosa e o kit do alquimista)
-  alquimia/                    o pote: a tela, as receitas, a energia alquímica e o guia de alquimia
+  alquimia/                    o pote: a tela, as receitas (do esgoto e da prisão, e as dos acessórios), a energia alquímica e o guia de alquimia
   entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o guardião de terra, as guardas, as ovelhas mágicas, o míssil mágico, as nuvens de gás...
   efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
   combate/

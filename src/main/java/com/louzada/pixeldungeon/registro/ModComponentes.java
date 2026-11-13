@@ -107,6 +107,10 @@ public class ModComponentes {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> FRUTA_COZIDA = COMPONENTES.registerComponentType("fruta_cozida",
             construtor -> construtor.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
 
+    // A varinha: quantos níveis vieram da resina arcana (não contam pra transformar ela em resina de novo)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> RESINA = COMPONENTES.registerComponentType("resina",
+            construtor -> construtor.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
     // O kit do alquimista: quanto ainda falta pra ele esquentar (100 = acabou de equipar, 0 = pronto)
     // e o tick do jogo do último turno em que ele estava equipado (pra saber quando foi equipado de novo)
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> AQUECIMENTO = COMPONENTES.registerComponentType("aquecimento",

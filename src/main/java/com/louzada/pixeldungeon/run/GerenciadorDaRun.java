@@ -3,7 +3,6 @@ package com.louzada.pixeldungeon.run;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.PixelDungeon;
@@ -15,6 +14,7 @@ import com.louzada.pixeldungeon.dungeon.MissaoDoFantasma;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
 import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
+import com.louzada.pixeldungeon.dungeon.TemaDoAndar;
 import com.louzada.pixeldungeon.entidade.FantasmaAliado;
 import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
@@ -22,9 +22,10 @@ import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.Talentos;
+import com.louzada.pixeldungeon.item.Acessorios;
 import com.louzada.pixeldungeon.item.Identificacao;
-import com.louzada.pixeldungeon.rede.RedeDoHeroi;
 import com.louzada.pixeldungeon.rede.PacoteAbrirMenu;
+import com.louzada.pixeldungeon.rede.RedeDoHeroi;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -217,6 +218,10 @@ public class GerenciadorDaRun {
             return info;
         }
 
+        // Os acessórios de agora decidem o tema do andar (ver TemaDoAndar) e mexem nos itens dele
+        Acessorios.atualizar(servidor);
+        TemaDoAndar.decidir(dados, andar);
+        PopulacaoDoAndar.esquecerPlanta(dados.semente(), andar);
         PlantaDoAndar planta = GeradorDeAndar.gerar(dados.semente(), andar);
         BlockPos origem = Andares.origemDoAndar(dados.numeroDaRun(), andar);
         // Os itens do andar são sorteados antes de construir, porque onde tem item a grama alta é aparada
@@ -320,7 +325,7 @@ public class GerenciadorDaRun {
         levarPara(jogador, andarAtual - 1, false);
     }
 
-    private static boolean chefeLutando(ServerLevel mundo, int andar) {
+    public static boolean chefeLutando(ServerLevel mundo, int andar) {
         BlockPos origem = Andares.origemDoAndar(DadosDaRun.pegar(mundo.getServer()).numeroDaRun(), andar);
         return !mundo.getEntitiesOfClass(Goo.class, PopulacaoDoAndar.caixaDoAndar(origem), Goo::lutando).isEmpty();
     }

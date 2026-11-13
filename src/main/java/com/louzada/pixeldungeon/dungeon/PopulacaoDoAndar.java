@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.PixelDungeon;
@@ -16,6 +15,8 @@ import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
 import com.louzada.pixeldungeon.entidade.Goo;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
+import com.louzada.pixeldungeon.item.Acessorios;
+import com.louzada.pixeldungeon.item.TipoDeAcessorio;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.run.DadosDaRun;
 import com.louzada.pixeldungeon.run.GerenciadorDaRun;
@@ -39,7 +40,7 @@ public class PopulacaoDoAndar {
     private static final double DISTANCIA_MINIMA_DOS_HEROIS = 24;
     private static final int RAIO_LIVRE_EM_VOLTA_DA_ENTRADA = 3;
 
-    private static int contadorDeTicks = 0;
+    private static float contadorDeTicks = 0;
     // Plantas já geradas (gerar de novo sai igual, mas assim é mais rápido)
     private static Map<String, PlantaDoAndar> plantas = new HashMap<>();
 
@@ -79,12 +80,14 @@ public class PopulacaoDoAndar {
         return talvezRaro(tipos.get(sorteio.nextInt(tipos.size())), sorteio);
     }
 
-    // Igual ao Shattered: 1 em cada 50 ratos é um rato albino
+    // Igual ao Shattered: 1 em cada 50 ratos é um rato albino (com o crânio de rato, 2x a 5x mais)
     private static EntityType<? extends MobDoShattered> talvezRaro(EntityType<? extends MobDoShattered> tipo, Random sorteio) {
-        if (tipo == ModEntidades.RATO_MARSUPIAL.get() && sorteio.nextInt(50) == 0) {
-            return ModEntidades.RATO_ALBINO.get();
+        if (tipo != ModEntidades.RATO_MARSUPIAL.get()) {
+            return tipo;
         }
-        return tipo;
+        float multiplicador = Acessorios.multiplicadorDeRaros(Acessorios.daRun(TipoDeAcessorio.CRANIO_DE_RATO));
+        boolean raro = multiplicador == 1 ? sorteio.nextInt(50) == 0 : sorteio.nextFloat() < multiplicador / 50F;
+        return raro ? ModEntidades.RATO_ALBINO.get() : tipo;
     }
 
     // ---- Começo do andar ----
@@ -143,10 +146,12 @@ public class PopulacaoDoAndar {
     // ---- Renascimento ----
 
     public static void aoTickDoServidor(ServerTickEvent.Post evento) {
-        contadorDeTicks++;
-        if (contadorDeTicks % TICKS_PARA_RENASCER != 0) {
+        // O relógio de sol dimensional (acessório) faz o tempo pra renascer passar mais devagar de dia e mais rápido de noite
+        contadorDeTicks += Acessorios.renascerAgora(Acessorios.daRun(TipoDeAcessorio.RELOGIO_DE_SOL));
+        if (contadorDeTicks < TICKS_PARA_RENASCER) {
             return;
         }
+        contadorDeTicks -= TICKS_PARA_RENASCER;
         MinecraftServer servidor = evento.getServer();
         DadosDaRun dados = DadosDaRun.pegar(servidor);
         if (!dados.ativa()) {
@@ -261,6 +266,11 @@ public class PopulacaoDoAndar {
     }
 
     // A planta de um andar, guardada pra não gerar de novo (a busca também usa)
+    // (o tema do andar é decidido quando ele é construído: a planta guardada antes disso não vale mais)
+    public static void esquecerPlanta(long semente, int andar) {
+        plantas.remove(semente + ":" + andar);
+    }
+
     public static PlantaDoAndar planta(long semente, int andar) {
         return plantas.computeIfAbsent(semente + ":" + andar, chave -> GeradorDeAndar.gerar(semente, andar));
     }

@@ -150,6 +150,7 @@ public class NuvemDeGas extends Entity {
         }
         for (LivingEntity criatura : level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(raio, ALTURA, raio))) {
             if (!criatura.isAlive() || criatura.isSpectator() || criatura.hasEffect(ModEfeitos.IMUNE_A_GAS)
+                    || (tipo() == Tipo.TOXICO && criatura.hasEffect(ModEfeitos.ESSENCIA_TOXICA))
                     || criatura.distanceToSqr(getX(), criatura.getY(), getZ()) > raio * raio) {
                 continue;
             }

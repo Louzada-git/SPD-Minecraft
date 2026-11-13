@@ -2,11 +2,13 @@ package com.louzada.pixeldungeon.entidade;
 
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
+import com.louzada.pixeldungeon.item.EfeitosDeInfusao;
 import com.louzada.pixeldungeon.item.EfeitosDePocao;
 import com.louzada.pixeldungeon.item.EfeitosDePocaoExotica;
 import com.louzada.pixeldungeon.item.FrutaSemGraca;
 import com.louzada.pixeldungeon.item.IdentidadesDaRun;
 import com.louzada.pixeldungeon.item.Identificacao;
+import com.louzada.pixeldungeon.item.ItemInfusao;
 import com.louzada.pixeldungeon.item.ItemPocao;
 import com.louzada.pixeldungeon.item.ItemPocaoExotica;
 import com.louzada.pixeldungeon.item.TipoDePocao;
@@ -74,6 +76,8 @@ public class PocaoArremessada extends ThrowableItemProjectile {
             if (apareceu && getOwner() instanceof ServerPlayer jogador) {
                 Identificacao.identificar(jogador, exotica.cor());
             }
+        } else if (getItem().getItem() instanceof ItemInfusao infusao) {
+            EfeitosDeInfusao.quebrar(mundo, infusao.tipo(), resultado.getLocation(), getOwner());
         } else if (getItem().getItem() instanceof FrutaSemGraca) {
             // A fruta-sem-graça cozida: as de poção ruim (e levitação e pureza) quebram igual à poção e deixam pedaços;
             // as outras caem inteiras

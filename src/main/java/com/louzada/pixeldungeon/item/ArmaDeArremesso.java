@@ -181,7 +181,7 @@ public class ArmaDeArremesso extends Item implements Arma, Equipamento {
             minimo = minimo + Math.round((maximo - minimo) * numeros.surpresa);
         }
         // A alteração (pedra de alteração) muda o dano sorteado, antes do bônus da força
-        int dano = Alteracao.dano(pilha, Sorteio.normal(sorteio, minimo, maximo));
+        int dano = Alteracao.dano(pilha, Acessorios.danoDoHeroi(sorteio, minimo, maximo));
         int forcaSobrando = heroi.forca() - forcaNecessaria(pilha);
         if (forcaSobrando > 0) {
             dano += Sorteio.normal(sorteio, 0, forcaSobrando);

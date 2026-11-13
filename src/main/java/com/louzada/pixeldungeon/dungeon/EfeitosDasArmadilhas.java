@@ -195,7 +195,7 @@ public class EfeitosDasArmadilhas {
 
     // ---- Alarme ----
 
-    private static void alarme(ServerLevel mundo, BlockPos controle) {
+    public static void alarme(ServerLevel mundo, BlockPos controle) {
         Vec3 centro = Armadilhas.centro(controle);
         Lugar lugar = lugar(mundo, controle);
         AABB andar = lugar != null ? PopulacaoDoAndar.caixaDoAndar(lugar.origem()) : new AABB(centro, centro).inflate(64, 8, 64);

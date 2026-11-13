@@ -163,39 +163,13 @@ public class EfeitosDasPedras {
 
     // Igual à bomba do Shattered: dano de (4 + andar) a (12 + 3 x andar), menos a armadura, em todo mundo nos 3x3 quadradinhos
     public static void explodir(ServerLevel mundo, BlockPos controle, @Nullable Entity dono) {
-        Vec3 meio = Armadilhas.centro(controle);
-        int andar = andarDe(mundo, meio);
-        long semente = Identificacao.sementeDaRun(mundo);
-        for (BlockPos quadradinho : EfeitosDasArmadilhas.quadradinhosAte(mundo, controle, 1)) {
-            Vec3 centro = Armadilhas.centro(quadradinho);
-            mundo.sendParticles(ParticleTypes.LARGE_SMOKE, centro.x, centro.y + 0.5, centro.z, 6, 1.0, 0.4, 1.0, 0.02);
-            queimarGrama(mundo, quadradinho);
-            for (ItemEntity item : EfeitosDasArmadilhas.itensEmVolta(mundo, quadradinho, 0)) {
-                ItemStack pilha = item.getItem();
-                if (!aguentaExplosao(pilha, semente)) {
-                    if (pilha.getItem() instanceof ItemPocao pocao) {
-                        EfeitosDePocao.quebrar(mundo, item.position(), IdentidadesDaRun.tipoDaCor(semente, pocao.cor()), pocao.cor(), dono);
-                    }
-                    item.discard();
-                }
-            }
-            for (LivingEntity criatura : EfeitosDasArmadilhas.criaturasEmVolta(mundo, quadradinho, 0)) {
-                if (criatura instanceof OvelhaMagica) {
-                    continue;
-                }
-                int dano = Sorteio.normal(mundo.getRandom(), 4 + andar, 12 + 3 * andar) - EfeitosDasArmadilhas.armadura(criatura);
-                if (dano > 0) {
-                    Combate.aplicar(criatura, dano, mundo.damageSources().explosion(null, dono));
-                }
-            }
-        }
-        mundo.sendParticles(ParticleTypes.EXPLOSION_EMITTER, meio.x, meio.y + 0.5, meio.z, 1, 0, 0, 0, 0);
-        mundo.playSound(null, BlockPos.containing(meio), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 2.0F, 1.0F);
+        // Igual ao Shattered: é a explosão de uma bomba comum (ver EfeitosDasBombas)
+        EfeitosDasBombas.explodir(mundo, TipoDeBomba.COMUM, controle, dono);
     }
 
     // Igual ao Shattered: os itens únicos e os equipamentos aguentam a explosão (as chaves, a poção de força,
     // o pergaminho de melhoria, a pedra de encantamento, o selo, o odre, os artefatos...)
-    private static boolean aguentaExplosao(ItemStack pilha, long semente) {
+    public static boolean aguentaExplosao(ItemStack pilha, long semente) {
         if (pilha.getItem() instanceof Equipamento || pilha.getItem() instanceof ArtefatoAchado || pilha.getItem() instanceof ChaveDeFerro
                 || pilha.getItem() instanceof SeloQuebrado || pilha.getItem() instanceof Odre || pilha.getItem() instanceof ArcoEspiritual
                 || pilha.getItem() instanceof TomoSagrado || pilha.getItem() instanceof CapaDasSombras) {
@@ -209,7 +183,7 @@ public class EfeitosDasPedras {
     }
 
     // A grama (alta e baixa) do quadradinho pega fogo e some
-    private static void queimarGrama(ServerLevel mundo, BlockPos controle) {
+    public static void queimarGrama(ServerLevel mundo, BlockPos controle) {
         for (int dx = 0; dx < T; dx++) {
             for (int dz = 0; dz < T; dz++) {
                 for (int dy = 1; dy <= 2; dy++) {
@@ -224,7 +198,7 @@ public class EfeitosDasPedras {
         }
     }
 
-    private static int andarDe(ServerLevel mundo, Vec3 lugar) {
+    public static int andarDe(ServerLevel mundo, Vec3 lugar) {
         DadosDaRun run = DadosDaRun.pegar(mundo.getServer());
         Integer andar = run.ativa() ? PopulacaoDoAndar.andarEm(run, lugar.x, lugar.y, lugar.z) : null;
         return andar == null ? 1 : Math.max(1, andar);

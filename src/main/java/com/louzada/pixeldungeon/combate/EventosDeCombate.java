@@ -16,6 +16,7 @@ import com.louzada.pixeldungeon.heroi.Furtividade;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
+import com.louzada.pixeldungeon.item.Acessorios;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.EfeitosDePergaminhoExotico;
 import com.louzada.pixeldungeon.item.artefato.BracadeiraDoLadrao;
@@ -204,6 +205,11 @@ public class EventosDeCombate {
         boolean ganhaItens = matador == null || RegrasDoHeroi.dados(matador).nivel() <= inimigo.atributos().nivelMaximo() + 2;
         // O item que a braçadeira do ladrão já roubou não cai de novo
         ItemStack saque = ganhaItens && !BracadeiraDoLadrao.foiRoubado(inimigo) ? inimigo.sortearSaque() : ItemStack.EMPTY;
+        // Fragmento do esquecimento (acessório): os inimigos soltam itens mais vezes (mais uma chance de sortear)
+        if (saque.isEmpty() && ganhaItens && matador != null && !BracadeiraDoLadrao.foiRoubado(inimigo)
+                && inimigo.getRandom().nextFloat() < Acessorios.multiplicadorDeSaque(matador) - 1) {
+            saque = inimigo.sortearSaque();
+        }
         if (!saque.isEmpty()) {
             ItemEntity noChao = inimigo.spawnAtLocation(saque);
             if (noChao != null) {

@@ -154,13 +154,18 @@ public class ItemVarinha extends Item implements Equipamento {
             usadas = tipo.cargasPorDisparo(cargas);
             // Poder inscrito: depois de ler um pergaminho, alguns disparos saem com +2 níveis
             EfeitosDeVarinha.lancar(heroi, tipo, NivelDoItem.nivel(pilha) + TalentosDoTier2.niveisInscritos(heroi), usadas);
+            // Resina maravilhosa (acessório): às vezes sai também um disparo amaldiçoado neutro ou bom
+            int resina = Acessorios.nivel(heroi, TipoDeAcessorio.RESINA_MARAVILHOSA);
+            if (resina >= 0 && heroi.getRandom().nextFloat() < Acessorios.chanceDeDisparoExtra(resina)) {
+                EfeitosDeVarinha.lancarAmaldicoada(heroi, true);
+            }
         }
         Talentos.aoUsarVarinha(heroi, cargas, usadas, false);
         Furtividade.revelar(heroi);
         // Identifica com o uso (intuição do estudioso +2: na hora)
         if (!NivelDoItem.identificado(pilha)) {
             if (RegrasDoHeroi.dados(heroi).pontos(Talento.INTUICAO_DO_ESTUDIOSO) >= 2) {
-                NivelDoItem.identificar(heroi, pilha);
+                NivelDoItem.identificarPeloUso(heroi, pilha);
             } else {
                 NivelDoItem.aoUsar(heroi, pilha);
             }

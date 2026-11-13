@@ -345,6 +345,11 @@ public abstract class MobDoShattered extends Monster implements Combatente {
 
     // ---- Aliado (corrompido) ----
 
+    // Morto-vivo ou demônio (a bomba sagrada fere mais; o esgoto ainda não tem nenhum)
+    public boolean mortoVivoOuDemonio() {
+        return false;
+    }
+
     public boolean aliado() {
         return hasEffect(ModEfeitos.CORROMPIDO) || hasEffect(ModEfeitos.DOMINADO) || aliadoDeNascenca();
     }

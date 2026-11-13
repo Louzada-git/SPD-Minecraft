@@ -142,8 +142,7 @@ public class Aneis {
             }
             float falta = anel.getOrDefault(ModComponentes.USOS_PARA_IDENTIFICAR.get(), 1.0F) - parte;
             if (falta <= 0) {
-                Identificacao.identificar(jogador, item.gema());
-                NivelDoItem.identificar(jogador, anel);
+                NivelDoItem.identificarPeloUso(jogador, anel);
             } else {
                 anel.set(ModComponentes.USOS_PARA_IDENTIFICAR.get(), falta);
             }

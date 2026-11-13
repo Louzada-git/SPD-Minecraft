@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.Turno;
@@ -720,12 +719,23 @@ public class EfeitosDeVarinha {
 
     // Igual ao Shattered, a magia de uma varinha amaldiçoada sai aleatória (e quase sempre ruim):
     // nada, fogo ou gelo onde o raio para, gás tóxico, grama em volta, ou quem lançou é teletransportado
+    // Com a resina maravilhosa (acessório), às vezes sai só uma das neutras ou boas ("soBoas"): fogo, gelo ou gás longe
+    // de quem lançou (onde o raio para, a 2 quadradinhos ou mais), ou a grama em volta.
     public static void lancarAmaldicoada(ServerPlayer jogador) {
+        int resina = Acessorios.nivel(jogador, TipoDeAcessorio.RESINA_MARAVILHOSA);
+        lancarAmaldicoada(jogador, resina >= 0 && jogador.getRandom().nextFloat() < Acessorios.chanceDeDisparoBom(resina));
+    }
+
+    public static void lancarAmaldicoada(ServerPlayer jogador, boolean soBoas) {
         ServerLevel mundo = jogador.serverLevel();
         Vec3 lugar = ondeORaioPara(jogador);
         rastro(jogador, lugar, Particulas.poeira(0x5A1E5A, 1.3F), 3);
         String mensagem;
-        switch (jogador.getRandom().nextInt(6)) {
+        int efeito = jogador.getRandom().nextInt(6);
+        if (soBoas) {
+            efeito = lugar.distanceTo(jogador.position()) >= 2 * Andares.TAMANHO_DO_QUADRADINHO ? jogador.getRandom().nextInt(4) : 3;
+        }
+        switch (efeito) {
             case 0 -> {
                 EfeitosDePocao.incendiar(mundo, lugar);
                 mensagem = "fogo";

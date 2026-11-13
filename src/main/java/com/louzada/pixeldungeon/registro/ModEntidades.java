@@ -2,6 +2,8 @@ package com.louzada.pixeldungeon.registro;
 
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.entidade.ArmaArremessada;
+import com.louzada.pixeldungeon.entidade.BombaAcesa;
+import com.louzada.pixeldungeon.entidade.BombaArremessada;
 import com.louzada.pixeldungeon.entidade.CaranguejoDeEsgoto;
 import com.louzada.pixeldungeon.entidade.CaranguejoGrande;
 import com.louzada.pixeldungeon.entidade.CobraDeEsgoto;
@@ -145,6 +147,14 @@ public class ModEntidades {
     public static final DeferredHolder<EntityType<?>, EntityType<PedraArremessada>> PEDRA_ARREMESSADA = ENTIDADES.register("pedra_arremessada",
             () -> EntityType.Builder.<PedraArremessada>of(PedraArremessada::new, MobCategory.MISC).sized(0.25F, 0.25F)
                     .clientTrackingRange(4).updateInterval(10).build("pedra_arremessada"));
+    // Bomba arremessada (acesa, vira uma bomba acesa onde cair)
+    public static final DeferredHolder<EntityType<?>, EntityType<BombaArremessada>> BOMBA_ARREMESSADA = ENTIDADES.register("bomba_arremessada",
+            () -> EntityType.Builder.<BombaArremessada>of(BombaArremessada::new, MobCategory.MISC).sized(0.25F, 0.25F)
+                    .clientTrackingRange(4).updateInterval(10).build("bomba_arremessada"));
+    // Bomba acesa no chão (explode quando o pavio acaba)
+    public static final DeferredHolder<EntityType<?>, EntityType<BombaAcesa>> BOMBA_ACESA = ENTIDADES.register("bomba_acesa",
+            () -> EntityType.Builder.<BombaAcesa>of(BombaAcesa::new, MobCategory.MISC).sized(0.5F, 0.5F)
+                    .clientTrackingRange(8).updateInterval(5).build("bomba_acesa"));
     // Nuvem de gás (tóxico, paralisante, confusão)
     public static final DeferredHolder<EntityType<?>, EntityType<NuvemDeGas>> NUVEM_DE_GAS = ENTIDADES.register("nuvem_de_gas",
             () -> EntityType.Builder.<NuvemDeGas>of(NuvemDeGas::new, MobCategory.MISC).sized(0.5F, 0.5F)

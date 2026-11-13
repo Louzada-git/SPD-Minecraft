@@ -6,8 +6,8 @@ import java.util.List;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Premio;
 
-// O arsenal (o "ArmoryRoom" do Shattered): uma estátua no canto do fundo e equipamento no chão.
-// No Shattered são 2 ou 3 entre bomba, arma, armadura e arma de arremesso; o mod só tem arma e armadura.
+// O arsenal (o "ArmoryRoom" do Shattered): uma estátua no canto do fundo e, no chão, 2 ou 3 prêmios diferentes
+// entre bomba, arma, armadura e arma de arremesso.
 public class Arsenal extends ComodoEspecial {
 
     @Override
@@ -30,9 +30,10 @@ public class Arsenal extends ComodoEspecial {
             Pincel.definir(planta, estatua, PlantaDoAndar.ESTATUA);
         }
 
-        List<Premio> premios = new ArrayList<>(List.of(Premio.ARMA, Premio.ARMADURA));
+        List<Premio> premios = new ArrayList<>(List.of(Premio.BOMBA, Premio.ARMA, Premio.ARMADURA, Premio.ARREMESSO));
         Dado.embaralhar(premios);
-        for (Premio premio : premios) {
+        int quantos = Dado.entre(2, 3);
+        for (Premio premio : premios.subList(0, quantos)) {
             Ponto lugar = lugarLivre(planta, PlantaDoAndar.CHAO);
             planta.adicionarPremio(lugar.x, lugar.y, premio, false);
         }

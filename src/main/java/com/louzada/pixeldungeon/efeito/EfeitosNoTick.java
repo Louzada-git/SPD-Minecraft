@@ -7,6 +7,8 @@ import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
+import com.louzada.pixeldungeon.item.Acessorios;
+import com.louzada.pixeldungeon.item.EfeitosDeElixir;
 import com.louzada.pixeldungeon.item.EfeitosDePergaminhoExotico;
 import com.louzada.pixeldungeon.item.EfeitosDePocaoExotica;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
@@ -33,6 +35,7 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 // dados extras da própria criatura.
 public class EfeitosNoTick {
     private static final String CURA_RESTANTE = "pixeldungeon_cura_restante";
+    private static final String CURA_POR_TURNO = "pixeldungeon_cura_por_turno";
     private static final String GRAMA_RESTANTE = "pixeldungeon_grama_restante";
     private static final String GRAMA_PARCIAL = "pixeldungeon_grama_parcial";
     private static final String GRAMA_LUGAR = "pixeldungeon_grama_lugar";
@@ -75,8 +78,10 @@ public class EfeitosNoTick {
     }
 
     // Poção de cura: cura um total de "quantidade", um quarto do que falta a cada turno
+    // Com o frasco de sangue (acessório), cura mais no total, mas no máximo um tanto por turno
     public static void curar(LivingEntity alvo, int quantidade) {
-        alvo.getPersistentData().putInt(CURA_RESTANTE, quantidade);
+        alvo.getPersistentData().putInt(CURA_RESTANTE, Acessorios.curaDoFrasco(alvo, quantidade));
+        alvo.getPersistentData().putInt(CURA_POR_TURNO, Acessorios.limiteDoFrasco(alvo));
         alvo.addEffect(new MobEffectInstance(ModEfeitos.CURANDO, PARA_SEMPRE));
     }
 
@@ -143,6 +148,10 @@ public class EfeitosNoTick {
         MobEffectInstance efeito = evento.getEffectInstance();
         LivingEntity criatura = evento.getEntity();
         if (efeito == null || criatura.level().isClientSide()) {
+            return;
+        }
+        // A armadura arcana (elixir) perde 1 nível a cada 80 turnos
+        if (EfeitosDeElixir.aoAcabar(criatura, efeito)) {
             return;
         }
         // A armadura de barro perde 1 nível a cada 50 turnos
@@ -217,6 +226,9 @@ public class EfeitosNoTick {
         if (criatura.hasEffect(ModEfeitos.CURANDO)) {
             int restante = dados.getInt(CURA_RESTANTE);
             int cura = Math.max(1, Math.round(restante * 0.25F));
+            if (dados.contains(CURA_POR_TURNO)) {
+                cura = Math.min(cura, dados.getInt(CURA_POR_TURNO));
+            }
             curarAgora(criatura, cura);
             restante -= cura;
             dados.putInt(CURA_RESTANTE, restante);
@@ -257,6 +269,8 @@ public class EfeitosNoTick {
                 alimentado.heal(1.0F);
             }
         }
+        // Os elixires (o gás da essência tóxica, a cura na água do rejuvenescimento aquático)
+        EfeitosDeElixir.aoTurno(criatura);
         // Vidência e arena do desafio (pergaminhos exóticos)
         if (criatura instanceof ServerPlayer leitor) {
             EfeitosDePergaminhoExotico.aoTurno(leitor);
@@ -388,7 +402,8 @@ public class EfeitosNoTick {
         if (((criatura.hasEffect(ModEfeitos.ESTASE) || criatura.hasEffect(ModEfeitos.PURIFICADO)) && evento.getEffectInstance() != null
                 && evento.getEffectInstance().getEffect().value().getCategory() == MobEffectCategory.HARMFUL)
                 || (criatura.hasEffect(ModEfeitos.ANTIMAGIA) && evento.getEffectInstance() != null
-                        && EfeitosDePergaminhoExotico.efeitoMagico(evento.getEffectInstance()))) {
+                        && EfeitosDePergaminhoExotico.efeitoMagico(evento.getEffectInstance()))
+                || EfeitosDeElixir.imune(criatura, evento.getEffectInstance())) {
             evento.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         }
     }

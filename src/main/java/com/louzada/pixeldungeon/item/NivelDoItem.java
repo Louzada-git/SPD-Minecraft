@@ -157,13 +157,17 @@ public class NivelDoItem {
             }
         }
         definirNivel(pilha, nivel);
+        // O pedaço de papiro (acessório) muda as chances das maldições e dos encantamentos, igual ao Shattered
+        int papiro = Acessorios.daRun(TipoDeAcessorio.PEDACO_DE_PAPIRO);
+        float maldicao = 0.3F * Acessorios.multiplicadorDeMaldicoes(papiro);
+        float encanto = Acessorios.multiplicadorDeEncantos(papiro);
         float efeito = sorteio.nextFloat();
-        if (efeito < 0.3F) {
+        if (efeito < maldicao) {
             List<Maldicao> possiveis = Maldicao.doAlvo(equipamento.alvoDasMaldicoes());
             pilha.set(ModComponentes.MALDICAO.get(), possiveis.get(sorteio.nextInt(possiveis.size())).id());
-        } else if (efeito >= 0.85F && ehArmadura(pilha)) {
+        } else if (efeito >= 1 - 0.15F * encanto && ehArmadura(pilha)) {
             definirGlifo(pilha, Glifo.sortear(sorteio));
-        } else if (efeito >= 0.9F && equipamento.alvoDasMaldicoes() == Maldicao.Alvo.ARMA) {
+        } else if (efeito >= 1 - 0.1F * encanto && equipamento.alvoDasMaldicoes() == Maldicao.Alvo.ARMA) {
             definirEncantamento(pilha, Encantamento.sortear(sorteio));
         }
         pilha.set(ModComponentes.IDENTIFICADO.get(), false);
@@ -208,7 +212,7 @@ public class NivelDoItem {
         }
         if (!identificado(pilha) && !(pilha.getItem() instanceof ItemAnel)) {
             Talento intuicao = ehArmadura(pilha) ? Talento.INTUICAO_DE_VETERANO : Talento.INTUICAO_DE_AVENTUREIRO;
-            if (RegrasDoHeroi.dados(jogador).pontos(intuicao) >= 2) {
+            if (RegrasDoHeroi.dados(jogador).pontos(intuicao) >= 2 && Acessorios.nivel(jogador, TipoDeAcessorio.FRAGMENTO_DO_ESQUECIMENTO) < 0) {
                 identificar(jogador, pilha);
                 return;
             }
@@ -235,10 +239,32 @@ public class NivelDoItem {
         float faltando = pilha.getOrDefault(ModComponentes.USOS_PARA_IDENTIFICAR.get(), usosParaIdentificar(pilha));
         faltando -= fatorDosTalentos(RegrasDoHeroi.dados(jogador), pilha);
         if (faltando <= 0) {
-            identificar(jogador, pilha);
+            identificarPeloUso(jogador, pilha);
         } else {
             pilha.set(ModComponentes.USOS_PARA_IDENTIFICAR.get(), faltando);
         }
+    }
+
+    // ---- Fragmento do esquecimento ----
+
+    // O item se identificaria sozinho (pelo uso ou por um talento). Com o fragmento do esquecimento (acessório) no inventário,
+    // igual ao Shattered, ele só fica "pronto" (avisa uma vez), e o fragmento é que identifica.
+    public static void identificarPeloUso(ServerPlayer jogador, ItemStack pilha) {
+        if (Acessorios.nivel(jogador, TipoDeAcessorio.FRAGMENTO_DO_ESQUECIMENTO) < 0) {
+            Identificacao.identificarItem(jogador, pilha);
+            return;
+        }
+        if (!prontoPraIdentificar(pilha)) {
+            pilha.set(ModComponentes.USOS_PARA_IDENTIFICAR.get(), 0F);
+            jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.fragmento.pronto", pilha.getHoverName())
+                    .withStyle(ChatFormatting.YELLOW), false);
+        }
+    }
+
+    // Pronto pra identificar com o fragmento do esquecimento
+    public static boolean prontoPraIdentificar(ItemStack pilha) {
+        return podeIdentificar(pilha) && !identificado(pilha) && pilha.has(ModComponentes.USOS_PARA_IDENTIFICAR.get())
+                && pilha.get(ModComponentes.USOS_PARA_IDENTIFICAR.get()) <= 0;
     }
 
     // Intuição de veterano (Guerreiro): armas 1,75x / 2,5x, armaduras 2,5x / na hora.
@@ -319,6 +345,18 @@ public class NivelDoItem {
             if (jogador != null && maldicaoConhecida(pilha)) {
                 jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.maldicao_sumiu").withStyle(ChatFormatting.AQUA), false);
             }
+        }
+    }
+
+    // A infusão mágica (feitiço): +1 nível sem perder o encantamento ou o glifo, e sem tirar a maldição
+    public static void infundir(ItemStack pilha) {
+        if (pilha.getOrDefault(ModComponentes.SELO.get(), false)) {
+            pilha.set(ModComponentes.SELO_MELHORIA.get(), true);
+        }
+        definirNivel(pilha, nivel(pilha) + 1);
+        ArmaDeArremesso.definirDurabilidade(pilha, ArmaDeArremesso.DURABILIDADE_MAXIMA);
+        if (pilha.getItem() instanceof ItemVarinha) {
+            Cargas.somar(pilha, ItemVarinha.cargasMaximas(pilha), 1);
         }
     }
 

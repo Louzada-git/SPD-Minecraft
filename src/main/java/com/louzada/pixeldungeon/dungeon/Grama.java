@@ -11,7 +11,9 @@ import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
 import com.louzada.pixeldungeon.heroi.GlifosDoHeroi;
 import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.Talento;
+import com.louzada.pixeldungeon.item.Acessorios;
 import com.louzada.pixeldungeon.item.ArtefatoAchado;
+import com.louzada.pixeldungeon.item.TipoDeAcessorio;
 import com.louzada.pixeldungeon.item.artefato.SandaliasDaNatureza;
 import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.louzada.pixeldungeon.registro.ModItens;
@@ -28,6 +30,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -37,7 +40,7 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 // Pisotear a grama alta, igual ao Shattered. A grama vale pelo quadradinho inteiro (4x4 blocos):
 // encostou em qualquer parte, o quadradinho todo é pisoteado e vira um tapete de musgo.
 //   - 1 em 6: cai uma gota de orvalho (ela voa sozinha pro odre de quem estiver perto)
-//   - 1 em 25: cai uma semente
+//   - 1 em 25: cai uma semente (com a semente petrificada, mais vezes, e às vezes uma pedra rúnica)
 //   - com as sandálias da natureza: elas carregam, e a semente (até 1 em 9) e o orvalho (até 1 em 4) caem mais
 //   - Caçadora: passa sem derrubar a grama (fica "trilhada"), mas ainda ganha o que cair
 //   - Caçadora com recompensa da natureza: às vezes cai uma baga
@@ -142,8 +145,13 @@ public class Grama {
         if (sorteio.nextFloat() < 1F / (UMA_GOTA_EM - natureza / 2F)) {
             GotaDeOrvalho.soltar(mundo, x, y, z);
         }
-        if (sorteio.nextFloat() < 1F / (UMA_SEMENTE_EM - natureza * 4F)) {
-            SaqueDoAndar.soltar(mundo, x, y, z, SaqueDoAndar.sementeAleatoria(new Random(sorteio.nextLong())));
+        // A semente petrificada (acessório) faz cair mais coisas, e às vezes uma pedra rúnica no lugar da semente
+        int petrificada = quemPisou instanceof Player jogador ? Acessorios.nivel(jogador, TipoDeAcessorio.SEMENTE_PETRIFICADA)
+                : Acessorios.daRun(TipoDeAcessorio.SEMENTE_PETRIFICADA);
+        if (sorteio.nextFloat() < Acessorios.multiplicadorDaGrama(petrificada) / (UMA_SEMENTE_EM - natureza * 4F)) {
+            Random dado = new Random(sorteio.nextLong());
+            boolean pedra = petrificada >= 0 && dado.nextFloat() < Acessorios.chanceDePedraNaGrama(petrificada);
+            SaqueDoAndar.soltar(mundo, x, y, z, pedra ? SaqueDoAndar.pedraAleatoria(dado) : SaqueDoAndar.sementeAleatoria(dado));
         }
         if (quemPisou instanceof ServerPlayer jogador && GerenciadorDoHeroi.emJogo(jogador)) {
             talvezBaga(mundo, jogador, x, y, z);

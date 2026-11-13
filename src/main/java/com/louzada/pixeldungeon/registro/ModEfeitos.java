@@ -77,6 +77,21 @@ public class ModEfeitos {
     // Vidência (pergaminho da vidência): acha sozinho os segredos até 8 quadradinhos
     public static final DeferredHolder<MobEffect, EfeitoSimples> VIDENCIA = EFEITOS.register("videncia",
             () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x99DDFF));
+    // Os elixires: sangue de dragão (fogo nos golpes, imune a fogo), toque gélido (frio nos golpes, imune a frio),
+    // essência tóxica (solta gás tóxico, imune a ele e a veneno), queda suave (cair não machuca),
+    // armadura arcana (diminui o dano mágico; perde 1 nível a cada 80 turnos) e rejuvenescimento aquático (cura na água)
+    public static final DeferredHolder<MobEffect, EfeitoSimples> FOGO_INTERIOR = EFEITOS.register("fogo_interior",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xFF8800));
+    public static final DeferredHolder<MobEffect, EfeitoSimples> FRIO_INTERIOR = EFEITOS.register("frio_interior",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x66CCFF));
+    public static final DeferredHolder<MobEffect, EfeitoSimples> ESSENCIA_TOXICA = EFEITOS.register("essencia_toxica",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x99CC00));
+    public static final DeferredHolder<MobEffect, EfeitoSimples> QUEDA_SUAVE = EFEITOS.register("queda_suave",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xDDFFEE));
+    public static final DeferredHolder<MobEffect, EfeitoSimples> ARMADURA_ARCANA = EFEITOS.register("armadura_arcana",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x9966FF));
+    public static final DeferredHolder<MobEffect, EfeitoSimples> REJUVENESCIMENTO = EFEITOS.register("rejuvenescimento",
+            () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0x22BBBB));
     // Arena de desafio (pergaminho do desafio): dentro dela, o herói toma 67% do dano e não fica com fome
     public static final DeferredHolder<MobEffect, EfeitoSimples> DESAFIO = EFEITOS.register("desafio",
             () -> new EfeitoSimples(MobEffectCategory.BENEFICIAL, 0xFF0000));

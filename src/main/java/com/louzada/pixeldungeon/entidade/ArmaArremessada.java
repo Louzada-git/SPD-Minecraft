@@ -1,5 +1,8 @@
 package com.louzada.pixeldungeon.entidade;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.combate.Combate;
 import com.louzada.pixeldungeon.combate.Combatente;
@@ -205,7 +208,7 @@ public class ArmaArremessada extends ThrowableItemProjectile {
         }
         // Intuição de sobrevivente +2 (Caçadora): identifica ao acertar
         if (dados.pontos(Talento.INTUICAO_DE_SOBREVIVENTE) >= 2) {
-            NivelDoItem.identificar(jogador, pilha);
+            NivelDoItem.identificarPeloUso(jogador, pilha);
         }
         int nivel = NivelDoItem.nivel(pilha);
         switch (especial()) {
@@ -302,6 +305,18 @@ public class ArmaArremessada extends ThrowableItemProjectile {
     // Quantas armas estão cravadas nele
     public static int espetados(LivingEntity alvo) {
         return alvo.getPersistentData().getList(ESPETADOS, Tag.TAG_COMPOUND).size();
+    }
+
+    // Tira as armas cravadas nele (o agarrão telecinético)
+    public static List<ItemStack> tirarEspetados(LivingEntity alvo) {
+        List<ItemStack> armas = new ArrayList<>();
+        CompoundTag dados = alvo.getPersistentData();
+        ListTag lista = dados.getList(ESPETADOS, Tag.TAG_COMPOUND);
+        for (int i = 0; i < lista.size(); i++) {
+            ItemStack.parse(alvo.registryAccess(), lista.getCompound(i)).ifPresent(armas::add);
+        }
+        dados.remove(ESPETADOS);
+        return armas;
     }
 
     // O inimigo morreu: as armas cravadas nele caem

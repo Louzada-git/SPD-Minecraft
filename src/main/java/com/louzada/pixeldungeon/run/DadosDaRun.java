@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.dungeon.Andares;
+import com.louzada.pixeldungeon.dungeon.TemaDoAndar;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -106,6 +106,12 @@ public class DadosDaRun extends SavedData {
         setDirty();
     }
 
+    // Guarda um número qualquer da run (o tema de cada andar, por exemplo: ver TemaDoAndar)
+    public void definirQueda(String item, int valor) {
+        quedas.put(item, valor);
+        setDirty();
+    }
+
     public boolean portaAchada(int andar, int qx, int qy) {
         Set<Integer> achadas = portasAchadas.get(andar);
         return achadas != null && achadas.contains(qy * Andares.TAMANHO_DA_PLANTA + qx);
@@ -182,6 +188,7 @@ public class DadosDaRun extends SavedData {
         for (String item : quedasTag.getAllKeys()) {
             dados.quedas.put(item, quedasTag.getInt(item));
         }
+        TemaDoAndar.carregar(dados, dados.quedas);
         ListTag listaDePortas = tag.getList("portas_achadas", Tag.TAG_COMPOUND);
         for (int i = 0; i < listaDePortas.size(); i++) {
             CompoundTag portasTag = listaDePortas.getCompound(i);

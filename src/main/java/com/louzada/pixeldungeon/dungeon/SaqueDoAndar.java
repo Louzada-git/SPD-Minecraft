@@ -5,13 +5,13 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.bloco.PlantaDoShattered;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Premio;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.PremioNoChao;
+import com.louzada.pixeldungeon.item.Acessorios;
 import com.louzada.pixeldungeon.item.ArmaDeArremesso;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
@@ -28,6 +28,8 @@ import com.louzada.pixeldungeon.item.ItemVarinha;
 import com.louzada.pixeldungeon.item.Maldicao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
 import com.louzada.pixeldungeon.item.Ouro;
+import com.louzada.pixeldungeon.item.TipoDeAcessorio;
+import com.louzada.pixeldungeon.item.TipoDeBomba;
 import com.louzada.pixeldungeon.item.TipoDePedra;
 import com.louzada.pixeldungeon.item.TipoDePergaminho;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
@@ -53,9 +55,10 @@ import net.minecraft.world.item.ItemStack;
 //   - a arma é de um tier sorteado pela região (no esgoto: 75% tier 2, 20% tier 3, 4% tier 4, 1% tier 5),
 //     com nível +0 (75%), +1 (20%) ou +2 (5%), 30% amaldiçoada, e vem sem identificar
 //   - cada item fica: num baú (4 em 20), dentro de um mímico (1 em 20, só a partir do andar 2) ou largado no chão
+//   - os acessórios mudam um pouco isso (ver Acessorios): o dente de mímico, os cristais exóticos, a luneta trincada
 //   - todo andar também tem uma ração largada no chão
 //   - em cada região caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares;
-//     e uma pedra de intuição a mais em um dos andares 1 a 4
+//     e uma pedra de intuição a mais em um dos andares 1 a 4, e o catalisador mágico também (o laboratório guarda ele)
 //   - cada porta trancada tem a chave de ferro dela largada numa sala comum
 //   - as salas especiais (arsenal, tesouraria, biblioteca, jardim, cripta, armadilhas) e as secretas têm os prêmios delas
 //   - a sala das armadilhas pede uma poção de levitação no chão do andar
@@ -87,6 +90,7 @@ public class SaqueDoAndar {
     public static final String PERGAMINHOS_DE_MELHORIA = "pergaminho_de_melhoria";
     public static final String PETALAS = "petalas_da_rosa";
     public static final String PEDRA_DE_INTUICAO = "pedra_de_intuicao";
+    public static final String CATALISADOR = "catalisador_magico";
 
     // Sorteia os itens do andar e já apara a grama alta onde eles vão ficar (antes de construir o andar)
     public static List<Saque> sortear(PlantaDoAndar planta, int andar, DadosDaRun run) {
@@ -107,6 +111,11 @@ public class SaqueDoAndar {
             int dado = sorteio.nextInt(20);
             if (dado >= 1 && dado <= 4) {
                 onde = Onde.BAU;
+                // Igual ao Shattered: com o dente de mímico, cada +1x de mímicos vira 25% de chance de o baú ser um mímico
+                float mimicos = Acessorios.multiplicadorDeMimicos(Acessorios.daRun(TipoDeAcessorio.DENTE_DE_MIMICO));
+                if (mimicos > 1 && sorteio.nextFloat() < (mimicos - 1) / 4F) {
+                    onde = Onde.MIMICO;
+                }
             } else if (dado == 5) {
                 // No andar 1 não tem mímico: vira um baú comum
                 onde = andar > 1 ? Onde.MIMICO : Onde.BAU;
@@ -135,9 +144,30 @@ public class SaqueDoAndar {
             run.contarQueda(PEDRA_DE_INTUICAO);
             garantidos.add(new ItemStack(ModItens.pedra(TipoDePedra.INTUICAO)));
         }
-        // O laboratório (igual ao Shattered): se o andar tem uma poção de força, ela vira o primeiro prêmio do laboratório
-        ItemStack forcaDoLaboratorio = null;
+        // O catalisador mágico (igual ao Shattered): um por run, nos andares 1 a 4 (no 4, se ainda não caiu, cai de certeza).
+        // (sorteado à parte, pra não mudar o resto do andar)
+        ItemStack catalisador = null;
+        if (andar < 5 && run.quedas(CATALISADOR) == 0 && (andar == 4 || new Random(semente * 71 + andar * 13L).nextInt(4 - andar) == 0)) {
+            run.contarQueda(CATALISADOR);
+            catalisador = new ItemStack(ModItens.CATALISADOR_MAGICO.get());
+            garantidos.add(catalisador);
+        }
+        // O laboratório (igual ao Shattered): o catalisador vira o primeiro prêmio do laboratório; senão, a poção de força do andar
+        ItemStack catalisadorDoLaboratorio = null;
         for (PremioNoChao premio : planta.premios()) {
+            if (premio.premio() == Premio.PREMIO_DO_LABORATORIO && catalisador != null && catalisadorDoLaboratorio == null) {
+                catalisadorDoLaboratorio = catalisador;
+                garantidos.remove(catalisador);
+            }
+        }
+        ItemStack forcaDoLaboratorio = null;
+        boolean primeiroDoLaboratorio = catalisadorDoLaboratorio != null;
+        for (PremioNoChao premio : planta.premios()) {
+            if (premio.premio() == Premio.PREMIO_DO_LABORATORIO && primeiroDoLaboratorio) {
+                // (o primeiro prêmio já é o catalisador)
+                primeiroDoLaboratorio = false;
+                continue;
+            }
             if (premio.premio() == Premio.PREMIO_DO_LABORATORIO && forcaDoLaboratorio == null) {
                 for (ItemStack item : garantidos) {
                     if (Identificacao.tipoDaPocao(semente, item) == TipoDePocao.FORCA) {
@@ -153,7 +183,9 @@ public class SaqueDoAndar {
         for (PremioNoChao premio : planta.premios()) {
             if (premio.premio() == Premio.PREMIO_DAS_ARMADILHAS && premioDasArmadilhas == null) {
                 if (sorteio.nextInt(3) != 0 && !garantidos.isEmpty()) {
-                    premioDasArmadilhas = garantidos.remove(sorteio.nextInt(garantidos.size()));
+                    // (igual ao Shattered: se o catalisador ainda estiver pra cair, é ele)
+                    premioDasArmadilhas = garantidos.contains(catalisador) ? catalisador : garantidos.get(sorteio.nextInt(garantidos.size()));
+                    garantidos.remove(premioDasArmadilhas);
                 } else {
                     premioDasArmadilhas = premioDoLabirinto(sorteio, andar);
                 }
@@ -168,6 +200,17 @@ public class SaqueDoAndar {
             }
             int[] lugar = lugares.remove(sorteio.nextInt(lugares.size()));
             saques.add(new Saque(lugar[0], lugar[1], List.of(item), Onde.CHAO));
+        }
+
+        // A luneta trincada (acessório): 37,5% a 150% de chance de itens a mais pelo andar (sorteados à parte)
+        int luneta = Acessorios.daRun(TipoDeAcessorio.LUNETA_TRINCADA);
+        if (luneta >= 0) {
+            Random dado = new Random(semente * 89 + andar * 17L);
+            int extras = (int) (dado.nextFloat() + Acessorios.chanceDaLuneta(luneta));
+            for (int i = 0; i < extras && !lugares.isEmpty(); i++) {
+                int[] lugar = lugares.remove(dado.nextInt(lugares.size()));
+                saques.add(new Saque(lugar[0], lugar[1], List.of(itemAleatorio(dado, andar, run)), Onde.CHAO));
+            }
         }
 
         // As pétalas da rosa seca: com a missão do fantasma completa e a rosa já achada, uma a cada 2 andares (igual ao Shattered)
@@ -195,6 +238,11 @@ public class SaqueDoAndar {
         }
         Set<TipoDePocao> pocoesDoLaboratorio = EnumSet.noneOf(TipoDePocao.class);
         for (PremioNoChao premio : planta.premios()) {
+            if (premio.premio() == Premio.PREMIO_DO_LABORATORIO && catalisadorDoLaboratorio != null) {
+                saques.add(new Saque(premio.x(), premio.y(), List.of(catalisadorDoLaboratorio), Onde.CHAO));
+                catalisadorDoLaboratorio = null;
+                continue;
+            }
             if (premio.premio() == Premio.PREMIO_DO_LABORATORIO && forcaDoLaboratorio != null) {
                 saques.add(new Saque(premio.x(), premio.y(), List.of(forcaDoLaboratorio), Onde.CHAO));
                 forcaDoLaboratorio = null;
@@ -221,7 +269,7 @@ public class SaqueDoAndar {
             case ARMADURA -> armaduraAleatoria(sorteio, andar);
             case OURO -> Ouro.sortear(sorteio, andar);
             case OURO_POUCO -> Ouro.pilha(5 + sorteio.nextInt(8));
-            case PERGAMINHO -> pergaminhoAleatorio(sorteio, semente);
+            case PERGAMINHO -> Acessorios.talvezExotico(pergaminhoAleatorio(sorteio, semente), sorteio, semente);
             case PERGAMINHO_DE_IDENTIFICAR_OU_REMOVER ->
                 Identificacao.pergaminho(semente, sorteio.nextBoolean() ? TipoDePergaminho.IDENTIFICACAO : TipoDePergaminho.REMOVER_MALDICAO);
             case ARMADURA_AMALDICOADA -> armaduraDaCripta(sorteio, andar);
@@ -238,8 +286,11 @@ public class SaqueDoAndar {
             case CARNE_GRELHADA -> new ItemStack(ModItens.CARNE_GRELHADA.get());
             case CRISTAIS_DO_LABORATORIO -> new ItemStack(ModItens.CRISTAL_DE_ENERGIA.get(), 5);
             case CRISTAIS_DO_LABORATORIO_SECRETO -> new ItemStack(ModItens.CRISTAL_DE_ENERGIA.get(), 3 + sorteio.nextInt(3));
-            case PREMIO_DO_LABORATORIO -> sorteio.nextBoolean() ? pocaoAleatoria(sorteio, semente) : pedraAleatoria(sorteio);
+            case PREMIO_DO_LABORATORIO -> sorteio.nextBoolean() ? Acessorios.talvezExotica(pocaoAleatoria(sorteio, semente), sorteio, semente)
+                    : pedraAleatoria(sorteio);
             case PAGINA_DO_GUIA -> new ItemStack(ModItens.PAGINA_DO_GUIA.get());
+            case BOMBA -> new ItemStack(ModItens.bomba(TipoDeBomba.COMUM), sorteio.nextInt(4) == 0 ? 2 : 1);
+            case BOMBA_DUPLA -> new ItemStack(ModItens.bomba(TipoDeBomba.COMUM), 2);
             case POCAO_DO_LABORATORIO_SECRETO -> Identificacao.pocao(semente, pocaoDoLaboratorioSecreto(sorteio, pocoesDoLaboratorio));
         };
         if (premio.premio() == Premio.PLANTA_ALEATORIA || premio.premio() == Premio.PLANTA_GRAMA_SOLAR || premio.premio() == Premio.PLANTA_ESTRELA
@@ -247,8 +298,12 @@ public class SaqueDoAndar {
             onde = Onde.PLANTADA;
         }
         // Igual ao Shattered: a partir do andar 2, cada baú de ouro da tesouraria tem 1 chance em 5 de ser um mímico
-        if (onde == Onde.BAU && premio.premio() == Premio.OURO && andar > 1 && sorteio.nextInt(5) == 0) {
-            onde = Onde.MIMICO;
+        // (com o dente de mímico, 1,5x a 3x mais)
+        if (onde == Onde.BAU && premio.premio() == Premio.OURO && andar > 1) {
+            float mimicos = Acessorios.multiplicadorDeMimicos(Acessorios.daRun(TipoDeAcessorio.DENTE_DE_MIMICO));
+            if (mimicos == 1 ? sorteio.nextInt(5) == 0 : sorteio.nextFloat() < mimicos / 5F) {
+                onde = Onde.MIMICO;
+            }
         }
         return new Saque(premio.x(), premio.y(), List.of(item), onde);
     }
@@ -375,8 +430,8 @@ public class SaqueDoAndar {
         long semente = run.semente();
         return switch (sortearPeso(sorteio, new float[] { 10, 8, 8, 2, 1.5F, 1, 1.5F, 1, 0.5F, 0.5F, 1 })) {
             case 0 -> Ouro.sortear(sorteio, andar);
-            case 1 -> pocaoAleatoria(sorteio, semente);
-            case 2 -> pergaminhoAleatorio(sorteio, semente);
+            case 1 -> Acessorios.talvezExotica(pocaoAleatoria(sorteio, semente), sorteio, semente);
+            case 2 -> Acessorios.talvezExotico(pergaminhoAleatorio(sorteio, semente), sorteio, semente);
             case 3 -> armaAleatoria(sorteio, andar);
             case 4 -> armaduraAleatoria(sorteio, andar);
             case 5 -> sementeAleatoria(sorteio);

@@ -132,6 +132,7 @@ public class TestesDaAlquimia {
         testarPaginasDoGuia(mundo, run);
         testarKit(mundo, run);
         testarAntimagia(mundo, run);
+        TestesDaAlquimiaDaPrisao.testar(mundo, run, canto);
     }
 
     // ---- O pote e a energia ----
@@ -256,11 +257,11 @@ public class TestesDaAlquimia {
     }
 
     // Uma faixa de chão de pedra longe de tudo; cada pedra fica num pedaço dela (6 quadradinhos de largura)
-    private static BlockPos plataforma(ServerLevel mundo, DadosDaRun run) {
+    static BlockPos plataforma(ServerLevel mundo, DadosDaRun run) {
         return plataforma(mundo, run, 2700);
     }
 
-    private static BlockPos plataforma(ServerLevel mundo, DadosDaRun run, int desvio) {
+    static BlockPos plataforma(ServerLevel mundo, DadosDaRun run, int desvio) {
         BlockPos perto = run.andar(1).entrada().offset(desvio, 0, 0);
         BlockPos base = new BlockPos(Math.floorDiv(perto.getX(), T) * T, perto.getY(), Math.floorDiv(perto.getZ(), T) * T);
         for (int x = 0; x < 8 * 6 * T; x++) {
@@ -275,11 +276,11 @@ public class TestesDaAlquimia {
     }
 
     // O bloco de chão do quadradinho (qx, qz) da plataforma
-    private static BlockPos quadradinho(BlockPos base, int qx, int qz) {
+    static BlockPos quadradinho(BlockPos base, int qx, int qz) {
         return base.offset(qx * T, -1, qz * T);
     }
 
-    private static RatoMarsupial rato(ServerLevel mundo, BlockPos base, int qx, int qz) {
+    static RatoMarsupial rato(ServerLevel mundo, BlockPos base, int qx, int qz) {
         RatoMarsupial rato = ModEntidades.RATO_MARSUPIAL.get().create(mundo);
         Vec3 meio = Armadilhas.centro(quadradinho(base, qx, qz));
         rato.moveTo(meio.x, meio.y, meio.z);
@@ -871,7 +872,8 @@ public class TestesDaAlquimia {
         boolean premiosCertos = premios.size() >= 1 && premios.size() <= 2;
         for (PlantaDoAndar.PremioNoChao premio : premios) {
             ItemStack item = itemDoSaque(saques, premio);
-            premiosCertos &= item.getItem() instanceof ItemPocao || item.getItem() instanceof ItemPedraRunica;
+            // (o catalisador mágico, se ainda não caiu nesta run, é o primeiro prêmio)
+            premiosCertos &= item.getItem() instanceof ItemPocao || item.getItem() instanceof ItemPedraRunica || item.is(ModItens.CATALISADOR_MAGICO.get());
         }
         List<PlantaDoAndar.PremioNoChao> paginas = premiosDoTipo(planta, PlantaDoAndar.Premio.PAGINA_DO_GUIA);
         boolean pagina = paginas.size() == 1 && itemDoSaque(saques, paginas.get(0)).is(ModItens.PAGINA_DO_GUIA.get());
@@ -923,9 +925,9 @@ public class TestesDaAlquimia {
         FakePlayer heroi = heroi(mundo, run);
         DadosDoHeroi dados = RegrasDoHeroi.dados(heroi);
         dados.definirPaginasDoGuia(0);
-        ItemStack paginas = new ItemStack(ModItens.PAGINA_DO_GUIA.get(), 6);
+        ItemStack paginas = new ItemStack(ModItens.PAGINA_DO_GUIA.get(), GuiaDeAlquimia.PAGINAS.length + 1);
         int primeira = PaginaDoGuia.ler(heroi, paginas);
-        boolean leuAPrimeira = primeira == 0 && paginas.getCount() == 5 && GuiaDeAlquimia.conhece(dados.paginasDoGuia(), 0);
+        boolean leuAPrimeira = primeira == 0 && paginas.getCount() == GuiaDeAlquimia.PAGINAS.length && GuiaDeAlquimia.conhece(dados.paginasDoGuia(), 0);
         for (int i = 1; i < GuiaDeAlquimia.PAGINAS.length; i++) {
             PaginaDoGuia.ler(heroi, paginas);
         }
@@ -939,7 +941,7 @@ public class TestesDaAlquimia {
         CompoundTag salvo = serializador.write(dados, mundo.registryAccess());
         boolean salvas = serializador.read(heroi, salvo, mundo.registryAccess()).paginasDoGuia() == todas;
         dados.definirPaginasDoGuia(0);
-        PixelDungeon.LOGGER.info("Teste das páginas do guia: leu a primeira = {}, leu as 5 = {}, a que sobrou não gasta = {}, "
+        PixelDungeon.LOGGER.info("Teste das páginas do guia: leu a primeira = {}, leu todas = {}, a que sobrou não gasta = {}, "
                 + "continuam na run nova = {}, são salvas = {}", leuAPrimeira, leuTodas, sobrou, continuam, salvas);
     }
 
@@ -1034,7 +1036,7 @@ public class TestesDaAlquimia {
                 + "o kit fica parado = {}, depois volta a esquentar = {}", naoLeu, naoDisparou, semAnel, kitParado, voltou);
     }
 
-    private static List<PlantaDoAndar.PremioNoChao> premiosDoTipo(PlantaDoAndar planta, PlantaDoAndar.Premio tipo) {
+    static List<PlantaDoAndar.PremioNoChao> premiosDoTipo(PlantaDoAndar planta, PlantaDoAndar.Premio tipo) {
         List<PlantaDoAndar.PremioNoChao> lista = new ArrayList<>();
         for (PlantaDoAndar.PremioNoChao premio : planta.premios()) {
             if (premio.premio() == tipo) {
@@ -1044,7 +1046,7 @@ public class TestesDaAlquimia {
         return lista;
     }
 
-    private static ItemStack itemDoSaque(List<SaqueDoAndar.Saque> saques, PlantaDoAndar.PremioNoChao premio) {
+    static ItemStack itemDoSaque(List<SaqueDoAndar.Saque> saques, PlantaDoAndar.PremioNoChao premio) {
         for (SaqueDoAndar.Saque saque : saques) {
             if (saque.x() == premio.x() && saque.y() == premio.y() && !saque.itens().isEmpty()) {
                 return saque.itens().get(0);
@@ -1079,7 +1081,7 @@ public class TestesDaAlquimia {
 
     // ---- Ajudantes ----
 
-    private static FakePlayer heroi(ServerLevel mundo, DadosDaRun run) {
+    static FakePlayer heroi(ServerLevel mundo, DadosDaRun run) {
         FakePlayer heroi = FakePlayerFactory.get(mundo, new GameProfile(UUID.fromString("5e7c1a3e-0000-4000-8000-00000000a1c0"), "TesteDaAlquimia"));
         RegrasDoHeroi.dados(heroi).comecar(ClasseDoHeroi.GUERREIRO, run.numeroDaRun());
         heroi.getInventory().clearContent();
@@ -1087,7 +1089,7 @@ public class TestesDaAlquimia {
         return heroi;
     }
 
-    private static MenuDaAlquimia menu(FakePlayer heroi, BlockPos canto) {
+    static MenuDaAlquimia menu(FakePlayer heroi, BlockPos canto) {
         return new MenuDaAlquimia(1, heroi.getInventory(), ContainerLevelAccess.create(heroi.level(), canto));
     }
 

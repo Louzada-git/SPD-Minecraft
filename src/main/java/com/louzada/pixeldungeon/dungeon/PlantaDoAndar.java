@@ -50,7 +50,9 @@ public class PlantaDoAndar {
         CARNE_GRELHADA,
         // Do laboratório: os cristais de energia (5; no secreto, de 3 a 5), o prêmio (a poção de força do andar, ou uma poção ou uma
         // pedra rúnica), a página do guia de alquimia e as poções do laboratório secreto (todas diferentes)
-        CRISTAIS_DO_LABORATORIO, CRISTAIS_DO_LABORATORIO_SECRETO, PREMIO_DO_LABORATORIO, PAGINA_DO_GUIA, POCAO_DO_LABORATORIO_SECRETO
+        CRISTAIS_DO_LABORATORIO, CRISTAIS_DO_LABORATORIO_SECRETO, PREMIO_DO_LABORATORIO, PAGINA_DO_GUIA, POCAO_DO_LABORATORIO_SECRETO,
+        // Bombas: a do arsenal (1 em 4 vezes, duas) e a dupla do arsenal secreto
+        BOMBA, BOMBA_DUPLA
     }
 
     // Um prêmio num quadradinho, no chão ou dentro de um baú

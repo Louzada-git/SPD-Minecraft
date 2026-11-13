@@ -19,12 +19,18 @@ import com.louzada.pixeldungeon.item.ChaveDeFerro;
 import com.louzada.pixeldungeon.item.ComidaDoShattered;
 import com.louzada.pixeldungeon.item.CorDePocao;
 import com.louzada.pixeldungeon.item.CristalDeEnergia;
+import com.louzada.pixeldungeon.item.FrutaSemGraca;
 import com.louzada.pixeldungeon.item.GemaDeAnel;
+import com.louzada.pixeldungeon.item.ItemAcessorio;
 import com.louzada.pixeldungeon.item.ItemAnel;
 import com.louzada.pixeldungeon.item.ItemAnkh;
-import com.louzada.pixeldungeon.item.FrutaSemGraca;
+import com.louzada.pixeldungeon.item.ItemBomba;
 import com.louzada.pixeldungeon.item.ItemCarneMisteriosa;
+import com.louzada.pixeldungeon.item.ItemCatalisador;
 import com.louzada.pixeldungeon.item.ItemComDescricao;
+import com.louzada.pixeldungeon.item.ItemElixir;
+import com.louzada.pixeldungeon.item.ItemFeitico;
+import com.louzada.pixeldungeon.item.ItemInfusao;
 import com.louzada.pixeldungeon.item.ItemPedraRunica;
 import com.louzada.pixeldungeon.item.ItemPergaminho;
 import com.louzada.pixeldungeon.item.ItemPergaminhoExotico;
@@ -32,13 +38,20 @@ import com.louzada.pixeldungeon.item.ItemPocao;
 import com.louzada.pixeldungeon.item.ItemPocaoExotica;
 import com.louzada.pixeldungeon.item.ItemSemente;
 import com.louzada.pixeldungeon.item.ItemVarinha;
+import com.louzada.pixeldungeon.item.MetalLiquido;
 import com.louzada.pixeldungeon.item.Odre;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.item.PaginaDoGuia;
 import com.louzada.pixeldungeon.item.PetalaSeca;
 import com.louzada.pixeldungeon.item.RacaoDeSuprimentos;
+import com.louzada.pixeldungeon.item.ResinaArcana;
 import com.louzada.pixeldungeon.item.RunaDePergaminho;
 import com.louzada.pixeldungeon.item.SeloQuebrado;
+import com.louzada.pixeldungeon.item.TipoDeAcessorio;
+import com.louzada.pixeldungeon.item.TipoDeBomba;
+import com.louzada.pixeldungeon.item.TipoDeElixir;
+import com.louzada.pixeldungeon.item.TipoDeFeitico;
+import com.louzada.pixeldungeon.item.TipoDeInfusao;
 import com.louzada.pixeldungeon.item.TipoDePedra;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 import com.louzada.pixeldungeon.item.TipoDeVarinha;
@@ -295,6 +308,17 @@ public class ModItens {
     public static final List<DeferredItem<ItemPocaoExotica>> POCOES_EXOTICAS = registrarPocoesExoticas();
     // Os pergaminhos exóticos, um pra cada runa (na ordem do RunaDePergaminho)
     public static final List<DeferredItem<ItemPergaminhoExotico>> PERGAMINHOS_EXOTICOS = registrarPergaminhosExoticos();
+    // As bombas: a comum e as melhoradas no pote (na ordem do TipoDeBomba)
+    public static final List<DeferredItem<ItemBomba>> BOMBAS = registrarBombas();
+    // As infusões (de arremessar) e os elixires (de beber), que saem do pote (na ordem do TipoDeInfusao e do TipoDeElixir)
+    public static final List<DeferredItem<ItemInfusao>> INFUSOES = registrarInfusoes();
+    public static final List<DeferredItem<ItemElixir>> ELIXIRES = registrarElixires();
+    public static final List<DeferredItem<ItemFeitico>> FEITICOS = registrarFeiticos();
+    public static final List<DeferredItem<ItemAcessorio>> ACESSORIOS = registrarAcessorios();
+    public static final DeferredItem<ItemCatalisador> CATALISADOR_MAGICO = ITENS.registerItem("catalisador_magico", ItemCatalisador::new);
+    // Metal líquido (conserta armas de arremesso) e resina arcana (aprimora varinhas), que saem do pote
+    public static final DeferredItem<MetalLiquido> METAL_LIQUIDO = ITENS.registerItem("metal_liquido", MetalLiquido::new);
+    public static final DeferredItem<ResinaArcana> RESINA_ARCANA = ITENS.registerItem("resina_arcana", ResinaArcana::new);
     // A página rasgada do guia de alquimia (fica nos laboratórios)
     public static final DeferredItem<PaginaDoGuia> PAGINA_DO_GUIA = ITENS.registerItem("pagina_do_guia", PaginaDoGuia::new);
 
@@ -434,6 +458,66 @@ public class ModItens {
     // O item da pedra desse tipo
     public static ItemPedraRunica pedra(TipoDePedra tipo) {
         return PEDRAS.get(tipo.ordinal()).get();
+    }
+
+    private static List<DeferredItem<ItemBomba>> registrarBombas() {
+        List<DeferredItem<ItemBomba>> lista = new ArrayList<>();
+        for (TipoDeBomba tipo : TipoDeBomba.values()) {
+            lista.add(ITENS.registerItem(tipo.id(), propriedades -> new ItemBomba(propriedades, tipo)));
+        }
+        return lista;
+    }
+
+    private static List<DeferredItem<ItemInfusao>> registrarInfusoes() {
+        List<DeferredItem<ItemInfusao>> lista = new ArrayList<>();
+        for (TipoDeInfusao tipo : TipoDeInfusao.values()) {
+            lista.add(ITENS.registerItem(tipo.nomeDoItem(), propriedades -> new ItemInfusao(propriedades, tipo)));
+        }
+        return lista;
+    }
+
+    private static List<DeferredItem<ItemElixir>> registrarElixires() {
+        List<DeferredItem<ItemElixir>> lista = new ArrayList<>();
+        for (TipoDeElixir tipo : TipoDeElixir.values()) {
+            lista.add(ITENS.registerItem(tipo.nomeDoItem(), propriedades -> new ItemElixir(propriedades, tipo)));
+        }
+        return lista;
+    }
+
+    private static List<DeferredItem<ItemFeitico>> registrarFeiticos() {
+        List<DeferredItem<ItemFeitico>> lista = new ArrayList<>();
+        for (TipoDeFeitico tipo : TipoDeFeitico.values()) {
+            lista.add(ITENS.registerItem(tipo.nomeDoItem(), propriedades -> new ItemFeitico(propriedades, tipo)));
+        }
+        return lista;
+    }
+
+    private static List<DeferredItem<ItemAcessorio>> registrarAcessorios() {
+        List<DeferredItem<ItemAcessorio>> lista = new ArrayList<>();
+        for (TipoDeAcessorio tipo : TipoDeAcessorio.values()) {
+            lista.add(ITENS.registerItem(tipo.nomeDoItem(), propriedades -> new ItemAcessorio(propriedades, tipo)));
+        }
+        return lista;
+    }
+
+    public static Item acessorio(TipoDeAcessorio tipo) {
+        return ACESSORIOS.get(tipo.ordinal()).get();
+    }
+
+    public static Item feitico(TipoDeFeitico tipo) {
+        return FEITICOS.get(tipo.ordinal()).get();
+    }
+
+    public static Item infusao(TipoDeInfusao tipo) {
+        return INFUSOES.get(tipo.ordinal()).get();
+    }
+
+    public static Item elixir(TipoDeElixir tipo) {
+        return ELIXIRES.get(tipo.ordinal()).get();
+    }
+
+    public static Item bomba(TipoDeBomba tipo) {
+        return BOMBAS.get(tipo.ordinal()).get();
     }
 
     // Os desenhos do pote de alquimia (não aparecem no criativo)

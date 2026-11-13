@@ -43,6 +43,7 @@ public class PixelDungeonCliente {
         barramentoDoMod.addListener(HudDoHeroi::aoRegistrar);
         NeoForge.EVENT_BUS.addListener(HudDoHeroi::aoDesenharCamada);
         NeoForge.EVENT_BUS.addListener(TelaDoInventario::aoAbrirTela);
+        NeoForge.EVENT_BUS.addListener(VisaoDoOlho::aoDesenharNevoa);
         // Só no teste do GitHub: tira fotos da tela do jogo e do inventário
         if (FotosDeTeste.ligado()) {
             NeoForge.EVENT_BUS.addListener(FotosDeTeste::aoTick);
@@ -80,6 +81,8 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.ARMA_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, false));
         evento.registerEntityRenderer(ModEntidades.SEMENTE_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 0.8F, false));
         evento.registerEntityRenderer(ModEntidades.PEDRA_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 0.8F, false));
+        evento.registerEntityRenderer(ModEntidades.BOMBA_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, false));
+        evento.registerEntityRenderer(ModEntidades.BOMBA_ACESA.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.2F, true));
         // Nuvem de gás: só a fumaça (as partículas saem dela mesma)
         evento.registerEntityRenderer(ModEntidades.NUVEM_DE_GAS.get(), NoopRenderer::new);
         // Imagem espelhada: igual ao herói dono dela

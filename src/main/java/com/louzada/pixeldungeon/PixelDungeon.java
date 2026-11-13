@@ -1,7 +1,5 @@
 package com.louzada.pixeldungeon;
 
-import org.slf4j.Logger;
-
 import com.louzada.pixeldungeon.combate.EventosDeCombate;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.dungeon.Baus;
@@ -13,8 +11,10 @@ import com.louzada.pixeldungeon.heroi.Escudos;
 import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
 import com.louzada.pixeldungeon.heroi.GlifosDoHeroi;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
+import com.louzada.pixeldungeon.item.Acessorios;
 import com.louzada.pixeldungeon.item.Comida;
 import com.louzada.pixeldungeon.item.CristalDeEnergia;
+import com.louzada.pixeldungeon.item.EfeitosDeElixir;
 import com.louzada.pixeldungeon.item.EfeitosDePergaminhoExotico;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.rede.ModRede;
@@ -22,11 +22,11 @@ import com.louzada.pixeldungeon.registro.ModAbas;
 import com.louzada.pixeldungeon.registro.ModAnexos;
 import com.louzada.pixeldungeon.registro.ModBlocos;
 import com.louzada.pixeldungeon.registro.ModComponentes;
-import com.louzada.pixeldungeon.registro.ModMenus;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 import com.louzada.pixeldungeon.registro.ModEntidades;
 import com.louzada.pixeldungeon.registro.ModItens;
 import com.louzada.pixeldungeon.registro.ModMateriais;
+import com.louzada.pixeldungeon.registro.ModMenus;
 import com.louzada.pixeldungeon.run.ComandosDaDungeon;
 import com.louzada.pixeldungeon.run.EventosDaRun;
 import com.mojang.logging.LogUtils;
@@ -36,6 +36,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
+import org.slf4j.Logger;
 
 // Classe principal do mod. O NeoForge cria ela quando o jogo carrega.
 // O valor dentro de @Mod tem que ser igual ao mod_id do gradle.properties.
@@ -72,6 +73,8 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(Aneis::aoReceberDano);
         NeoForge.EVENT_BUS.addListener(GlifosDoHeroi::aoReceberDano);
         NeoForge.EVENT_BUS.addListener(EfeitosDePergaminhoExotico::aoReceberDano);
+        NeoForge.EVENT_BUS.addListener(EfeitosDeElixir::aoReceberDano);
+        NeoForge.EVENT_BUS.addListener(EfeitosDeElixir::aoCair);
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoMorrerAlguem);
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoTomarDano);
         // O selo do Guerreiro olha o dano depois que o combate calculou (por isso prioridade baixa)
@@ -94,5 +97,9 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(Baus::aoClicarComDireito);
         NeoForge.EVENT_BUS.addListener(Baus::aoClicarComEsquerdo);
         NeoForge.EVENT_BUS.addListener(Baus::aoQuebrar);
+        // Os acessórios (o que é da run, o que acontece com o tempo, e o cubo de sal na cura da fome)
+        NeoForge.EVENT_BUS.addListener(Acessorios::aoTickDoServidor);
+        NeoForge.EVENT_BUS.addListener(Acessorios::aoTickDoJogador);
+        NeoForge.EVENT_BUS.addListener(Acessorios::aoCurar);
     }
 }

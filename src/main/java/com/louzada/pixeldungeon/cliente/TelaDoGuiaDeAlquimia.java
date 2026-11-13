@@ -2,14 +2,20 @@ package com.louzada.pixeldungeon.cliente;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.alquimia.GuiaDeAlquimia;
 import com.louzada.pixeldungeon.item.FrutaSemGraca;
 import com.louzada.pixeldungeon.item.ItemSemente;
+import com.louzada.pixeldungeon.item.MetalLiquido;
+import com.louzada.pixeldungeon.item.TipoDeBomba;
+import com.louzada.pixeldungeon.item.TipoDeElixir;
+import com.louzada.pixeldungeon.item.TipoDeFeitico;
+import com.louzada.pixeldungeon.item.TipoDeInfusao;
+import com.louzada.pixeldungeon.item.TipoDePedra;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 import com.louzada.pixeldungeon.item.TipoDePocao;
+import com.louzada.pixeldungeon.item.TipoDeVarinha;
 import com.louzada.pixeldungeon.registro.ModItens;
 
 import net.minecraft.client.gui.GuiGraphics;
@@ -97,6 +103,27 @@ public class TelaDoGuiaDeAlquimia extends Screen {
                     new ItemStack(ModItens.POCOES_EXOTICAS.get(0).get())));
             case 4 -> lista.add(new Receita(List.of(new ItemStack(ModItens.PERGAMINHOS.get(0).get())), 6,
                     new ItemStack(ModItens.PERGAMINHOS_EXOTICOS.get(0).get())));
+            case 5 -> {
+                ItemStack bomba = new ItemStack(ModItens.bomba(TipoDeBomba.COMUM));
+                lista.add(new Receita(List.of(bomba, new ItemStack(ModItens.POCOES.get(1).get())), 0, new ItemStack(ModItens.bomba(TipoDeBomba.GELO))));
+                lista.add(new Receita(List.of(bomba, new ItemStack(ModItens.BOLHA_DE_GOSMA.get())), 6, new ItemStack(ModItens.bomba(TipoDeBomba.ARCANA))));
+            }
+            case 6 -> {
+                ItemStack facas = new ItemStack(ModItens.FACA_DE_ARREMESSO.get(), 3);
+                lista.add(new Receita(List.of(facas), 3, new ItemStack(ModItens.METAL_LIQUIDO.get(), MetalLiquido.metalDoConjunto(facas))));
+                lista.add(new Receita(List.of(new ItemStack(ModItens.varinha(TipoDeVarinha.MISSEL_MAGICO))), 5, new ItemStack(ModItens.RESINA_ARCANA.get(), 2)));
+            }
+            case 7 -> {
+                lista.add(new Receita(List.of(new ItemStack(ModItens.POCOES.get(2).get())), 8, new ItemStack(ModItens.infusao(TipoDeInfusao.NEVASCA))));
+                lista.add(new Receita(List.of(new ItemStack(ModItens.POCOES.get(3).get())), 16, new ItemStack(ModItens.elixir(TipoDeElixir.PODER))));
+            }
+            case 8 -> {
+                ItemStack pedra = new ItemStack(ModItens.pedra(TipoDePedra.INTUICAO));
+                lista.add(new Receita(List.of(new ItemStack(ModItens.PERGAMINHOS.get(1).get()), pedra), 1, new ItemStack(ModItens.feitico(TipoDeFeitico.INSTAVEL))));
+                lista.add(new Receita(List.of(new ItemStack(ModItens.SEMENTES.get(0).get()), pedra), 2, new ItemStack(ModItens.feitico(TipoDeFeitico.ALQUIMIZAR), 8)));
+                lista.add(new Receita(List.of(new ItemStack(ModItens.METAL_LIQUIDO.get(), 10)), 10,
+                        new ItemStack(ModItens.feitico(TipoDeFeitico.AGARRAO_TELECINETICO), 8)));
+            }
             default -> {
             }
         }

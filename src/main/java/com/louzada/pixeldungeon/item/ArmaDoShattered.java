@@ -2,7 +2,6 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.List;
 import java.util.Locale;
-
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.PixelDungeon;
@@ -256,7 +255,7 @@ public class ArmaDoShattered extends Item implements Arma, Equipamento {
         if (deSurpresa && numeros.surpresa > 0) {
             minimo = minimo + Math.round((maximo - minimo) * numeros.surpresa);
         }
-        int dano = Alteracao.dano(pilha, Sorteio.normal(sorteio, minimo, maximo));
+        int dano = Alteracao.dano(pilha, Acessorios.danoDoHeroi(sorteio, minimo, maximo));
         int forcaSobrando = heroi.forca() - forcaNecessaria(pilha);
         if (forcaSobrando > 0) {
             dano += sorteio.nextInt(forcaSobrando + 1);

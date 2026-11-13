@@ -10,9 +10,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
+import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
+import com.louzada.pixeldungeon.dungeon.TemaDoAndar;
 import com.louzada.pixeldungeon.dungeon.TipoDeArmadilha;
+import com.louzada.pixeldungeon.item.Acessorios;
 
 // Desenha os cômodos já posicionados na planta (o "RegularPainter" + "SewerPainter" do Shattered):
 //   1. a planta fica do tamanho dos cômodos, com 1 quadradinho de parede em volta
@@ -231,7 +233,9 @@ public class PintorDoEsgoto {
     }
 
     private static void pintarAgua(PlantaDoAndar planta, List<Comodo> comodos) {
-        boolean[] lago = Mancha.gerar(planta.largura(), planta.altura(), AGUA, AGRUPAMENTO_DA_AGUA, true);
+        // (com a moita de musgo, às vezes o andar fica cheio de água: ver TemaDoAndar)
+        float agua = TemaDoAndar.atual().tema() == TemaDoAndar.Tema.AGUA ? 0.85f : AGUA;
+        boolean[] lago = Mancha.gerar(planta.largura(), planta.altura(), agua, AGRUPAMENTO_DA_AGUA, true);
         for (Comodo comodo : comodos) {
             for (Ponto p : comodo.pontosComAgua()) {
                 // (as armadilhas das salas especiais e secretas ficam: no Shattered, a água só cai em chão vazio)
@@ -246,7 +250,9 @@ public class PintorDoEsgoto {
     // Quanto mais vizinhos com grama, mais chance de ser grama alta (de 1 em 12 até 9 em 12)
     private static void pintarGrama(PlantaDoAndar planta, List<Comodo> comodos) {
         int largura = planta.largura();
-        boolean[] grama = Mancha.gerar(largura, planta.altura(), GRAMA, AGRUPAMENTO_DA_GRAMA, true);
+        // (com a moita de musgo, às vezes o andar fica cheio de grama: ver TemaDoAndar)
+        float quantaGrama = TemaDoAndar.atual().tema() == TemaDoAndar.Tema.GRAMA ? 0.80f : GRAMA;
+        boolean[] grama = Mancha.gerar(largura, planta.altura(), quantaGrama, AGRUPAMENTO_DA_GRAMA, true);
         List<Ponto> comGrama = new ArrayList<>();
         for (Comodo comodo : comodos) {
             for (Ponto p : comodo.pontosComGrama()) {
@@ -305,7 +311,13 @@ public class PintorDoEsgoto {
         TipoDeArmadilha[] tipos = TipoDeArmadilha.doAndar(andar);
         float[] pesos = TipoDeArmadilha.pesosDoAndar(andar);
         int[][] lados = { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
-        for (int i = 0; i < quantas && !livres.isEmpty(); i++) {
+        // O mecanismo de armadilha (acessório): no andar de armadilhas, 5x mais (as que sobram ficam à vista), e uma parte
+        // das escondidas fica à vista em qualquer andar (ver TemaDoAndar)
+        TemaDoAndar.Decisao tema = TemaDoAndar.atual();
+        int total = tema.tema() == TemaDoAndar.Tema.ARMADILHAS ? 5 * quantas : quantas;
+        float chanceAVista = Acessorios.chanceDeArmadilhaAVista(tema.mecanismo());
+        float somaAVista = 0;
+        for (int i = 0; i < total && !livres.isEmpty(); i++) {
             TipoDeArmadilha tipo = tipos[Dado.chances(pesos)];
             Ponto lugar = tipo.evitaLugaresFechados() && !abertos.isEmpty() ? Dado.elemento(abertos) : Dado.elemento(livres);
             livres.remove(lugar);
@@ -313,7 +325,12 @@ public class PintorDoEsgoto {
             for (int[] lado : lados) {
                 abertos.remove(new Ponto(lugar.x + lado[0], lugar.y + lado[1]));
             }
-            planta.colocarArmadilha(lugar.x, lugar.y, tipo, false);
+            somaAVista += chanceAVista;
+            boolean aVista = i >= quantas || somaAVista >= 1;
+            if (somaAVista >= 1 && i < quantas) {
+                somaAVista--;
+            }
+            planta.colocarArmadilha(lugar.x, lugar.y, tipo, aVista);
         }
     }
 

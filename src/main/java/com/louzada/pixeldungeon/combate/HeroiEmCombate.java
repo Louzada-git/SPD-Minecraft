@@ -1,7 +1,6 @@
 package com.louzada.pixeldungeon.combate;
 
 import java.util.UUID;
-
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.heroi.Aneis;
@@ -16,14 +15,17 @@ import com.louzada.pixeldungeon.heroi.RegrasDoHeroi;
 import com.louzada.pixeldungeon.heroi.Talento;
 import com.louzada.pixeldungeon.heroi.Talentos;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
+import com.louzada.pixeldungeon.item.Acessorios;
 import com.louzada.pixeldungeon.item.Alteracao;
 import com.louzada.pixeldungeon.item.Arma;
 import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
+import com.louzada.pixeldungeon.item.EfeitosDeElixir;
 import com.louzada.pixeldungeon.item.Encantamento;
 import com.louzada.pixeldungeon.item.Glifo;
 import com.louzada.pixeldungeon.item.Maldicao;
 import com.louzada.pixeldungeon.item.NivelDoItem;
+import com.louzada.pixeldungeon.item.TipoDeAcessorio;
 import com.louzada.pixeldungeon.item.TipoDeAnel;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
@@ -111,7 +113,14 @@ public class HeroiEmCombate implements Combatente {
     public float sortearDano(Golpe golpe) {
         RandomSource sorteio = jogador.getRandom();
         Arma arma = armaDo(golpe);
-        int dano = arma != null ? arma.sortearDano(golpe.arma(), sorteio, dados, golpe.surpresa()) : danoDeMaoVazia(sorteio);
+        // Trevo de treze folhas (acessório): às vezes o dano sai no máximo ou no mínimo (ver Acessorios.danoDoHeroi)
+        Acessorios.marcarTrevo(Acessorios.nivel(jogador, TipoDeAcessorio.TREVO_DE_TREZE_FOLHAS));
+        int dano;
+        try {
+            dano = arma != null ? arma.sortearDano(golpe.arma(), sorteio, dados, golpe.surpresa()) : danoDeMaoVazia(sorteio);
+        } finally {
+            Acessorios.marcarTrevo(-1);
+        }
         // Anel da força: com uma arma de perto, +1 de dano por bônus
         if (golpe.arma().getItem() instanceof ArmaDoShattered) {
             dano += dados.bonusDoAnel(TipoDeAnel.FORCA);
@@ -124,7 +133,7 @@ public class HeroiEmCombate implements Combatente {
         if (dados.usaAnel(TipoDeAnel.FORCA)) {
             return Aneis.danoDoSoco(sorteio, dados.forca(), dados.bonusDoAnel(TipoDeAnel.FORCA));
         }
-        return Sorteio.normal(sorteio, 1, Math.max(1, dados.forca() - 8));
+        return Acessorios.danoDoHeroi(sorteio, 1, Math.max(1, dados.forca() - 8));
     }
 
     @Override
@@ -199,6 +208,8 @@ public class HeroiEmCombate implements Combatente {
         LivingEntity alvo = golpe.alvo().entidade();
         long agora = jogador.level().getGameTime();
         dano += Talentos.bonusDoGolpe(jogador, dados, alvo, golpe.surpresa(), golpe.deLonge(), agora);
+        // Elixires: o sangue de dragão põe fogo, o toque gélido resfria
+        EfeitosDeElixir.aoAcertar(jogador, alvo);
         if (jogador.hasEffect(ModEfeitos.ARMA_CELESTIAL)) {
             dano += 2;
             Particulas.sangue(alvo, 0xFFFF88, 2);

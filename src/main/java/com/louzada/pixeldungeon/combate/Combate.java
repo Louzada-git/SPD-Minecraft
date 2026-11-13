@@ -4,6 +4,8 @@ import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
+import com.louzada.pixeldungeon.item.Acessorios;
+import com.louzada.pixeldungeon.item.TipoDeAcessorio;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 
 import net.minecraft.sounds.SoundEvents;
@@ -76,6 +78,8 @@ public class Combate {
         LivingEntity quemApanha = golpe.alvo().entidade();
         // Paralisado, congelado ou dormindo não consegue desviar
         float esquiva = EfeitosNoTick.semDefesa(quemApanha) ? 0 : golpe.alvo().esquiva(golpe) * pelosEfeitos(quemApanha);
+        // Tufo de furão (acessório): todo mundo desvia mais, igual ao Shattered
+        esquiva *= Acessorios.multiplicadorDeEsquiva(Acessorios.daRun(TipoDeAcessorio.TUFO_DE_FURAO));
         return acertou(golpe.atacante().entidade().getRandom(), precisaoDoGolpe(golpe), esquiva);
     }
 
