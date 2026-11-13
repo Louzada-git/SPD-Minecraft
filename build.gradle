@@ -197,8 +197,10 @@ idea {
 }
 
 // Temporário: mostra o classpath de compilação
+def caminhoDeCompilacao = project.sourceSets.main.compileClasspath
 tasks.register('mostrarClasspath') {
+    dependsOn 'compileJava'
     doLast {
-        sourceSets.main.compileClasspath.files.each { println "CP:" + it }
+        caminhoDeCompilacao.files.each { println "CP:" + it }
     }
 }
