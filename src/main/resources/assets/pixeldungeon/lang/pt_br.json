@@ -525,8 +525,8 @@
   "hud.pixeldungeon.ouro": "Ouro: %s",
   "hud.pixeldungeon.mochila": "Inventário [%s]",
   "hud.pixeldungeon.mochila.descricao": "Clique para fechar.",
-  "hud.pixeldungeon.esperar": "Esperar",
-  "hud.pixeldungeon.esperar.descricao": "No Shattered, passa um turno. Aqui os turnos passam sozinhos (1 turno = 2 segundos).",
+  "hud.pixeldungeon.esperar": "Esperar [%s]",
+  "hud.pixeldungeon.esperar.descricao": "Passa 1 turno parado, sem atacar nem usar nada (é o que prepara o golpe paciente da Duelista). Segurando a tecla, continua esperando.",
   "hud.pixeldungeon.procurar": "Procurar [%s]",
   "hud.pixeldungeon.procurar.descricao": "Procura segredos em volta: sempre acha as portas e as armadilhas escondidas que estiverem perto e à vista. Leva 2 turnos.",
   "effect.pixeldungeon.comendo": "Comendo",
@@ -1641,5 +1641,8 @@
   "mensagem.pixeldungeon.poco.item": "A água da consciência revelou: %s",
   "mensagem.pixeldungeon.sacrificio.digno": "O fogo consome sua oferenda e se torna mais forte.",
   "mensagem.pixeldungeon.sacrificio.indigno": "O fogo consome sua oferenda, mas nada acontece.",
-  "mensagem.pixeldungeon.sacrificio.premio": "O fogo se intensifica e logo se dissipa, deixando para trás uma recompensa!"
+  "mensagem.pixeldungeon.sacrificio.premio": "O fogo se intensifica e logo se dissipa, deixando para trás uma recompensa!",
+  "effect.pixeldungeon.esperando": "Esperando",
+  "key.pixeldungeon.esperar": "Esperar 1 turno",
+  "efeito.pixeldungeon.esperar": "..."
 }

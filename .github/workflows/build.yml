@@ -94,7 +94,11 @@ jobs:
           if ! grep -qE "Andar 1: ([4-9]|[1-9][0-9]) itens" servidor.log; then echo "Os itens do andar 1 não apareceram"; exit 1; fi
           echo "----- salas e portas -----"
           grep -E "Andar [0-9]+: [0-9]+x[0-9]+ quadradinhos" servidor.log || true
-          if ! grep -qE "Andar 1: [0-9]+x[0-9]+ quadradinhos, [0-9]+ salas, [1-9][0-9]* portas, [1-9] trancadas, [1-9] chaves de ferro" servidor.log; then echo "O andar 1 não tem as portas do Shattered"; exit 1; fi
+          # (o andar 1 pode não ter sala trancada: as salas especiais sorteadas podem ser todas sem tranca; mas cada porta trancada tem a chave dela)
+          linha=$(grep -oE "Andar 1: [0-9]+x[0-9]+ quadradinhos, [0-9]+ salas, [1-9][0-9]* portas, [0-9]+ trancadas, [0-9]+ chaves de ferro" servidor.log | head -1)
+          trancadas=$(echo "$linha" | grep -oE "[0-9]+ trancadas" | grep -oE "[0-9]+")
+          chaves=$(echo "$linha" | grep -oE "[0-9]+ chaves" | grep -oE "[0-9]+")
+          if [ -z "$linha" ] || [ "$trancadas" != "$chaves" ]; then echo "O andar 1 não tem as portas do Shattered"; exit 1; fi
           if ! grep -q "Teste das portas: comum fechada no começo = true, trancada fechada no começo = true" servidor.log; then echo "As portas não começaram fechadas"; exit 1; fi
           if ! grep -q "Teste das portas: a comum abriu com o rato perto = true, a trancada continuou fechada = true" servidor.log; then echo "As portas não abriram direito"; exit 1; fi
           if ! grep -q "Teste da chave de ferro: destrancou = true, gastou a chave = true, ficou comum = true" servidor.log; then echo "A chave de ferro não funcionou"; exit 1; fi
@@ -271,6 +275,7 @@ jobs:
           if ! grep -q "Teste dos moradores das salas: 3 piranhas, vivas na água = true, morreu no seco = true, estátua parada = true, arma encantada = true, acordou ao apanhar = true, deixou a arma = true, sentinela não apanha = true, o raio acerta = true" servidor.log; then echo "Os moradores das salas não funcionaram"; exit 1; fi
           if ! grep -q "Teste do pote de mel: a abelha nasceu com o pote = true, defende só perto do pote = true, sem o pote vira comum = true" servidor.log; then echo "O pote de mel ou a abelha não funcionou"; exit 1; fi
           if ! grep -q "Teste do abismo: a queda aleija e faz sangrar = true, tira pelo menos metade da vida = true, com a queda suave não = true, cai no andar de baixo = true, o item cai junto = true, o inimigo morre = true, a sala do poço existe pra quem cai do piso frágil = true" servidor.log; then echo "O abismo não funcionou"; exit 1; fi
+          if ! grep -q "Teste do esperar: começou = true, parado = true, não espera duas vezes = true, não usa item = true, não ataca = true, golpe paciente pronto = true, bônus do golpe = 2, gastou = true, depois pode atacar = true, sair do lugar desfaz = true, ficar parado sem esperar não prepara = true" servidor.log; then echo "O esperar não funcionou"; exit 1; fi
           echo "Servidor ligou, os 5 andares foram construídos e o Goo está no ninho"
 
       # Liga o jogo de verdade (sem monitor, no Xvfb), entra no mundo do teste do servidor

@@ -9,6 +9,7 @@ import com.louzada.pixeldungeon.dungeon.Busca;
 import com.louzada.pixeldungeon.dungeon.MissaoDoFantasma;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
+import com.louzada.pixeldungeon.heroi.Espera;
 import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
 import com.louzada.pixeldungeon.heroi.HabilidadesDaDuelista;
 import com.louzada.pixeldungeon.heroi.MagiasDoClerigo;
@@ -41,6 +42,7 @@ public class ModRede {
         registrador.playToServer(PacoteUsarHabilidade.TIPO, PacoteUsarHabilidade.CODEC, ModRede::aoReceberUsarHabilidade);
         registrador.playToServer(PacoteLancarMagia.TIPO, PacoteLancarMagia.CODEC, ModRede::aoReceberLancarMagia);
         registrador.playToServer(PacoteProcurar.TIPO, PacoteProcurar.CODEC, ModRede::aoReceberProcurar);
+        registrador.playToServer(PacoteEsperar.TIPO, PacoteEsperar.CODEC, ModRede::aoReceberEsperar);
         // Identificação: o que o jogador já sabe, a tela de escolher item e a de compartilhar
         registrador.playToClient(PacoteConhecimento.TIPO, PacoteConhecimento.CODEC, ModRede::aoReceberConhecimento);
         registrador.playToClient(PacoteEscolherItem.TIPO, PacoteEscolherItem.CODEC, ModRede::aoReceberEscolherItem);
@@ -114,15 +116,21 @@ public class ModRede {
     }
 
     private static void aoReceberUsarHabilidade(PacoteUsarHabilidade pacote, IPayloadContext contexto) {
-        if (contexto.player() instanceof ServerPlayer jogador) {
+        if (contexto.player() instanceof ServerPlayer jogador && !Espera.esperando(jogador)) {
             HabilidadesDaDuelista.usar(jogador);
             RedeDoHeroi.enviarEstado(jogador, false);
         }
     }
 
     private static void aoReceberProcurar(PacoteProcurar pacote, IPayloadContext contexto) {
-        if (contexto.player() instanceof ServerPlayer jogador && GerenciadorDoHeroi.emJogo(jogador)) {
+        if (contexto.player() instanceof ServerPlayer jogador && GerenciadorDoHeroi.emJogo(jogador) && !Espera.esperando(jogador)) {
             Busca.procurar(jogador);
+        }
+    }
+
+    private static void aoReceberEsperar(PacoteEsperar pacote, IPayloadContext contexto) {
+        if (contexto.player() instanceof ServerPlayer jogador) {
+            Espera.esperar(jogador);
         }
     }
 
@@ -173,7 +181,7 @@ public class ModRede {
 
     private static void aoReceberLancarMagia(PacoteLancarMagia pacote, IPayloadContext contexto) {
         MagiasDoClerigo.Magia magia = MagiasDoClerigo.Magia.peloId(pacote.magia());
-        if (magia != null && contexto.player() instanceof ServerPlayer jogador) {
+        if (magia != null && contexto.player() instanceof ServerPlayer jogador && !Espera.esperando(jogador)) {
             MagiasDoClerigo.lancar(jogador, magia);
         }
     }

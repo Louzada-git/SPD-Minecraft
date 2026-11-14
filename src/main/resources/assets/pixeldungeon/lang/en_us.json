@@ -525,8 +525,8 @@
   "hud.pixeldungeon.ouro": "Gold: %s",
   "hud.pixeldungeon.mochila": "Inventory [%s]",
   "hud.pixeldungeon.mochila.descricao": "Click to close.",
-  "hud.pixeldungeon.esperar": "Wait",
-  "hud.pixeldungeon.esperar.descricao": "In Shattered, this passes a turn. Here turns pass by themselves (1 turn = 2 seconds).",
+  "hud.pixeldungeon.esperar": "Wait [%s]",
+  "hud.pixeldungeon.esperar.descricao": "Spends 1 turn standing still, without attacking or using anything (this is what readies the Duelist's patient strike). Hold the key to keep waiting.",
   "hud.pixeldungeon.procurar": "Search [%s]",
   "hud.pixeldungeon.procurar.descricao": "Searches for secrets around you: always finds hidden doors and traps that are close and in sight. Takes 2 turns.",
   "effect.pixeldungeon.comendo": "Eating",
@@ -1641,5 +1641,8 @@
   "mensagem.pixeldungeon.poco.item": "The water of awareness revealed: %s",
   "mensagem.pixeldungeon.sacrificio.digno": "The fire consumes your offering and grows stronger.",
   "mensagem.pixeldungeon.sacrificio.indigno": "The fire consumes your offering, but doesn't change.",
-  "mensagem.pixeldungeon.sacrificio.premio": "The fire flares and then dissipates, leaving a reward behind!"
+  "mensagem.pixeldungeon.sacrificio.premio": "The fire flares and then dissipates, leaving a reward behind!",
+  "effect.pixeldungeon.esperando": "Waiting",
+  "key.pixeldungeon.esperar": "Wait a turn",
+  "efeito.pixeldungeon.esperar": "..."
 }

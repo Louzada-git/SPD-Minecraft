@@ -345,8 +345,11 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
         BarraDeFerramentas.Botao botao = BarraDeFerramentas.botaoEm(width, topoDaBarra, mouseX, mouseY);
         if (botao != null) {
             String chave = "hud.pixeldungeon." + botao.name().toLowerCase();
-            Component tecla = botao == BarraDeFerramentas.Botao.PROCURAR ? TeclasDoMod.PROCURAR.getTranslatedKeyMessage()
-                    : minecraft.options.keyInventory.getTranslatedKeyMessage();
+            Component tecla = switch (botao) {
+                case PROCURAR -> TeclasDoMod.PROCURAR.getTranslatedKeyMessage();
+                case ESPERAR -> TeclasDoMod.ESPERAR.getTranslatedKeyMessage();
+                case MOCHILA -> minecraft.options.keyInventory.getTranslatedKeyMessage();
+            };
             return List.of(Component.translatable(chave, tecla).withStyle(ChatFormatting.YELLOW),
                     Component.translatable(chave + ".descricao").withStyle(ChatFormatting.GRAY));
         }
@@ -365,12 +368,15 @@ public class TelaDoInventario extends AbstractContainerScreen<InventoryMenu> {
             BarraDeFerramentas.Botao clicado = BarraDeFerramentas.botaoEm(width, topoDaBarra, mouseX, mouseY);
             if (clicado != null) {
                 minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                // A mochila fecha o inventário; procurar fecha e procura; esperar só mostra a dica
+                // A mochila fecha o inventário; procurar fecha e procura; esperar fecha e espera 1 turno
                 if (clicado == BarraDeFerramentas.Botao.MOCHILA) {
                     onClose();
                 } else if (clicado == BarraDeFerramentas.Botao.PROCURAR) {
                     onClose();
                     PacketDistributor.sendToServer(new PacoteProcurar());
+                } else if (clicado == BarraDeFerramentas.Botao.ESPERAR) {
+                    onClose();
+                    TeclasDoMod.pedirParaEsperar(jogador.level().getGameTime());
                 }
                 return true;
             }

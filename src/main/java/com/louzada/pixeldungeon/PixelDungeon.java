@@ -9,6 +9,7 @@ import com.louzada.pixeldungeon.dungeon.Sacrificio;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.heroi.Aneis;
 import com.louzada.pixeldungeon.heroi.Escudos;
+import com.louzada.pixeldungeon.heroi.Espera;
 import com.louzada.pixeldungeon.heroi.GerenciadorDoHeroi;
 import com.louzada.pixeldungeon.heroi.GlifosDoHeroi;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
@@ -79,6 +80,13 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoMorrerAlguem);
         // O fogo de sacrifício
         NeoForge.EVENT_BUS.addListener(Sacrificio::aoMorrer);
+        // Esperando (o botão de esperar), o herói não ataca nem usa nada
+        NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST, Espera::aoAtacar);
+        NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST, Espera::aoUsarItem);
+        NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST, Espera::aoClicarNoBloco);
+        NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST, Espera::aoBaterNoBloco);
+        NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST, Espera::aoMexerEmAlguem);
+        NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST, Espera::aoMexerEmAlguemNoPonto);
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoTomarDano);
         // O selo do Guerreiro olha o dano depois que o combate calculou (por isso prioridade baixa)
         NeoForge.EVENT_BUS.addListener(EventPriority.LOW, Escudos::aoReceberDano);

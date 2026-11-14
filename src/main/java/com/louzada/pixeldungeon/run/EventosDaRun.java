@@ -78,6 +78,7 @@ public class EventosDaRun {
     // Teste das portas: um rato dormindo do lado de uma porta comum e outro do lado de uma trancada
     private static BlockPos portaDoTeste = null;
     private static BlockPos trancadaDoTeste = null;
+    private static int andarDasPortas = 1;
     private static List<RatoMarsupial> ratosDasPortas = new ArrayList<>();
     // Teste do míssil mágico: o rato do teste de combate leva um míssil
     private static RatoMarsupial ratoDoMissil = null;
@@ -115,6 +116,7 @@ public class EventosDaRun {
             TestesDasArmadilhas.testar(servidor);
             TestesDaAlquimia.testar(servidor);
             TestesDasSalasEspeciais.testar(servidor);
+            TestesDaEspera.testar(servidor);
         }
     }
 
@@ -175,24 +177,32 @@ public class EventosDaRun {
         ticksParaOTesteDoGoo = 5 * 20;
     }
 
-    // Só no teste do GitHub: as portas do andar 1 começam fechadas; um rato encostado faz a comum abrir
-    // (o resultado sai junto com o do Goo, 5 s depois)
+    // Só no teste do GitHub: as portas do primeiro andar que tem porta comum e trancada começam fechadas; um rato encostado faz
+    // a comum abrir (o resultado sai junto com o do Goo, 5 s depois). (Nem todo andar tem sala trancada: as salas especiais
+    // sorteadas podem ser todas sem tranca.)
     private static void testarPortas(MinecraftServer servidor) {
         ServerLevel mundo = servidor.overworld();
         DadosDaRun run = DadosDaRun.pegar(servidor);
-        PlantaDoAndar planta = GeradorDeAndar.gerar(run.semente(), 1);
-        BlockPos origem = Andares.origemDoAndar(run.numeroDaRun(), 1);
-        for (int y = 0; y < planta.altura(); y++) {
-            for (int x = 0; x < planta.largura(); x++) {
-                if (planta.tipo(x, y) == PlantaDoAndar.PORTA && portaDoTeste == null) {
-                    portaDoTeste = ConstrutorDeAndar.controleDaPorta(origem, planta, x, y);
-                } else if (planta.tipo(x, y) == PlantaDoAndar.PORTA_TRANCADA && trancadaDoTeste == null) {
-                    trancadaDoTeste = ConstrutorDeAndar.controleDaPorta(origem, planta, x, y);
+        for (int andar = 1; andar <= 4 && (portaDoTeste == null || trancadaDoTeste == null); andar++) {
+            portaDoTeste = null;
+            trancadaDoTeste = null;
+            andarDasPortas = andar;
+            PlantaDoAndar planta = GeradorDeAndar.gerar(run.semente(), andar);
+            BlockPos origem = Andares.origemDoAndar(run.numeroDaRun(), andar);
+            for (int y = 0; y < planta.altura(); y++) {
+                for (int x = 0; x < planta.largura(); x++) {
+                    if (planta.tipo(x, y) == PlantaDoAndar.PORTA && portaDoTeste == null) {
+                        portaDoTeste = ConstrutorDeAndar.controleDaPorta(origem, planta, x, y);
+                    } else if (planta.tipo(x, y) == PlantaDoAndar.PORTA_TRANCADA && trancadaDoTeste == null) {
+                        trancadaDoTeste = ConstrutorDeAndar.controleDaPorta(origem, planta, x, y);
+                    }
                 }
             }
         }
         if (portaDoTeste == null || trancadaDoTeste == null) {
-            PixelDungeon.LOGGER.info("Teste das portas: o andar 1 não tem porta comum e trancada");
+            portaDoTeste = null;
+            trancadaDoTeste = null;
+            PixelDungeon.LOGGER.info("Teste das portas: nenhum andar tem porta comum e trancada");
             return;
         }
         PixelDungeon.LOGGER.info("Teste das portas: comum fechada no começo = {}, trancada fechada no começo = {}", !portaAberta(mundo, portaDoTeste),
@@ -421,14 +431,14 @@ public class EventosDaRun {
             ServerLevel mundo = evento.getServer().overworld();
             PixelDungeon.LOGGER.info("Teste das portas: a comum abriu com o rato perto = {}, a trancada continuou fechada = {}",
                     portaAberta(mundo, portaDoTeste), !portaAberta(mundo, trancadaDoTeste));
-            // Um herói com a chave de ferro do andar 1 destranca a trancada e gasta a chave
+            // Um herói com a chave de ferro do andar destranca a trancada e gasta a chave
             FakePlayer heroi = FakePlayerFactory.get(mundo, new GameProfile(UUID.fromString("5e7c1a3e-0000-4000-8000-00000000b0b0"), "TesteDoMod"));
             DadosDaRun run = DadosDaRun.pegar(evento.getServer());
             heroi.getInventory().clearContent();
-            heroi.getInventory().add(ChaveDeFerro.criar(run.numeroDaRun(), 1));
+            heroi.getInventory().add(ChaveDeFerro.criar(run.numeroDaRun(), andarDasPortas));
             boolean destrancou = ModBlocos.PORTA_GIGANTE.get().usarChave(mundo, trancadaDoTeste, heroi);
             PixelDungeon.LOGGER.info("Teste da chave de ferro: destrancou = {}, gastou a chave = {}, ficou comum = {}", destrancou,
-                    ChaveDeFerro.procurar(heroi, run.numeroDaRun(), 1).isEmpty(), !mundo.getBlockState(trancadaDoTeste).getValue(PortaGigante.TRANCADA));
+                    ChaveDeFerro.procurar(heroi, run.numeroDaRun(), andarDasPortas).isEmpty(), !mundo.getBlockState(trancadaDoTeste).getValue(PortaGigante.TRANCADA));
             for (RatoMarsupial rato : ratosDasPortas) {
                 rato.discard();
             }

@@ -21,6 +21,7 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
     - As outras 2 precisam de coisas que o mod ainda não tem (estantes que pegam fogo, e baús trancados com chaves douradas).
   - A partir do andar 2, algumas portas comuns também ficam escondidas (o andar dividido por 20: 10% no andar 2, 20% no 4), mas só se der pra chegar nas salas por outro caminho.
 - **Procurar** (tecla **G** ou o botão de procurar da barra do inventário), igual ao Shattered: acha na hora as portas e as armadilhas escondidas que estiverem perto e à vista, e leva 2 turnos. A porta escondida vira uma porta gigante comum, pra todo mundo.
+- **Esperar** (tecla **Z** ou o botão de esperar da barra do inventário), igual ao Shattered: o herói passa 1 turno (2 segundos) parado, sem pular, atacar, usar itens, mexer em nada, usar a habilidade da arma, lançar magias nem procurar. Segurando a tecla, ele continua esperando, turno depois de turno. É o que prepara o golpe paciente da Duelista.
   - Perto quer dizer 1 quadradinho em volta (3x3). O Ladino procura 2 (5x5), e a grande busca soma mais 1 (+1: um círculo de 7x7, +2: um quadrado de 7x7).
   - Andando, a cada quadradinho novo o herói tem uma chance de notar sozinho cada segredo perto: porta escondida 20% no andar 0, caindo 1% por andar; armadilha escondida 40%, caindo 0,4% por andar. Quando acha, aparece "Você percebeu algo.".
   - Manchas de água (30%) e de grama (20%), igual ao esgoto do Shattered.
@@ -88,7 +89,7 @@ Igual à interface completa do Shattered. Durante a run, a barra de itens, os co
 - **Embaixo à esquerda, a barra de status:** o rosto do herói (a skin do jogador) com o nível embaixo, a **vida** em vermelho (a blindagem aparece em cinza) e a **experiência** em amarelo, com os números em cima.
   - Em cima das barras ficam os ícones dos **efeitos** (piscando quando estão acabando), o de **fome** ("Faminto" quando falta 1/3 da comida, "Morrendo de fome" quando acaba) e uma estrela com a tecla **K** quando tem ponto de talento pra gastar.
   - O rosto pisca em vermelho com pouca vida (menos de 1/3) e em amarelo por 10 segundos quando ganha um ponto de talento.
-- **Embaixo à direita, a barra de ferramentas:** os botões de procurar, esperar e mochila do Shattered e, à esquerda deles, as **9 casinhas** da barra de itens. A do item na mão fica mais clara, com borda amarela. O item da mão esquerda aparece numa casinha solta do lado. A Duelista ganha uma etiqueta em cima com as cargas da habilidade.
+- **Embaixo à direita, a barra de ferramentas:** os botões de procurar, esperar e mochila do Shattered (no inventário, dá pra clicar neles) e, à esquerda deles, as **9 casinhas** da barra de itens. A do item na mão fica mais clara, com borda amarela. O item da mão esquerda aparece numa casinha solta do lado. A Duelista ganha uma etiqueta em cima com as cargas da habilidade.
 - **Inventário (tecla E):** abre igual ao do Shattered: a barra de ferramentas sobe e embaixo dela aparece o painel do inventário. O jogo continua aparecendo atrás (sem escurecer) e fica **pausado** enquanto o inventário está aberto (no single player).
   - Em cima, igual ao Shattered: a casinha da **armadura**, a da mão esquerda, as 2 casinhas de **anel** e o ouro; embaixo, as 27 casinhas da mochila. O capacete do Minecraft não existe na run (as pernas e os pés viraram as casinhas de anel).
   - À esquerda, o painel do herói: a skin em 3D olhando pro mouse, a classe, o nível, a força e o andar.
@@ -629,7 +630,7 @@ As receitas do esgoto e da prisão do Shattered (as 9 páginas do guia de alquim
 | Mago | refeição empoderadora, intuição do estudioso (identifica varinhas 3x mais rápido, e no primeiro disparo com +2), magia prolongada, barreira de apoio |
 | Ladino | rações guardadas (baús com rações de suprimentos), intuição do ladrão (identifica anéis 2x mais rápido e descobre o tipo ao pôr; com +2, identifica ao pôr e descobre o tipo ao pegar), golpe surpresa, sombras protetoras |
 | Caçadora | recompensa da natureza (bagas na grama alta), intuição de sobrevivente (identifica armas de arremesso 3x mais rápido, e ao acertar com +2), ataque consecutivo, auxílio da natureza (pele de árvore quando uma planta é ativada perto dela) |
-| Duelista | refeição fortalecedora, intuição de aventureiro (identifica armas mais rápido, e na hora com +2), golpe paciente (ficar parado 1 turno antes de bater), barreira agressiva |
+| Duelista | refeição fortalecedora, intuição de aventureiro (identifica armas mais rápido, e na hora com +2), golpe paciente (esperar 1 turno, com a tecla Z, antes de bater de perto; sair do lugar desfaz), barreira agressiva |
 | Clérigo | magias saciadas, intuição divina, luz abrasadora, escudo de luz |
 
 - Tier 2, também com os números do Shattered:
@@ -755,6 +756,7 @@ Comandos:
 | tecla `K` | Tela de talentos |
 | tecla `V` | Habilidade da arma (Duelista) |
 | tecla `G` | Procurar (portas escondidas) |
+| tecla `Z` | Esperar 1 turno (segurando, continua esperando) |
 | `/dungeon andar 3` | Vai direto pro andar 3 (de 1 a 5) |
 | `/dungeon xp 20` | Ganha 20 de XP do Shattered (pra testar os níveis) |
 | `/dungeon novarun` | Acaba a run atual e manda todo mundo de volta pro menu |

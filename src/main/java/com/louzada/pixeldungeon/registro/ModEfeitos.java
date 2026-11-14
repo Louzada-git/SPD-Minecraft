@@ -43,6 +43,9 @@ public class ModEfeitos {
     // Come na hora, mas nesse tempo o herói não anda, não ataca e não usa itens.
     public static final DeferredHolder<MobEffect, EfeitoSimples> COMENDO = EFEITOS.register("comendo",
             () -> EfeitoSimples.quePrende(MobEffectCategory.NEUTRAL, 0xC89650, "comendo"));
+    // Esperando (o botão de esperar do Shattered): 1 turno parado, sem atacar nem usar nada (ver Espera)
+    public static final DeferredHolder<MobEffect, EfeitoSimples> ESPERANDO = EFEITOS.register("esperando",
+            () -> EfeitoSimples.quePrende(MobEffectCategory.NEUTRAL, 0xB4B4C8, "esperando"));
 
     // Paralisado (gás paralisante): não anda nem ataca. Igual ao Shattered, dura 10 turnos.
     public static final DeferredHolder<MobEffect, EfeitoSimples> PARALISADO = EFEITOS.register("paralisado",

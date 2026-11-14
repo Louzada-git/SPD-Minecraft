@@ -35,7 +35,6 @@ public class Talentos {
     public static final String CONSECUTIVO = "ataque_consecutivo";
     public static final String CONSECUTIVO_ALVO = "ataque_consecutivo_alvo";
     public static final String PACIENTE = "golpe_paciente";
-    public static final String PARADO = "parado_ticks";
     public static final String POSICAO_X = "posicao_x";
     public static final String POSICAO_Z = "posicao_z";
     public static final String FORTALECER_VEZES = "fortalecer_vezes";
@@ -139,7 +138,6 @@ public class Talentos {
         if (pontos > 0 && !aDistancia && dados.sim(PACIENTE)) {
             bonus += pontos + sorteio.nextInt(3 - pontos);
             dados.definir(PACIENTE, false);
-            dados.definir(PARADO, 0);
         }
         // Refeição fortalecedora
         int vezes = dados.inteiro(FORTALECER_VEZES);
@@ -190,25 +188,26 @@ public class Talentos {
 
     // ---- Todo tick ----
 
-    // Golpe paciente: ficar parado 1 turno (2 segundos) conta como "esperar"
-    public static void aoTick(ServerPlayer jogador, DadosDoHeroi dados) {
+    // Golpe paciente: igual ao Shattered, esperar (o botão de esperar, ver Espera) prepara o golpe; sair do lugar desfaz
+    public static void aoEsperar(ServerPlayer jogador) {
+        DadosDoHeroi dados = RegrasDoHeroi.dados(jogador);
         if (dados.pontos(Talento.GOLPE_PACIENTE) <= 0) {
+            return;
+        }
+        dados.definir(PACIENTE, true);
+        dados.definir(POSICAO_X, (float) jogador.getX());
+        dados.definir(POSICAO_Z, (float) jogador.getZ());
+        Particulas.subindoEmVolta(jogador, Particulas.poeira(0x8000FF, 0.8F), 6, 0.0);
+    }
+
+    public static void aoTick(ServerPlayer jogador, DadosDoHeroi dados) {
+        if (!dados.sim(PACIENTE)) {
             return;
         }
         double dx = jogador.getX() - dados.decimal(POSICAO_X);
         double dz = jogador.getZ() - dados.decimal(POSICAO_Z);
         if (dx * dx + dz * dz > 0.0025) {
-            dados.definir(PARADO, 0);
             dados.definir(PACIENTE, false);
-            dados.definir(POSICAO_X, (float) jogador.getX());
-            dados.definir(POSICAO_Z, (float) jogador.getZ());
-            return;
-        }
-        int parado = dados.inteiro(PARADO) + 1;
-        dados.definir(PARADO, parado);
-        if (parado == Turno.TICKS) {
-            dados.definir(PACIENTE, true);
-            Particulas.subindoEmVolta(jogador, Particulas.poeira(0x8000FF, 0.8F), 6, 0.0);
         }
     }
 
