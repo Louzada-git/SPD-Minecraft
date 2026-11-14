@@ -81,6 +81,9 @@ public class TestesDasArmadilhas {
         doEsgoto.addAll(List.of(TipoDeArmadilha.DA_SALA_DAS_ARMADILHAS));
         doEsgoto.add(TipoDeArmadilha.DARDOS_VENENOSOS);
         doEsgoto.add(TipoDeArmadilha.DESMORONAMENTO);
+        // (as da sala queimada e do campo minado)
+        doEsgoto.add(TipoDeArmadilha.FOGO);
+        doEsgoto.add(TipoDeArmadilha.EXPLOSIVA);
         boolean tiposCertos = true;
         for (int andar = 1; andar <= 4; andar++) {
             PlantaDoAndar planta = PopulacaoDoAndar.planta(run.semente(), andar);

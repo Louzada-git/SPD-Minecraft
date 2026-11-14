@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
+import com.louzada.pixeldungeon.dungeon.TemaDoAndar;
 
 // As salas especiais (o "SpecialRoom" do Shattered): têm uma porta só (às vezes trancada: a chave de ferro do andar aparece
 // numa sala comum). São as 19 do Shattered até a prisão: 9 de equipamento e 10 de consumíveis (ver Tipo), mais o laboratório
@@ -152,7 +153,8 @@ public abstract class ComodoEspecial extends Comodo {
             }
             escolhidas = new ArrayList<>();
             List<Tipo> doAndar = new ArrayList<>(daRun);
-            int quantas = 1 + escolher(sorteio, new float[] { 1, 4 });
+            // (no andar extenso, o máximo (2) e mais uma, igual ao Shattered)
+            int quantas = TemaDoAndar.daSemente(semente, a) == TemaDoAndar.Tema.GRANDE ? 3 : 1 + escolher(sorteio, new float[] { 1, 4 });
             int regiao = 1 + a / 5;
             boolean laboratorio = false;
             if (regiao > laboratorios && (a % 5 == 4 || (a % 5 == 3 && sorteio.nextInt(2) == 0))) {

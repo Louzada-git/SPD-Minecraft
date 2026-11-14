@@ -7,10 +7,12 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
+import com.louzada.pixeldungeon.dungeon.TemaDoAndar;
 import com.louzada.pixeldungeon.dungeon.geracao.ComodoComum.Escada;
 
 // Gera um andar comum do esgoto igual ao Shattered (o "RegularLevel" + "SewerLevel"):
 //   - a entrada, a saída, de 4 a 6 salas comuns (as grandes valem por 2 ou 3), 1 ou 2 salas especiais e as secretas
+//     (no andar extenso, 9 salas comuns e 3 especiais; no com segredos, uma secreta a mais: ver TemaDoAndar)
 //   - metade das vezes o andar é uma volta, metade é um oito
 //   - o arquiteto posiciona tudo (tenta de novo até dar certo) e o pintor desenha
 public final class GeracaoDoShattered {
@@ -56,12 +58,12 @@ public final class GeracaoDoShattered {
         comodos.add(ComodoComum.sortearComEscada(Escada.ENTRADA, andar));
         comodos.add(ComodoComum.sortearComEscada(Escada.SAIDA, andar));
 
-        // De 4 a 6 salas comuns (5 na média)
-        int comuns = 4 + Dado.chances(new float[] { 1, 3, 1 });
+        // De 4 a 6 salas comuns (5 na média); no andar extenso, o máximo (6) vezes 1,5
+        int comuns = TemaDoAndar.atual().tema() == TemaDoAndar.Tema.GRANDE ? 9 : 4 + Dado.chances(new float[] { 1, 3, 1 });
         for (int i = 0; i < comuns; i++) {
             ComodoComum sala;
             do {
-                sala = ComodoComum.sortear();
+                sala = ComodoComum.sortear(andar);
             } while (!sala.sortearTamanho(comuns - i));
             i += sala.valor() - 1;
             comodos.add(sala);

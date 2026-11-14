@@ -1,0 +1,62 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "minecraft:block/polished_andesite",
+    "pedra": "minecraft:block/polished_andesite",
+    "base": "minecraft:block/mossy_cobblestone",
+    "cruz": "minecraft:block/polished_deepslate"
+  },
+  "elements": [
+    {
+      "from": [1, 0, 4], "to": [15, 2, 12],
+      "faces": {
+        "down": { "texture": "#base", "cullface": "down" },
+        "up": { "texture": "#base" },
+        "north": { "texture": "#base" },
+        "south": { "texture": "#base" },
+        "west": { "texture": "#base" },
+        "east": { "texture": "#base" }
+      }
+    },
+    {
+      "from": [3, 2, 6], "to": [13, 13, 10],
+      "faces": {
+        "up": { "texture": "#pedra" },
+        "north": { "texture": "#pedra" },
+        "south": { "texture": "#pedra" },
+        "west": { "texture": "#pedra" },
+        "east": { "texture": "#pedra" }
+      }
+    },
+    {
+      "from": [4, 13, 6], "to": [12, 14, 10],
+      "faces": {
+        "up": { "texture": "#pedra" },
+        "north": { "texture": "#pedra" },
+        "south": { "texture": "#pedra" },
+        "west": { "texture": "#pedra" },
+        "east": { "texture": "#pedra" }
+      }
+    },
+    {
+      "from": [7.5, 5, 5.5], "to": [8.5, 11, 6],
+      "faces": {
+        "north": { "texture": "#cruz" },
+        "west": { "texture": "#cruz" },
+        "east": { "texture": "#cruz" },
+        "up": { "texture": "#cruz" },
+        "down": { "texture": "#cruz" }
+      }
+    },
+    {
+      "from": [6, 8.5, 5.5], "to": [10, 9.5, 6],
+      "faces": {
+        "north": { "texture": "#cruz" },
+        "west": { "texture": "#cruz" },
+        "east": { "texture": "#cruz" },
+        "up": { "texture": "#cruz" },
+        "down": { "texture": "#cruz" }
+      }
+    }
+  ]
+}

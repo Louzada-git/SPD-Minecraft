@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import com.louzada.pixeldungeon.bloco.FogoDeSacrificio;
 import com.louzada.pixeldungeon.entidade.Abelha;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
+import com.louzada.pixeldungeon.entidade.Espectro;
 import com.louzada.pixeldungeon.entidade.EstatuaAnimada;
 import com.louzada.pixeldungeon.entidade.Mimico;
 import com.louzada.pixeldungeon.entidade.MobDoShattered;
@@ -37,7 +38,8 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 
 // O fogo de sacrifício do Shattered (a sala do sacrifício): marca quem está perto do altar (no quadradinho dele ou nos 8 em volta)
 // por 2 turnos; quem morre marcado é sacrificado. O fogo precisa de 6 + 4 x andar de sacrifício; cada inimigo vale 2 ou 3 vezes:
-//   estátua animada e mímico: 1 + andar; piranha e abelha: 1 + andar / 2; pedacinho de enxame: 1; os outros: 1 + o XP deles
+//   estátua animada e mímico: 1 + andar; piranha e abelha: 1 + andar / 2; espectro: 1 + andar / 3; pedacinho de enxame: 1;
+//   os outros: 1 + o XP deles
 // Quando completa, o fogo apaga e deixa uma arma da região seguinte, +1 mas amaldiçoada (se já tiver um encantamento bom,
 // fica sem maldição).
 public final class Sacrificio {
@@ -129,6 +131,8 @@ public final class Sacrificio {
             valor = 1 + andar;
         } else if (inimigo instanceof Piranha || inimigo instanceof Abelha) {
             valor = 1 + andar / 2;
+        } else if (inimigo instanceof Espectro) {
+            valor = 1 + andar / 3;
         } else if (inimigo instanceof EnxameDeMoscas && inimigo.xpAoMorrer() == 0) {
             valor = 1;
         } else if (inimigo.xpAoMorrer() > 0) {

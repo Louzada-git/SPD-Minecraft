@@ -287,6 +287,8 @@ public class GerenciadorDaRun {
         FantasmaAliado.acompanhar(jogador);
         jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.andar", andar,
                 Component.translatable(Andares.regiaoDoAndar(andar))), true);
+        // O tema do andar (abismal, inundado, escuro...), igual ao Shattered
+        TemaDoAndar.avisar(jogador, andar);
         // Primeira vez nesse andar: talentos que acontecem ao explorar (rações guardadas do Ladino)
         Talentos.aoChegarNoAndar(jogador, andar);
         // Previsão do ladino: avisa se o andar tem uma sala secreta
@@ -300,6 +302,7 @@ public class GerenciadorDaRun {
         FantasmaAliado.acompanhar(jogador);
         jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.andar", andar,
                 Component.translatable(Andares.regiaoDoAndar(andar))), true);
+        TemaDoAndar.avisar(jogador, andar);
         Talentos.aoChegarNoAndar(jogador, andar);
         Busca.aoChegarNoAndar(jogador, andar);
     }

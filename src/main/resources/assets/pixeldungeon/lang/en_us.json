@@ -1644,5 +1644,20 @@
   "mensagem.pixeldungeon.sacrificio.premio": "The fire flares and then dissipates, leaving a reward behind!",
   "effect.pixeldungeon.esperando": "Waiting",
   "key.pixeldungeon.esperar": "Wait a turn",
-  "efeito.pixeldungeon.esperar": "..."
+  "efeito.pixeldungeon.esperar": "...",
+  "tema.pixeldungeon.abismos": "Your steps echo across the dungeon.",
+  "tema.pixeldungeon.agua": "You hear water splashing around you.",
+  "tema.pixeldungeon.grama": "The smell of vegetation is thick in the air.",
+  "tema.pixeldungeon.escuro": "You can hear enemies moving in the darkness.",
+  "tema.pixeldungeon.grande": "This dungeon floor seems unusually large.",
+  "tema.pixeldungeon.armadilhas": "The ground seems especially treacherous here.",
+  "tema.pixeldungeon.segredos": "The atmosphere hints that this floor hides many secrets.",
+  "armadilha.pixeldungeon.fogo": "burning trap",
+  "armadilha.pixeldungeon.fogo.titulo": "Burning Trap",
+  "armadilha.pixeldungeon.fogo.descricao": "Stepping on this trap will ignite a chemical mixture, setting the surrounding area aflame.",
+  "armadilha.pixeldungeon.explosiva": "explosive trap",
+  "armadilha.pixeldungeon.explosiva.titulo": "Explosive Trap",
+  "armadilha.pixeldungeon.explosiva.descricao": "This trap contains some powdered explosive and a trigger mechanism. Activating it will cause an explosion in the immediate area.",
+  "entity.pixeldungeon.espectro": "Wraith",
+  "block.pixeldungeon.tumulo": "Tomb"
 }

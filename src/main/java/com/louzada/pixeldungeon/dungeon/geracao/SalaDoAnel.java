@@ -3,7 +3,9 @@ package com.louzada.pixeldungeon.dungeon.geracao;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 
 // A sala do anel (o "RingRoom" do Shattered): um corredor em volta de um bloco de parede no meio.
-// Nas salas grandes, o bloco do meio é oco, com uma porta e barris dentro.
+// Nas salas grandes, o bloco do meio é oco, com uma porta e barris dentro, e no meio dos barris fica guardado um dos itens
+// que o andar ia ter (se tiver algum). Também pode ser a entrada ou a saída do andar (sempre grande):
+// aí o bloco do meio é de chão especial, com a escada no meio.
 public class SalaDoAnel extends ComodoComum {
 
     @Override
@@ -18,7 +20,7 @@ public class SalaDoAnel extends ComodoComum {
 
     @Override
     public float[] chancesDoTamanho() {
-        return new float[] { 9, 3, 1 };
+        return escada != Escada.NENHUMA ? new float[] { 0, 1, 0 } : new float[] { 9, 3, 1 };
     }
 
     @Override
@@ -31,7 +33,7 @@ public class SalaDoAnel extends ComodoComum {
         Pincel.preencher(planta, this, larguraDoCorredor + 1, PlantaDoAndar.PAREDE);
 
         if (menorLado >= 10) {
-            Pincel.preencher(planta, this, larguraDoCorredor + 2, PlantaDoAndar.BARRIL);
+            Pincel.preencher(planta, this, larguraDoCorredor + 2, escada != Escada.NENHUMA ? PlantaDoAndar.CHAO_ESPECIAL : PlantaDoAndar.BARRIL);
             Ponto centro = centro();
             int dx = 0;
             int dy = 0;
@@ -54,12 +56,18 @@ public class SalaDoAnel extends ComodoComum {
             }
             // Um caminho do meio até a parede do bloco, que ganha uma porta
             Pincel.definir(planta, centro, PlantaDoAndar.CHAO_ESPECIAL);
+            Ponto meio = new Ponto(centro);
             centro.deslocar(dx, dy);
             while (planta.tipo(centro.x, centro.y) != PlantaDoAndar.PAREDE) {
                 Pincel.definir(planta, centro, PlantaDoAndar.CHAO_ESPECIAL);
                 centro.deslocar(dx, dy);
             }
             Pincel.definir(planta, centro, PlantaDoAndar.PORTA);
+            if (escada != Escada.NENHUMA) {
+                porEscadaEm(planta, meio);
+            } else {
+                planta.adicionarPremio(meio.x, meio.y, PlantaDoAndar.Premio.PREMIO_DO_ANEL, PlantaDoAndar.Recipiente.CHAO);
+            }
         }
 
         portasComuns();

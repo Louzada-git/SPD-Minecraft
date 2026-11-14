@@ -41,15 +41,20 @@ public class ConstrutorDeAndar {
     private static final int ATUALIZACAO = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
     private static final int T = Andares.TAMANHO_DO_QUADRADINHO;
     private static final int ALTURA_DO_TETO = Andares.ALTURA_DA_PAREDE + 1;
-    // Luz invisível de fundo (0 a 15); as lanternas dão a luz forte
+    // Luz invisível de fundo (0 a 15); as lanternas dão a luz forte. No andar escuro, nada de lanternas e a luz de fundo é bem fraca.
     private static final int LUZ_DAS_SALAS = 10;
     private static final int LUZ_DOS_CORREDORES = 9;
+    private static final int LUZ_DAS_SALAS_NO_ESCURO = 6;
+    private static final int LUZ_DOS_CORREDORES_NO_ESCURO = 5;
 
     private ServerLevel nivel;
     private PlantaDoAndar planta;
     private BlockPos origem;
     private Random sorteio;
     private BlockPos.MutableBlockPos posicao = new BlockPos.MutableBlockPos();
+    private final boolean escuro;
+    private final int luzDasSalas;
+    private final int luzDosCorredores;
 
     private BlockState parede = ModBlocos.PAREDE_ESGOTO.get().defaultBlockState();
     private BlockState chao = ModBlocos.CHAO_ESGOTO.get().defaultBlockState();
@@ -74,6 +79,9 @@ public class ConstrutorDeAndar {
         this.planta = planta;
         this.origem = origem;
         this.sorteio = new Random(semente);
+        this.escuro = planta.tema() == TemaDoAndar.Tema.ESCURO;
+        this.luzDasSalas = escuro ? LUZ_DAS_SALAS_NO_ESCURO : LUZ_DAS_SALAS;
+        this.luzDosCorredores = escuro ? LUZ_DOS_CORREDORES_NO_ESCURO : LUZ_DOS_CORREDORES;
     }
 
     // semente: decide a decoração (mesma semente = mesma decoração)
@@ -195,6 +203,8 @@ public class ConstrutorDeAndar {
         // A armadilha toma o lugar do chão (os 16 blocos, cada um com um pedaço do desenho dela)
         TipoDeArmadilha armadilha = tipo == PlantaDoAndar.AGUA ? null : planta.armadilha(qx, qy);
         boolean escondida = armadilha != null && !planta.armadilhaVisivel(qx, qy);
+        // (as da sala queimada já começam gastas)
+        boolean desarmada = armadilha != null && planta.armadilhaDesarmada(qx, qy);
 
         for (int dx = 0; dx < T; dx++) {
             for (int dz = 0; dz < T; dz++) {
@@ -223,7 +233,7 @@ public class ConstrutorDeAndar {
                 } else if (tipo == PlantaDoAndar.RESPIRADOURO) {
                     colocar(qx, qy, dx, 0, dz, respiradouro.setValue(Respiradouro.CONTROLE, dx == 0 && dz == 0));
                 } else if (armadilha != null) {
-                    colocar(qx, qy, dx, 0, dz, ModBlocos.ARMADILHA.get().pedaco(armadilha, escondida, false, dx, dz));
+                    colocar(qx, qy, dx, 0, dz, ModBlocos.ARMADILHA.get().pedaco(armadilha, escondida, desarmada, dx, dz));
                 } else {
                     colocar(qx, qy, dx, 0, dz, chaoDaqui);
                 }
@@ -253,14 +263,14 @@ public class ConstrutorDeAndar {
             }
         }
 
-        if (armadilha != null) {
+        if (armadilha != null && !desarmada) {
             // O controle da armadilha começa a olhar quem pisa
             nivel.scheduleTick(Armadilhas.controle(origem, qx, qy), ModBlocos.ARMADILHA.get(), ArmadilhaBloco.INTERVALO);
         }
 
         if (tipo == PlantaDoAndar.ABISMO) {
             // Em cima do abismo, só a luz de fundo
-            colocar(qx, qy, 1, alturaLivre, 1, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, LUZ_DAS_SALAS));
+            colocar(qx, qy, 1, alturaLivre, 1, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, luzDasSalas));
             return;
         }
         if (!planta.passavel(qx, qy) || planta.ehPorta(qx, qy)) {
@@ -273,7 +283,7 @@ public class ConstrutorDeAndar {
             colocar(qx, qy, 1, alturaLivre - 1, 1, corrente);
             colocar(qx, qy, 1, alturaLivre - 2, 1, lanterna);
         } else {
-            int forca = planta.ehCorredor(qx, qy) ? LUZ_DOS_CORREDORES : LUZ_DAS_SALAS;
+            int forca = planta.ehCorredor(qx, qy) ? luzDosCorredores : luzDasSalas;
             colocar(qx, qy, 1, alturaLivre, 1, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, forca));
         }
     }
@@ -312,7 +322,7 @@ public class ConstrutorDeAndar {
             }
         }
         // Uma luz fraca do lado da porta (no alto, fora do caminho dela)
-        colocar(qx, qy, pelaX ? 3 : 1, Andares.ALTURA_DO_CORREDOR, pelaX ? 1 : 3, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, LUZ_DOS_CORREDORES));
+        colocar(qx, qy, pelaX ? 3 : 1, Andares.ALTURA_DO_CORREDOR, pelaX ? 1 : 3, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, luzDosCorredores));
         // O controle (coluna 0, linha 0) começa a olhar em volta
         nivel.scheduleTick(controleDaPorta(origem, planta, qx, qy), porta, 4);
     }
@@ -325,7 +335,7 @@ public class ConstrutorDeAndar {
                 colocar(qx, qy, pelaX ? 1 : coluna, 1 + linha, pelaX ? coluna : 1, bloco);
             }
         }
-        colocar(qx, qy, pelaX ? 3 : 1, Andares.ALTURA_DO_CORREDOR, pelaX ? 1 : 3, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, LUZ_DOS_CORREDORES));
+        colocar(qx, qy, pelaX ? 3 : 1, Andares.ALTURA_DO_CORREDOR, pelaX ? 1 : 3, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, luzDosCorredores));
     }
 
     // Onde fica o controle da porta do quadradinho (o pedaço da coluna 0, linha 0)
@@ -409,9 +419,9 @@ public class ConstrutorDeAndar {
                 .setValue(StairBlock.HALF, Half.TOP);
     }
 
-    // Lanternas no centro de cada sala e, nas salas grandes, a cada 4 quadradinhos a partir do centro
+    // Lanternas no centro de cada sala e, nas salas grandes, a cada 4 quadradinhos a partir do centro (no andar escuro, nenhuma)
     private boolean temLanterna(int qx, int qy) {
-        if (planta.ehCorredor(qx, qy)) {
+        if (escuro || planta.ehCorredor(qx, qy)) {
             return false;
         }
         for (Sala sala : planta.salas()) {

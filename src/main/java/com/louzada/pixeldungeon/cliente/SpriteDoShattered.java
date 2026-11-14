@@ -105,6 +105,10 @@ public record SpriteDoShattered(ResourceLocation textura, int larguraDaFolha, in
             anim(2, true, 0, 0, 0, 0, 0, 1, 1), anim(15, true, 2, 3, 4, 5, 6, 7), anim(12, false, 8, 9, 10), anim(5, false, 11, 12, 13, 14, 15, 15),
             null);
 
+    // WraithSprite (o espectro, do tamanho de uma pessoa)
+    public static final SpriteDoShattered ESPECTRO = new SpriteDoShattered(textura("wraith"), 128, 32, 14, 15, 0.125F,
+            anim(5, true, 0, 1), anim(10, true, 0, 1), anim(10, false, 0, 2, 3), anim(8, false, 0, 4, 5, 6, 7), null);
+
     // SentrySprite (a vermelha, a das salas da sentinela)
     public static final SpriteDoShattered SENTINELA = new SpriteDoShattered(textura("sentry"), 32, 16, 8, 15, 0.11F,
             anim(1, true, 0), anim(1, true, 0), anim(1, false, 0), anim(1, false, 0), null);

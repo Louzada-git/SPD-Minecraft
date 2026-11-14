@@ -23,22 +23,29 @@ import com.louzada.pixeldungeon.bloco.PortaDeCristal;
 import com.louzada.pixeldungeon.bloco.PortaGigante;
 import com.louzada.pixeldungeon.bloco.PoteDeAlquimia;
 import com.louzada.pixeldungeon.bloco.Respiradouro;
+import com.louzada.pixeldungeon.bloco.Tumulo;
+import com.louzada.pixeldungeon.bloco.TumuloEntidade;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 // Todos os blocos do mod ficam registrados aqui.
 // Todos são inquebráveis: a dungeon é construída pelo mod e o jogador não desmonta ela.
 public class ModBlocos {
     public static final DeferredRegister.Blocks BLOCOS = DeferredRegister.createBlocks(PixelDungeon.MODID);
+    // Os blocos que guardam coisas (só o túmulo, por enquanto)
+    public static final DeferredRegister<BlockEntityType<?>> ENTIDADES_DE_BLOCO = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, PixelDungeon.MODID);
 
     // ---- Estrutura do esgoto ----
 
@@ -100,6 +107,11 @@ public class ModBlocos {
     // O fundo do poço mágico (embaixo da água): saúde ou consciência
     public static final DeferredBlock<FundoDoPoco> FUNDO_DO_POCO = BLOCOS.registerBlock("fundo_do_poco", FundoDoPoco::new,
             inquebravel().lightLevel(estado -> 8));
+    // O túmulo do cemitério gramado (guarda itens; quem abre solta espectros)
+    public static final DeferredBlock<Tumulo> TUMULO = BLOCOS.registerBlock("tumulo", Tumulo::new,
+            inquebravel().sound(SoundType.STONE).mapColor(MapColor.STONE).noOcclusion().pushReaction(PushReaction.BLOCK));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TumuloEntidade>> ENTIDADE_DO_TUMULO = ENTIDADES_DE_BLOCO.register("tumulo",
+            () -> BlockEntityType.Builder.of(TumuloEntidade::new, TUMULO.get()).build(null));
     // As brasas em volta do fogo de sacrifício
     public static final DeferredBlock<Block> BRASAS = BLOCOS.registerSimpleBlock("brasas", inquebravel().sound(SoundType.GILDED_BLACKSTONE)
             .lightLevel(estado -> 3));

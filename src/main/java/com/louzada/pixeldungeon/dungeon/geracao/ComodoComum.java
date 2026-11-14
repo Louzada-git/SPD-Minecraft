@@ -118,15 +118,24 @@ public abstract class ComodoComum extends Comodo {
         return !(ehEntrada() && andar <= 1);
     }
 
-    // Duas salas comuns encostadas podem virar uma só se o lado de dentro perto da parede não for sólido.
-    // A entrada dos andares 1 e 2 nunca se junta (igual ao Shattered).
+    // Duas salas comuns encostadas podem virar uma só se o lado de dentro perto da parede não for sólido
+    // (o abismo não é sólido, igual ao Shattered). A entrada dos andares 1 e 2 nunca se junta (igual ao Shattered).
     @Override
     public boolean podeJuntar(PlantaDoAndar planta, Comodo outro, Ponto p) {
         if (ehEntrada() && andar <= 2) {
             return false;
         }
         Ponto dentro = pontoDentro(p, 1);
-        return planta.passavel(dentro.x, dentro.y);
+        return planta.passavel(dentro.x, dentro.y) || planta.tipo(dentro.x, dentro.y) == PlantaDoAndar.ABISMO;
+    }
+
+    // A escada num lugar certo (as salas que têm um lugar dela, como o meio do anel e da bacia)
+    protected void porEscadaEm(PlantaDoAndar planta, Ponto lugar) {
+        if (escada == Escada.ENTRADA) {
+            planta.definirEntrada(lugar.x, lugar.y);
+        } else if (escada == Escada.SAIDA) {
+            planta.definirSaida(lugar.x, lugar.y);
+        }
     }
 
     // Põe a escada num quadradinho sorteado longe das paredes (onde o "podeTerEscada" deixar),
@@ -164,21 +173,42 @@ public abstract class ComodoComum extends Comodo {
 
     // ---- As salas do esgoto ----
 
-    // Igual ao Shattered nos andares 1 a 4: cano (16), anel (8), ponte na água (8), barris (4) e plantas (1).
-    // (O Shattered também tem a bacia redonda, a plataforma e a fenda, que precisam de abismo; o mod ainda não tem.)
-    public static ComodoComum sortear() {
-        return switch (Dado.chances(new float[] { 16, 8, 8, 4, 1 })) {
+    // Igual ao Shattered: as do esgoto (cano 16, anel 8, ponte na água 8, barris 4 e bacia redonda 4) e as que aparecem
+    // em qualquer região (1 cada): plantas, aquário, plataforma, queimada, fenda, cemitério gramado, listrada, estudo,
+    // baú suspeito e campo minado. No andar 1 não tem aquário, queimada, cemitério, baú suspeito nem campo minado.
+    private static final float[] DO_ANDAR_1 = { 16, 8, 8, 4, 4, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0 };
+    private static final float[] DO_ESGOTO = { 16, 8, 8, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+
+    public static ComodoComum sortear(int andar) {
+        return switch (Dado.chances(andar <= 1 ? DO_ANDAR_1 : DO_ESGOTO)) {
             case 0 -> new SalaDosCanos();
             case 1 -> new SalaDoAnel();
             case 2 -> new SalaDaPonte();
             case 3 -> new SalaDosBarris();
-            default -> new SalaDasPlantas();
+            case 4 -> new BaciaRedonda();
+            case 5 -> new SalaDasPlantas();
+            case 6 -> new Aquario();
+            case 7 -> new Plataforma();
+            case 8 -> new SalaQueimada();
+            case 9 -> new Fenda();
+            case 10 -> new CemiterioGramado();
+            case 11 -> new SalaListrada();
+            case 12 -> new Estudo();
+            case 13 -> new BauSuspeito();
+            default -> new CampoMinado();
         };
     }
 
-    // A entrada e a saída: ponte na água (4) ou barris (3)
+    // A entrada e a saída (igual ao Shattered): ponte na água (4) ou barris (3); a partir do andar 3 (a saída, do 2),
+    // também o anel (2) e a bacia redonda (1), sempre grandes e com a escada no meio
     public static ComodoComum sortearComEscada(Escada escada, int andar) {
-        ComodoComum sala = Dado.chances(new float[] { 4, 3 }) == 0 ? new SalaDaPonte() : new SalaDosBarris();
+        boolean todas = escada == Escada.ENTRADA ? andar >= 3 : andar >= 2;
+        ComodoComum sala = switch (Dado.chances(todas ? new float[] { 4, 3, 2, 1 } : new float[] { 4, 3 })) {
+            case 0 -> new SalaDaPonte();
+            case 1 -> new SalaDosBarris();
+            case 2 -> new SalaDoAnel();
+            default -> new BaciaRedonda();
+        };
         sala.comEscada(escada, andar);
         sala.sortearTamanho();
         return sala;

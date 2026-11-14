@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "pixeldungeon:block/tumulo" },
+    "facing=east": { "model": "pixeldungeon:block/tumulo", "y": 90 },
+    "facing=south": { "model": "pixeldungeon:block/tumulo", "y": 180 },
+    "facing=west": { "model": "pixeldungeon:block/tumulo", "y": 270 }
+  }
+}

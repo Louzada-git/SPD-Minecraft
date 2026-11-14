@@ -557,7 +557,12 @@ public class TestesDasSalasEspeciais {
         boolean vivasNaAgua = false;
         boolean morreuNoSeco = false;
         if (piscina != null) {
-            List<Piranha> todas = mundo.getEntitiesOfClass(Piranha.class, piscina.caixa());
+            // (só as da piscina: o andar também pode ter um aquário, que é uma sala comum)
+            List<Piranha> todas = mundo.getEntitiesOfClass(Piranha.class, piscina.caixa(), piranha -> {
+                PlantaDoAndar.Sala sala = piscina.planta().salaEm(Math.floorDiv((int) Math.floor(piranha.getX()) - piscina.origem().getX(), T),
+                        Math.floorDiv((int) Math.floor(piranha.getZ()) - piscina.origem().getZ(), T));
+                return sala != null && sala.especial();
+            });
             piranhas = todas.size();
             vivasNaAgua = !todas.isEmpty();
             for (Piranha piranha : todas) {

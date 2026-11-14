@@ -32,6 +32,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 // Os inimigos de cada andar, com as regras do Shattered:
 //   - quando o andar é criado, nascem vários inimigos dormindo (8 no andar 1)
 //   - a cada 50 turnos (100 s), se o andar tiver menos inimigos que o limite, nasce mais um longe dos heróis
+//     (no andar escuro, a cada 2/3 disso; no extenso, o limite é um terço maior)
 //   - no andar 1 não nasce mais nenhum depois do começo
 //   - quanto mais jogadores, mais vida os inimigos têm (+50% por jogador a mais)
 //   - nos andares de chefe só tem o chefe, dormindo no meio da arena (no andar 5, o Goo no ninho dele)
@@ -41,6 +42,8 @@ public class PopulacaoDoAndar {
     private static final int RAIO_LIVRE_EM_VOLTA_DA_ENTRADA = 3;
 
     private static float contadorDeTicks = 0;
+    // O relógio dos andares escuros (os inimigos voltam em 2/3 do tempo)
+    private static float contadorNoEscuro = 0;
     // Plantas já geradas (gerar de novo sai igual, mas assim é mais rápido)
     private static Map<String, PlantaDoAndar> plantas = new HashMap<>();
 
@@ -51,7 +54,11 @@ public class PopulacaoDoAndar {
             return 0;
         }
         Random sorteio = new Random(semente * 7919 + andar);
-        return 3 + andar % 5 + sorteio.nextInt(3);
+        int limite = 3 + andar % 5 + sorteio.nextInt(3);
+        if (TemaDoAndar.de(semente, andar).tema() == TemaDoAndar.Tema.GRANDE) {
+            limite = (int) Math.ceil(limite * 1.33f);
+        }
+        return limite;
     }
 
     public static int quantidadeInicial(long semente, int andar) {
@@ -147,11 +154,20 @@ public class PopulacaoDoAndar {
 
     public static void aoTickDoServidor(ServerTickEvent.Post evento) {
         // O relógio de sol dimensional (acessório) faz o tempo pra renascer passar mais devagar de dia e mais rápido de noite
-        contadorDeTicks += Acessorios.renascerAgora(Acessorios.daRun(TipoDeAcessorio.RELOGIO_DE_SOL));
-        if (contadorDeTicks < TICKS_PARA_RENASCER) {
+        float passou = Acessorios.renascerAgora(Acessorios.daRun(TipoDeAcessorio.RELOGIO_DE_SOL));
+        contadorDeTicks += passou;
+        contadorNoEscuro += passou;
+        boolean vezDosOutros = contadorDeTicks >= TICKS_PARA_RENASCER;
+        boolean vezDosEscuros = contadorNoEscuro >= TICKS_PARA_RENASCER * 2 / 3F;
+        if (!vezDosOutros && !vezDosEscuros) {
             return;
         }
-        contadorDeTicks -= TICKS_PARA_RENASCER;
+        if (vezDosOutros) {
+            contadorDeTicks -= TICKS_PARA_RENASCER;
+        }
+        if (vezDosEscuros) {
+            contadorNoEscuro -= TICKS_PARA_RENASCER * 2 / 3F;
+        }
         MinecraftServer servidor = evento.getServer();
         DadosDaRun dados = DadosDaRun.pegar(servidor);
         if (!dados.ativa()) {
@@ -169,7 +185,10 @@ public class PopulacaoDoAndar {
             }
         }
         for (int andar : andaresComHerois) {
-            renascerUm(servidor.overworld(), dados, andar, herois);
+            boolean escuro = TemaDoAndar.de(dados.semente(), andar).tema() == TemaDoAndar.Tema.ESCURO;
+            if (escuro ? vezDosEscuros : vezDosOutros) {
+                renascerUm(servidor.overworld(), dados, andar, herois);
+            }
         }
     }
 

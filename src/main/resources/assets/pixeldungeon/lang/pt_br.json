@@ -1644,5 +1644,20 @@
   "mensagem.pixeldungeon.sacrificio.premio": "O fogo se intensifica e logo se dissipa, deixando para trás uma recompensa!",
   "effect.pixeldungeon.esperando": "Esperando",
   "key.pixeldungeon.esperar": "Esperar 1 turno",
-  "efeito.pixeldungeon.esperar": "..."
+  "efeito.pixeldungeon.esperar": "...",
+  "tema.pixeldungeon.abismos": "Seus passos ecoam pela masmorra.",
+  "tema.pixeldungeon.agua": "Você ouve água respingando ao seu redor.",
+  "tema.pixeldungeon.grama": "O cheiro de vegetação está bem forte no ar.",
+  "tema.pixeldungeon.escuro": "Você consegue ouvir os inimigos se movendo na escuridão.",
+  "tema.pixeldungeon.grande": "Este andar da masmorra parece incomumente largo.",
+  "tema.pixeldungeon.armadilhas": "O chão parece especialmente traiçoeiro aqui.",
+  "tema.pixeldungeon.segredos": "A atmosfera deste andar indica que ele contém vários segredos.",
+  "armadilha.pixeldungeon.fogo": "armadilha de combustão",
+  "armadilha.pixeldungeon.fogo.titulo": "Armadilha de Combustão",
+  "armadilha.pixeldungeon.fogo.descricao": "Pisar nesta armadilha irá incendiar uma mistura química, incendiando a área circundante.",
+  "armadilha.pixeldungeon.explosiva": "armadilha explosiva",
+  "armadilha.pixeldungeon.explosiva.titulo": "Armadilha Explosiva",
+  "armadilha.pixeldungeon.explosiva.descricao": "Esta armadilha contém um pouco de explosivos em pó e um mecanismo de ativação. Ativá-la irá causar uma explosão na área imediata.",
+  "entity.pixeldungeon.espectro": "Espectro",
+  "block.pixeldungeon.tumulo": "Túmulo"
 }

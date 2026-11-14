@@ -92,7 +92,7 @@ public abstract class Arquiteto {
             }
             tuneis[0][quantos]--;
             for (int j = 0; j < quantos; j++) {
-                volta.add(new ComodoDeLigacao());
+                volta.add(ComodoDeLigacao.sortear());
             }
         }
         return volta;
@@ -131,7 +131,7 @@ public abstract class Arquiteto {
             }
         }
         while (!anterior.ligar(primeira)) {
-            ComodoDeLigacao tunel = new ComodoDeLigacao();
+            ComodoDeLigacao tunel = ComodoDeLigacao.sortear();
             if (posicionar(comodos, anterior, tunel, anguloEntre(anterior, primeira)) == -1) {
                 return false;
             }
@@ -175,7 +175,7 @@ public abstract class Arquiteto {
             chances[tuneis]--;
 
             for (int j = 0; j < tuneis; j++) {
-                ComodoDeLigacao tunel = new ComodoDeLigacao();
+                ComodoDeLigacao tunel = ComodoDeLigacao.sortear();
                 float angulo;
                 int tentativas = 3;
                 do {

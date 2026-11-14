@@ -182,7 +182,8 @@ public class EfeitosDasBombas {
         mundo.playSound(null, BlockPos.containing(meio), SoundEvents.WOOL_PLACE, SoundSource.NEUTRAL, 1.0F, 0.8F);
     }
 
-    private static void fogo(ServerLevel mundo, List<BlockPos> quadradinhos) {
+    // Fogo nos quadradinhos (também a armadilha de fogo)
+    public static void fogo(ServerLevel mundo, List<BlockPos> quadradinhos) {
         for (BlockPos quadradinho : quadradinhos) {
             for (BlockPos posicao : BlockPos.betweenClosed(quadradinho.offset(0, 1, 0), quadradinho.offset(T - 1, 1, T - 1))) {
                 BlockPos abaixo = posicao.below();
