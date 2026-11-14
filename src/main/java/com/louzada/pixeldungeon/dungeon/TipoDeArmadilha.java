@@ -35,7 +35,11 @@ public enum TipoDeArmadilha implements StringRepresentable {
     // GrippingTrap: prende os pés (sangramento e aleijado), quantas vezes for
     AGARRADORA("agarradora", Cor.CINZA, Forma.PONTOS, true, false, true),
     // RockfallTrap: pedras caem na sala inteira (só no tesouro secreto, por aqui)
-    DESMORONAMENTO("desmoronamento", Cor.CINZA, Forma.LOSANGO, false, true, true);
+    DESMORONAMENTO("desmoronamento", Cor.CINZA, Forma.LOSANGO, false, true, true),
+    // BurningTrap: fogo em volta (só na sala queimada, por aqui)
+    FOGO("fogo", Cor.LARANJA, Forma.PONTOS, true, true, false),
+    // ExplosiveTrap: a explosão de uma bomba (só no campo minado, por aqui)
+    EXPLOSIVA("explosiva", Cor.LARANJA, Forma.LOSANGO, true, true, false);
 
     // As cores e os desenhos das armadilhas do Shattered (na ordem da folha de desenhos)
     public enum Cor {

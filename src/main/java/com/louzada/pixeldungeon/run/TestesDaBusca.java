@@ -11,6 +11,7 @@ import com.louzada.pixeldungeon.dungeon.Busca;
 import com.louzada.pixeldungeon.dungeon.ConstrutorDeAndar;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
+import com.louzada.pixeldungeon.dungeon.TemaDoAndar;
 import com.louzada.pixeldungeon.dungeon.SaqueDoAndar;
 import com.louzada.pixeldungeon.heroi.ClasseDoHeroi;
 import com.louzada.pixeldungeon.heroi.DadosDoHeroi;
@@ -116,7 +117,9 @@ public class TestesDaBusca {
         // Previsão do ladino: com +2 sempre avisa num andar com sala secreta; sem o talento, nunca
         int andarComSala = 0;
         for (int a = 2; a <= 4 && andarComSala == 0; a++) {
-            if (PopulacaoDoAndar.planta(run.semente(), a).salasSecretas() > 0) {
+            // (no andar com segredos, igual ao Shattered, só avisa com 2 ou mais)
+            PlantaDoAndar candidata = PopulacaoDoAndar.planta(run.semente(), a);
+            if (candidata.salasSecretas() >= (candidata.tema() == TemaDoAndar.Tema.SEGREDOS ? 2 : 1)) {
                 andarComSala = a;
             }
         }

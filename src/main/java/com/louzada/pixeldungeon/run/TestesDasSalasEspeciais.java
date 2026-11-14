@@ -178,7 +178,7 @@ public class TestesDasSalasEspeciais {
                 PlantaDoAndar deBaixo = GeradorDeAndar.gerar(onde[0], (int) onde[1] + 1);
                 yield planta.pisoFragil() != null && tiles(planta, PlantaDoAndar.ABISMO) > 0 && deBaixo.salaDoPoco() != null;
             }
-            case PISCINA -> inimigos(planta, InimigoDaSala.PIRANHA) == 3 && premios(planta, Premio.EQUIPAMENTO_DA_SALA, Recipiente.BAU) == 1
+            case PISCINA -> inimigosNasEspeciais(planta, InimigoDaSala.PIRANHA) == 3 && premios(planta, Premio.EQUIPAMENTO_DA_SALA, Recipiente.BAU) == 1
                     && tiles(planta, PlantaDoAndar.PEDESTAL) >= 1 && planta.pedidos(ItemPedido.INVISIBILIDADE) >= 1 && tiles(planta, PlantaDoAndar.AGUA) >= 9;
             case SALA_DA_SENTINELA -> inimigos(planta, InimigoDaSala.SENTINELA) == 1
                     && planta.inimigos().stream().allMatch(inimigo -> inimigo.tipo() != InimigoDaSala.SENTINELA || (inimigo.sala() != null && inimigo.extra() > 0))
@@ -557,7 +557,12 @@ public class TestesDasSalasEspeciais {
         boolean vivasNaAgua = false;
         boolean morreuNoSeco = false;
         if (piscina != null) {
-            List<Piranha> todas = mundo.getEntitiesOfClass(Piranha.class, piscina.caixa());
+            // (só as da piscina: o andar também pode ter um aquário, que é uma sala comum)
+            List<Piranha> todas = mundo.getEntitiesOfClass(Piranha.class, piscina.caixa(), piranha -> {
+                PlantaDoAndar.Sala sala = piscina.planta().salaEm(Math.floorDiv((int) Math.floor(piranha.getX()) - piscina.origem().getX(), T),
+                        Math.floorDiv((int) Math.floor(piranha.getZ()) - piscina.origem().getZ(), T));
+                return sala != null && sala.especial();
+            });
             piranhas = todas.size();
             vivasNaAgua = !todas.isEmpty();
             for (Piranha piranha : todas) {
@@ -738,6 +743,18 @@ public class TestesDasSalasEspeciais {
         int total = 0;
         for (PlantaDoAndar.InimigoNaPlanta inimigo : planta.inimigos()) {
             if (inimigo.tipo() == tipo) {
+                total++;
+            }
+        }
+        return total;
+    }
+
+    // Só os das salas especiais (o aquário, que é uma sala comum, também tem piranhas)
+    private static int inimigosNasEspeciais(PlantaDoAndar planta, InimigoDaSala tipo) {
+        int total = 0;
+        for (PlantaDoAndar.InimigoNaPlanta inimigo : planta.inimigos()) {
+            PlantaDoAndar.Sala sala = planta.salaEm(inimigo.x(), inimigo.y());
+            if (inimigo.tipo() == tipo && sala != null && sala.especial()) {
                 total++;
             }
         }

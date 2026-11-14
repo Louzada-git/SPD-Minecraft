@@ -1353,6 +1353,198 @@
     },
     "coluna=3,desarmada=true,escondida=false,linha=3,tipo=desmoronamento": {
       "model": "pixeldungeon:block/armadilha/preto_losango_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/laranja_pontos_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=fogo": {
+      "model": "pixeldungeon:block/armadilha/preto_pontos_c3_l3"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=0,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c0_l0"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=0,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c0_l0"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=1,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c0_l1"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=1,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c0_l1"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=2,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c0_l2"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=2,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c0_l2"
+    },
+    "coluna=0,desarmada=false,escondida=false,linha=3,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c0_l3"
+    },
+    "coluna=0,desarmada=true,escondida=false,linha=3,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c0_l3"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=0,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c1_l0"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=0,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c1_l0"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=1,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c1_l1"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=1,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c1_l1"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=2,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c1_l2"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=2,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c1_l2"
+    },
+    "coluna=1,desarmada=false,escondida=false,linha=3,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c1_l3"
+    },
+    "coluna=1,desarmada=true,escondida=false,linha=3,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c1_l3"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=0,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c2_l0"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=0,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c2_l0"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=1,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c2_l1"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=1,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c2_l1"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=2,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c2_l2"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=2,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c2_l2"
+    },
+    "coluna=2,desarmada=false,escondida=false,linha=3,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c2_l3"
+    },
+    "coluna=2,desarmada=true,escondida=false,linha=3,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c2_l3"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=0,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c3_l0"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=0,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c3_l0"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=1,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c3_l1"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=1,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c3_l1"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=2,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c3_l2"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=2,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c3_l2"
+    },
+    "coluna=3,desarmada=false,escondida=false,linha=3,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/laranja_losango_c3_l3"
+    },
+    "coluna=3,desarmada=true,escondida=false,linha=3,tipo=explosiva": {
+      "model": "pixeldungeon:block/armadilha/preto_losango_c3_l3"
     }
   }
 }

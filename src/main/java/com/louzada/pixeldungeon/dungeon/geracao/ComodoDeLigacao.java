@@ -1,12 +1,56 @@
 package com.louzada.pixeldungeon.dungeon.geracao;
 
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
+import com.louzada.pixeldungeon.dungeon.TemaDoAndar;
 
 // Os túneis entre as salas (o "ConnectionRoom" + "TunnelRoom" do Shattered). O espaço do túnel é um retângulo
 // de 3 a 10 quadradinhos, mas só o caminho entre as portas vira chão: no mod ele vira um corredor (mais baixo que as salas).
-// (No esgoto do Shattered, 20 em cada 26 ligações são túneis; as outras são pontes e passarelas sobre abismo,
-// que o mod ainda não tem.)
+// No andar abismal, o caminho é de chão especial (fora dele é tudo abismo).
+// Igual ao Shattered, no esgoto 20 em cada 26 ligações são túneis; as outras são a ponte (1), a passarela (2),
+// o túnel em anel (2) e a ponte em anel (1).
 public class ComodoDeLigacao extends Comodo {
+
+    public static ComodoDeLigacao sortear() {
+        return switch (Dado.chances(new float[] { 20, 1, 2, 2, 1 })) {
+            case 0 -> new ComodoDeLigacao();
+            case 1 -> new PonteSobreOAbismo();
+            case 2 -> new Passarela();
+            case 3 -> new TunelEmAnel();
+            default -> new PonteEmAnel();
+        };
+    }
+
+    // O chão do caminho (o "tunnelTile" do Shattered)
+    static byte chaoDoTunel() {
+        return TemaDoAndar.atual().tema() == TemaDoAndar.Tema.ABISMOS ? PlantaDoAndar.CHAO_ESPECIAL : PlantaDoAndar.CHAO;
+    }
+
+    // As ligações que atravessam abismo (a ponte, a passarela e a ponte em anel): quando duas delas se encostam,
+    // a parede entre elas vira abismo também
+    protected boolean sobreOAbismo() {
+        return false;
+    }
+
+    // O lado de dentro vira abismo, e a parede encostada em outra ligação sobre o abismo também
+    protected void encherDeAbismo(PlantaDoAndar planta) {
+        Pincel.preencher(planta, this, 1, PlantaDoAndar.ABISMO);
+    }
+
+    protected void abrirParaOsVizinhosDeAbismo(PlantaDoAndar planta) {
+        for (Comodo vizinho : vizinhos) {
+            if (vizinho instanceof ComodoDeLigacao outra && outra.sobreOAbismo()) {
+                Retangulo i = intersecao(vizinho);
+                if (i.largura() != 0) {
+                    i.esquerda++;
+                    i.direita--;
+                } else {
+                    i.cima++;
+                    i.baixo--;
+                }
+                Pincel.preencher(planta, i.esquerda, i.cima, i.largura() + 1, i.altura() + 1, PlantaDoAndar.ABISMO);
+            }
+        }
+    }
 
     @Override
     public int minLargura() {
@@ -35,7 +79,11 @@ public class ComodoDeLigacao extends Comodo {
 
     @Override
     public void pintar(PlantaDoAndar planta) {
-        byte chao = PlantaDoAndar.CHAO;
+        pintarCaminhos(planta);
+    }
+
+    protected void pintarCaminhos(PlantaDoAndar planta) {
+        byte chao = chaoDoTunel();
         Retangulo c = espacoDasLigacoes();
         // De cada porta, um caminho em "L" até o meio das portas
         for (Porta porta : ligados.values()) {
@@ -68,7 +116,14 @@ public class ComodoDeLigacao extends Comodo {
         }
     }
 
-    private Retangulo espacoDasLigacoes() {
+    // O espaço onde todos os caminhos se encontram (quase sempre 1 quadradinho)
+    protected Retangulo espacoDasLigacoes() {
+        Ponto c = centroDasPortas();
+        return new Retangulo(c.x, c.y, c.x, c.y);
+    }
+
+    // Um ponto à mesma distância de todas as portas
+    protected Ponto centroDasPortas() {
         float somaX = 0;
         float somaY = 0;
         for (Porta porta : ligados.values()) {
@@ -85,6 +140,6 @@ public class ComodoDeLigacao extends Comodo {
         }
         c.x = Math.max(esquerda + 1, Math.min(c.x, direita - 1));
         c.y = Math.max(cima + 1, Math.min(c.y, baixo - 1));
-        return new Retangulo(c.x, c.y, c.x, c.y);
+        return c;
     }
 }

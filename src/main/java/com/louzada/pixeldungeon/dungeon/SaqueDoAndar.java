@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.bloco.PlantaDoShattered;
+import com.louzada.pixeldungeon.bloco.Tumulo;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Premio;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.PremioNoChao;
 import com.louzada.pixeldungeon.item.Acessorios;
@@ -62,6 +63,7 @@ import net.minecraft.world.item.ItemStack;
 //   - cada item fica: num baú (4 em 20), dentro de um mímico (1 em 20, só a partir do andar 2) ou largado no chão
 //   - os acessórios mudam um pouco isso (ver Acessorios): o dente de mímico, os cristais exóticos, a luneta trincada
 //   - todo andar também tem uma ração largada no chão
+//   - o andar extenso (ver TemaDoAndar) tem 2 itens a mais e mais uma comida
 //   - em cada região caem 2 poções de força e 3 pergaminhos de melhoria, espalhados pelos andares;
 //     e uma pedra de intuição a mais em um dos andares 1 a 4, e o catalisador mágico também (o laboratório guarda ele)
 //   - cada porta trancada tem a chave de ferro dela largada numa sala comum
@@ -75,8 +77,11 @@ public class SaqueDoAndar {
 
     // Onde o item fica (PLANTADA: a semente vira uma planta no chão)
     public enum Onde {
-        CHAO, BAU, MIMICO, PLANTADA, BAU_DE_CRISTAL, OSSADA
+        CHAO, BAU, MIMICO, PLANTADA, BAU_DE_CRISTAL, OSSADA, TUMULO
     }
+
+    // Marca do item amaldiçoado de uma ossada assombrada (quem pega solta um espectro)
+    public static final String ASSOMBRADO = "pixeldungeon_assombrado";
 
     // Um quadradinho com itens
     public record Saque(int x, int y, List<ItemStack> itens, Onde onde) {
@@ -107,6 +112,10 @@ public class SaqueDoAndar {
         Random sorteio = new Random(semente * 53 + andar * 11L);
         List<int[]> lugares = PopulacaoDoAndar.lugaresLivres(planta);
         int quantidade = 3 + sortearPeso(sorteio, new float[] { 6, 3, 1 });
+        boolean extenso = planta.tema() == TemaDoAndar.Tema.GRANDE;
+        if (extenso) {
+            quantidade += 2;
+        }
 
         for (int i = 0; i < quantidade && !lugares.isEmpty(); i++) {
             int[] lugar = lugares.remove(sorteio.nextInt(lugares.size()));
@@ -136,6 +145,9 @@ public class SaqueDoAndar {
         // os pergaminhos de melhoria da região (no chão)
         List<ItemStack> garantidos = new ArrayList<>();
         garantidos.add(new ItemStack(sorteio.nextInt(5) == 0 ? ModItens.PASTEL.get() : ModItens.RACAO.get()));
+        if (extenso) {
+            garantidos.add(comidaAleatoria(sorteio));
+        }
         if (precisaDePocaoDeForca(run, andar, sorteio)) {
             run.contarQueda(POCOES_DE_FORCA);
             garantidos.add(Identificacao.pocao(semente, TipoDePocao.FORCA));
@@ -205,6 +217,9 @@ public class SaqueDoAndar {
                 case EQUIPAMENTO_DA_SENTINELA -> sorteio.nextInt(2) == 0 ? tirarGuardado(garantidos, catalisador, null) : null;
                 case PEDRA_DA_SALA -> tirarGuardado(garantidos, catalisador, ItemPedraRunica.class);
                 case OURO_OU_CATALISADOR -> catalisador != null && garantidos.remove(catalisador) ? catalisador : null;
+                // As salas comuns que guardam prêmio: o anel grande e o baú suspeito sempre, o estudo metade das vezes
+                case PREMIO_DO_ANEL, PREMIO_SUSPEITO -> tirarGuardado(garantidos, catalisador, null);
+                case PREMIO_DO_ESTUDO -> sorteio.nextInt(2) == 0 ? tirarGuardado(garantidos, catalisador, null) : null;
                 default -> null;
             };
             if (guardado != null) {
@@ -267,6 +282,10 @@ public class SaqueDoAndar {
         List<ItemStack> caminho = planta.premios().stream().anyMatch(premio -> premio.premio() == Premio.CAMINHO_1)
                 ? caminhoDeCristal(sorteio, semente) : List.of();
         for (PremioNoChao premio : planta.premios()) {
+            // (o meio do anel só tem prêmio se o andar tinha algum item pra guardar)
+            if (premio.premio() == Premio.PREMIO_DO_ANEL && guardados.get(premio) == null) {
+                continue;
+            }
             if (premio.premio() == Premio.PREMIO_DO_LABORATORIO && catalisadorDoLaboratorio != null) {
                 saques.add(new Saque(premio.x(), premio.y(), List.of(catalisadorDoLaboratorio), Onde.CHAO));
                 catalisadorDoLaboratorio = null;
@@ -298,6 +317,7 @@ public class SaqueDoAndar {
             case BAU -> Onde.BAU;
             case BAU_DE_CRISTAL -> Onde.BAU_DE_CRISTAL;
             case OSSADA -> Onde.OSSADA;
+            case TUMULO -> Onde.TUMULO;
             default -> Onde.CHAO;
         };
         ItemStack item = switch (premio.premio()) {
@@ -349,6 +369,11 @@ public class SaqueDoAndar {
             case CHAVE_DE_CRISTAL -> ChaveDeCristal.criar(run.numeroDaRun(), andar);
             case CAMINHO_1, CAMINHO_2, CAMINHO_3, CAMINHO_4, CAMINHO_5, CAMINHO_6 ->
                 caminho.get(premio.premio().ordinal() - Premio.CAMINHO_1.ordinal()).copy();
+            case PREMIO_DO_ANEL -> guardado != null ? guardado : ItemStack.EMPTY;
+            case PREMIO_DO_ESTUDO -> guardado != null ? guardado
+                    : sorteio.nextBoolean() ? Acessorios.talvezExotica(pocaoAleatoria(sorteio, semente), sorteio, semente)
+                            : Acessorios.talvezExotico(pergaminhoAleatorio(sorteio, semente), sorteio, semente);
+            case PREMIO_SUSPEITO -> guardado != null ? guardado : Ouro.sortear(sorteio, andar);
         };
         if (premio.premio() == Premio.PLANTA_ALEATORIA || premio.premio() == Premio.PLANTA_GRAMA_SOLAR || premio.premio() == Premio.PLANTA_ESTRELA
                 || premio.premio() == Premio.ARBUSTO_DE_FRUTA) {
@@ -360,6 +385,13 @@ public class SaqueDoAndar {
             float mimicos = Acessorios.multiplicadorDeMimicos(Acessorios.daRun(TipoDeAcessorio.DENTE_DE_MIMICO));
             if (mimicos == 1 ? sorteio.nextInt(5) == 0 : sorteio.nextFloat() < mimicos / 5F) {
                 onde = Onde.MIMICO;
+            }
+        }
+        // O baú suspeito (igual ao Shattered): 1 em 3 vezes é um mímico (com o dente de mímico, mais), que guarda um prêmio a mais
+        if (premio.premio() == Premio.PREMIO_SUSPEITO) {
+            float mimicos = Acessorios.multiplicadorDeMimicos(Acessorios.daRun(TipoDeAcessorio.DENTE_DE_MIMICO));
+            if (sorteio.nextFloat() < mimicos / 3F) {
+                return new Saque(premio.x(), premio.y(), List.of(item, premioDoMimico(sorteio, andar)), Onde.MIMICO);
             }
         }
         return new Saque(premio.x(), premio.y(), List.of(item), onde);
@@ -559,12 +591,27 @@ public class SaqueDoAndar {
                     }
                 }
             } else if (saque.onde() == Onde.OSSADA) {
-                // A ossada: um crânio no canto e os itens no meio do quadradinho
+                // A ossada: um crânio no canto e os itens no meio do quadradinho. Igual ao Shattered, se tiver um item amaldiçoado
+                // ela é assombrada: a maldição dele fica à vista, e quem pega ele solta um espectro (ver Espectro)
                 Baus.colocarOssada(mundo, new BlockPos(origem.getX() + saque.x() * T, origem.getY() + 1, origem.getZ() + saque.y() * T), mundo.getRandom());
+                boolean assombrada = false;
                 for (ItemStack item : saque.itens()) {
-                    soltar(mundo, origem.getX() + saque.x() * T + T / 2.0, origem.getY() + 1, origem.getZ() + saque.y() * T + T / 2.0, item);
+                    ItemEntity noChaoDaOssada = soltar(mundo, origem.getX() + saque.x() * T + T / 2.0, origem.getY() + 1,
+                            origem.getZ() + saque.y() * T + T / 2.0, item);
+                    if (!assombrada && NivelDoItem.amaldicoado(item)) {
+                        assombrada = true;
+                        item.set(ModComponentes.MALDICAO_CONHECIDA.get(), true);
+                        noChaoDaOssada.setItem(item);
+                        noChaoDaOssada.getPersistentData().putBoolean(ASSOMBRADO, true);
+                    }
                 }
                 noChao++;
+            } else if (saque.onde() == Onde.TUMULO) {
+                // O túmulo: uma lápide no meio do quadradinho com os itens dentro (quem abre solta os espectros)
+                BlockPos lugar = new BlockPos(origem.getX() + saque.x() * T + 1, origem.getY() + 1, origem.getZ() + saque.y() * T + 1);
+                if (Tumulo.colocar(mundo, lugar, Direction.Plane.HORIZONTAL.getRandomDirection(mundo.getRandom()), saque.itens())) {
+                    baus++;
+                }
             } else if (saque.onde() == Onde.BAU_DE_CRISTAL) {
                 BlockPos lugar = new BlockPos(origem.getX() + saque.x() * T + 1, origem.getY() + 1, origem.getZ() + saque.y() * T + 1);
                 if (Baus.colocarDeCristal(mundo, lugar, Direction.Plane.HORIZONTAL.getRandomDirection(mundo.getRandom()), saque.itens())) {

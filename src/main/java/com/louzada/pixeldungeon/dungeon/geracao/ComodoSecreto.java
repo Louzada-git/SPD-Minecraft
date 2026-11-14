@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
+import com.louzada.pixeldungeon.dungeon.TemaDoAndar;
 
 // As salas secretas (o "SecretRoom" do Shattered): salas especiais com a porta escondida, que só aparece
 // procurando (ou com o pergaminho de mapeamento mágico). Igual ao Shattered:
@@ -63,6 +64,10 @@ public abstract class ComodoSecreto extends ComodoEspecial {
                 continue;
             }
             int quantas = quantasNoAndar(sorteio, daRegiao, a);
+            // No andar com segredos, uma a mais (igual ao Shattered)
+            if (TemaDoAndar.daSemente(semente, a) == TemaDoAndar.Tema.SEGREDOS) {
+                quantas++;
+            }
             for (int i = 0; i < quantas; i++) {
                 int indice = escolher(sorteio, new float[] { 6, 3, 1 });
                 while (indice >= fila.size()) {

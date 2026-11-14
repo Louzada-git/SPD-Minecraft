@@ -15,6 +15,7 @@ import com.louzada.pixeldungeon.heroi.GlifosDoHeroi;
 import com.louzada.pixeldungeon.heroi.TalentosDoTier2;
 import com.louzada.pixeldungeon.item.Acessorios;
 import com.louzada.pixeldungeon.item.Comida;
+import com.louzada.pixeldungeon.entidade.Espectro;
 import com.louzada.pixeldungeon.item.CristalDeEnergia;
 import com.louzada.pixeldungeon.item.EfeitosDeElixir;
 import com.louzada.pixeldungeon.item.EfeitosDePergaminhoExotico;
@@ -50,6 +51,7 @@ public class PixelDungeon {
     public PixelDungeon(IEventBus barramentoDoMod, ModContainer container) {
         // Registros: blocos, itens, abas do criativo...
         ModBlocos.BLOCOS.register(barramentoDoMod);
+        ModBlocos.ENTIDADES_DE_BLOCO.register(barramentoDoMod);
         ModItens.ITENS.register(barramentoDoMod);
         ModAbas.ABAS.register(barramentoDoMod);
         ModAnexos.ANEXOS.register(barramentoDoMod);
@@ -99,6 +101,7 @@ public class PixelDungeon {
         // Ouro: encostou na pilha, as moedas vão pra bolsa
         NeoForge.EVENT_BUS.addListener(Ouro::aoEncostar);
         NeoForge.EVENT_BUS.addListener(CristalDeEnergia::aoEncostar);
+        NeoForge.EVENT_BUS.addListener(Espectro::aoPegar);
         // Efeitos do Shattered que agem a cada turno (veneno, cura, sono...) e o mapeamento mágico
         NeoForge.EVENT_BUS.addListener(EfeitosNoTick::aoTick);
         NeoForge.EVENT_BUS.addListener(EfeitosNoTick::aoAcabarEfeito);

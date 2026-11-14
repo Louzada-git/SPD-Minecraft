@@ -81,6 +81,9 @@ public class TestesDasArmadilhas {
         doEsgoto.addAll(List.of(TipoDeArmadilha.DA_SALA_DAS_ARMADILHAS));
         doEsgoto.add(TipoDeArmadilha.DARDOS_VENENOSOS);
         doEsgoto.add(TipoDeArmadilha.DESMORONAMENTO);
+        // (as da sala queimada e do campo minado)
+        doEsgoto.add(TipoDeArmadilha.FOGO);
+        doEsgoto.add(TipoDeArmadilha.EXPLOSIVA);
         boolean tiposCertos = true;
         for (int andar = 1; andar <= 4; andar++) {
             PlantaDoAndar planta = PopulacaoDoAndar.planta(run.semente(), andar);
@@ -230,7 +233,8 @@ public class TestesDasArmadilhas {
                 PlantaDoAndar planta = GeradorDeAndar.gerar(semente, andar);
                 PlantaDoAndar.PremioNoChao item = null;
                 for (PlantaDoAndar.PremioNoChao premio : planta.premios()) {
-                    if (premio.premio() == PlantaDoAndar.Premio.ITEM_ALEATORIO) {
+                    // (o do cemitério gramado fica num túmulo)
+                    if (premio.premio() == PlantaDoAndar.Premio.ITEM_ALEATORIO && premio.recipiente() == PlantaDoAndar.Recipiente.OSSADA) {
                         item = premio;
                     }
                 }

@@ -274,7 +274,9 @@ public class Busca {
             return false;
         }
         DadosDaRun run = DadosDaRun.pegar(jogador.serverLevel().getServer());
-        if (PopulacaoDoAndar.planta(run.semente(), andar).salasSecretas() <= 0) {
+        // (no andar com segredos, só avisa se tiver pelo menos 2, igual ao Shattered)
+        PlantaDoAndar planta = PopulacaoDoAndar.planta(run.semente(), andar);
+        if (planta.salasSecretas() < (planta.tema() == TemaDoAndar.Tema.SEGREDOS ? 2 : 1)) {
             return false;
         }
         // Igual ao Shattered, o sorteio usa a semente do andar: o resultado é sempre o mesmo naquele andar

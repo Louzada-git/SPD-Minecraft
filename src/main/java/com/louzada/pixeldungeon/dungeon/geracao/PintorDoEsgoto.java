@@ -17,12 +17,14 @@ import com.louzada.pixeldungeon.dungeon.TipoDeArmadilha;
 import com.louzada.pixeldungeon.item.Acessorios;
 
 // Desenha os cômodos já posicionados na planta (o "RegularPainter" + "SewerPainter" do Shattered):
-//   1. a planta fica do tamanho dos cômodos, com 1 quadradinho de parede em volta
+//   1. a planta fica do tamanho dos cômodos, com 1 quadradinho de parede em volta (no andar abismal, 2 de abismo
+//      e a parede na beirada: fora dos cômodos é tudo abismo, igual ao Shattered)
 //   2. cada ligação ganha uma porta num ponto sorteado da parede em comum, e cada cômodo se desenha
 //   3. salas comuns vizinhas com uma parede comprida entre elas às vezes viram uma sala só (a parede some)
 //   4. as portas: comum vira porta gigante, trancada vira porta trancada, túnel e água viram chão e água.
 //      Igual ao Shattered, as das salas secretas ficam escondidas, e as comuns também podem ficar (andar / 20 de chance,
 //      a partir do andar 2), desde que dê pra chegar nas duas salas sem passar por porta escondida.
+//      No andar com segredos, a chance fica no meio do caminho até 50%, e basta que nenhum dos dois lados fique isolado.
 //   5. manchas de água (30%) e de grama (20%), igual ao esgoto
 //   6. as armadilhas: de 2 a 3 por andar (só a de dardos no andar 1), em chão vazio de qualquer cômodo
 public class PintorDoEsgoto {
@@ -40,8 +42,10 @@ public class PintorDoEsgoto {
             esquerda = Math.min(esquerda, comodo.esquerda);
             cima = Math.min(cima, comodo.cima);
         }
-        esquerda -= 1;
-        cima -= 1;
+        boolean abismal = TemaDoAndar.atual().tema() == TemaDoAndar.Tema.ABISMOS;
+        int margem = abismal ? 2 : 1;
+        esquerda -= margem;
+        cima -= margem;
         int direita = 0;
         int baixo = 0;
         for (Comodo comodo : comodos) {
@@ -49,12 +53,23 @@ public class PintorDoEsgoto {
             direita = Math.max(direita, comodo.direita);
             baixo = Math.max(baixo, comodo.baixo);
         }
-        int largura = direita + 2;
-        int altura = baixo + 2;
+        int largura = direita + margem + 1;
+        int altura = baixo + margem + 1;
         if (largura > tamanhoMaximo || altura > tamanhoMaximo) {
             return null;
         }
         PlantaDoAndar planta = new PlantaDoAndar(largura, altura);
+        if (abismal) {
+            planta.preencherTudo(PlantaDoAndar.ABISMO);
+            for (int x = 0; x < largura; x++) {
+                planta.definir(x, 0, PlantaDoAndar.PAREDE);
+                planta.definir(x, altura - 1, PlantaDoAndar.PAREDE);
+            }
+            for (int y = 0; y < altura; y++) {
+                planta.definir(0, y, PlantaDoAndar.PAREDE);
+                planta.definir(largura - 1, y, PlantaDoAndar.PAREDE);
+            }
+        }
 
         // 2. Portas e desenho de cada cômodo
         List<Comodo> embaralhados = new ArrayList<>(comodos);
@@ -114,7 +129,12 @@ public class PintorDoEsgoto {
 
     private static void pintarPortas(PlantaDoAndar planta, List<Comodo> comodos, int andar) {
         // A chance de uma porta comum ficar escondida: 2/20 no andar 2 até 20/20 no andar 20
+        // (no andar com segredos, puxada pra perto de 50%)
         float chanceEscondida = andar > 1 ? Math.min(1f, andar / 20f) : 0f;
+        boolean segredos = TemaDoAndar.atual().tema() == TemaDoAndar.Tema.SEGREDOS;
+        if (segredos) {
+            chanceEscondida = (0.5f + chanceEscondida) / 2f;
+        }
         Map<Comodo, Comodo> juntados = new HashMap<>();
         for (Comodo comodo : comodos) {
             for (Comodo outro : comodo.ligados.keySet()) {
@@ -139,13 +159,15 @@ public class PintorDoEsgoto {
                     // (o sorteio só acontece quando pode dar certo, pra não mudar os andares sem portas escondidas)
                     if (chanceEscondida > 0 && Dado.decimal() < chanceEscondida) {
                         porta.tipo = Comodo.Porta.Tipo.ESCONDIDA;
-                        if (!alcanca(comodos, comodo, outro)) {
+                        boolean pode = segredos ? !isolado(comodos, comodo) && !isolado(comodos, outro) : alcanca(comodos, comodo, outro);
+                        if (!pode) {
                             porta.tipo = Comodo.Porta.Tipo.DESTRANCADA;
                         }
                     }
                 }
                 byte tipo = switch (porta.tipo) {
-                    case VAZIA, TUNEL -> PlantaDoAndar.CHAO;
+                    case VAZIA -> PlantaDoAndar.CHAO;
+                    case TUNEL -> ComodoDeLigacao.chaoDoTunel();
                     case AGUA -> PlantaDoAndar.AGUA;
                     case COMUM, DESTRANCADA -> PlantaDoAndar.PORTA;
                     case ESCONDIDA -> PlantaDoAndar.PORTA_ESCONDIDA;
@@ -162,15 +184,27 @@ public class PintorDoEsgoto {
     // Dá pra ir de um cômodo a outro sem passar por porta escondida, trancada ou parede? (o "Graph" do Shattered,
     // que só anda por portas abertas, túneis e portas comuns)
     private static boolean alcanca(List<Comodo> comodos, Comodo de, Comodo ate) {
+        return alcancaveis(de).contains(ate);
+    }
+
+    // No andar com segredos: o cômodo fica isolado se dele não der pra chegar em pelo menos 2 salas (contando ele, sem os túneis)
+    private static boolean isolado(List<Comodo> comodos, Comodo de) {
+        int salas = 0;
+        for (Comodo comodo : alcancaveis(de)) {
+            if (!(comodo instanceof ComodoDeLigacao)) {
+                salas++;
+            }
+        }
+        return salas < 2;
+    }
+
+    private static Set<Comodo> alcancaveis(Comodo de) {
         Set<Comodo> vistos = new HashSet<>();
         Deque<Comodo> fila = new ArrayDeque<>();
         fila.add(de);
         vistos.add(de);
         while (!fila.isEmpty()) {
             Comodo aqui = fila.poll();
-            if (aqui == ate) {
-                return true;
-            }
             for (Map.Entry<Comodo, Comodo.Porta> ligacao : aqui.ligados.entrySet()) {
                 Comodo.Porta porta = ligacao.getValue();
                 Comodo.Porta.Tipo tipo = porta == null ? Comodo.Porta.Tipo.COMUM : porta.tipo;
@@ -181,7 +215,7 @@ public class PintorDoEsgoto {
                 }
             }
         }
-        return false;
+        return vistos;
     }
 
     // Derruba a parede entre duas salas comuns, a partir da porta, até onde as duas deixarem (pelo menos 3 quadradinhos)

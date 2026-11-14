@@ -19,13 +19,15 @@ public class GeradorDeAndar {
         Random sorteio = new Random(semente * 1000003L + andar);
         List<ComodoEspecial.Tipo> especiais = ComodoEspecial.doAndar(semente, andar);
         List<ComodoSecreto.Tipo> secretas = ComodoSecreto.secretasDoAndar(semente, andar);
-        // O tema que os acessórios deram pro andar (ver TemaDoAndar), pro pintor
-        TemaDoAndar.marcarAtual(TemaDoAndar.de(semente, andar));
+        // O tema do andar (ver TemaDoAndar), pro pintor
+        TemaDoAndar.Decisao tema = TemaDoAndar.de(semente, andar);
+        TemaDoAndar.marcarAtual(tema);
         try {
             // Às vezes o andar sai grande demais; aí gera de novo
-            for (int tentativa = 0; tentativa < 50; tentativa++) {
+            for (int tentativa = 0; tentativa < 100; tentativa++) {
                 PlantaDoAndar planta = GeracaoDoShattered.gerar(sorteio, andar, especiais, secretas, Andares.TAMANHO_DA_PLANTA);
                 if (planta != null) {
+                    planta.definirTema(tema.tema());
                     return planta;
                 }
             }

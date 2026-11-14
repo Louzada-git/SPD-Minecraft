@@ -166,17 +166,27 @@ public class TestesDosAcessorios {
         Acessorios.definirDaRun(TipoDeAcessorio.CRISTAIS_EXOTICOS, -1);
         boolean cristais = exoticos > 260 && exoticos < 380 && forcaComum;
 
-        // Moita de musgo e mecanismo: no nível 3, metade dos andares (os sem tema) ganha o tema
+        // Moita de musgo e mecanismo: no nível 3, todos os andares que a semente deixou sem tema (mais ou menos metade) ganham o tema
+        // (o musgo dá água ou grama; o mecanismo, armadilhas ou abismo)
+        int semTema = 0;
         int comTema = 0;
         int armadilhasDeTema = 0;
         for (long outra = 1; outra <= 40; outra++) {
-            comTema += TemaDoAndar.sortear(outra, 3, 3, -1).tema() != TemaDoAndar.Tema.NENHUM ? 1 : 0;
-            armadilhasDeTema += TemaDoAndar.sortear(outra, 3, -1, 3).tema() == TemaDoAndar.Tema.ARMADILHAS ? 1 : 0;
+            if (TemaDoAndar.daSemente(outra, 3) != TemaDoAndar.Tema.NENHUM) {
+                continue;
+            }
+            semTema++;
+            TemaDoAndar.Tema doMusgo = TemaDoAndar.sortear(outra, 3, 3, -1).tema();
+            comTema += doMusgo == TemaDoAndar.Tema.AGUA || doMusgo == TemaDoAndar.Tema.GRAMA ? 1 : 0;
+            TemaDoAndar.Tema doMecanismo = TemaDoAndar.sortear(outra, 3, -1, 3).tema();
+            armadilhasDeTema += doMecanismo == TemaDoAndar.Tema.ARMADILHAS || doMecanismo == TemaDoAndar.Tema.ABISMOS ? 1 : 0;
         }
-        boolean temas = comTema >= 10 && comTema <= 30 && armadilhasDeTema >= 10 && armadilhasDeTema <= 30
+        boolean temas = semTema >= 10 && semTema <= 30 && comTema == semTema && armadilhasDeTema == semTema
                 && TemaDoAndar.sortear(1, 1, 3, 3).tema() == TemaDoAndar.Tema.NENHUM;
         // O andar de água tem bem mais água; o de armadilhas, 5x mais armadilhas (as a mais à vista)
         long fingida = 987654321L;
+        TemaDoAndar.registrar(fingida, 3, new TemaDoAndar.Decisao(TemaDoAndar.Tema.NENHUM, -1));
+        TemaDoAndar.registrar(fingida, 2, new TemaDoAndar.Decisao(TemaDoAndar.Tema.NENHUM, -1));
         int aguaNormal = contar(GeradorDeAndar.gerar(fingida, 3), PlantaDoAndar.AGUA);
         TemaDoAndar.registrar(fingida, 3, new TemaDoAndar.Decisao(TemaDoAndar.Tema.AGUA, -1));
         int aguaDoTema = contar(GeradorDeAndar.gerar(fingida, 3), PlantaDoAndar.AGUA);

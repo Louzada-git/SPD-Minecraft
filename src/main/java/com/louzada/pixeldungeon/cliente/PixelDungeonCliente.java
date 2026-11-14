@@ -71,6 +71,7 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.ABELHA.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.ABELHA, 0.2F));
         evento.registerEntityRenderer(ModEntidades.ESTATUA_ANIMADA.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.ESTATUA, 0.45F));
         evento.registerEntityRenderer(ModEntidades.SENTINELA.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.SENTINELA, 0.4F));
+        evento.registerEntityRenderer(ModEntidades.ESPECTRO.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.ESPECTRO, 0.0F));
         // Míssil mágico: não tem modelo, é só o rastro de luz (as partículas saem dele mesmo)
         evento.registerEntityRenderer(ModEntidades.MISSEL_MAGICO.get(), NoopRenderer::new);
         // Luz guia do Clérigo: igual ao míssil, só o rastro de luz

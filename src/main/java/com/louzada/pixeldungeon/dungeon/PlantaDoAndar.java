@@ -78,12 +78,17 @@ public class PlantaDoAndar {
         POCAO_OU_PERGAMINHO, OURO_DOBRADO,
         OURO_OU_CATALISADOR, PREMIO_DA_OSSADA, MIUDEZA_DA_OSSADA, CHAVE_DE_CRISTAL,
         // A sala do caminho de cristal: as poções e os pergaminhos, das mais comuns (as primeiras salinhas) às mais raras (os pedestais)
-        CAMINHO_1, CAMINHO_2, CAMINHO_3, CAMINHO_4, CAMINHO_5, CAMINHO_6
+        CAMINHO_1, CAMINHO_2, CAMINHO_3, CAMINHO_4, CAMINHO_5, CAMINHO_6,
+        // Das salas comuns: o item guardado no meio da sala do anel grande (se o andar tiver algum), o do pedestal do estudo
+        // (metade das vezes um item guardado; senão, uma poção ou um pergaminho) e o do baú suspeito (um item guardado, ou ouro;
+        // às vezes o baú é um mímico)
+        PREMIO_DO_ANEL, PREMIO_DO_ESTUDO, PREMIO_SUSPEITO
     }
 
-    // Onde o prêmio fica: no chão, num baú, num baú de cristal (só abre com a chave de cristal) ou numa ossada (o "SKELETON")
+    // Onde o prêmio fica: no chão, num baú, num baú de cristal (só abre com a chave de cristal), numa ossada (o "SKELETON")
+    // ou num túmulo (o "TOMB": quem abre solta os espectros)
     public enum Recipiente {
-        CHAO, BAU, BAU_DE_CRISTAL, OSSADA
+        CHAO, BAU, BAU_DE_CRISTAL, OSSADA, TUMULO
     }
 
     // Um prêmio num quadradinho
@@ -150,6 +155,10 @@ public class PlantaDoAndar {
     // e se ela começa à vista. Depois de construída, quem sabe se ela está escondida ou desarmada é o bloco no mundo.
     private TipoDeArmadilha[] armadilhas;
     private boolean[] armadilhaVisivel;
+    // As que já começam desarmadas (as da sala queimada)
+    private boolean[] armadilhaDesarmada;
+    // O tema do andar (ver TemaDoAndar)
+    private TemaDoAndar.Tema tema = TemaDoAndar.Tema.NENHUM;
 
     private List<PremioNoChao> premios = new ArrayList<>();
     private EnumMap<ItemPedido, Integer> pedidos = new EnumMap<>(ItemPedido.class);
@@ -184,6 +193,20 @@ public class PlantaDoAndar {
         Arrays.fill(salaDoQuadradinho, -1);
         this.armadilhas = new TipoDeArmadilha[largura * altura];
         this.armadilhaVisivel = new boolean[largura * altura];
+        this.armadilhaDesarmada = new boolean[largura * altura];
+    }
+
+    public TemaDoAndar.Tema tema() {
+        return tema;
+    }
+
+    public void definirTema(TemaDoAndar.Tema novo) {
+        tema = novo;
+    }
+
+    // Preenche a planta inteira com um tipo (o andar abismal começa todo buraco)
+    public void preencherTudo(byte tipo) {
+        Arrays.fill(quadradinhos, tipo);
     }
 
     // Cava a sala (vira chão) e lembra que esses quadradinhos são dela
@@ -340,7 +363,20 @@ public class PlantaDoAndar {
         if (dentro(x, y)) {
             armadilhas[y * largura + x] = tipo;
             armadilhaVisivel[y * largura + x] = visivel || !tipo.escondivel();
+            armadilhaDesarmada[y * largura + x] = false;
         }
+    }
+
+    // Uma armadilha que já foi gasta (fica à vista, sem fazer nada)
+    public void colocarArmadilhaDesarmada(int x, int y, TipoDeArmadilha tipo) {
+        colocarArmadilha(x, y, tipo, true);
+        if (dentro(x, y)) {
+            armadilhaDesarmada[y * largura + x] = true;
+        }
+    }
+
+    public boolean armadilhaDesarmada(int x, int y) {
+        return dentro(x, y) && armadilhaDesarmada[y * largura + x];
     }
 
     @Nullable
@@ -449,14 +485,14 @@ public class PlantaDoAndar {
         return false;
     }
 
-    // Onde inimigos e itens podem aparecer, igual ao Shattered: chão (sem água, escada, porta ou armadilha) das salas comuns,
+    // Onde inimigos e itens podem aparecer, igual ao Shattered: chão (o comum ou o especial, sem água, escada, porta ou armadilha) das salas comuns,
     // longe da entrada e sem nada já posto ali. Nas salas especiais e nos túneis não aparece nada.
     // (O andar do chefe não tem salas comuns de verdade: lá vale qualquer chão.)
     public List<int[]> lugaresLivres(int raioEmVoltaDaEntrada) {
         List<int[]> lugares = new ArrayList<>();
         for (int qy = 0; qy < altura; qy++) {
             for (int qx = 0; qx < largura; qx++) {
-                if (tipo(qx, qy) != CHAO || temPremioEm(qx, qy) || temArmadilha(qx, qy)) {
+                if ((tipo(qx, qy) != CHAO && tipo(qx, qy) != CHAO_ESPECIAL) || temPremioEm(qx, qy) || temArmadilha(qx, qy)) {
                     continue;
                 }
                 Sala sala = salaEm(qx, qy);

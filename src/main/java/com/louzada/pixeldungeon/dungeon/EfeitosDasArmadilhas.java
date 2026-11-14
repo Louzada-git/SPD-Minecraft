@@ -26,6 +26,8 @@ import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.entidade.NuvemDeGas;
 import com.louzada.pixeldungeon.entidade.OvelhaMagica;
 import com.louzada.pixeldungeon.heroi.Furtividade;
+import com.louzada.pixeldungeon.item.EfeitosDasBombas;
+import com.louzada.pixeldungeon.item.TipoDeBomba;
 import com.louzada.pixeldungeon.registro.ModEfeitos;
 import com.louzada.pixeldungeon.run.DadosDaRun;
 
@@ -116,6 +118,10 @@ public class EfeitosDasArmadilhas {
             case PORTAL -> portal(mundo, controle);
             case AGARRADORA -> agarrar(mundo, controle, quem);
             case DESMORONAMENTO -> desmoronamento(mundo, controle);
+            // Igual ao Shattered: fogo na armadilha e nos 8 quadradinhos em volta
+            case FOGO -> EfeitosDasBombas.fogo(mundo, quadradinhosAte(mundo, controle, 1));
+            // Igual ao Shattered: a explosão de uma bomba comum
+            case EXPLOSIVA -> EfeitosDasBombas.explodir(mundo, TipoDeBomba.COMUM, controle, null);
         }
     }
 

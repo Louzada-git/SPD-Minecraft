@@ -9,6 +9,7 @@ import com.louzada.pixeldungeon.entidade.CaranguejoDeEsgoto;
 import com.louzada.pixeldungeon.entidade.CaranguejoGrande;
 import com.louzada.pixeldungeon.entidade.CobraDeEsgoto;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
+import com.louzada.pixeldungeon.entidade.Espectro;
 import com.louzada.pixeldungeon.entidade.EstatuaAnimada;
 import com.louzada.pixeldungeon.entidade.FantasmaAliado;
 import com.louzada.pixeldungeon.entidade.FantasmaTriste;
@@ -92,6 +93,10 @@ public class ModEntidades {
     // Sentinela (a sala da sentinela): não é um inimigo de verdade (não apanha, não anda)
     public static final DeferredHolder<EntityType<?>, EntityType<Sentinela>> SENTINELA = ENTIDADES.register("sentinela",
             () -> EntityType.Builder.of(Sentinela::new, MobCategory.MISC).sized(0.8F, 1.6F).fireImmune().clientTrackingRange(10).build("sentinela"));
+
+    // Espectro (sai dos túmulos do cemitério gramado e da ossada assombrada): do tamanho de uma pessoa, voando
+    public static final DeferredHolder<EntityType<?>, EntityType<Espectro>> ESPECTRO = ENTIDADES.register("espectro",
+            () -> EntityType.Builder.of(Espectro::new, MobCategory.MONSTER).sized(0.6F, 1.6F).build("espectro"));
 
     // Chefe do andar 5: uma gosma larga e baixa
     public static final DeferredHolder<EntityType<?>, EntityType<Goo>> GOO = ENTIDADES.register("goo",
@@ -220,5 +225,6 @@ public class ModEntidades {
         evento.put(ABELHA.get(), Abelha.atributosDaAbelha().build());
         evento.put(ESTATUA_ANIMADA.get(), MobDoShattered.atributosDoMinecraft(EstatuaAnimada.ATRIBUTOS).add(Attributes.KNOCKBACK_RESISTANCE, 0.5).build());
         evento.put(SENTINELA.get(), Sentinela.atributosDaSentinela().build());
+        evento.put(ESPECTRO.get(), Espectro.atributosDoEspectro().build());
     }
 }
