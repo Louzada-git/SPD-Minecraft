@@ -233,7 +233,8 @@ public class TestesDasArmadilhas {
                 PlantaDoAndar planta = GeradorDeAndar.gerar(semente, andar);
                 PlantaDoAndar.PremioNoChao item = null;
                 for (PlantaDoAndar.PremioNoChao premio : planta.premios()) {
-                    if (premio.premio() == PlantaDoAndar.Premio.ITEM_ALEATORIO) {
+                    // (o do cemitério gramado fica num túmulo)
+                    if (premio.premio() == PlantaDoAndar.Premio.ITEM_ALEATORIO && premio.recipiente() == PlantaDoAndar.Recipiente.OSSADA) {
                         item = premio;
                     }
                 }
