@@ -145,8 +145,18 @@ public class TestesDasArmadilhas {
                 if (premio == null) {
                     continue;
                 }
-                achouSala = true;
                 PlantaDoAndar.Sala sala = planta.salaEm(premio.x(), premio.y());
+                // (1 em 4 dessas salas é um abismo, sem armadilhas: o teste procura uma com armadilhas)
+                boolean abismo = false;
+                for (int y = sala.y(); y < sala.y() + sala.altura(); y++) {
+                    for (int x = sala.x(); x < sala.x() + sala.largura(); x++) {
+                        abismo |= planta.tipo(x, y) == PlantaDoAndar.ABISMO;
+                    }
+                }
+                if (abismo) {
+                    continue;
+                }
+                achouSala = true;
                 int armadilhas = 0;
                 boolean todasAVista = true;
                 Set<TipoDeArmadilha> tipos = EnumSet.noneOf(TipoDeArmadilha.class);

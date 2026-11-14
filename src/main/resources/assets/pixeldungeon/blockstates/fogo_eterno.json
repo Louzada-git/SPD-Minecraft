@@ -1,0 +1,90 @@
+{
+  "multipart": [
+    {
+      "apply": [
+        {
+          "model": "pixeldungeon:block/fogo_eterno_floor0"
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_floor1"
+        }
+      ]
+    },
+    {
+      "apply": [
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side0"
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side1"
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side_alt0"
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side_alt1"
+        }
+      ]
+    },
+    {
+      "apply": [
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side0",
+          "y": 90
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side1",
+          "y": 90
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side_alt0",
+          "y": 90
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side_alt1",
+          "y": 90
+        }
+      ]
+    },
+    {
+      "apply": [
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side0",
+          "y": 180
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side1",
+          "y": 180
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side_alt0",
+          "y": 180
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side_alt1",
+          "y": 180
+        }
+      ]
+    },
+    {
+      "apply": [
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side0",
+          "y": 270
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side1",
+          "y": 270
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side_alt0",
+          "y": 270
+        },
+        {
+          "model": "pixeldungeon:block/fogo_eterno_side_alt1",
+          "y": 270
+        }
+      ]
+    }
+  ]
+}

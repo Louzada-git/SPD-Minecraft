@@ -15,6 +15,7 @@ import com.louzada.pixeldungeon.item.ArtefatoAchado;
 import com.louzada.pixeldungeon.item.Baga;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
 import com.louzada.pixeldungeon.item.CapaDasSombras;
+import com.louzada.pixeldungeon.item.ChaveDeCristal;
 import com.louzada.pixeldungeon.item.ChaveDeFerro;
 import com.louzada.pixeldungeon.item.ComidaDoShattered;
 import com.louzada.pixeldungeon.item.CorDePocao;
@@ -43,6 +44,8 @@ import com.louzada.pixeldungeon.item.Odre;
 import com.louzada.pixeldungeon.item.Ouro;
 import com.louzada.pixeldungeon.item.PaginaDoGuia;
 import com.louzada.pixeldungeon.item.PetalaSeca;
+import com.louzada.pixeldungeon.item.PoteDeMel;
+import com.louzada.pixeldungeon.item.PoteQuebrado;
 import com.louzada.pixeldungeon.item.RacaoDeSuprimentos;
 import com.louzada.pixeldungeon.item.ResinaArcana;
 import com.louzada.pixeldungeon.item.RunaDePergaminho;
@@ -329,6 +332,10 @@ public class ModItens {
 
     // Chave de ferro: abre uma porta trancada do andar dela
     public static final DeferredItem<ChaveDeFerro> CHAVE_DE_FERRO = ITENS.registerItem("chave_de_ferro", ChaveDeFerro::new);
+    public static final DeferredItem<ChaveDeCristal> CHAVE_DE_CRISTAL = ITENS.registerItem("chave_de_cristal", ChaveDeCristal::new);
+    // O pote de mel (dele sai uma abelha) e o pote quebrado (a abelha protege ele)
+    public static final DeferredItem<PoteDeMel> POTE_DE_MEL = ITENS.registerItem("pote_de_mel", PoteDeMel::new);
+    public static final DeferredItem<PoteQuebrado> POTE_QUEBRADO = ITENS.registerItem("pote_quebrado", PoteQuebrado::new);
 
     // Bolha de gosma: cai do Goo quando ele morre (sozinha não faz nada; vai servir pra alquimia)
     public static final DeferredItem<ItemComDescricao> BOLHA_DE_GOSMA = ITENS.registerItem("bolha_de_gosma",

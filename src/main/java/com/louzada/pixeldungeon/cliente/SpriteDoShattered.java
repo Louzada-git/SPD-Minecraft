@@ -91,4 +91,21 @@ public record SpriteDoShattered(ResourceLocation textura, int larguraDaFolha, in
     public static final SpriteDoShattered OVELHA = new SpriteDoShattered(textura("sheep"), 64, 16, 16, 15, 0.09F,
             anim(8, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0), anim(8, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0),
             anim(8, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0), anim(20, false, 0), null);
+
+    // PiranhaSprite
+    public static final SpriteDoShattered PIRANHA = new SpriteDoShattered(textura("piranha"), 256, 32, 12, 16, 1 / 20F,
+            anim(8, true, 0, 1, 2, 1), anim(20, true, 0, 1, 2, 1), anim(20, false, 3, 4, 5, 6, 7, 8, 9, 10, 11), anim(4, false, 12, 13, 14), null);
+
+    // BeeSprite
+    public static final SpriteDoShattered ABELHA = new SpriteDoShattered(textura("bee"), 256, 16, 16, 16, 1 / 20F,
+            anim(12, true, 0, 1, 1, 0, 2, 2), anim(15, true, 0, 1, 1, 0, 2, 2), anim(20, false, 3, 4, 5, 6), anim(20, false, 7, 8, 9, 10), null);
+
+    // StatueSprite
+    public static final SpriteDoShattered ESTATUA = new SpriteDoShattered(textura("statue"), 256, 64, 12, 15, 0.125F,
+            anim(2, true, 0, 0, 0, 0, 0, 1, 1), anim(15, true, 2, 3, 4, 5, 6, 7), anim(12, false, 8, 9, 10), anim(5, false, 11, 12, 13, 14, 15, 15),
+            null);
+
+    // SentrySprite (a vermelha, a das salas da sentinela)
+    public static final SpriteDoShattered SENTINELA = new SpriteDoShattered(textura("sentry"), 32, 16, 8, 15, 0.11F,
+            anim(1, true, 0), anim(1, true, 0), anim(1, false, 0), anim(1, false, 0), null);
 }

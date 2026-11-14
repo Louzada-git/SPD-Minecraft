@@ -2,6 +2,7 @@ package com.louzada.pixeldungeon.dungeon;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -31,6 +32,21 @@ public class PlantaDoAndar {
     public static final byte PORTA_ESCONDIDA = 11;
     // O pote de alquimia (o laboratório): fica no meio do quadradinho, ninguém passa
     public static final byte POTE = 12;
+    // Abismo (o "CHASM" do Shattered): um buraco; quem cai vai parar no andar de baixo
+    public static final byte ABISMO = 13;
+    // Poço mágico (água da saúde ou da consciência) e o poço que já foi usado (o "EMPTY_WELL")
+    public static final byte POCO = 14;
+    public static final byte POCO_VAZIO = 15;
+    // Pedestal: o chão especial onde fica o prêmio de algumas salas
+    public static final byte PEDESTAL = 16;
+    // Porta de cristal: só abre com a chave de cristal do andar (e dá pra ver através dela)
+    public static final byte PORTA_DE_CRISTAL = 17;
+    // Barricada de madeira: não abre, só queima
+    public static final byte BARRICADA = 18;
+    // Brasas (em volta do altar do fogo de sacrifício)
+    public static final byte BRASAS = 19;
+    // Respiradouro de gás tóxico (a sala de gás tóxico): solta gás o tempo todo
+    public static final byte RESPIRADOURO = 20;
 
     // Grama por cima do chão (uma camada separada, o quadradinho continua sendo chão)
     public static final byte SEM_GRAMA = 0;
@@ -52,11 +68,51 @@ public class PlantaDoAndar {
         // pedra rúnica), a página do guia de alquimia e as poções do laboratório secreto (todas diferentes)
         CRISTAIS_DO_LABORATORIO, CRISTAIS_DO_LABORATORIO_SECRETO, PREMIO_DO_LABORATORIO, PAGINA_DO_GUIA, POCAO_DO_LABORATORIO_SECRETO,
         // Bombas: a do arsenal (1 em 4 vezes, duas) e a dupla do arsenal secreto
-        BOMBA, BOMBA_DUPLA
+        BOMBA, BOMBA_DUPLA,
+        // Das salas especiais da prisão e do resto do esgoto:
+        //   o depósito e a sala do fogo mágico (um prêmio guardado, ou uma poção, pergaminho, comida ou ouro), o pote de mel,
+        //   a pedra rúnica da sala das pedras, o equipamento da piscina e da sentinela, o do cofre de cristal (varinha, anel
+        //   ou artefato), as poções e pergaminhos da sala da escolha, o ouro (dobrado) e os baús da sala de gás tóxico,
+        //   e o que tem na ossada da sala do poço
+        PREMIO_DO_DEPOSITO, POTE_DE_MEL, PEDRA_DA_SALA, EQUIPAMENTO_DA_SALA, EQUIPAMENTO_DA_SENTINELA, PREMIO_DE_CRISTAL, PREMIO_ESCONDIDO,
+        POCAO_OU_PERGAMINHO, OURO_DOBRADO,
+        OURO_OU_CATALISADOR, PREMIO_DA_OSSADA, MIUDEZA_DA_OSSADA, CHAVE_DE_CRISTAL,
+        // A sala do caminho de cristal: as poções e os pergaminhos, das mais comuns (as primeiras salinhas) às mais raras (os pedestais)
+        CAMINHO_1, CAMINHO_2, CAMINHO_3, CAMINHO_4, CAMINHO_5, CAMINHO_6
     }
 
-    // Um prêmio num quadradinho, no chão ou dentro de um baú
-    public record PremioNoChao(int x, int y, Premio premio, boolean noBau) {
+    // Onde o prêmio fica: no chão, num baú, num baú de cristal (só abre com a chave de cristal) ou numa ossada (o "SKELETON")
+    public enum Recipiente {
+        CHAO, BAU, BAU_DE_CRISTAL, OSSADA
+    }
+
+    // Um prêmio num quadradinho
+    public record PremioNoChao(int x, int y, Premio premio, Recipiente recipiente) {
+        public boolean noBau() {
+            return recipiente == Recipiente.BAU;
+        }
+    }
+
+    // Os itens que uma sala pede pro andar (largados numa sala comum): a sala das armadilhas pede a poção de levitação,
+    // o depósito a de chama líquida, a piscina a de invisibilidade, a do fogo mágico a gélida, a de gás tóxico a de pureza,
+    // a da sentinela a de rapidez, e as salas de cristal as chaves de cristal
+    public enum ItemPedido {
+        LEVITACAO, CHAMA_LIQUIDA, INVISIBILIDADE, GELO, PUREZA, RAPIDEZ, CHAVE_DE_CRISTAL
+    }
+
+    // Os inimigos que já nascem com a sala: as piranhas da piscina, a estátua animada e a sentinela
+    public enum InimigoDaSala {
+        PIRANHA, ESTATUA_ANIMADA, SENTINELA,
+        // A abelha do esconderijo do mel (nasce com o pote quebrado dela do lado)
+        ABELHA
+    }
+
+    // extra: a sala da sentinela (onde ela vigia) e quantos turnos ela demora pra atirar a primeira vez
+    public record InimigoNaPlanta(int x, int y, InimigoDaSala tipo, @Nullable Sala sala, float extra) {
+    }
+
+    // O poço mágico de uma sala (true: água da saúde; false: da consciência)
+    public record PocoNaPlanta(int x, int y, boolean saude) {
     }
 
     // Uma sala retangular (só o lado de dentro, sem as paredes). x, y = canto; largura e altura em quadradinhos.
@@ -94,10 +150,20 @@ public class PlantaDoAndar {
     // e se ela começa à vista. Depois de construída, quem sabe se ela está escondida ou desarmada é o bloco no mundo.
     private TipoDeArmadilha[] armadilhas;
     private boolean[] armadilhaVisivel;
-    // Quantas poções de levitação o andar ganha (a sala das armadilhas pede uma)
-    private int pocoesDeLevitacao = 0;
 
     private List<PremioNoChao> premios = new ArrayList<>();
+    private EnumMap<ItemPedido, Integer> pedidos = new EnumMap<>(ItemPedido.class);
+    private List<InimigoNaPlanta> inimigos = new ArrayList<>();
+    private List<PocoNaPlanta> pocos = new ArrayList<>();
+    // O fogo mágico (eterno) e o fogo de sacrifício
+    private List<int[]> fogoEterno = new ArrayList<>();
+    @Nullable
+    private int[] fogoDeSacrificio;
+    // O piso frágil (quem cai nele vai pra sala do poço do andar de baixo) e a sala do poço (onde se cai)
+    @Nullable
+    private Sala pisoFragil;
+    @Nullable
+    private Sala salaDoPoco;
     // Quantas chaves de ferro o andar precisa (uma por porta trancada); elas ficam em salas comuns
     private int chavesDeFerro = 0;
     // Quantas salas secretas o andar tem (a previsão do ladino avisa)
@@ -167,7 +233,84 @@ public class PlantaDoAndar {
     }
 
     public void adicionarPremio(int x, int y, Premio premio, boolean noBau) {
-        premios.add(new PremioNoChao(x, y, premio, noBau));
+        premios.add(new PremioNoChao(x, y, premio, noBau ? Recipiente.BAU : Recipiente.CHAO));
+    }
+
+    public void adicionarPremio(int x, int y, Premio premio, Recipiente recipiente) {
+        premios.add(new PremioNoChao(x, y, premio, recipiente));
+    }
+
+    // ---- O que as salas especiais pedem ----
+
+    public void pedir(ItemPedido item) {
+        pedidos.merge(item, 1, Integer::sum);
+    }
+
+    public int pedidos(ItemPedido item) {
+        return pedidos.getOrDefault(item, 0);
+    }
+
+    public void adicionarInimigo(int x, int y, InimigoDaSala tipo, @Nullable Sala sala, float extra) {
+        inimigos.add(new InimigoNaPlanta(x, y, tipo, sala, extra));
+    }
+
+    public List<InimigoNaPlanta> inimigos() {
+        return inimigos;
+    }
+
+    public void adicionarPoco(int x, int y, boolean saude) {
+        definir(x, y, POCO);
+        pocos.add(new PocoNaPlanta(x, y, saude));
+    }
+
+    // O poço mágico desse quadradinho (ou null)
+    @Nullable
+    public PocoNaPlanta pocoEm(int x, int y) {
+        for (PocoNaPlanta poco : pocos) {
+            if (poco.x() == x && poco.y() == y) {
+                return poco;
+            }
+        }
+        return null;
+    }
+
+    public List<PocoNaPlanta> pocos() {
+        return pocos;
+    }
+
+    public void adicionarFogoEterno(int x, int y) {
+        fogoEterno.add(new int[] { x, y });
+    }
+
+    public List<int[]> fogoEterno() {
+        return fogoEterno;
+    }
+
+    public void definirFogoDeSacrificio(int x, int y) {
+        fogoDeSacrificio = new int[] { x, y };
+    }
+
+    @Nullable
+    public int[] fogoDeSacrificio() {
+        return fogoDeSacrificio;
+    }
+
+    public void definirPisoFragil(Sala sala) {
+        pisoFragil = sala;
+    }
+
+    @Nullable
+    public Sala pisoFragil() {
+        return pisoFragil;
+    }
+
+    public void definirSalaDoPoco(Sala sala) {
+        salaDoPoco = sala;
+    }
+
+    @Nullable
+    public Sala salaDoPoco() {
+        return salaDoPoco;
     }
 
     public List<PremioNoChao> premios() {
@@ -224,13 +367,6 @@ public class PlantaDoAndar {
         return total;
     }
 
-    public void pedirPocaoDeLevitacao() {
-        pocoesDeLevitacao++;
-    }
-
-    public int pocoesDeLevitacao() {
-        return pocoesDeLevitacao;
-    }
 
     public void contarSalaSecreta() {
         salasSecretas++;
@@ -291,13 +427,14 @@ public class PlantaDoAndar {
     // Dá pra andar em cima?
     public boolean passavel(int x, int y) {
         byte tipo = tipo(x, y);
-        return tipo != PAREDE && tipo != PORTA_ESCONDIDA && tipo != ESTATUA && tipo != ESTANTE && tipo != BARRIL && tipo != POTE;
+        return tipo != PAREDE && tipo != PORTA_ESCONDIDA && tipo != ESTATUA && tipo != ESTANTE && tipo != BARRIL && tipo != POTE && tipo != ABISMO
+                && tipo != POCO && tipo != POCO_VAZIO && tipo != PORTA_DE_CRISTAL && tipo != BARRICADA;
     }
 
-    // As portas gigantes (as comuns e as trancadas)
+    // As portas (as gigantes, comuns e trancadas, a de cristal e a barricada): têm a altura dos corredores
     public boolean ehPorta(int x, int y) {
         byte tipo = tipo(x, y);
-        return tipo == PORTA || tipo == PORTA_TRANCADA;
+        return tipo == PORTA || tipo == PORTA_TRANCADA || tipo == PORTA_DE_CRISTAL || tipo == BARRICADA;
     }
 
     // Uma parede só precisa ser construída se encostar em algum lugar aberto (inclusive na diagonal)

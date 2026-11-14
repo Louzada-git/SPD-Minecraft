@@ -6,8 +6,11 @@ import java.util.Random;
 
 import com.louzada.pixeldungeon.bloco.ArmadilhaBloco;
 import com.louzada.pixeldungeon.bloco.CapimAlto;
+import com.louzada.pixeldungeon.bloco.FogoDeSacrificio;
+import com.louzada.pixeldungeon.bloco.FundoDoPoco;
 import com.louzada.pixeldungeon.bloco.PortaGigante;
 import com.louzada.pixeldungeon.bloco.PoteDeAlquimia;
+import com.louzada.pixeldungeon.bloco.Respiradouro;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar.Sala;
 import com.louzada.pixeldungeon.registro.ModBlocos;
 
@@ -62,6 +65,9 @@ public class ConstrutorDeAndar {
     private BlockState gramaBaixa = ModBlocos.GRAMA_BAIXA.get().defaultBlockState();
     private BlockState barril = ModBlocos.BARRIL_ESGOTO.get().defaultBlockState();
     private BlockState estante = ModBlocos.ESTANTE_ESGOTO.get().defaultBlockState();
+    private BlockState brasas = ModBlocos.BRASAS.get().defaultBlockState();
+    private BlockState fundoDoAbismo = ModBlocos.FUNDO_DO_ABISMO.get().defaultBlockState();
+    private BlockState respiradouro = ModBlocos.RESPIRADOURO.get().defaultBlockState();
 
     private ConstrutorDeAndar(ServerLevel nivel, PlantaDoAndar planta, BlockPos origem, long semente) {
         this.nivel = nivel;
@@ -96,6 +102,8 @@ public class ConstrutorDeAndar {
             construirPilares(sala);
         }
         construirEscadas();
+        construirBeiradasDosAbismos();
+        construirFogos();
     }
 
     // Uma porta escondida foi achada: a parede vira uma porta comum. A planta já tem que estar com a PORTA no lugar.
@@ -174,18 +182,46 @@ public class ConstrutorDeAndar {
         byte tipo = planta.tipo(qx, qy);
         int alturaLivre = alturaLivre(qx, qy);
         boolean temLanterna = temLanterna(qx, qy);
-        // O chão especial (as pontes, a biblioteca) é de tufo entalhado
-        BlockState chaoDaqui = tipo == PlantaDoAndar.CHAO_ESPECIAL || tipo == PlantaDoAndar.POTE ? moldura : chao;
+        // O chão especial (as pontes, a biblioteca) é de tufo entalhado; o pedestal, de tijolos de tufo com o meio de pilar;
+        // as brasas (em volta do fogo de sacrifício), de pedra-negra com ouro
+        BlockState chaoDaqui = switch (tipo) {
+            case PlantaDoAndar.CHAO_ESPECIAL, PlantaDoAndar.POTE, PlantaDoAndar.POCO, PlantaDoAndar.POCO_VAZIO -> moldura;
+            case PlantaDoAndar.PEDESTAL -> rodape;
+            case PlantaDoAndar.BRASAS -> brasas;
+            default -> chao;
+        };
+        boolean poco = tipo == PlantaDoAndar.POCO || tipo == PlantaDoAndar.POCO_VAZIO;
+        PlantaDoAndar.PocoNaPlanta pocoMagico = tipo == PlantaDoAndar.POCO ? planta.pocoEm(qx, qy) : null;
         // A armadilha toma o lugar do chão (os 16 blocos, cada um com um pedaço do desenho dela)
         TipoDeArmadilha armadilha = tipo == PlantaDoAndar.AGUA ? null : planta.armadilha(qx, qy);
         boolean escondida = armadilha != null && !planta.armadilhaVisivel(qx, qy);
 
         for (int dx = 0; dx < T; dx++) {
             for (int dz = 0; dz < T; dz++) {
+                boolean meio = dx >= 1 && dx <= 2 && dz >= 1 && dz <= 2;
                 // Chão (a água fica num buraco de 1 bloco com chão embaixo)
                 if (tipo == PlantaDoAndar.AGUA) {
                     colocar(qx, qy, dx, -1, dz, chao);
                     colocar(qx, qy, dx, 0, dz, agua);
+                } else if (tipo == PlantaDoAndar.ABISMO) {
+                    // O abismo: um buraco escuro (quem chega no fundo cai pro andar de baixo)
+                    colocar(qx, qy, dx, 0, dz, Blocks.AIR.defaultBlockState());
+                    colocar(qx, qy, dx, -1, dz, Blocks.AIR.defaultBlockState());
+                    colocar(qx, qy, dx, -2, dz, fundoDoAbismo);
+                } else if (poco && meio) {
+                    // O poço: um buraco de 2x2 no meio, com a água mágica (o fundo diz qual é) ou seco
+                    if (pocoMagico != null) {
+                        colocar(qx, qy, dx, -1, dz, ModBlocos.FUNDO_DO_POCO.get().defaultBlockState()
+                                .setValue(FundoDoPoco.SAUDE, pocoMagico.saude()).setValue(FundoDoPoco.CONTROLE, dx == 1 && dz == 1));
+                        colocar(qx, qy, dx, 0, dz, agua);
+                    } else {
+                        colocar(qx, qy, dx, -1, dz, chao);
+                        colocar(qx, qy, dx, 0, dz, Blocks.AIR.defaultBlockState());
+                    }
+                } else if (tipo == PlantaDoAndar.PEDESTAL && meio) {
+                    colocar(qx, qy, dx, 0, dz, pilar);
+                } else if (tipo == PlantaDoAndar.RESPIRADOURO) {
+                    colocar(qx, qy, dx, 0, dz, respiradouro.setValue(Respiradouro.CONTROLE, dx == 0 && dz == 0));
                 } else if (armadilha != null) {
                     colocar(qx, qy, dx, 0, dz, ModBlocos.ARMADILHA.get().pedaco(armadilha, escondida, false, dx, dz));
                 } else {
@@ -222,6 +258,11 @@ public class ConstrutorDeAndar {
             nivel.scheduleTick(Armadilhas.controle(origem, qx, qy), ModBlocos.ARMADILHA.get(), ArmadilhaBloco.INTERVALO);
         }
 
+        if (tipo == PlantaDoAndar.ABISMO) {
+            // Em cima do abismo, só a luz de fundo
+            colocar(qx, qy, 1, alturaLivre, 1, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, LUZ_DAS_SALAS));
+            return;
+        }
         if (!planta.passavel(qx, qy) || planta.ehPorta(qx, qy)) {
             // A porta, a estátua, a estante e os barris ocupam o meio do quadradinho: a luz vem dos vizinhos
             return;
@@ -248,6 +289,8 @@ public class ConstrutorDeAndar {
         switch (planta.tipo(qx, qy)) {
             case PlantaDoAndar.PORTA -> construirPorta(qx, qy, false);
             case PlantaDoAndar.PORTA_TRANCADA -> construirPorta(qx, qy, true);
+            case PlantaDoAndar.PORTA_DE_CRISTAL -> construirPlanoDePorta(qx, qy, ModBlocos.PORTA_DE_CRISTAL.get().defaultBlockState());
+            case PlantaDoAndar.BARRICADA -> construirPlanoDePorta(qx, qy, ModBlocos.BARRICADA.get().defaultBlockState());
             case PlantaDoAndar.ESTATUA -> construirEstatua(qx, qy);
             case PlantaDoAndar.ESTANTE -> construirEstante(qx, qy);
             case PlantaDoAndar.BARRIL -> construirBarris(qx, qy);
@@ -272,6 +315,17 @@ public class ConstrutorDeAndar {
         colocar(qx, qy, pelaX ? 3 : 1, Andares.ALTURA_DO_CORREDOR, pelaX ? 1 : 3, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, LUZ_DOS_CORREDORES));
         // O controle (coluna 0, linha 0) começa a olhar em volta
         nivel.scheduleTick(controleDaPorta(origem, planta, qx, qy), porta, 4);
+    }
+
+    // A porta de cristal e a barricada: uma "parede" fina no lugar da porta gigante, do mesmo tamanho
+    private void construirPlanoDePorta(int qx, int qy, BlockState bloco) {
+        boolean pelaX = planta.passavel(qx - 1, qy) && planta.passavel(qx + 1, qy);
+        for (int coluna = 0; coluna < PortaGigante.LARGURA; coluna++) {
+            for (int linha = 0; linha < PortaGigante.ALTURA; linha++) {
+                colocar(qx, qy, pelaX ? 1 : coluna, 1 + linha, pelaX ? coluna : 1, bloco);
+            }
+        }
+        colocar(qx, qy, pelaX ? 3 : 1, Andares.ALTURA_DO_CORREDOR, pelaX ? 1 : 3, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, LUZ_DOS_CORREDORES));
     }
 
     // Onde fica o controle da porta do quadradinho (o pedaço da coluna 0, linha 0)
@@ -390,6 +444,78 @@ public class ConstrutorDeAndar {
         for (int dy = inicio; dy <= alturaLivre(qx, qy); dy++) {
             colocar(qx, qy, dx, dy, dz, pilar);
         }
+    }
+
+    // ---- Abismos e fogos ----
+
+    // Embaixo dos vizinhos de um abismo, parede (senão o buraco mostra o vazio dos lados)
+    private void construirBeiradasDosAbismos() {
+        for (int qy = 0; qy < planta.altura(); qy++) {
+            for (int qx = 0; qx < planta.largura(); qx++) {
+                if (planta.tipo(qx, qy) == PlantaDoAndar.ABISMO) {
+                    continue;
+                }
+                boolean encosta = false;
+                for (int vy = -1; vy <= 1 && !encosta; vy++) {
+                    for (int vx = -1; vx <= 1; vx++) {
+                        if (planta.dentro(qx + vx, qy + vy) && planta.tipo(qx + vx, qy + vy) == PlantaDoAndar.ABISMO) {
+                            encosta = true;
+                            break;
+                        }
+                    }
+                }
+                if (!encosta) {
+                    continue;
+                }
+                for (int dx = 0; dx < T; dx++) {
+                    for (int dz = 0; dz < T; dz++) {
+                        colocar(qx, qy, dx, -1, dz, parede);
+                        colocar(qx, qy, dx, -2, dz, parede);
+                    }
+                }
+            }
+        }
+    }
+
+    // O fogo eterno (uma parede de fogo de 3 blocos de altura em cada quadradinho) e o fogo de sacrifício (2x2 no altar)
+    private void construirFogos() {
+        BlockState fogoEterno = ModBlocos.FOGO_ETERNO.get().defaultBlockState();
+        for (int[] lugar : planta.fogoEterno()) {
+            for (int dx = 0; dx < T; dx++) {
+                for (int dz = 0; dz < T; dz++) {
+                    for (int dy = 1; dy <= 3; dy++) {
+                        colocar(lugar[0], lugar[1], dx, dy, dz, fogoEterno);
+                    }
+                }
+            }
+        }
+        int[] altar = planta.fogoDeSacrificio();
+        if (altar != null) {
+            BlockState fogo = ModBlocos.FOGO_DE_SACRIFICIO.get().defaultBlockState();
+            for (int dx = 1; dx <= 2; dx++) {
+                for (int dz = 1; dz <= 2; dz++) {
+                    colocar(altar[0], altar[1], dx, 1, dz, fogo.setValue(FogoDeSacrificio.CONTROLE, dx == 1 && dz == 1));
+                }
+            }
+            nivel.scheduleTick(controleDoFogoDeSacrificio(origem, altar[0], altar[1]), ModBlocos.FOGO_DE_SACRIFICIO.get(), 20);
+        }
+        for (int qy = 0; qy < planta.altura(); qy++) {
+            for (int qx = 0; qx < planta.largura(); qx++) {
+                if (planta.tipo(qx, qy) == PlantaDoAndar.RESPIRADOURO) {
+                    posicao.set(origem.getX() + qx * T, origem.getY(), origem.getZ() + qy * T);
+                    nivel.scheduleTick(posicao.immutable(), ModBlocos.RESPIRADOURO.get(), 5);
+                }
+                if (planta.tipo(qx, qy) == PlantaDoAndar.POCO) {
+                    posicao.set(origem.getX() + qx * T + 1, origem.getY() - 1, origem.getZ() + qy * T + 1);
+                    nivel.scheduleTick(posicao.immutable(), ModBlocos.FUNDO_DO_POCO.get(), 10);
+                }
+            }
+        }
+    }
+
+    // O bloco do fogo de sacrifício que cuida de tudo
+    public static BlockPos controleDoFogoDeSacrificio(BlockPos origem, int qx, int qy) {
+        return new BlockPos(origem.getX() + qx * T + 1, origem.getY() + 1, origem.getZ() + qy * T + 1);
     }
 
     // ---- Entrada e saída ----

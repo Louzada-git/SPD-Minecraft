@@ -1,6 +1,7 @@
 package com.louzada.pixeldungeon.registro;
 
 import com.louzada.pixeldungeon.PixelDungeon;
+import com.louzada.pixeldungeon.entidade.Abelha;
 import com.louzada.pixeldungeon.entidade.ArmaArremessada;
 import com.louzada.pixeldungeon.entidade.BombaAcesa;
 import com.louzada.pixeldungeon.entidade.BombaArremessada;
@@ -8,6 +9,7 @@ import com.louzada.pixeldungeon.entidade.CaranguejoDeEsgoto;
 import com.louzada.pixeldungeon.entidade.CaranguejoGrande;
 import com.louzada.pixeldungeon.entidade.CobraDeEsgoto;
 import com.louzada.pixeldungeon.entidade.EnxameDeMoscas;
+import com.louzada.pixeldungeon.entidade.EstatuaAnimada;
 import com.louzada.pixeldungeon.entidade.FantasmaAliado;
 import com.louzada.pixeldungeon.entidade.FantasmaTriste;
 import com.louzada.pixeldungeon.entidade.FlechaEspiritual;
@@ -25,12 +27,15 @@ import com.louzada.pixeldungeon.entidade.MobDoShattered;
 import com.louzada.pixeldungeon.entidade.NuvemDeGas;
 import com.louzada.pixeldungeon.entidade.OvelhaMagica;
 import com.louzada.pixeldungeon.entidade.PedraArremessada;
+import com.louzada.pixeldungeon.entidade.Piranha;
 import com.louzada.pixeldungeon.entidade.PocaoArremessada;
+import com.louzada.pixeldungeon.entidade.PoteArremessado;
 import com.louzada.pixeldungeon.entidade.RaioSolar;
 import com.louzada.pixeldungeon.entidade.RatoAlbino;
 import com.louzada.pixeldungeon.entidade.RatoFetido;
 import com.louzada.pixeldungeon.entidade.RatoMarsupial;
 import com.louzada.pixeldungeon.entidade.SementeArremessada;
+import com.louzada.pixeldungeon.entidade.Sentinela;
 import com.louzada.pixeldungeon.entidade.SlimeDeEsgoto;
 
 import net.minecraft.core.registries.Registries;
@@ -72,6 +77,21 @@ public class ModEntidades {
     // Mímico: do tamanho de um baú (escondido, ele é um baú de verdade)
     public static final DeferredHolder<EntityType<?>, EntityType<Mimico>> MIMICO = ENTIDADES.register("mimico",
             () -> EntityType.Builder.of(Mimico::new, MobCategory.MONSTER).sized(0.875F, 0.875F).build("mimico"));
+
+    // ---- As salas especiais ----
+
+    // Piranha (a piscina): pequena, cabe na água rasa
+    public static final DeferredHolder<EntityType<?>, EntityType<Piranha>> PIRANHA = ENTIDADES.register("piranha",
+            () -> EntityType.Builder.of(Piranha::new, MobCategory.MONSTER).sized(0.6F, 0.5F).fireImmune().build("piranha"));
+    // Abelha (sai do pote de mel)
+    public static final DeferredHolder<EntityType<?>, EntityType<Abelha>> ABELHA = ENTIDADES.register("abelha",
+            () -> EntityType.Builder.of(Abelha::new, MobCategory.MONSTER).sized(0.6F, 0.6F).build("abelha"));
+    // Estátua animada (a sala da estátua)
+    public static final DeferredHolder<EntityType<?>, EntityType<EstatuaAnimada>> ESTATUA_ANIMADA = ENTIDADES.register("estatua_animada",
+            () -> EntityType.Builder.of(EstatuaAnimada::new, MobCategory.MONSTER).sized(0.7F, 1.9F).build("estatua_animada"));
+    // Sentinela (a sala da sentinela): não é um inimigo de verdade (não apanha, não anda)
+    public static final DeferredHolder<EntityType<?>, EntityType<Sentinela>> SENTINELA = ENTIDADES.register("sentinela",
+            () -> EntityType.Builder.of(Sentinela::new, MobCategory.MISC).sized(0.8F, 1.6F).fireImmune().clientTrackingRange(10).build("sentinela"));
 
     // Chefe do andar 5: uma gosma larga e baixa
     public static final DeferredHolder<EntityType<?>, EntityType<Goo>> GOO = ENTIDADES.register("goo",
@@ -155,6 +175,10 @@ public class ModEntidades {
     public static final DeferredHolder<EntityType<?>, EntityType<BombaAcesa>> BOMBA_ACESA = ENTIDADES.register("bomba_acesa",
             () -> EntityType.Builder.<BombaAcesa>of(BombaAcesa::new, MobCategory.MISC).sized(0.5F, 0.5F)
                     .clientTrackingRange(8).updateInterval(5).build("bomba_acesa"));
+    // Pote de mel arremessado (quebra onde cair e solta uma abelha)
+    public static final DeferredHolder<EntityType<?>, EntityType<PoteArremessado>> POTE_ARREMESSADO = ENTIDADES.register("pote_arremessado",
+            () -> EntityType.Builder.<PoteArremessado>of(PoteArremessado::new, MobCategory.MISC).sized(0.3F, 0.3F)
+                    .clientTrackingRange(4).updateInterval(10).build("pote_arremessado"));
     // Nuvem de gás (tóxico, paralisante, confusão)
     public static final DeferredHolder<EntityType<?>, EntityType<NuvemDeGas>> NUVEM_DE_GAS = ENTIDADES.register("nuvem_de_gas",
             () -> EntityType.Builder.<NuvemDeGas>of(NuvemDeGas::new, MobCategory.MISC).sized(0.5F, 0.5F)
@@ -192,5 +216,9 @@ public class ModEntidades {
         evento.put(IMAGEM_ESPELHADA.get(), ImagemEspelhada.atributosDaImagem().build());
         evento.put(GUARDIAO_DA_TERRA.get(), MobDoShattered.atributosDoMinecraft(GuardiaoDaTerra.ATRIBUTOS).build());
         evento.put(GUARDA.get(), MobDoShattered.atributosDoMinecraft(Guarda.ATRIBUTOS).add(Attributes.KNOCKBACK_RESISTANCE, 1.0).build());
+        evento.put(PIRANHA.get(), Piranha.atributosDaPiranha().build());
+        evento.put(ABELHA.get(), Abelha.atributosDaAbelha().build());
+        evento.put(ESTATUA_ANIMADA.get(), MobDoShattered.atributosDoMinecraft(EstatuaAnimada.ATRIBUTOS).add(Attributes.KNOCKBACK_RESISTANCE, 0.5).build());
+        evento.put(SENTINELA.get(), Sentinela.atributosDaSentinela().build());
     }
 }

@@ -10,10 +10,15 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
 - Andares do esgoto (1 a 4) gerados igual ao Shattered (o mesmo jeito de montar o mapa do jogo original):
   - A entrada, a saída, de 4 a 6 salas comuns (algumas grandes) e 1 ou 2 salas especiais. Metade dos andares é uma volta, a outra metade é um oito, com galhos e túneis entre as salas.
   - As salas do esgoto do Shattered: a dos canos (canais de água com uma calçada em volta), a do anel, a da ponte na água, a dos barris de armazenamento e a das plantas. Salas vizinhas às vezes viram uma só (a parede entre elas some).
-  - **Salas especiais**, trancadas: **arsenal** (2 ou 3 prêmios diferentes: bomba, arma, armadura ou armas de arremesso), **tesouraria** (ouro no chão ou em baús, que a partir do andar 2 podem ser mímicos), **biblioteca** (estantes e pergaminhos; o primeiro é de identificação ou de remover maldição), **jardim** (grama alta e às vezes plantas), **cripta** (uma armadura melhor que as do andar, +1, mas amaldiçoada) e **laboratório** (um no esgoto, no andar 3 ou 4; ver Alquimia). A **sala das armadilhas** tem porta comum (ver Armadilhas).
-  - **Salas secretas**, com a porta escondida (parece parede): 2 ou 3 no esgoto, espalhadas pelos andares 2 a 4, igual ao Shattered. São 8 das 12 do Shattered:
-    - **jardim secreto** (grama alta, uma flor-estrela e mais 3 plantas), **biblioteca secreta** (estantes em volta de um oval e 2 ou 3 pergaminhos), **despensa** (uma planta no meio de uma poça e uma ração de suprimentos), **tesouro** (montes de ouro que somam umas 8 pilhas, e metade do chão com armadilhas à vista), **labirinto** (um baú no fim, com uma arma ou armadura da região seguinte, nunca amaldiçoada, e 1 em 3 com +1 a mais), **arsenal secreto** (uma estátua, 2 bombas e 2 conjuntos de armas de arremesso), **invocação secreta** (o chão todo de armadilhas de invocação escondidas, e um item qualquer no meio) e **laboratório secreto** (o pote de alquimia no meio, 2 montes de 3 a 5 cristais de energia e 2 ou 3 poções diferentes).
-    - As outras 4 precisam de coisas que o mod ainda não tem (estantes que pegam fogo, poço mágico, pote de mel e abismo).
+  - **Salas especiais**: as 19 do Shattered até a prisão, mais o laboratório e a sala do poço. Cada andar tem 1 ou 2, sorteadas igual ao Shattered (uma de equipamento, uma de consumíveis...), com só uma sala de chaves de cristal e só uma que dá poção por andar.
+    - De equipamento: **arsenal** (2 ou 3 prêmios: bomba, arma, armadura ou armas de arremesso), **cripta** (uma armadura melhor que as do andar, +1, mas amaldiçoada), **piscina** (a sala é toda água, com 3 piranhas, e um baú num pedestal do outro lado; o andar ganha uma poção de invisibilidade), **sala da sentinela** (uma sentinela que não morre atira em quem pisa no chão entalhado; tem um caminho seguro junto à parede e o baú no pedestal do outro lado; o andar ganha uma poção de rapidez), **sala da estátua** (uma estátua animada parada, com uma arma encantada, que só luta se alguém mexer com ela), **cofre de cristal** (2 baús de cristal com uma varinha, um anel ou um artefato, mas o andar só tem uma chave de cristal), **escolha de cristal** (duas portas de cristal e uma chave só: 3 ou 4 poções e pergaminhos de um lado, um baú com varinha, anel ou artefato do outro), **sala do sacrifício** (um altar com fogo de sacrifício no meio de um abismo: quem morre perto dele é sacrificado, e com sacrifícios suficientes o fogo deixa uma arma da região seguinte, +1 mas amaldiçoada) e **piso frágil** (quase toda desabada num abismo; quem cair vai parar na sala do poço do andar de baixo).
+    - De consumíveis: **tesouraria** (ouro no chão ou em baús, que a partir do andar 2 podem ser mímicos), **biblioteca** (estantes e pergaminhos; o primeiro é de identificação ou de remover maldição), **jardim** (grama alta e às vezes plantas), **sala das pedras** (2 ou 3 pedras rúnicas numa ilha no meio de um abismo), **depósito** (3 ou 4 itens atrás de uma barricada de madeira que só queimando abre; o andar ganha uma poção de chama líquida), **poço mágico** (água da saúde ou da consciência), **sala de gás tóxico** (respiradouros soltando gás, uma ossada com ouro dobrado e 2 baús; o andar ganha uma poção de pureza), **sala do fogo mágico** (uma parede de fogo eterno verde, que só gelo ou água apagam, e 3 ou 4 itens atrás; o andar ganha uma poção de gelo), **caminho de cristal** (6 salinhas com portas de cristal e 3 chaves: das poções e pergaminhos mais comuns às mais raras) e a **sala das armadilhas** (ver Armadilhas).
+    - **Laboratório** (um por região, no andar 3 ou 4; ver Alquimia) e **sala do poço** (no andar logo abaixo de um piso frágil: um poço seco, uma porta de cristal e uma ossada com um anel, um artefato ou um equipamento, miudezas e a chave de cristal pra sair).
+    - Diferenças do Shattered: o cofre de cristal não tem o mímico de cristal; a sala da estátua nunca tem a estátua de armadura; a ossada da sala do poço não solta espectro; o fogo de sacrifício não chama inimigos a mais; o fogo eterno só queima quem encosta nele (no Shattered, quem fica do lado); o gás tóxico começa a sair quando alguém chega perto; o piso frágil não mostra o poço lá embaixo.
+    - Muitas ficam trancadas: a **chave de ferro** aparece numa sala comum do mesmo andar. As **chaves de cristal** também (menos a da sala do poço, que fica na ossada) e abrem as **portas de cristal** (clique direito, dá pra ver através delas) e os **baús de cristal** (com um cristal de ametista em cima; clicando sem a chave, mostra o que tem dentro).
+  - **Salas secretas**, com a porta escondida (parece parede): 2 ou 3 no esgoto, espalhadas pelos andares 2 a 4, igual ao Shattered. São 10 das 12 do Shattered:
+    - **jardim secreto** (grama alta, uma flor-estrela e mais 3 plantas), **biblioteca secreta** (estantes em volta de um oval e 2 ou 3 pergaminhos), **despensa** (uma planta no meio de uma poça e uma ração de suprimentos), **tesouro** (montes de ouro que somam umas 8 pilhas, e metade do chão com armadilhas à vista), **labirinto** (um baú no fim, com uma arma ou armadura da região seguinte, nunca amaldiçoada, e 1 em 3 com +1 a mais), **arsenal secreto** (uma estátua, 2 bombas e 2 conjuntos de armas de arremesso), **invocação secreta** (o chão todo de armadilhas de invocação escondidas, e um item qualquer no meio) e **laboratório secreto** (o pote de alquimia no meio, 2 montes de 3 a 5 cristais de energia e 2 ou 3 poções diferentes), **poço secreto** (um poço mágico cercado de abismo) e **esconderijo do mel** (um pote quebrado com a abelha dele de guarda, um pote de mel e uma bomba).
+    - As outras 2 precisam de coisas que o mod ainda não tem (estantes que pegam fogo, e baús trancados com chaves douradas).
   - A partir do andar 2, algumas portas comuns também ficam escondidas (o andar dividido por 20: 10% no andar 2, 20% no 4), mas só se der pra chegar nas salas por outro caminho.
 - **Procurar** (tecla **G** ou o botão de procurar da barra do inventário), igual ao Shattered: acha na hora as portas e as armadilhas escondidas que estiverem perto e à vista, e leva 2 turnos. A porta escondida vira uma porta gigante comum, pra todo mundo.
   - Perto quer dizer 1 quadradinho em volta (3x3). O Ladino procura 2 (5x5), e a grande busca soma mais 1 (+1: um círculo de 7x7, +2: um quadrado de 7x7).
@@ -23,6 +28,8 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
   - Paredes, chão e teto são inquebráveis.
 - **Portas gigantes** entre as salas: ocupam o quadradinho inteiro (4 blocos de largura e 6 de altura), com o desenho da porta do Shattered. Abrem sozinhas quando alguém (herói ou inimigo) chega perto e fecham quando todo mundo sai. Fechadas, bloqueiam a visão dos inimigos.
   - **Portas trancadas** (com cadeado) guardam as salas especiais. Cada uma tem uma **chave de ferro** largada numa sala comum do mesmo andar: é só chegar perto da porta com a chave que ela destranca (e a chave é gasta). A chave só abre as portas do andar dela.
+- **Abismos** (o "chasm" do Shattered): buracos escuros no chão. Quem cai vai parar num lugar qualquer do andar de baixo (quem cai do piso frágil, na sala do poço), igual ao Shattered: aleijado por 10 turnos, sangrando (mais quanto menos vida tinha) e perdendo pelo menos metade da vida que tinha. Com o elixir da queda suave não machuca, e levitando não cai. Os inimigos que caem morrem (os que voam não caem), e os itens caem junto pro andar de baixo.
+- **Poços mágicos:** entrar na água bebe dela, uma vez só, e o poço seca. A da saúde cura tudo (vida e efeitos ruins), tira as maldições do que está equipado e mata a fome; a da consciência identifica o que está equipado, mostra se o resto do equipamento é amaldiçoado e revela as portas escondidas e as armadilhas do andar. Jogar um item desconhecido na água da consciência identifica ele.
 - Em cima das poças, a água pinga do teto (igual às goteiras do esgoto do Shattered).
 - **Grama** igual ao esgoto do Shattered: manchas de grama baixa e grama alta pelas salas. A grama alta é a do Minecraft, só que bem maior (3 blocos de altura).
   - Encostou, o quadradinho inteiro (4x4) é pisoteado e vira musgo. Mobs também pisoteiam (o enxame, que voa, não).
@@ -35,6 +42,7 @@ Mod para **Minecraft 1.21.1** com **NeoForge**.
   - Paredes de tijolo de pedra que variam sozinhas (com musgo, rachadas) e rodapé de tijolo de tufo.
   - Chão de tufo polido e lanternas penduradas por correntes no meio das salas.
   - Chão especial de tufo entalhado nas pontes e na biblioteca, estátuas de tufo entalhado, estantes de livros e pilhas de barris.
+  - Pedestais de tijolo de tufo, brasas de pedra-negra com ouro em volta do fogo de sacrifício (azul), a grade dos respiradouros, o fogo eterno verde (desenhado pelo mod) e as portas de cristal violeta.
   - Moldura de tufo entalhado em volta das escadas.
 - Escada de subida na entrada de cada andar e alçapão de descida na saída.
 - Sem dia/noite, sem chuva e sem mobs do Minecraft nascendo.
@@ -70,7 +78,8 @@ As armadilhas do esgoto do Shattered, com os mesmos desenhos e os mesmos número
 - **Sala das armadilhas** (uma das salas especiais, com porta comum): o chão inteiro coberto de armadilhas à vista, todas iguais (agarradora, de teletransporte ou de rebanho), e um baú do outro lado, às vezes num pedestal. O baú guarda, 2 em 3 vezes, um dos itens garantidos do andar (a ração, a poção de força ou o pergaminho de melhoria); senão, uma arma ou armadura da região seguinte, nunca amaldiçoada, 1 em 3 com +1. O andar ganha uma **poção de levitação** pra atravessar voando.
 - **Tesouro secreto:** metade do chão com armadilhas à vista (de desmoronamento ou de dardo venenoso), até embaixo do ouro. **Invocação secreta:** o chão todo de armadilhas de invocação escondidas; um inimigo invocado em cima de outra armadilha ativa ela também.
 - O **talismã da vidência** equipado deixa o herói apreensivo ("Você se sente apreensivo.") quando tem uma armadilha escondida a até 3 quadradinhos, à vista; a busca dá 2 de carga por armadilha achada, e a vidência revela as do cone.
-- Diferenças do Shattered: 1 em 4 salas das armadilhas do Shattered é um abismo (o mod ainda não tem abismos); a eletricidade não corre pela água; o item amaldiçoado da invocação secreta não solta espectro.
+- 1 em 4 salas das armadilhas é um **abismo** em vez de armadilhas, igual ao Shattered (a poção de levitação serve do mesmo jeito).
+- Diferenças do Shattered: a eletricidade não corre pela água; o item amaldiçoado da invocação secreta não solta espectro.
 
 ### Tela do jogo e inventário
 
@@ -605,7 +614,7 @@ As receitas do esgoto e da prisão do Shattered (as 9 páginas do guia de alquim
 | Luneta trincada | 37,5% a 150% de chance de um item a mais em cada andar |
 
 - Diferenças do Shattered:
-  - Faltam as receitas com ingredientes que só aparecem mais pra frente: a bomba de estilhaços, a infusão de maldição, a armadilha armazenada e a energia selvagem (fragmento de metal), a invocação de elemental (brasas) e o elixir de cura com mel (pote de mel).
+  - Faltam as receitas com ingredientes que só aparecem mais pra frente: a bomba de estilhaços, a infusão de maldição, a armadilha armazenada e a energia selvagem (fragmento de metal), a invocação de elemental (brasas) e o elixir de cura com mel (o pote de mel já existe, mas a receita ainda não).
   - O catalisador mostra 3 acessórios (no Shattered, 4), porque o pote mostra até 3 receitas de cada vez.
   - O mod ainda não tem os outros temas de andar do Shattered (escuro, grande, abismos...), os mímicos de ébano e de ouro, nem as estátuas e mímicos de cristal (o crânio de rato e o dente de mímico só mexem no que já tem). O mecanismo de armadilha nunca deixa o andar cheio de abismos, só de armadilhas. Os itens da luneta ficam à vista.
 
@@ -649,6 +658,20 @@ Inimigos do esgoto com os números do Shattered:
 | Slime | 4 | 20 | 12 | 5 | 2-5 | 0 | 4 |
 | Enxame de Moscas | 3-4 | 50 | 10 | 5 | 1-4 | 0 | 3 |
 | Rato Albino (raro) | 1-3 | 12 | 8 | 2 | 1-4 | 0-1 | 2 |
+
+Os moradores das salas especiais (os números crescem com o andar, igual ao Shattered; nenhum dá XP):
+
+| Inimigo | Onde | Vida | Precisão | Esquiva | Dano | Armadura |
+|---|---|---|---|---|---|---|
+| Piranha Gigante | piscina | 10 + 5 x andar | 20 + 2 x andar | 10 + 2 x andar | andar a 4 + 2 x andar | 0 a andar |
+| Abelha Dourada | pote de mel | (2 + andar) x 4 | 9 + andar | 9 + andar | 1/10 a 1/4 da vida | 0 |
+| Estátua Animada | sala da estátua | 15 + 5 x andar | (9 + andar) x a da arma | 4 + andar | o da arma | 0 a andar |
+| Sentinela Vermelha | sala da sentinela | não apanha | 20 + 2 x andar | - | 2 + andar / 2 a 4 + andar | - |
+
+- A **piranha** só vive na água: nada o dobro da velocidade do herói e, fora da água, morre. Sempre deixa uma carne misteriosa.
+- O **pote de mel** (no depósito e na sala do fogo mágico, às vezes) quebra onde for jogado (ou agachado, ali mesmo) e solta uma **abelha**, que defende o pote quebrado: ataca quem chegar a 3 quadradinhos dele (os outros inimigos primeiro) e vai atrás de quem estiver com ele. Sem o pote, vira um inimigo comum.
+- A **estátua animada** fica parada até alguém bater nela (ou jogar algo ruim nela). Derrotada, deixa a arma dela, encantada e sem maldição.
+- A **sentinela** não anda e não apanha. Quem pisa no chão entalhado da sala dela, à vista, leva raios: ela carrega um pouco (mais tempo nas salas maiores) e depois atira uma vez por segundo. Sair do chão entalhado zera a carga.
 
 - Quando o andar é criado, os inimigos nascem **dormindo** (8 no andar 1). Eles acordam quando notam um herói: quanto mais perto, mais rápido.
 - **Ataque surpresa:** bater num inimigo dormindo ou que não está de olho em você sempre acerta. A adaga bate quase no dano máximo.
@@ -756,7 +779,7 @@ Copie a mensagem de erro inteira (principalmente as linhas com `error:`) e mande
 
 1. **Texturas próprias** dos blocos.
 2. **Mais itens:** as lojas.
-3. **O resto do esgoto do Shattered:** as salas secretas que faltam e as salas que precisam de abismo.
+3. **O resto do esgoto do Shattered:** as 2 salas secretas que faltam, os temas de andar (escuro, grande, de abismos...) e as estátuas e mímicos de cristal.
 
 Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod vai ser feito pra jogar junto com o Better Combat.
 
@@ -766,11 +789,11 @@ Depois disso: prisão, cavernas, cidade dos anões e salões demoníacos. O mod 
 src/main/java/com/louzada/pixeldungeon/
   PixelDungeon.java            classe principal, liga tudo
   registro/                    blocos, itens, aba do criativo e dados do jogador
-  bloco/                       escadas, portas gigantes, armadilhas, plantas e blocos de decoração
+  bloco/                       escadas, portas gigantes, armadilhas, plantas, blocos de decoração e os das salas especiais (porta de cristal, barricada, fogo eterno, fogo de sacrifício, respiradouro, poço, fundo do abismo)
   item/                        armas, armas de arremesso, varinhas, anéis, armadura, glifos, encantamentos, o selo do Guerreiro, poções, pergaminhos, sementes, pedras rúnicas, poções e pergaminhos exóticos, bombas, compostos, elixires, feitiços, acessórios, comidas, identificação e maldições
     artefato/                  os 11 artefatos que se acha pela dungeon (o cálice, o chifre, a ampulheta, o livro, as correntes, o talismã, a braçadeira, as sandálias, a chave, a rosa e o kit do alquimista)
   alquimia/                    o pote: a tela, as receitas (do esgoto e da prisão, e as dos acessórios), a energia alquímica e o guia de alquimia
-  entidade/                    os inimigos do Shattered, o Goo, o mímico, a imagem espelhada, o guardião de terra, as guardas, as ovelhas mágicas, o míssil mágico, as nuvens de gás...
+  entidade/                    os inimigos do Shattered, o Goo, o mímico, a piranha, a abelha, a estátua animada, a sentinela, a imagem espelhada, o guardião de terra, as guardas, as ovelhas mágicas, o míssil mágico, as nuvens de gás...
   efeito/                      efeitos do Shattered (veneno, paralisia, cura... e o que cada um faz por turno)
   combate/
     Combate.java               o golpe do Shattered, igual pra todo mundo (acerto, dano, armadura, reações)
@@ -810,7 +833,7 @@ src/main/java/com/louzada/pixeldungeon/
     Andares.java               medidas e onde cada andar fica no mundo
     PlantaDoAndar.java         o mapa do andar em quadradinhos
     GeradorDeAndar.java        gera o mapa de cada andar (os comuns pela geração do Shattered, o do chefe é a arena)
-    geracao/                   a geração do Shattered: os cômodos, o arquiteto (volta ou oito) e o pintor do esgoto
+    geracao/                   a geração do Shattered: os cômodos (as salas comuns, especiais e secretas), o arquiteto (volta ou oito) e o pintor do esgoto
     ConstrutorDeAndar.java     transforma o mapa em blocos (com as portas gigantes; e abre as portas escondidas achadas)
     Busca.java                 procurar: acha as portas escondidas das salas secretas e as armadilhas escondidas
     TipoDeArmadilha.java       as armadilhas do esgoto, os desenhos delas e quais aparecem em cada andar
@@ -819,7 +842,11 @@ src/main/java/com/louzada/pixeldungeon/
     MissaoDoFantasma.java      a missão do fantasma triste: onde ele aparece, os inimigos dela e a recompensa
     PopulacaoDoAndar.java      inimigos de cada andar e renascimento
     SaqueDoAndar.java          o que fica espalhado pelo andar
-    Baus.java                  baús e mímicos disfarçados
+    Baus.java                  baús, baús de cristal, ossadas e mímicos disfarçados
+    Abismo.java                quem cai no abismo vai pro andar de baixo
+    Pocos.java                 os poços mágicos (saúde e consciência)
+    Sacrificio.java            o fogo de sacrifício
+    InimigosDasSalas.java      os moradores das salas especiais (piranhas, estátua, sentinela, abelha)
     PlantasDoShattered.java    o que cada planta faz
     Teleporte.java             teletransporte pra outro lugar do andar
   run/

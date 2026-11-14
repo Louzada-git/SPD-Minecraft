@@ -6,16 +6,23 @@ import java.util.List;
 import com.louzada.pixeldungeon.PixelDungeon;
 import com.louzada.pixeldungeon.bloco.ArbustoDeFruta;
 import com.louzada.pixeldungeon.bloco.ArmadilhaBloco;
+import com.louzada.pixeldungeon.bloco.Barricada;
 import com.louzada.pixeldungeon.bloco.BlocoComFormato;
-import com.louzada.pixeldungeon.bloco.CapimAlto;
 import com.louzada.pixeldungeon.bloco.BlocoEscadaDescida;
 import com.louzada.pixeldungeon.bloco.BlocoEscadaSubida;
 import com.louzada.pixeldungeon.bloco.BlocoParedeEsgoto;
+import com.louzada.pixeldungeon.bloco.CapimAlto;
+import com.louzada.pixeldungeon.bloco.FogoDeSacrificio;
+import com.louzada.pixeldungeon.bloco.FogoEterno;
+import com.louzada.pixeldungeon.bloco.FundoDoAbismo;
+import com.louzada.pixeldungeon.bloco.FundoDoPoco;
 import com.louzada.pixeldungeon.bloco.GramaBaixa;
 import com.louzada.pixeldungeon.bloco.ParedeDaChave;
 import com.louzada.pixeldungeon.bloco.PlantaDoShattered;
+import com.louzada.pixeldungeon.bloco.PortaDeCristal;
 import com.louzada.pixeldungeon.bloco.PortaGigante;
 import com.louzada.pixeldungeon.bloco.PoteDeAlquimia;
+import com.louzada.pixeldungeon.bloco.Respiradouro;
 import com.louzada.pixeldungeon.item.TipoDePlanta;
 
 import net.minecraft.world.level.block.Block;
@@ -66,6 +73,36 @@ public class ModBlocos {
     public static final DeferredBlock<PoteDeAlquimia> POTE_DE_ALQUIMIA = BLOCOS.registerBlock("pote_de_alquimia", PoteDeAlquimia::new,
             inquebravel().sound(SoundType.DECORATED_POT).noOcclusion().isSuffocating((estado, mundo, posicao) -> false)
                     .isViewBlocking((estado, mundo, posicao) -> false));
+
+    // ---- As salas especiais ----
+
+    // O fundo do abismo (quem chega nele cai pro andar de baixo): escuro, atravessável
+    public static final DeferredBlock<FundoDoAbismo> FUNDO_DO_ABISMO = BLOCOS.registerBlock("fundo_do_abismo", FundoDoAbismo::new,
+            inquebravel().mapColor(MapColor.COLOR_BLACK).noCollission().noOcclusion());
+    // A porta de cristal (abre com a chave de cristal): dá pra ver através
+    public static final DeferredBlock<PortaDeCristal> PORTA_DE_CRISTAL = BLOCOS.registerBlock("porta_de_cristal", PortaDeCristal::new,
+            inquebravel().sound(SoundType.AMETHYST).noOcclusion().lightLevel(estado -> 4).isViewBlocking((estado, mundo, posicao) -> false)
+                    .isSuffocating((estado, mundo, posicao) -> false).isRedstoneConductor((estado, mundo, posicao) -> false));
+    // A barricada de madeira (a porta do depósito): só queimando
+    public static final DeferredBlock<Barricada> BARRICADA = BLOCOS.registerBlock("barricada", Barricada::new,
+            inquebravel().sound(SoundType.WOOD).mapColor(MapColor.WOOD).ignitedByLava());
+    // O fogo eterno (a sala do fogo mágico): uma parede de fogo que não deixa passar; só gelo ou água apagam
+    public static final DeferredBlock<FogoEterno> FOGO_ETERNO = BLOCOS.registerBlock("fogo_eterno", FogoEterno::new,
+            inquebravel().mapColor(MapColor.COLOR_LIGHT_GREEN).noOcclusion().lightLevel(estado -> 12).sound(SoundType.WOOL)
+                    .pushReaction(PushReaction.BLOCK).isViewBlocking((estado, mundo, posicao) -> false)
+                    .isSuffocating((estado, mundo, posicao) -> false).isRedstoneConductor((estado, mundo, posicao) -> false));
+    // O respiradouro de gás tóxico (a sala de gás tóxico)
+    public static final DeferredBlock<Respiradouro> RESPIRADOURO = BLOCOS.registerBlock("respiradouro", Respiradouro::new,
+            inquebravel().sound(SoundType.METAL));
+    // O fogo de sacrifício (a sala do sacrifício): não queima ninguém
+    public static final DeferredBlock<FogoDeSacrificio> FOGO_DE_SACRIFICIO = BLOCOS.registerBlock("fogo_de_sacrificio", FogoDeSacrificio::new,
+            inquebravel().mapColor(MapColor.COLOR_PURPLE).noCollission().noOcclusion().lightLevel(estado -> 14).sound(SoundType.WOOL));
+    // O fundo do poço mágico (embaixo da água): saúde ou consciência
+    public static final DeferredBlock<FundoDoPoco> FUNDO_DO_POCO = BLOCOS.registerBlock("fundo_do_poco", FundoDoPoco::new,
+            inquebravel().lightLevel(estado -> 8));
+    // As brasas em volta do fogo de sacrifício
+    public static final DeferredBlock<Block> BRASAS = BLOCOS.registerSimpleBlock("brasas", inquebravel().sound(SoundType.GILDED_BLACKSTONE)
+            .lightLevel(estado -> 3));
 
     // ---- Decoração ----
 

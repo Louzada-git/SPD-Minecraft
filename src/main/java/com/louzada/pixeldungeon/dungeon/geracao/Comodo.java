@@ -241,6 +241,10 @@ public abstract class Comodo extends Retangulo {
 
     public abstract void pintar(PlantaDoAndar planta);
 
+    // Depois de pintado, o cômodo vira uma sala da planta (o lado de dentro); as salas que precisam saber qual é a delas usam isto
+    public void registrada(PlantaDoAndar planta, PlantaDoAndar.Sala sala) {
+    }
+
     public boolean podeTerAgua(Ponto p) {
         return true;
     }
@@ -290,8 +294,9 @@ public abstract class Comodo extends Retangulo {
     // A porta de uma ligação. O tipo só sobe (uma sala pede porta comum, a outra pede trancada: fica trancada).
     public static class Porta extends Ponto {
         public enum Tipo {
-            // Nada (só chão), túnel, água, porta comum (vira destrancada ou escondida), destrancada, escondida, trancada, parede
-            VAZIA, TUNEL, AGUA, COMUM, DESTRANCADA, ESCONDIDA, TRANCADA, PAREDE
+            // Nada (só chão), túnel, água, porta comum (vira destrancada ou escondida), destrancada, escondida, barricada (só queimando),
+            // trancada (chave de ferro), de cristal (chave de cristal), parede
+            VAZIA, TUNEL, AGUA, COMUM, DESTRANCADA, ESCONDIDA, BARRICADA, TRANCADA, CRISTAL, PAREDE
         }
 
         public Tipo tipo = Tipo.VAZIA;

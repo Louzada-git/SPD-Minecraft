@@ -26,4 +26,10 @@ public class ModAnexos {
             () -> AttachmentType.builder(() -> false)
                     .serialize(Codec.BOOL)
                     .build());
+
+    // Baú de cristal (só abre com a chave de cristal do andar)
+    public static final Supplier<AttachmentType<Boolean>> BAU_DE_CRISTAL = ANEXOS.register("bau_de_cristal",
+            () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL)
+                    .build());
 }

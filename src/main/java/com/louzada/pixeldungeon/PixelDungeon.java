@@ -5,6 +5,7 @@ import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.dungeon.Baus;
 import com.louzada.pixeldungeon.dungeon.MapeamentoMagico;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
+import com.louzada.pixeldungeon.dungeon.Sacrificio;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
 import com.louzada.pixeldungeon.heroi.Aneis;
 import com.louzada.pixeldungeon.heroi.Escudos;
@@ -76,6 +77,8 @@ public class PixelDungeon {
         NeoForge.EVENT_BUS.addListener(EfeitosDeElixir::aoReceberDano);
         NeoForge.EVENT_BUS.addListener(EfeitosDeElixir::aoCair);
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoMorrerAlguem);
+        // O fogo de sacrifício
+        NeoForge.EVENT_BUS.addListener(Sacrificio::aoMorrer);
         NeoForge.EVENT_BUS.addListener(EventosDeCombate::aoTomarDano);
         // O selo do Guerreiro olha o dano depois que o combate calculou (por isso prioridade baixa)
         NeoForge.EVENT_BUS.addListener(EventPriority.LOW, Escudos::aoReceberDano);

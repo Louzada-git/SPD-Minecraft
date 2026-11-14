@@ -10,6 +10,7 @@ import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.dungeon.Busca;
 import com.louzada.pixeldungeon.dungeon.ConstrutorDeAndar;
 import com.louzada.pixeldungeon.dungeon.GeradorDeAndar;
+import com.louzada.pixeldungeon.dungeon.InimigosDasSalas;
 import com.louzada.pixeldungeon.dungeon.MissaoDoFantasma;
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 import com.louzada.pixeldungeon.dungeon.PopulacaoDoAndar;
@@ -231,6 +232,7 @@ public class GerenciadorDaRun {
         PixelDungeon.LOGGER.info("Andar {} construído em {} ms", andar, System.currentTimeMillis() - inicio);
         contarGrama(planta, andar);
         PopulacaoDoAndar.povoarNoInicio(servidor.overworld(), planta, origem, andar, dados.semente());
+        InimigosDasSalas.criar(servidor.overworld(), planta, origem, andar, dados.semente());
         SaqueDoAndar.colocar(servidor.overworld(), origem, andar, saque);
         // Num dos andares 2 a 4, o fantasma triste espera na sala da saída
         MissaoDoFantasma.talvezCriar(servidor.overworld(), planta, origem, andar, dados);
@@ -288,6 +290,17 @@ public class GerenciadorDaRun {
         // Primeira vez nesse andar: talentos que acontecem ao explorar (rações guardadas do Ladino)
         Talentos.aoChegarNoAndar(jogador, andar);
         // Previsão do ladino: avisa se o andar tem uma sala secreta
+        Busca.aoChegarNoAndar(jogador, andar);
+    }
+
+    // Caiu de um abismo: chega no andar de baixo nesse lugar (o resto é igual a descer a escada)
+    public static void chegarCaindo(ServerPlayer jogador, int andar, BlockPos lugar) {
+        garantirAndar(jogador.serverLevel().getServer(), andar);
+        teleportar(jogador, lugar);
+        FantasmaAliado.acompanhar(jogador);
+        jogador.displayClientMessage(Component.translatable("mensagem.pixeldungeon.andar", andar,
+                Component.translatable(Andares.regiaoDoAndar(andar))), true);
+        Talentos.aoChegarNoAndar(jogador, andar);
         Busca.aoChegarNoAndar(jogador, andar);
     }
 

@@ -11,7 +11,7 @@ import com.louzada.pixeldungeon.dungeon.TipoDeArmadilha;
 // (às vezes em cima de um pedestal). A porta é comum, e o andar ganha uma poção de levitação pra passar voando.
 // O prêmio (ver SaqueDoAndar): 2 em 3 vezes, um dos itens garantidos do andar (a ração, a poção de força ou o pergaminho
 // de melhoria); senão, uma arma ou armadura da região seguinte, nunca amaldiçoada, às vezes +1.
-// No Shattered, 1 em 4 dessas salas é um abismo em vez de armadilhas; o mod ainda não tem abismos.
+// 1 em 4 dessas salas é um abismo em vez de armadilhas (igual ao Shattered): aí só voando (ou caindo pro andar de baixo).
 public class SalaDasArmadilhas extends ComodoEspecial {
 
     // Do tamanho limitado, pra não ter armadilhas demais nem de menos
@@ -38,10 +38,9 @@ public class SalaDasArmadilhas extends ComodoEspecial {
     @Override
     public void pintar(PlantaDoAndar planta) {
         Pincel.preencher(planta, this, PlantaDoAndar.PAREDE);
-        Pincel.preencher(planta, this, 1, PlantaDoAndar.CHAO);
-        // (o sorteio do abismo do Shattered fica, pra sala sair do mesmo jeito quando os abismos chegarem)
-        Dado.ate(4);
-        TipoDeArmadilha tipo = Dado.elemento(Arrays.asList(TipoDeArmadilha.DA_SALA_DAS_ARMADILHAS));
+        boolean abismo = Dado.ate(4) == 0;
+        TipoDeArmadilha tipo = abismo ? null : Dado.elemento(Arrays.asList(TipoDeArmadilha.DA_SALA_DAS_ARMADILHAS));
+        Pincel.preencher(planta, this, 1, abismo ? PlantaDoAndar.ABISMO : PlantaDoAndar.CHAO);
 
         Porta porta = entrada();
         porta.definir(Porta.Tipo.COMUM);
@@ -78,20 +77,24 @@ public class SalaDasArmadilhas extends ComodoEspecial {
         for (int qy = cima + 1; qy < baixo; qy++) {
             for (int qx = esquerda + 1; qx < direita; qx++) {
                 boolean naFileira = qx >= fileiraX0 && qx <= fileiraX1 && qy >= fileiraY0 && qy <= fileiraY1;
-                if (!naFileira) {
+                if (!naFileira && !abismo) {
                     planta.colocarArmadilha(qx, qy, tipo, true);
                 }
             }
         }
 
-        // O baú: 1 em 3 direto no chão, senão em cima de um pedestal (o chão entalhado)
+        // O baú: 1 em 3 direto no chão (no abismo, num pedacinho de chão), senão em cima de um pedestal
         if (x >= 0) {
-            if (Dado.ate(3) != 0) {
-                Pincel.definir(planta, x, y, PlantaDoAndar.CHAO_ESPECIAL);
+            if (Dado.ate(3) == 0) {
+                if (abismo) {
+                    Pincel.definir(planta, x, y, PlantaDoAndar.CHAO);
+                }
+            } else {
+                Pincel.definir(planta, x, y, PlantaDoAndar.PEDESTAL);
             }
             planta.adicionarPremio(x, y, Premio.PREMIO_DAS_ARMADILHAS, true);
         }
-        planta.pedirPocaoDeLevitacao();
+        planta.pedir(PlantaDoAndar.ItemPedido.LEVITACAO);
     }
 
     // As armadilhas comuns do andar não caem aqui (o chão já está cheio)

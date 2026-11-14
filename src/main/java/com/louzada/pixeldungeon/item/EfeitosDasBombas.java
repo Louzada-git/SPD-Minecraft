@@ -2,11 +2,11 @@ package com.louzada.pixeldungeon.item;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.Turno;
 import com.louzada.pixeldungeon.bloco.CapimAlto;
+import com.louzada.pixeldungeon.bloco.FogoEterno;
 import com.louzada.pixeldungeon.combate.Combate;
 import com.louzada.pixeldungeon.combate.Sorteio;
 import com.louzada.pixeldungeon.dungeon.Andares;
@@ -151,6 +151,7 @@ public class EfeitosDasBombas {
 
     private static void gelo(ServerLevel mundo, List<BlockPos> quadradinhos) {
         for (BlockPos quadradinho : quadradinhos) {
+            FogoEterno.apagarPerto(mundo, Vec3.atCenterOf(quadradinho), 3);
             for (LivingEntity criatura : EfeitosDasArmadilhas.criaturasEmVolta(mundo, quadradinho, 0)) {
                 criatura.addEffect(new MobEffectInstance(ModEfeitos.CONGELADO, 2 * Turno.TICKS));
                 criatura.setTicksFrozen(Math.max(criatura.getTicksFrozen(), 160));

@@ -67,6 +67,10 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.SLIME.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.SLIME, 0.5F));
         evento.registerEntityRenderer(ModEntidades.GOO.get(), RenderizadorDeGoo::new);
         evento.registerEntityRenderer(ModEntidades.MIMICO.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.MIMICO, 0.45F));
+        evento.registerEntityRenderer(ModEntidades.PIRANHA.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.PIRANHA, 0.0F));
+        evento.registerEntityRenderer(ModEntidades.ABELHA.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.ABELHA, 0.2F));
+        evento.registerEntityRenderer(ModEntidades.ESTATUA_ANIMADA.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.ESTATUA, 0.45F));
+        evento.registerEntityRenderer(ModEntidades.SENTINELA.get(), contexto -> new RenderizadorDeSprite<>(contexto, SpriteDoShattered.SENTINELA, 0.4F));
         // Míssil mágico: não tem modelo, é só o rastro de luz (as partículas saem dele mesmo)
         evento.registerEntityRenderer(ModEntidades.MISSEL_MAGICO.get(), NoopRenderer::new);
         // Luz guia do Clérigo: igual ao míssil, só o rastro de luz
@@ -82,6 +86,7 @@ public class PixelDungeonCliente {
         evento.registerEntityRenderer(ModEntidades.SEMENTE_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 0.8F, false));
         evento.registerEntityRenderer(ModEntidades.PEDRA_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 0.8F, false));
         evento.registerEntityRenderer(ModEntidades.BOMBA_ARREMESSADA.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, false));
+        evento.registerEntityRenderer(ModEntidades.POTE_ARREMESSADO.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.0F, false));
         evento.registerEntityRenderer(ModEntidades.BOMBA_ACESA.get(), contexto -> new ThrownItemRenderer<>(contexto, 1.2F, true));
         // Nuvem de gás: só a fumaça (as partículas saem dela mesma)
         evento.registerEntityRenderer(ModEntidades.NUVEM_DE_GAS.get(), NoopRenderer::new);

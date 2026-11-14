@@ -1,10 +1,10 @@
 package com.louzada.pixeldungeon.item;
 
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 import com.louzada.pixeldungeon.Turno;
+import com.louzada.pixeldungeon.bloco.FogoEterno;
 import com.louzada.pixeldungeon.combate.NumerosFlutuantes;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.dungeon.Andares;
@@ -129,6 +129,8 @@ public class EfeitosDePocao {
 
     // Gelo: congela por 10 turnos quem estiver perto e a água vira gelo (que derrete depois)
     public static void congelar(ServerLevel mundo, Vec3 lugar) {
+        // O gelo apaga o fogo eterno (a parede inteira)
+        FogoEterno.apagarPerto(mundo, lugar, 5);
         for (LivingEntity criatura : mundo.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(lugar, 10, 6, 10))) {
             if (criatura.isSpectator()) {
                 continue;
@@ -168,6 +170,8 @@ public class EfeitosDePocao {
 
     // Pureza: some com as nuvens de gás e apaga o fogo em volta
     public static void limparGasesEFogo(ServerLevel mundo, Vec3 lugar, int raio) {
+        // Igual ao Shattered, a pureza também limpa o fogo eterno
+        FogoEterno.apagarPerto(mundo, lugar, raio);
         for (NuvemDeGas nuvem : mundo.getEntitiesOfClass(NuvemDeGas.class, AABB.ofSize(lugar, raio * 2, raio * 2, raio * 2))) {
             nuvem.discard();
         }

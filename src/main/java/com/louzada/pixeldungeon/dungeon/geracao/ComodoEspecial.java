@@ -8,30 +8,49 @@ import java.util.function.Supplier;
 
 import com.louzada.pixeldungeon.dungeon.PlantaDoAndar;
 
-// As salas especiais (o "SpecialRoom" do Shattered): têm uma porta só, e as do mod ficam trancadas
-// (a chave de ferro do andar aparece numa sala comum).
-// O mod tem o arsenal, a cripta (de equipamento), o jardim, a biblioteca, a tesouraria e a sala das armadilhas (de consumíveis),
-// e o laboratório (um por região, no andar 3 ou 4). A sala das armadilhas é a única com porta comum.
+// As salas especiais (o "SpecialRoom" do Shattered): têm uma porta só (às vezes trancada: a chave de ferro do andar aparece
+// numa sala comum). São as 19 do Shattered até a prisão: 9 de equipamento e 10 de consumíveis (ver Tipo), mais o laboratório
+// (um por região, no andar 3 ou 4) e a sala do poço (no andar logo abaixo de um piso frágil).
 public abstract class ComodoEspecial extends Comodo {
 
     // Os tipos de sala especial, separados igual ao Shattered
     public enum Tipo {
-        ARSENAL(true, Arsenal::new), CRIPTA(true, Cripta::new), JARDIM(false, Jardim::new), BIBLIOTECA(false, Biblioteca::new),
-        TESOURARIA(false, Tesouraria::new), ARMADILHAS(false, SalaDasArmadilhas::new),
-        // O laboratório não entra na fila: aparece uma vez por região, sempre como a primeira sala especial do andar
-        LABORATORIO(false, Laboratorio::new);
+        // De equipamento
+        PISO_FRAGIL(true, false, false, PisoFragil::new), CRIPTA(true, false, false, Cripta::new), PISCINA(true, false, true, Piscina::new),
+        ARSENAL(true, false, false, Arsenal::new), SALA_DA_SENTINELA(true, false, true, SalaDaSentinela::new),
+        SALA_DA_ESTATUA(true, false, false, SalaDaEstatua::new), COFRE_DE_CRISTAL(true, true, false, CofreDeCristal::new),
+        ESCOLHA_DE_CRISTAL(true, true, false, EscolhaDeCristal::new), SALA_DO_SACRIFICIO(true, false, false, SalaDoSacrificio::new),
+        // De consumíveis
+        SALA_DAS_PEDRAS(false, false, false, SalaDasPedras::new), JARDIM(false, false, false, Jardim::new), BIBLIOTECA(false, false, false, Biblioteca::new),
+        DEPOSITO(false, false, true, Deposito::new), TESOURARIA(false, false, false, Tesouraria::new), POCO_MAGICO(false, false, false, PocoMagico::new),
+        SALA_DE_GAS_TOXICO(false, false, true, SalaDeGasToxico::new), SALA_DO_FOGO_MAGICO(false, false, true, SalaDoFogoMagico::new),
+        ARMADILHAS(false, false, true, SalaDasArmadilhas::new), CAMINHO_DE_CRISTAL(false, true, false, CaminhoDeCristal::new),
+        // Estas não entram na fila: o laboratório aparece uma vez por região, sempre como a primeira sala especial do andar,
+        // e a sala do poço aparece (a mais) no andar logo abaixo de um piso frágil
+        LABORATORIO(false, false, false, Laboratorio::new), SALA_DO_POCO(false, true, false, SalaDoPoco::new);
 
         // De equipamento (senão, de consumíveis)
         public final boolean deEquipamento;
+        // Usa chaves de cristal (só uma dessas por andar)
+        public final boolean deCristal;
+        // Dá uma poção pro andar (só uma dessas por andar)
+        public final boolean daPocao;
         private final Supplier<ComodoEspecial> criador;
 
-        Tipo(boolean deEquipamento, Supplier<ComodoEspecial> criador) {
+        Tipo(boolean deEquipamento, boolean deCristal, boolean daPocao, Supplier<ComodoEspecial> criador) {
             this.deEquipamento = deEquipamento;
+            this.deCristal = deCristal;
+            this.daPocao = daPocao;
             this.criador = criador;
         }
 
         public ComodoEspecial criar() {
             return criador.get();
+        }
+
+        // Entra na fila das salas da run?
+        public boolean naFila() {
+            return this != LABORATORIO && this != SALA_DO_POCO;
         }
     }
 
@@ -96,15 +115,17 @@ public abstract class ComodoEspecial extends Comodo {
 
     // Igual ao Shattered: no começo da run, as salas especiais são embaralhadas e intercaladas
     // (uma de consumíveis, uma de equipamento...). Cada andar tem 1 ou 2 (quase sempre 2) e escolhe
-    // geralmente a primeira da fila; a usada vai pro fim da fila. Aqui a run é "simulada" do andar 1 até o pedido,
+    // geralmente a primeira da fila; a usada vai pro fim da fila. Num andar, só uma sala de chaves de cristal e só uma que dá
+    // poção; o piso frágil não aparece logo antes do chefe. Aqui a run é "simulada" do andar 1 até o pedido,
     // pra cada andar sair sempre igual sem precisar guardar nada.
     // O laboratório (o "labRoomNeeded" do Shattered): um por região, no andar 3 (metade das vezes) ou no 4.
+    // A sala do poço: no andar logo abaixo de um piso frágil, a mais.
     public static List<Tipo> doAndar(long semente, int andar) {
         Random sorteio = new Random(semente * 15485863L + 7);
         List<Tipo> deEquipamento = new ArrayList<>();
         List<Tipo> deConsumiveis = new ArrayList<>();
         for (Tipo tipo : Tipo.values()) {
-            if (tipo != Tipo.LABORATORIO) {
+            if (tipo.naFila()) {
                 (tipo.deEquipamento ? deEquipamento : deConsumiveis).add(tipo);
             }
         }
@@ -123,6 +144,7 @@ public abstract class ComodoEspecial extends Comodo {
 
         List<Tipo> escolhidas = new ArrayList<>();
         int laboratorios = 0;
+        int andarDoPoco = -1;
         for (int a = 1; a <= andar; a++) {
             // Andares de chefe não têm salas especiais
             if (a % 5 == 0) {
@@ -132,20 +154,48 @@ public abstract class ComodoEspecial extends Comodo {
             List<Tipo> doAndar = new ArrayList<>(daRun);
             int quantas = 1 + escolher(sorteio, new float[] { 1, 4 });
             int regiao = 1 + a / 5;
+            boolean laboratorio = false;
             if (regiao > laboratorios && (a % 5 == 4 || (a % 5 == 3 && sorteio.nextInt(2) == 0))) {
                 laboratorios++;
-                escolhidas.add(Tipo.LABORATORIO);
-                quantas--;
+                laboratorio = true;
             }
-            for (int i = 0; i < quantas && !doAndar.isEmpty(); i++) {
-                int indice = escolher(sorteio, new float[] { 6, 3, 1 });
-                while (indice >= doAndar.size()) {
-                    indice--;
+            for (int i = 0; i < quantas; i++) {
+                Tipo tipo;
+                if (a == andarDoPoco) {
+                    andarDoPoco = -1;
+                    tipo = Tipo.SALA_DO_POCO;
+                    quantas++;
+                } else if (laboratorio) {
+                    laboratorio = false;
+                    tipo = Tipo.LABORATORIO;
+                } else {
+                    // (cair do piso frágil no andar do chefe não dá)
+                    if ((a + 1) % 5 == 0) {
+                        doAndar.remove(Tipo.PISO_FRAGIL);
+                    }
+                    if (doAndar.isEmpty()) {
+                        break;
+                    }
+                    int indice = escolher(sorteio, new float[] { 6, 3, 1 });
+                    while (indice >= doAndar.size()) {
+                        indice--;
+                    }
+                    tipo = doAndar.get(indice);
+                    if (tipo == Tipo.PISO_FRAGIL) {
+                        andarDoPoco = a + 1;
+                    }
                 }
-                Tipo tipo = doAndar.remove(indice);
                 escolhidas.add(tipo);
-                daRun.remove(tipo);
-                daRun.add(tipo);
+                doAndar.remove(tipo);
+                if (tipo.deCristal) {
+                    doAndar.removeIf(outro -> outro.deCristal);
+                }
+                if (tipo.daPocao) {
+                    doAndar.removeIf(outro -> outro.daPocao);
+                }
+                if (daRun.remove(tipo)) {
+                    daRun.add(tipo);
+                }
             }
         }
         return escolhidas;

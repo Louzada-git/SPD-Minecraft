@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "controle=true,saude=true": {
+      "model": "pixeldungeon:block/fundo_do_poco_saude"
+    },
+    "controle=false,saude=true": {
+      "model": "pixeldungeon:block/fundo_do_poco_saude"
+    },
+    "controle=true,saude=false": {
+      "model": "pixeldungeon:block/fundo_do_poco_consciencia"
+    },
+    "controle=false,saude=false": {
+      "model": "pixeldungeon:block/fundo_do_poco_consciencia"
+    }
+  }
+}

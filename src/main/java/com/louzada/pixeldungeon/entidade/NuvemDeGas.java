@@ -1,6 +1,7 @@
 package com.louzada.pixeldungeon.entidade;
 
 import com.louzada.pixeldungeon.Turno;
+import com.louzada.pixeldungeon.bloco.FogoEterno;
 import com.louzada.pixeldungeon.combate.Particulas;
 import com.louzada.pixeldungeon.dungeon.Andares;
 import com.louzada.pixeldungeon.efeito.EfeitosNoTick;
@@ -137,6 +138,10 @@ public class NuvemDeGas extends Entity {
         }
         if (tickCount % Turno.TICKS != 0) {
             return;
+        }
+        // O gelo e a chuva apagam o fogo eterno (a parede inteira)
+        if ((tipo() == Tipo.CONGELANTE || tipo() == Tipo.TEMPESTADE) && level() instanceof ServerLevel servidor) {
+            FogoEterno.apagarPerto(servidor, position(), raio + 1);
         }
         // A chuva apaga o fogo do chão
         if (tipo() == Tipo.TEMPESTADE) {

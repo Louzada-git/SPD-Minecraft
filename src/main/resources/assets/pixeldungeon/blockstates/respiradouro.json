@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "controle=false": {
+      "model": "pixeldungeon:block/respiradouro"
+    },
+    "controle=true": {
+      "model": "pixeldungeon:block/respiradouro"
+    }
+  }
+}

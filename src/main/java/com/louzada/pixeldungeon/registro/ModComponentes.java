@@ -117,4 +117,8 @@ public class ModComponentes {
             construtor -> construtor.persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> EQUIPADO_EM = COMPONENTES.registerComponentType("equipado_em",
             construtor -> construtor.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG));
+
+    // O pote quebrado: o número dele (as abelhas que saíram do pote guardam o mesmo número e defendem quem estiver com ele)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ID_DO_POTE = COMPONENTES.registerComponentType("id_do_pote",
+            construtor -> construtor.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 }

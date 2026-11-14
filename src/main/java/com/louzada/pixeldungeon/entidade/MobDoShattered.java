@@ -111,14 +111,19 @@ public abstract class MobDoShattered extends Monster implements Combatente {
         targetSelector.addGoal(1, new HurtByTargetGoal(this));
         // Não enxerga nada quando está cego. Herói invisível ele ainda segue, mas não consegue atacar (AtaqueDoShattered).
         targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false,
-                alvo -> !aliado() && enxerga()));
+                alvo -> !aliado() && enxerga() && podeCacar(alvo)));
         // As imagens espelhadas distraem os inimigos (o mímico só se importa com quem mexeu nele)
         targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ImagemEspelhada.class, 10, true, false,
-                alvo -> !aliado() && enxerga()));
+                alvo -> !aliado() && enxerga() && podeCacar(alvo)));
         // Os aliados (corrompidos) caçam os inimigos, e os inimigos caçam os aliados
         targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, MobDoShattered.class, 10, true, false,
                 alvo -> enxerga() && alvo instanceof MobDoShattered outro && outro.aliado() != aliado() && !(outro instanceof Mimico)
-                        && !(this instanceof Mimico)));
+                        && !(this instanceof Mimico) && podeCacar(alvo)));
+    }
+
+    // Esse alvo pode ser caçado agora? (as abelhas só caçam quem chega perto do pote delas)
+    protected boolean podeCacar(LivingEntity alvo) {
+        return true;
     }
 
     // Como ele ataca (de perto, por padrão)

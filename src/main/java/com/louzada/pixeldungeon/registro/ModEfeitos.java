@@ -113,6 +113,9 @@ public class ModEfeitos {
     // Veneno do Shattered (musgo-do-pesar): o dano por turno vai caindo com o tempo, e pode matar
     public static final DeferredHolder<MobEffect, EfeitoSimples> VENENO = EFEITOS.register("veneno",
             () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0x8844AA));
+    // Marcado pelo fogo de sacrifício: quem morrer assim, perto do fogo, é sacrificado
+    public static final DeferredHolder<MobEffect, EfeitoSimples> MARCADO = EFEITOS.register("marcado",
+            () -> new EfeitoSimples(MobEffectCategory.NEUTRAL, 0x9944FF));
     // Sangrando (maldição sacrificial): dano que vai diminuindo
     public static final DeferredHolder<MobEffect, EfeitoSimples> SANGRANDO = EFEITOS.register("sangrando",
             () -> new EfeitoSimples(MobEffectCategory.HARMFUL, 0xAA0000));

@@ -1,8 +1,11 @@
 package com.louzada.pixeldungeon.dungeon;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -17,12 +20,14 @@ import com.louzada.pixeldungeon.item.ArmaDoShattered;
 import com.louzada.pixeldungeon.item.ArmaduraDoShattered;
 import com.louzada.pixeldungeon.item.ArtefatoAchado;
 import com.louzada.pixeldungeon.item.CajadoDoMago;
+import com.louzada.pixeldungeon.item.ChaveDeCristal;
 import com.louzada.pixeldungeon.item.ChaveDeFerro;
 import com.louzada.pixeldungeon.item.Equipamento;
 import com.louzada.pixeldungeon.item.FrutaSemGraca;
 import com.louzada.pixeldungeon.item.GemaDeAnel;
 import com.louzada.pixeldungeon.item.Identificacao;
 import com.louzada.pixeldungeon.item.ItemAnel;
+import com.louzada.pixeldungeon.item.ItemPedraRunica;
 import com.louzada.pixeldungeon.item.ItemSemente;
 import com.louzada.pixeldungeon.item.ItemVarinha;
 import com.louzada.pixeldungeon.item.Maldicao;
@@ -70,7 +75,7 @@ public class SaqueDoAndar {
 
     // Onde o item fica (PLANTADA: a semente vira uma planta no chão)
     public enum Onde {
-        CHAO, BAU, MIMICO, PLANTADA
+        CHAO, BAU, MIMICO, PLANTADA, BAU_DE_CRISTAL, OSSADA
     }
 
     // Um quadradinho com itens
@@ -191,8 +196,26 @@ public class SaqueDoAndar {
                 }
             }
         }
-        for (int i = 0; i < planta.pocoesDeLevitacao(); i++) {
-            garantidos.add(Identificacao.pocao(semente, TipoDePocao.LEVITACAO));
+        // As salas que guardam um dos itens que o andar ia ter (o "findPrizeItem" do Shattered): o catalisador primeiro
+        Map<PremioNoChao, ItemStack> guardados = new HashMap<>();
+        for (PremioNoChao premio : planta.premios()) {
+            ItemStack guardado = switch (premio.premio()) {
+                case PREMIO_DO_DEPOSITO -> sorteio.nextInt(3) != 0 ? tirarGuardado(garantidos, catalisador, null) : null;
+                case EQUIPAMENTO_DA_SALA -> sorteio.nextInt(3) == 0 ? tirarGuardado(garantidos, catalisador, null) : null;
+                case EQUIPAMENTO_DA_SENTINELA -> sorteio.nextInt(2) == 0 ? tirarGuardado(garantidos, catalisador, null) : null;
+                case PEDRA_DA_SALA -> tirarGuardado(garantidos, catalisador, ItemPedraRunica.class);
+                case OURO_OU_CATALISADOR -> catalisador != null && garantidos.remove(catalisador) ? catalisador : null;
+                default -> null;
+            };
+            if (guardado != null) {
+                guardados.put(premio, guardado);
+            }
+        }
+        // Os itens que as salas pedem pro andar (a poção pra atravessar a sala, as chaves de cristal...)
+        for (PlantaDoAndar.ItemPedido pedido : PlantaDoAndar.ItemPedido.values()) {
+            for (int i = 0; i < planta.pedidos(pedido); i++) {
+                garantidos.add(itemPedido(pedido, run, andar));
+            }
         }
         for (ItemStack item : garantidos) {
             if (lugares.isEmpty()) {
@@ -237,6 +260,12 @@ public class SaqueDoAndar {
             }
         }
         Set<TipoDePocao> pocoesDoLaboratorio = EnumSet.noneOf(TipoDePocao.class);
+        // O cofre de cristal (igual ao Shattered): cada baú de cristal é de um tipo diferente (varinha, anel ou artefato)
+        List<Integer> salasDeCristal = new ArrayList<>(List.of(0, 1, 2));
+        Collections.shuffle(salasDeCristal, sorteio);
+        // O caminho de cristal: as 3 poções e os 3 pergaminhos, das mais comuns às mais raras (só sorteia se o andar tiver a sala)
+        List<ItemStack> caminho = planta.premios().stream().anyMatch(premio -> premio.premio() == Premio.CAMINHO_1)
+                ? caminhoDeCristal(sorteio, semente) : List.of();
         for (PremioNoChao premio : planta.premios()) {
             if (premio.premio() == Premio.PREMIO_DO_LABORATORIO && catalisadorDoLaboratorio != null) {
                 saques.add(new Saque(premio.x(), premio.y(), List.of(catalisadorDoLaboratorio), Onde.CHAO));
@@ -248,7 +277,8 @@ public class SaqueDoAndar {
                 forcaDoLaboratorio = null;
                 continue;
             }
-            saques.add(saqueDoPremio(premio, sorteio, andar, run, pilhasDoTesouro, premioDasArmadilhas, pocoesDoLaboratorio));
+            saques.add(saqueDoPremio(premio, sorteio, andar, run, pilhasDoTesouro, premioDasArmadilhas, pocoesDoLaboratorio, guardados.get(premio),
+                    salasDeCristal, caminho));
         }
 
         for (Saque saque : saques) {
@@ -261,9 +291,15 @@ public class SaqueDoAndar {
 
     // O item de verdade de cada prêmio das salas especiais
     private static Saque saqueDoPremio(PremioNoChao premio, Random sorteio, int andar, DadosDaRun run, int pilhasDoTesouro,
-            @Nullable ItemStack premioDasArmadilhas, Set<TipoDePocao> pocoesDoLaboratorio) {
+            @Nullable ItemStack premioDasArmadilhas, Set<TipoDePocao> pocoesDoLaboratorio, @Nullable ItemStack guardado, List<Integer> salasDeCristal,
+            List<ItemStack> caminho) {
         long semente = run.semente();
-        Onde onde = premio.noBau() ? Onde.BAU : Onde.CHAO;
+        Onde onde = switch (premio.recipiente()) {
+            case BAU -> Onde.BAU;
+            case BAU_DE_CRISTAL -> Onde.BAU_DE_CRISTAL;
+            case OSSADA -> Onde.OSSADA;
+            default -> Onde.CHAO;
+        };
         ItemStack item = switch (premio.premio()) {
             case ARMA -> armaAleatoria(sorteio, andar);
             case ARMADURA -> armaduraAleatoria(sorteio, andar);
@@ -292,6 +328,27 @@ public class SaqueDoAndar {
             case BOMBA -> new ItemStack(ModItens.bomba(TipoDeBomba.COMUM), sorteio.nextInt(4) == 0 ? 2 : 1);
             case BOMBA_DUPLA -> new ItemStack(ModItens.bomba(TipoDeBomba.COMUM), 2);
             case POCAO_DO_LABORATORIO_SECRETO -> Identificacao.pocao(semente, pocaoDoLaboratorioSecreto(sorteio, pocoesDoLaboratorio));
+            case PREMIO_DO_DEPOSITO, MIUDEZA_DA_OSSADA -> guardado != null ? guardado : miudeza(sorteio, andar, semente);
+            case POTE_DE_MEL -> new ItemStack(ModItens.POTE_DE_MEL.get());
+            case PEDRA_DA_SALA -> guardado != null ? guardado : pedraAleatoria(sorteio);
+            case EQUIPAMENTO_DA_SALA, EQUIPAMENTO_DA_SENTINELA -> guardado != null ? guardado : equipamentoDaSala(sorteio, andar);
+            case PREMIO_DE_CRISTAL -> {
+                int categoria = salasDeCristal.remove(0);
+                salasDeCristal.add(categoria);
+                yield premioDeCristal(sorteio, run, categoria);
+            }
+            case PREMIO_ESCONDIDO -> premioDeCristal(sorteio, run, sorteio.nextInt(3));
+            case POCAO_OU_PERGAMINHO -> sorteio.nextBoolean() ? Acessorios.talvezExotica(pocaoAleatoria(sorteio, semente), sorteio, semente)
+                    : Acessorios.talvezExotico(pergaminhoAleatorio(sorteio, semente), sorteio, semente);
+            case OURO_DOBRADO -> {
+                ItemStack ouro = Ouro.sortear(sorteio, andar);
+                yield Ouro.pilha(Ouro.quantidade(ouro) * 2);
+            }
+            case OURO_OU_CATALISADOR -> guardado != null ? guardado : Ouro.sortear(sorteio, andar);
+            case PREMIO_DA_OSSADA -> premioDaOssada(sorteio, andar, run);
+            case CHAVE_DE_CRISTAL -> ChaveDeCristal.criar(run.numeroDaRun(), andar);
+            case CAMINHO_1, CAMINHO_2, CAMINHO_3, CAMINHO_4, CAMINHO_5, CAMINHO_6 ->
+                caminho.get(premio.premio().ordinal() - Premio.CAMINHO_1.ordinal()).copy();
         };
         if (premio.premio() == Premio.PLANTA_ALEATORIA || premio.premio() == Premio.PLANTA_GRAMA_SOLAR || premio.premio() == Premio.PLANTA_ESTRELA
                 || premio.premio() == Premio.ARBUSTO_DE_FRUTA) {
@@ -306,6 +363,132 @@ public class SaqueDoAndar {
             }
         }
         return new Saque(premio.x(), premio.y(), List.of(item), onde);
+    }
+
+    // ---- Os prêmios das salas especiais novas ----
+
+    // Tira um dos itens que o andar ia ter (o catalisador primeiro); com "tipo", só um item desse tipo
+    @Nullable
+    private static ItemStack tirarGuardado(List<ItemStack> garantidos, @Nullable ItemStack catalisador, @Nullable Class<?> tipo) {
+        if (catalisador != null && garantidos.remove(catalisador)) {
+            return catalisador;
+        }
+        for (ItemStack item : garantidos) {
+            if (tipo == null || tipo.isInstance(item.getItem())) {
+                garantidos.remove(item);
+                return item;
+            }
+        }
+        return null;
+    }
+
+    // O item que uma sala pede pro andar
+    private static ItemStack itemPedido(PlantaDoAndar.ItemPedido pedido, DadosDaRun run, int andar) {
+        long semente = run.semente();
+        return switch (pedido) {
+            case LEVITACAO -> Identificacao.pocao(semente, TipoDePocao.LEVITACAO);
+            case CHAMA_LIQUIDA -> Identificacao.pocao(semente, TipoDePocao.CHAMA_LIQUIDA);
+            case INVISIBILIDADE -> Identificacao.pocao(semente, TipoDePocao.INVISIBILIDADE);
+            case GELO -> Identificacao.pocao(semente, TipoDePocao.GELO);
+            case PUREZA -> Identificacao.pocao(semente, TipoDePocao.PUREZA);
+            case RAPIDEZ -> Identificacao.pocao(semente, TipoDePocao.PRESSA);
+            case CHAVE_DE_CRISTAL -> ChaveDeCristal.criar(run.numeroDaRun(), andar);
+        };
+    }
+
+    // Uma poção, um pergaminho, uma comida ou ouro (o depósito, a sala do fogo mágico, a ossada)
+    public static ItemStack miudeza(Random sorteio, int andar, long semente) {
+        return switch (sorteio.nextInt(4)) {
+            case 0 -> Acessorios.talvezExotica(pocaoAleatoria(sorteio, semente), sorteio, semente);
+            case 1 -> Acessorios.talvezExotico(pergaminhoAleatorio(sorteio, semente), sorteio, semente);
+            case 2 -> comidaAleatoria(sorteio);
+            default -> Ouro.sortear(sorteio, andar);
+        };
+    }
+
+    // A comida do chão, igual ao Shattered: ração (4) ou pastel (1)
+    public static ItemStack comidaAleatoria(Random sorteio) {
+        return new ItemStack(sorteio.nextInt(5) == 0 ? ModItens.PASTEL.get() : ModItens.RACAO.get());
+    }
+
+    // O equipamento da piscina e da sentinela (igual ao Shattered): do tier da região seguinte (arma 2 em 5, arremesso 1 em 5,
+    // armadura 2 em 5), nunca amaldiçoado (e já se sabe disso), e 1 em 3 vezes com +1
+    public static ItemStack equipamentoDaSala(Random sorteio, int andar) {
+        int dado = sorteio.nextInt(5);
+        ItemStack premio = dado <= 1 ? armaAleatoria(sorteio, andar + 5) : dado == 2 ? arremessoAleatorio(sorteio, andar + 5)
+                : armaduraAleatoria(sorteio, andar + 5);
+        premio.remove(ModComponentes.MALDICAO.get());
+        premio.set(ModComponentes.MALDICAO_CONHECIDA.get(), true);
+        if (sorteio.nextInt(3) == 0) {
+            NivelDoItem.definirNivel(premio, NivelDoItem.nivel(premio) + 1);
+        }
+        return premio;
+    }
+
+    // Varinha (0), anel (1) ou artefato (2)
+    public static ItemStack premioDeCristal(Random sorteio, DadosDaRun run, int categoria) {
+        return switch (categoria) {
+            case 0 -> varinhaAleatoria(sorteio);
+            case 1 -> anelAleatorio(sorteio);
+            default -> artefatoAleatorio(sorteio, run);
+        };
+    }
+
+    // O prêmio da ossada da sala do poço (igual ao Shattered): um anel, um artefato, ou uma arma, arma de arremesso ou armadura
+    public static ItemStack premioDaOssada(Random sorteio, int andar, DadosDaRun run) {
+        return switch (sorteio.nextInt(3)) {
+            case 0 -> anelAleatorio(sorteio);
+            case 1 -> artefatoAleatorio(sorteio, run);
+            default -> switch (sorteio.nextInt(5)) {
+                case 0, 1 -> armaAleatoria(sorteio, andar);
+                case 2 -> arremessoAleatorio(sorteio, andar);
+                default -> armaduraAleatoria(sorteio, andar);
+            };
+        };
+    }
+
+    // O caminho de cristal (igual ao Shattered): 3 poções e 3 pergaminhos sem repetir; uma das poções é a de experiência,
+    // ou um dos pergaminhos é o de transmutação. Na ordem: poção e pergaminho mais comuns, os do meio, os mais raros.
+    public static List<ItemStack> caminhoDeCristal(Random sorteio, long semente) {
+        List<TipoDePocao> pocoes = new ArrayList<>();
+        List<TipoDePergaminho> pergaminhos = new ArrayList<>();
+        if (sorteio.nextBoolean()) {
+            pocoes.add(pocaoDiferente(sorteio, semente, pocoes));
+            pergaminhos.add(TipoDePergaminho.TRANSMUTACAO);
+        } else {
+            pocoes.add(TipoDePocao.EXPERIENCIA);
+            pergaminhos.add(pergaminhoDiferente(sorteio, semente, pergaminhos));
+        }
+        pocoes.add(pocaoDiferente(sorteio, semente, pocoes));
+        pergaminhos.add(pergaminhoDiferente(sorteio, semente, pergaminhos));
+        pocoes.add(pocaoDiferente(sorteio, semente, pocoes));
+        pergaminhos.add(pergaminhoDiferente(sorteio, semente, pergaminhos));
+        pocoes.sort((a, b) -> Float.compare(b.peso(), a.peso()));
+        pergaminhos.sort((a, b) -> Float.compare(b.peso(), a.peso()));
+        List<ItemStack> itens = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            itens.add(Identificacao.pocao(semente, pocoes.get(i)));
+            itens.add(Identificacao.pergaminho(semente, pergaminhos.get(i)));
+        }
+        return itens;
+    }
+
+    private static TipoDePocao pocaoDiferente(Random sorteio, long semente, List<TipoDePocao> jaTem) {
+        while (true) {
+            TipoDePocao tipo = Identificacao.tipoDaPocao(semente, pocaoAleatoria(sorteio, semente));
+            if (!jaTem.contains(tipo)) {
+                return tipo;
+            }
+        }
+    }
+
+    private static TipoDePergaminho pergaminhoDiferente(Random sorteio, long semente, List<TipoDePergaminho> jaTem) {
+        while (true) {
+            TipoDePergaminho tipo = Identificacao.tipoDoPergaminho(semente, pergaminhoAleatorio(sorteio, semente));
+            if (!jaTem.contains(tipo)) {
+                return tipo;
+            }
+        }
     }
 
     // As chances de cada poção do laboratório secreto (igual ao Shattered: as mais fracas são mais comuns); não repete na mesma sala
@@ -374,6 +557,18 @@ public class SaqueDoAndar {
                         // O arbusto de fruta-sem-graça
                         mundo.setBlock(lugar, ModBlocos.ARBUSTO_DE_FRUTA.get().defaultBlockState(), 3);
                     }
+                }
+            } else if (saque.onde() == Onde.OSSADA) {
+                // A ossada: um crânio no canto e os itens no meio do quadradinho
+                Baus.colocarOssada(mundo, new BlockPos(origem.getX() + saque.x() * T, origem.getY() + 1, origem.getZ() + saque.y() * T), mundo.getRandom());
+                for (ItemStack item : saque.itens()) {
+                    soltar(mundo, origem.getX() + saque.x() * T + T / 2.0, origem.getY() + 1, origem.getZ() + saque.y() * T + T / 2.0, item);
+                }
+                noChao++;
+            } else if (saque.onde() == Onde.BAU_DE_CRISTAL) {
+                BlockPos lugar = new BlockPos(origem.getX() + saque.x() * T + 1, origem.getY() + 1, origem.getZ() + saque.y() * T + 1);
+                if (Baus.colocarDeCristal(mundo, lugar, Direction.Plane.HORIZONTAL.getRandomDirection(mundo.getRandom()), saque.itens())) {
+                    baus++;
                 }
             } else if (saque.onde() == Onde.CHAO) {
                 // Bem no meio do quadradinho

@@ -73,6 +73,7 @@ public class PintorDoEsgoto {
                 Sala sala = new Sala(comodo.esquerda + 1, comodo.cima + 1, comodo.largura() - 2, comodo.altura() - 2,
                         comodo instanceof ComodoEspecial);
                 comodo.numeroDaSala = planta.registrarSala(sala);
+                comodo.registrada(planta, sala);
             }
         }
 
@@ -149,6 +150,8 @@ public class PintorDoEsgoto {
                     case COMUM, DESTRANCADA -> PlantaDoAndar.PORTA;
                     case ESCONDIDA -> PlantaDoAndar.PORTA_ESCONDIDA;
                     case TRANCADA -> PlantaDoAndar.PORTA_TRANCADA;
+                    case BARRICADA -> PlantaDoAndar.BARRICADA;
+                    case CRISTAL -> PlantaDoAndar.PORTA_DE_CRISTAL;
                     case PAREDE -> PlantaDoAndar.PAREDE;
                 };
                 planta.definir(porta.x, porta.y, tipo);
